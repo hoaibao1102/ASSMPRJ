@@ -1,9 +1,3 @@
-<%-- 
-    Document   : index
-    Created on : May 15, 2025, 12:44:58 AM
-    Author     : MSI PC
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="vi">
@@ -86,84 +80,167 @@
 
             /* Section chính */
             .section {
+                padding: 20px;
                 max-width: 1200px;
-                margin: 30px auto;
-                padding: 0 20px;
+                margin: 0 auto;
             }
 
-            /* Tiêu đề section */
             .title {
-                font-size: 1.8rem;
+                font-size: 28px;
+                font-weight: 700;
                 margin-bottom: 20px;
-                border-left: 5px solid #3498db;
-                padding-left: 15px;
-                font-weight: 600;
-            }
-
-            /* Lưới card */
-            .grid {
-                display: flex;
-                gap: 20px;
-                flex-wrap: wrap;
-                justify-content: space-between;
-            }
-
-            /* Card */
-            .card {
-                background: #fff;
-                border-radius: 10px;
-                overflow: hidden;
-                box-shadow: 0 4px 10px rgba(0,0,0,0.1);
                 text-align: center;
-                flex: 1 1 calc(25% - 20px);
-                max-width: calc(25% - 20px);
+            }
+
+            .grid {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr); /* 4 cột đều */
+                grid-template-rows: repeat(2, 300px);  /* 2 hàng cao 300px, có thể điều chỉnh */
+                gap: 16px;
+            }
+
+            .card1 {
+                grid-column: 1 / 3; /* chiếm 2 cột */
+                grid-row: 1 / 3;    /* chiếm 2 hàng */
+            }
+
+            .card1 form.card {
+                height: 100%;       /* form card chiếm hết vùng */
+                display: flex;
+                flex-direction: column;
+            }
+
+            .card1 .image-wrapper {
+                flex-grow: 1;       /* ảnh chiếm phần lớn form */
+                overflow: hidden;
+                border-radius: 16px 16px 0 0;
+                height: 100%;       /* chiếm 100% chiều cao phần trên */
+            }
+
+            .card1 .image-wrapper img {
+                height: 100%;       /* ảnh phủ hết div chứa */
+                width: 100%;
+                object-fit: cover;
+                display: block;
                 transition: transform 0.3s ease;
             }
 
-            .card:hover {
-                transform: translateY(-5px);
+
+            .card2{
+                grid-column: 3/4;
+                grid-row: 1/2;
+
+            }
+            .card3{
+                grid-column: 4/6;
+                grid-row: 1/2;
+
+            }
+            .card4{
+                grid-column: 3/4;
+                grid-row: 2/3;
+
+
+            }
+            .card5{
+                grid-column: 4/5;
+                grid-row: 2/3;
+
+            }
+            .card6{
+                grid-column: 5/6;
+                grid-row: 2/3;
+
             }
 
-            .card img {
+            form >div.card{
+                position: relative;
+                border-radius: 16px;
+                overflow: hidden;
+                box-shadow: 0 8px 16px rgb(0 0 0 / 0.1);
+                cursor: pointer;
+                background-color: #fff;
+                transition: transform 0.3s ease;
+            }
+
+            form.card:hover {
+                transform: translateY(-6px);
+                box-shadow: 0 12px 20px rgb(0 0 0 / 0.15);
+            }
+
+            form.card .image-wrapper {
+                position: relative;
+                overflow: hidden;
+                border-radius: 16px 16px 0 0;
+
+            }
+
+            form.card img {
                 width: 100%;
-                height: 160px;
+                height: 244px;
                 object-fit: cover;
-            }
-
-            .card h4 {
-                margin: 15px 0 10px 0;
-                font-size: 1.2rem;
-                color: #2c3e50;
-                font-weight: 600;
-            }
-
-            .card a {
-                text-decoration: none;
                 display: block;
-                padding: 10px 0;
-                background: #3498db;
-                color: white;
-                border-radius: 0 0 10px 10px;
+                transition: transform 0.3s ease;
+            }
+
+            form.card:hover img {
+                transform: scale(1.05);
+            }
+
+            .btn-overlay {
+                position: absolute;
+                bottom: 12px;
+                left: 50%;
+                transform: translateX(-50%);
+                background-color: rgba(0,0,0,0.5);
+                color: #fff;
+                border: none;
+                padding: 10px 22px;
+                border-radius: 24px;
                 font-weight: 600;
-                transition: background-color 0.3s ease;
+                font-size: 14px;
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity 0.3s ease;
             }
 
-            .card a:hover {
-                background: #2980b9;
+            form.card:hover .btn-overlay {
+                opacity: 1;
+                pointer-events: auto;
             }
 
-            /* Responsive cho màn hình nhỏ */
+            form.card h4 {
+                margin: 14px 0 20px 0;
+                text-align: center;
+                font-weight: 700;
+                font-size: 18px;
+                color: #333;
+                user-select: none;
+            }
+
+            input[type="hidden"] {
+                display: none;
+            }
+
+            /* Responsive */
             @media (max-width: 1024px) {
-                .card {
+                form.card {
                     flex: 1 1 calc(33.333% - 20px);
                     max-width: calc(33.333% - 20px);
                 }
             }
 
             @media (max-width: 768px) {
-                .card {
+                form.card {
                     flex: 1 1 calc(50% - 20px);
                     max-width: calc(50% - 20px);
+                }
+            }
+
+            @media (max-width: 480px) {
+                form.card {
+                    flex: 1 1 100%;
+                    max-width: 100%;
                 }
             }
 
@@ -173,94 +250,120 @@
                     max-width: 100%;
                 }
             }
-
         </style>
     </head>
     <body>
 
         <jsp:include page="header.jsp"/>
-        
-        
-        <!-- Chèn ngay dưới phần banner -->
+
+        <!-- Slider -->
         <div class="slider-container">
             <div class="slider">
                 <div class="slider-title">Khám phá Việt Nam theo cách của bạn!</div>
                 <img src="assets/images/danangimg.jpg" alt="Đà Nẵng" class="slide active">
-                <img src="assets/images/dalatimg.webp" alt="Đà Lạt" class="slide">
-                <img src="assets/images/vungtauimg.jpg" alt="Vũng Tàu" class="slide">
+                <img src="assets/images/slider/dalatsl.webp" alt="Đà Lạt" class="slide">
+                <img src="assets/images/slider/vungtausl.jpeg" alt="Vũng Tàu" class="slide">
                 <img src="assets/images/hanoiimg.jpg" alt="Hà Nội" class="slide">
+                <img src="assets/images/hueimg.jpg" alt="Huế" class="slide">
+                <img src="assets/images/slider/nhatrangsl.jpg" alt="Nha Trang" class="slide">
             </div>
         </div>
-
 
         <div class="section">
             <div class="title">Điểm đến nổi bật</div>
             <div class="grid">
-                <div class="card">
-                    <img src="assets/images/danangimg.jpg" alt="Đà Nẵng">
-                    <h4>Đà Nẵng</h4>
-                    <a href="place-list.jsp?location=Đà Nẵng">Xem thêm</a>
+                <div class="card1">
+                    <form class="card " action="PlaceController" method="post">
+                        <div class="image-wrapper">
+                            <img src="assets/images/danang2img.jpg" alt="Đà Nẵng" />
+                            <button type="submit" class="btn-overlay">Xem thêm</button>
+                        </div>
+                        <h4>Đà Nẵng</h4>
+                        <input type="hidden" name="location" value="Đà Nẵng" />
+                    </form>
                 </div>
-                <div class="card">
-                    <img src="assets/images/dalatimg.webp" alt="Đà Lạt">
-                    <h4>Đà Lạt</h4>
-                    <a href="place-list.jsp?location=Đà Lạt">Xem thêm</a>
+
+
+                <div class="card2">
+                    <form class="card " action="PlaceController" method="post">
+                        <div class="image-wrapper">
+                            <img src="assets/images/dalatimg.webp" alt="Đà Lạt" />
+                            <button type="submit" class="btn-overlay">Xem thêm</button>
+                        </div>
+                        <h4>Đà Lạt</h4>
+                        <input type="hidden" name="location" value="Đà Lạt" />
+                    </form>
                 </div>
-                <div class="card">
-                    <img src="assets/images/vungtauimg.jpg" alt="Vũng Tàu">
-                    <h4>Vũng Tàu</h4>
-                    <a href="place-list.jsp?location=Vũng Tàu">Xem thêm</a>
+
+
+                <div class="card3">
+                    <form class="card " action="PlaceController" method="post">
+                        <div class="image-wrapper">
+                            <img src="assets/images/vungtauimg.jpg" alt="Vũng Tàu" />
+                            <button type="submit" class="btn-overlay">Xem thêm</button>
+                        </div>
+                        <h4>Vũng Tàu</h4>
+                        <input type="hidden" name="location" value="Vũng Tàu" />
+                    </form>
                 </div>
-                <div class="card">
-                    <img src="assets/images/hanoiimg.jpg" alt="Hà Nội">
-                    <h4>Hà Nội</h4>
-                    <a href="place-list.jsp?location=Hà Nội">Xem thêm</a>
+
+
+                <div class="card4">
+                    <form class="card " action="PlaceController" method="post">
+                        <div class="image-wrapper">
+                            <img src="assets/images/hanoiimg.jpg" alt="Hà Nội" />
+                            <button type="submit" class="btn-overlay">Xem thêm</button>
+                        </div>
+                        <h4>Hà Nội</h4>
+                        <input type="hidden" name="location" value="Hà Nội" />
+                    </form>
                 </div>
+
+
+                <div class="card5">
+                    <form class="card " action="PlaceController" method="post">
+                        <div class="image-wrapper">
+                            <img src="assets/images/hueimg.jpg" alt="Huế" />
+                            <button type="submit" class="btn-overlay">Xem thêm</button>
+                        </div>
+                        <h4>Huế</h4>
+                        <input type="hidden" name="location" value="Huế" />
+                    </form>
+                </div>
+
+
+                <div class="card6">
+                    <form class="card " action="PlaceController" method="post">
+                        <div class="image-wrapper">
+                            <img src="assets/images/nhatrangimg.jpg" alt="Nha Trang" />
+                            <button type="submit" class="btn-overlay">Xem thêm</button>
+                        </div>
+                        <h4>Nha Trang</h4>
+                        <input type="hidden" name="location" value="Nha Trang" />
+                    </form>
+                </div>
+
+
             </div>
         </div>
 
-        <div class="section">
-            <div class="title">Gợi ý ăn uống & vui chơi</div>
-            <div class="grid">
-                <div class="card">
-                    <img src="assets/images/banhkhotimg.jpg" alt="Bánh khọt Vũng Tàu">
-                    <h4>Bánh khọt Gốc Vú Sữa</h4>
-                    <a href="https://goo.gl/maps/Q3Q4pxAf1vZcJt4Z9" target="_blank">Xem bản đồ</a>
-                </div>
-                <div class="card">
-                    <img src="assets/images/nguhanhsonimg.jpg" alt="Ngũ Hành Sơn">
-                    <h4>Ngũ Hành Sơn</h4>
-                    <a href="https://goo.gl/maps/v2FHvN61Z69iL8DA7" target="_blank">Xem bản đồ</a>
-                </div>
-                <div class="card">
-                    <img src="assets/images/bucha.jpg" alt="Bún chả Hương Liên">
-                    <h4>Bún chả Hương Liên</h4>
-                    <a href="https://goo.gl/maps/XUgYjpuSAv1cF5RF6" target="_blank">Xem bản đồ</a>
-                </div>
-            </div>
-        </div>
+        <jsp:include page="footer.jsp"/>
 
-    </div>
+        <script>
+            const slides = document.querySelectorAll('.slide');
+            let currentIndex = 0;
 
-    <jsp:include page="footer.jsp"/>
+            function showSlide(index) {
+                slides.forEach((slide, i) => {
+                    slide.classList.toggle('active', i === index);
+                });
+            }
 
+            setInterval(() => {
+                currentIndex = (currentIndex + 1) % slides.length;
+                showSlide(currentIndex);
+            }, 7000); // 7 giây
+        </script>
 
-    <script>
-        const slides = document.querySelectorAll('.slide');
-        let currentIndex = 0;
-
-        function showSlide(index) {
-            slides.forEach((slide, i) => {
-                slide.classList.toggle('active', i === index);
-            });
-        }
-
-        setInterval(() => {
-            currentIndex = (currentIndex + 1) % slides.length;
-            showSlide(currentIndex);
-        }, 2500); // 3 giây
-    </script>
-
-
-</body>
+    </body>
 </html>
