@@ -50,10 +50,10 @@ public class TourDAO implements IDAO<TourDTO, String> {
 
     @Override
     public List<TourDTO> search(String searchTerm) {
-        String sql = "SELECT [idTour],[destination],[placestart],[duration],[startdate],[price],[nametour],[img],P.description, T.transport_name\n"
-                + "  FROM [travel_assistant].[dbo].[TourList] TL \n"
-                + "  JOIN DBO.transport T ON TL.transport_id = T.transport_id\n"
-                + "  JOIN DBO.places P ON TL.idplace = P.idplace\n"
+        String sql = "SELECT [idTour],[destination],[placestart],[duration],[startdate],[price],[nametour],[img],P.description AS place_description, T.transport_name AS transport "
+                + "  FROM [travel_assistant].[dbo].[TourList] TL "
+                + "  JOIN DBO.transport T ON TL.transport_id = T.transport_id"
+                + "  JOIN DBO.places P ON TL.idplace = P.idplace"
                 + "  WHERE P.placename = ? ";
         List<TourDTO> list = new ArrayList<>();
         try {
@@ -69,10 +69,10 @@ public class TourDAO implements IDAO<TourDTO, String> {
                                             rs.getString("duration"),
                                             rs.getString("startdate"),
                                             rs.getDouble("price"),
+                                            rs.getString("transport"),
                                             rs.getString("nametour"),
                                             rs.getString("img"),
-                                            rs.getString("P.description"),
-                                            rs.getString("T.transport_name"));
+                                            rs.getString("place_description"));
 
                 list.add(newT);
             }

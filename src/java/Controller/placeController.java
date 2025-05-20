@@ -37,12 +37,14 @@ public class placeController extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         TourDAO tdao = new TourDAO();
         String location = request.getParameter("location");
-        if(location.equals("Nha Trang")){
+        if (location != null && !location.trim().isEmpty()) {
+            location = location.trim(); // loại bỏ khoảng trắng đầu/cuối
             List<TourDTO> tour = tdao.search(location);
             request.setAttribute("tourList", tour);
-            RequestDispatcher rd = request.getRequestDispatcher("TourListForm.jsp");
-            rd.forward(request, response);
+            request.getRequestDispatcher("TourListForm.jsp").forward(request, response);
+
         }
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

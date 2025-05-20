@@ -4,12 +4,12 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/D:/MONHOCKI4/PRJ/ASSM/bookingTour/web/TourListForm.jsp</file>
+            <file>file:/D:/MONHOCKI4/PRJ/ASSM/bookingTour/src/java/Controller/loginController.java</file>
             <file>file:/D:/MONHOCKI4/PRJ/ASSM/bookingTour/web/DestinationForm.jsp</file>
-            <file>file:/D:/MONHOCKI4/PRJ/ASSM/bookingTour/web/header.jsp</file>
             <file>file:/D:/MONHOCKI4/PRJ/ASSM/bookingTour/src/java/DTO/TourDTO.java</file>
             <file>file:/D:/MONHOCKI4/PRJ/ASSM/bookingTour/web/index.jsp</file>
             <file>file:/D:/MONHOCKI4/PRJ/ASSM/bookingTour/src/java/DAO/TourDAO.java</file>
-            <file>file:/D:/MONHOCKI4/PRJ/ASSM/bookingTour/src/java/DAO/UserDAO.java</file>
+            <file>file:/D:/MONHOCKI4/PRJ/ASSM/bookingTour/web/LoginForm.jsp</file>
             <file>file:/D:/MONHOCKI4/PRJ/ASSM/bookingTour/src/java/Controller/placeController.java</file>
         </group>
     </open-files>
