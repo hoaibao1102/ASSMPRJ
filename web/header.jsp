@@ -203,7 +203,7 @@
 
                     <ul class="menu" id="menu">
                         <li class="menu-item"><a href="index.jsp">Trang chủ</a></li>
-                        <li class="menu-item"><a href="location-list.jsp">Tour</a></li>
+                        <li class="menu-item"><a href="location-list.jsp">Điểm đến</a></li>
                         <li class="menu-item"><a href="about.jsp">Giới thiệu</a></li>
                         <li class="menu-item"><a href="contact.jsp">Liên hệ</a></li>
                     </ul>
