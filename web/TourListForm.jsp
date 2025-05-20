@@ -25,6 +25,30 @@
                 background: #f5f5f5;
             }
 
+            h1 {
+                font-weight: 900;
+                font-size: 3rem;
+                margin-bottom: 12px;
+                letter-spacing: 2px;
+                color: #2c3e50;
+                text-transform: uppercase;
+                font-family: 'Segoe UI Black', 'Arial Black', Arial, sans-serif;
+                text-shadow: 1px 1px 2px rgba(0,0,0,0.15);
+            }
+
+            p.description {
+                font-size: 1.2rem;
+                color: #6c7a89;
+                max-width: 800px;
+                margin: 0 auto 30px auto;
+                line-height: 1.6;
+                font-style: italic;
+                border-left: 5px solid #2980b9;
+                padding-left: 15px;
+                font-family: 'Georgia', serif;
+                letter-spacing: 0.5px;
+            }
+
             .container {
                 max-width: 1100px;
                 margin: 85px auto 0 auto;
@@ -40,8 +64,8 @@
             }
 
             .tour-img {
-                width: 340px;
-                height: 220px;
+                width:  435px;
+                height: 100%;
                 object-fit: cover;
                 flex-shrink: 0;
             }
@@ -112,14 +136,14 @@
         %>
 
         <div class="container">
-            <h2 style="margin-bottom: 20px;">Danh sách Tour <%=tourList.get(0).getDestination()%> </h2>
-
+            <h1 style="margin-bottom: 20px;">Danh sách Tour <%=tourList.get(0).getDestination()%> </h1>
+            <p  style="margin-bottom: 20px;"><%=tourList.get(0).getPlaceDescription()%></p>
             <%
                 if (tourList != null && !tourList.isEmpty()) {
                     for (TourDTO t : tourList) {
             %>
             <div class="tour-card">
-                <img class="tour-img" src="assets/images/<%=t.getImg()%>" alt="<%= t.getNameTour() %>">
+                <img class="tour-img" src="assets/images/places/<%=t.getImg()%>" alt="<%= t.getNameTour() %>">
                 <div class="tour-content">
                     <div>
                         <div class="tour-title"><%= t.getNameTour() %></div>

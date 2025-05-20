@@ -372,10 +372,10 @@
                 <div class="slider-title">Khám phá Việt Nam theo cách của bạn!</div>
                 <img src="assets/images/danangimg.jpg" alt="Đà Nẵng" class="slide active">
                 <img src="assets/images/slider/dalatsl.webp" alt="Đà Lạt" class="slide">
-                <img src="assets/images/slider/vungtausl.jpeg" alt="Vũng Tàu" class="slide">
+                <img src="assets/images/slider/vungtausl.jpg" alt="Vũng Tàu" class="slide">
                 <img src="assets/images/hanoiimg.jpg" alt="Hà Nội" class="slide">
                 <img src="assets/images/hueimg.jpg" alt="Huế" class="slide">
-                <img src="assets/images/slider/nhatrangsl.jpg" alt="Nha Trang" class="slide">
+                <img src="assets/images/slider/nhatrangslider.jpg" alt="Nha Trang" class="slide">
             </div>
         </div>
 
@@ -383,7 +383,7 @@
             <div class="title">Điểm đến nổi bật</div>
             <div class="grid">
                 <div class="card1">
-                    <form class="card " action="PlaceController" method="post">
+                    <form class="card " action="placeController" method="post">
                         <div class="image-wrapper">
                             <img src="assets/images/danang2img.jpg" alt="Đà Nẵng" />
                             <button type="submit" class="btn-overlay">Xem thêm</button>
@@ -394,7 +394,7 @@
                 </div>
 
                 <div class="card2">
-                    <form class="card " action="PlaceController" method="post">
+                    <form class="card " action="placeController" method="post">
                         <div class="image-wrapper">
                             <img src="assets/images/vungtauimg.jpg" alt="Vũng Tàu" />
                             <button type="submit" class="btn-overlay">Xem thêm</button>
@@ -405,7 +405,7 @@
                 </div>
 
                 <div class="card3">
-                    <form class="card " action="PlaceController" method="post">
+                    <form class="card " action="placeController" method="post">
                         <div class="image-wrapper">
                             <img src="assets/images/nhatrangimg.jpg" alt="Nha Trang" />
                             <button type="submit" class="btn-overlay">Xem thêm</button>
