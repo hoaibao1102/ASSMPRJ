@@ -5,7 +5,9 @@
 package Controller;
 
 import DAO.TourDAO;
+import DAO.TourDetailDAO;
 import DTO.TourDTO;
+import DTO.TourDetailDTO;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -42,9 +44,16 @@ public class placeController extends HttpServlet {
             List<TourDTO> tour = tdao.search(location);
             request.setAttribute("tourList", tour);
             request.getRequestDispatcher("TourListForm.jsp").forward(request, response);
-
         }
-
+        
+        TourDetailDAO tdDao= new TourDetailDAO();
+        String idTour = request.getParameter("idTour");
+        if ( idTour != null && !idTour.trim().isEmpty()) {
+            idTour = idTour.trim(); // loại bỏ khoảng trắng đầu/cuối
+            TourDetailDTO tourDetail  = tdDao.readbyID(idTour);
+            request.setAttribute("tourDetail", tourDetail);
+            request.getRequestDispatcher("TourDetailForm.jsp").forward(request, response);
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

@@ -10,7 +10,10 @@
             <file>file:/D:/MONHOCKI4/PRJ/ASSM/bookingTour/web/DestinationForm.jsp</file>
             <file>file:/D:/MONHOCKI4/PRJ/ASSM/bookingTour/web/header.jsp</file>
             <file>file:/D:/MONHOCKI4/PRJ/ASSM/bookingTour/web/RegisForm.jsp</file>
+            <file>file:/D:/MONHOCKI4/PRJ/ASSM/bookingTour/src/java/DTO/UserDTO.java</file>
+            <file>file:/D:/MONHOCKI4/PRJ/ASSM/bookingTour/src/java/DTO/TourDTO.java</file>
             <file>file:/D:/MONHOCKI4/PRJ/ASSM/bookingTour/web/index.jsp</file>
+            <file>file:/D:/MONHOCKI4/PRJ/ASSM/bookingTour/src/java/DAO/TourDAO.java</file>
             <file>file:/D:/MONHOCKI4/PRJ/ASSM/bookingTour/web/LoginForm.jsp</file>
         </group>
     </open-files>
