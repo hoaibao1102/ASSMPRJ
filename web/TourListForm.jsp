@@ -165,11 +165,12 @@
                         </div>
                         <div class="price">Giá từ: <%= String.format("%,.0f", t.getPrice()) %> đ</div>
                     </div>
-                    
+
                     <!-- Form sử dụng input submit cho nút Xem chi tiết -->
                     <form action="placeController" method="get">
-                         <input type="hidden" name="idTour" value="<%=t.getIdTour()%>" />
-                         <input class="btn-detail" type="submit" value="Xem chi tiết" />
+                        <input type="hidden" name="action" value="<tourDetail" />
+                        <input type="hidden" name="idTour" value="<%=t.getIdTour()%>" />
+                        <input class="btn-detail" type="submit" value="Xem chi tiết" />
                     </form>
                 </div>
             </div>
