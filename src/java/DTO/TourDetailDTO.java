@@ -10,6 +10,7 @@ package DTO;
  */
 public class TourDetailDTO {
     private String idTour;
+    private String nameTour;
     private String descriptD1;
     private String descriptD2;
     private String descriptD3;
@@ -22,7 +23,8 @@ public class TourDetailDTO {
     public TourDetailDTO() {
     }
 
-    public TourDetailDTO(String idTour, String descriptD1, String descriptD2, String descriptD3, String imgD1, String imgD2, String imgD3, String imgHotel, String imgOther) {
+    public TourDetailDTO(String idTour,String nameTour, String descriptD1, String descriptD2, String descriptD3, String imgD1, String imgD2, String imgD3, String imgHotel, String imgOther) {
+        this.nameTour = nameTour;
         this.idTour = idTour;
         this.descriptD1 = descriptD1;
         this.descriptD2 = descriptD2;
@@ -42,6 +44,15 @@ public class TourDetailDTO {
         this.idTour = idTour;
     }
 
+    public String getNameTour() {
+        return nameTour;
+    }
+
+    public void setNameTour(String nameTour) {
+        this.nameTour = nameTour;
+    }
+
+    
     public String getDescriptD1() {
         return descriptD1;
     }

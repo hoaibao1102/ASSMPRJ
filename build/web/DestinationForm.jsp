@@ -126,7 +126,7 @@
                     <h4>Đà Nẵng</h4>
                     <p>Đà Nẵng – thành phố biển xinh đẹp nổi tiếng với bãi biển Mỹ Khê dài và nhiều danh thắng hấp dẫn. Bạn sẽ được khám phá cầu Rồng, Bà Nà Hills, và thưởng thức ẩm thực đặc sắc.</p>
                     <input type="hidden" name="location" value="Đà Nẵng" />
-                    <input type="hidden" name="action" value="<tourList" />
+                    <input type="hidden" name="action" value="tourList" />
                     <button type="submit" class="btn-overlay">Xem thêm</button>
                 </div>
             </form>
@@ -137,7 +137,7 @@
                     <h4>Đà Lạt</h4>
                     <p>Đà Lạt được biết đến với khí hậu mát mẻ quanh năm, các vườn hoa và cảnh quan lãng mạn. Địa điểm lý tưởng cho các cặp đôi và những ai yêu thiên nhiên.</p>
                     <input type="hidden" name="location" value="Đà Lạt" />
-                    <input type="hidden" name="action" value="<tourList" />
+                    <input type="hidden" name="action" value="tourList" />
                     <button type="submit" class="btn-overlay">Xem thêm</button>
                 </div>
             </form>
@@ -148,7 +148,7 @@
                     <h4>Vũng Tàu</h4>
                     <p>Vũng Tàu nổi tiếng với những bãi biển xanh mát và nhiều món hải sản thơm ngon. Đây là địa điểm nghỉ dưỡng được nhiều gia đình và nhóm bạn yêu thích.</p>
                     <input type="hidden" name="location" value="Vũng Tàu" />
-                    <input type="hidden" name="action" value="<tourList" />
+                    <input type="hidden" name="action" value="tourList" />
                     <button type="submit" class="btn-overlay">Xem thêm</button>
                 </div>
             </form>
@@ -159,7 +159,7 @@
                     <h4>Hà Nội</h4>
                     <p>Thủ đô Hà Nội giữ nét cổ kính với nhiều di tích lịch sử, phố cổ sầm uất và văn hóa ẩm thực đặc trưng miền Bắc, là điểm đến không thể bỏ qua.</p>
                     <input type="hidden" name="location" value="Hà Nội" />
-                    <input type="hidden" name="action" value="<tourList" />
+                    <input type="hidden" name="action" value="tourList" />
                     <button type="submit" class="btn-overlay">Xem thêm</button>
                 </div>
             </form>
@@ -170,7 +170,7 @@
                     <h4>Huế</h4>
                     <p>Huế là cố đô với nhiều di tích cung điện, lăng tẩm cổ kính, và nét đẹp thanh bình bên dòng sông Hương mơ mộng.</p>
                     <input type="hidden" name="location" value="Huế" />
-                    <input type="hidden" name="action" value="<tourList"/>
+                    <input type="hidden" name="action" value="tourList"/>
                     <button type="submit" class="btn-overlay">Xem thêm</button>
                 </div>
             </form>
@@ -181,7 +181,7 @@
                     <h4>Nha Trang</h4>
                     <p>Nha Trang nổi tiếng với biển xanh cát trắng, khu vui chơi giải trí và nhiều món hải sản tươi ngon hấp dẫn.</p>
                     <input type="hidden" name="location" value="Nha Trang" />
-                    <input type="hidden" name="action" value="<tourList" />
+                    <input type="hidden" name="action" value="tourList" />
                     <button type="submit" class="btn-overlay">Xem thêm</button>
                 </div>
             </form>

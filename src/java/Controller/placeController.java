@@ -39,24 +39,26 @@ public class placeController extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         TourDAO tdao = new TourDAO();
         String location = request.getParameter("location");
-        String action = request.getParameter("action");
-        if (action.equals("tourList")) {
-            if (location != null && !location.trim().isEmpty()) {
-                location = location.trim(); // loại bỏ khoảng trắng đầu/cuối
-                List<TourDTO> tour = tdao.search(location);
-                request.setAttribute("tourList", tour);
-                request.getRequestDispatcher("TourListForm.jsp").forward(request, response);
-            }
-        }else
-        if (action.equals("tourDetail")) {
-            TourDetailDAO tdDao = new TourDetailDAO();
-            String idTour = request.getParameter("idTour");
-            if (idTour != null && !idTour.trim().isEmpty()) {
-                idTour = idTour.trim(); // loại bỏ khoảng trắng đầu/cuối
-                TourDetailDTO tourDetail = tdDao.readbyID(idTour);
-                request.setAttribute("tourDetail", tourDetail);
-                request.getRequestDispatcher("TourDetailForm.jsp").forward(request, response);
-            }
+
+        //lay ra list tour
+        if (location != null && !location.trim().isEmpty()) {
+            location = location.trim(); // loại bỏ khoảng trắng đầu/cuối
+            List<TourDTO> tour = tdao.search(location);
+            request.setAttribute("tourList", tour);
+            request.getRequestDispatcher("TourListForm.jsp").forward(request, response);
+        }
+
+        //di vao chi tiet tour    
+        TourDetailDAO tdDao = new TourDetailDAO();
+        String idTour = request.getParameter("idTour");
+        if (idTour != null && !idTour.trim().isEmpty()) {
+            TourDetailDTO tourDetail = tdDao.readbyID(idTour);
+
+            TourDTO tourTicket = tdao.readbyID(idTour); 
+            
+            request.setAttribute("tourDetail", tourDetail);
+            request.setAttribute("tourTicket", tourTicket);
+            request.getRequestDispatcher("TourDetailForm.jsp").forward(request, response);
         }
 
     }
