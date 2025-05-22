@@ -1,7 +1,25 @@
-# Created by https://www.toptal.com/developers/gitignore/api/maven,netbeans
-# Edit at https://www.toptal.com/developers/gitignore?templates=maven,netbeans
+# ==========================================
+# Java Web + NetBeans + Ant/Maven Git Ignore
+# ==========================================
 
-### Maven ###
+# === NetBeans generated files ===
+**/nbproject/private/
+**/nbproject/Makefile-*.mk
+**/nbproject/Package-*.bash
+
+# === Build artifacts ===
+build/
+dist/
+nbbuild/
+nbdist/
+
+# === IDE-specific ===
+*.iml
+.idea/
+*.ipr
+*.iws
+
+# === Maven files ===
 target/
 pom.xml.tag
 pom.xml.releaseBackup
@@ -11,24 +29,23 @@ release.properties
 dependency-reduced-pom.xml
 buildNumber.properties
 .mvn/timing.properties
-# https://github.com/takari/maven-wrapper#usage-without-binary-jar
 .mvn/wrapper/maven-wrapper.jar
 
-# Eclipse m2e generated files
-# Eclipse Core
-.project
-# JDT-specific (Eclipse Java Development Tools)
-.classpath
+# === Misc ===
+*.class
+*.log
+*.DS_Store
+*.bak
+*.tmp
 
-### NetBeans ###
-**/nbproject/private/
-**/nbproject/Makefile-*.mk
-**/nbproject/Package-*.bash
-build/
-nbbuild/
-dist/
-nbdist/
-.nb-gradle/
+# === OS-specific ===
+Thumbs.db
+ehthumbs.db
+.DS_Store
+Icon?
+Desktop.ini
 
-# End of https://www.toptal.com/developers/gitignore/api/maven,netbeans
-arrow
+# === User settings (optional) ===
+*.swp
+*.swo
+*.vscode/
