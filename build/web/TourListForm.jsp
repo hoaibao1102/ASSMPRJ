@@ -112,19 +112,28 @@
                 margin: 8px 0;
             }
 
+            /* CSS cho nút Xem chi tiết */
             .btn-detail {
                 align-self: flex-end;
-                padding: 10px 20px;
+                padding: 12px 25px;
                 background: #0d6efd;
                 color: white;
                 border: none;
                 border-radius: 6px;
                 font-weight: 600;
+                cursor: pointer;
                 text-decoration: none;
+                font-size: 1rem;
+                margin-top: 10px;
+                margin-left: 77%;
             }
 
             .btn-detail:hover {
                 background: #084298;
+            }
+
+            .btn-detail:focus {
+                outline: none;
             }
 
         </style>
@@ -156,7 +165,13 @@
                         </div>
                         <div class="price">Giá từ: <%= String.format("%,.0f", t.getPrice()) %> đ</div>
                     </div>
-                    <a class="btn-detail" href="TourDetailController?idTour=<%= t.getIdTour() %>">Xem chi tiết</a>
+
+                    <!-- Form sử dụng input submit cho nút Xem chi tiết -->
+                    <form action="placeController" method="get">
+                        <input type="hidden" name="action" value="tourDetail" />
+                        <input type="hidden" name="idTour" value="<%=t.getIdTour()%>" />
+                        <input class="btn-detail" type="submit" value="Xem chi tiết" />
+                    </form>
                 </div>
             </div>
             <%

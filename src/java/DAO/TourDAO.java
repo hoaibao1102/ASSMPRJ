@@ -35,7 +35,39 @@ public class TourDAO implements IDAO<TourDTO, String> {
 
     @Override
     public TourDTO readbyID(String id) {
+        String sql = "SELECT [idTour],[destination],[placestart],[duration],[startdate],[price],[nametour],[img],P.description AS place_description, T.transport_name AS transport "
+                + "  FROM [travel_assistant].[dbo].[TourList] TL "
+                + "  JOIN DBO.transport T ON TL.transport_id = T.transport_id"
+                + "  JOIN DBO.places P ON TL.idplace = P.idplace"
+                + "  WHERE idTour = ? ";
+        try {
+            Connection conn = DBUtils.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, id);
+            ResultSet rs = ps.executeQuery();
+
+            if(rs.next()) {
+                TourDTO newT = new  TourDTO(rs.getString("idTour"),
+                                            rs.getString("destination"), 
+                                            rs.getString("placestart"),
+                                            rs.getString("duration"),
+                                            rs.getString("startdate"),
+                                            rs.getDouble("price"),
+                                            rs.getString("transport"),
+                                            rs.getString("nametour"),
+                                            rs.getString("img"),
+                                            rs.getString("place_description"));
+                return newT;
+            }
+            
+
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(TourDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(TourDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return null;
+        
     }
 
     @Override
