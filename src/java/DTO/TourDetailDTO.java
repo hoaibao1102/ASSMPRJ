@@ -14,7 +14,7 @@ public class TourDetailDTO {
     private String descriptD1;
     private String descriptD2;
     private String descriptD3;
-    private String img;
+    private String imgDetail;
     
     public TourDetailDTO() {
     }
@@ -25,7 +25,7 @@ public class TourDetailDTO {
         this.descriptD1 = descriptD1;
         this.descriptD2 = descriptD2;
         this.descriptD3 = descriptD3;
-        this.img = img;
+        this.imgDetail = img;
     }
 
     public String getIdTour() {
@@ -69,11 +69,11 @@ public class TourDetailDTO {
     }
 
     public String getImg() {
-        return img;
+        return imgDetail;
     }
 
     public void setImg(String img) {
-        this.img = img;
+        this.imgDetail = img;
     }
 
     

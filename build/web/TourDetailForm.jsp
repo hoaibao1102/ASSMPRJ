@@ -82,6 +82,7 @@
                 font-family: Arial, sans-serif;
                 width: 100%;
                 max-width: 360px;
+                height: 40%;
             }
 
             .label {
@@ -186,6 +187,41 @@
                 gap: 8px;
             }
 
+
+            <!--LÀM DETAIL O DUOI-->
+            .collapsible {
+                cursor: pointer;
+                user-select: none;
+                color: #2980b9;
+                font-weight: bold;
+                margin-top: 20px;
+                margin-bottom: 5px;
+                font-size: 1.3rem;
+                border-bottom: 1px solid #2980b9;
+                padding-bottom: 4px;
+            }
+
+            .content {
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.3s ease-out;
+                font-size: 1rem;
+                color: #444;
+                line-height: 1.6;
+                margin-bottom: 15px;
+                padding-left: 8px;
+                border-left: 3px solid #2980b9;
+            }
+
+
+            .collapsible .toggle-text {
+                font-style: italic;
+                font-weight: normal;
+                color: #555;
+                margin-left: 10px;
+                cursor: pointer;
+            }
+
         </style>
     </head>
     <body>
@@ -201,36 +237,37 @@
                 %>
 
                 <h1><%= tourTicket.getDestination() %>: <%= tourDetail.getNameTour() %></h1>
-
-                <!-- Ngày 1 -->
-                <div>
-                    <h2>Ngày 1</h2>
-                    <p><%= tourDetail.getDescriptD1() %></p>
-                   
-                </div>
-
-                <!-- Ngày 2 -->
-                <div>
-                    <h2>Ngày 2</h2>
-                    <p><%= tourDetail.getDescriptD2() %></p>
-                   
-                </div>
-
-                <% if (tourDetail.getDescriptD3() != null) { %>
-                <!-- Ngày 3 -->
-                <div>
-                    <h2>Ngày 3</h2>
-                    <p><%= tourDetail.getDescriptD3() %></p>
-                   
-                </div>
-                <% } %>
                 <!-- Khách sạn -->
                 <div>
                     <h2>hinh anh</h2>
                     <p><%= tourDetail.getImg() %></p>
                 </div>
+                <!-- Ngày 1 -->
+                <div>
+                    <%
+                    renderDescription(tourDetail.getDescriptD1(), out);
+                    %>
+                </div>
 
-                
+                <!-- Ngày 2 -->
+                <div>
+                    <%
+                    renderDescription(tourDetail.getDescriptD2(), out);
+                    %>
+
+                </div>
+                <% if (tourDetail.getDescriptD3() != null) { %>
+                <!-- Ngày 3 -->
+                <div>
+                    <%
+                    renderDescription(tourDetail.getDescriptD3(), out);
+                    %>
+
+                </div>
+                <% } %>
+
+
+
                 <% } else { %>
                 <p>Không tìm thấy thông tin chi tiết cho tour này.</p>
                 <% } %>
@@ -270,4 +307,46 @@
 
         <%@include file="footer.jsp" %>
     </body>
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var coll = document.getElementsByClassName("collapsible");
+            for (var i = 0; i < coll.length; i++) {
+                coll[i].addEventListener("click", function () {
+                    this.classList.toggle("active");
+                    var content = this.nextElementSibling;
+                    var toggleText = this.querySelector(".toggle-text");
+
+                    if (content.style.maxHeight) {
+                        content.style.maxHeight = null;
+                        if (toggleText)
+                            toggleText.textContent = "chi tiết";
+                    } else {
+                        content.style.maxHeight = content.scrollHeight + "px";
+                        if (toggleText)
+                            toggleText.textContent = "thu gọn";
+                    }
+                });
+            }
+        });
+
+    </script>
 </html>
+<%! 
+    public void renderDescription(String descript, jakarta.servlet.jsp.JspWriter out) throws java.io.IOException {
+        String[] list = descript.split("#");
+        out.println("<div>");
+        out.println("<div class='collapsible'><h2>" + list[0] + "</h2> <span class='toggle-text'>chi tiết</span></div>");
+        out.println("<div class='content'>"); 
+            for (int i = 1; i < list.length; i++) {
+                if (i % 2 != 0) {
+                    out.println("<h3>" + list[i] + "</h3>");
+                } else {
+                    out.println("<p>" + list[i].replace("/", "<br>")  + "</p>");
+                }
+            }
+        out.println("</div>");
+        out.println("</div>");
+    }
+%>
