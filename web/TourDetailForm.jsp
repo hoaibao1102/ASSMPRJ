@@ -73,7 +73,7 @@
                 box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             }
 
-/*            BÊN PHAIR */
+            /*            BÊN PHAIR */
             .right-content {
                 background: #fff;
                 border-radius: 12px;
@@ -206,14 +206,14 @@
                 <div>
                     <h2>Ngày 1</h2>
                     <p><%= tourDetail.getDescriptD1() %></p>
-                    <img src="assets/images/<%= tourDetail.getImgD1() %>" alt="Ngày 1" />
+                   
                 </div>
 
                 <!-- Ngày 2 -->
                 <div>
                     <h2>Ngày 2</h2>
                     <p><%= tourDetail.getDescriptD2() %></p>
-                    <img src="assets/images/<%= tourDetail.getImgD2() %>" alt="Ngày 2" />
+                   
                 </div>
 
                 <% if (tourDetail.getDescriptD3() != null) { %>
@@ -221,29 +221,23 @@
                 <div>
                     <h2>Ngày 3</h2>
                     <p><%= tourDetail.getDescriptD3() %></p>
-                    <img src="assets/images/<%= tourDetail.getImgD3() %>" alt="Ngày 3" />
-                </div>
-
-                <!-- Khách sạn -->
-                <div>
-                    <h2>Khách sạn</h2>
-                    <img src="assets/images/<%= tourDetail.getImgHotel() %>" alt="Khách sạn" />
-                </div>
-
-                <!-- Hình ảnh khác -->
-                <div>
-                    <h2>Hình ảnh khác</h2>
-                    <img src="assets/images/<%= tourDetail.getImgOther() %>" alt="Khác" />
+                   
                 </div>
                 <% } %>
+                <!-- Khách sạn -->
+                <div>
+                    <h2>hinh anh</h2>
+                    <p><%= tourDetail.getImg() %></p>
+                </div>
 
+                
                 <% } else { %>
                 <p>Không tìm thấy thông tin chi tiết cho tour này.</p>
                 <% } %>
             </div>
-<!--///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+            <!--///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
             <div class="right-content">
-                
+
                 <div class="price">
                     <span class="label">Giá:</span>
                     <span class="original-price"><%= vnd.format(tourTicket.getPrice()+1000000) %> ₫</span> 

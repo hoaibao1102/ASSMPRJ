@@ -32,7 +32,7 @@ public class TourDetailDAO implements IDAO<TourDetailDTO, String>{
 
     @Override
     public TourDetailDTO readbyID(String id) {
-       String sql = "SELECT tl.nametour as nametour, td.idTour as idTour,day1descrip ,day2descrip,day3descrip ,day1img,day2img,day3img,hotelimg "
+       String sql = "SELECT tl.nametour as nametour, td.idTour as idTour,day1descrip ,day2descrip,day3descrip ,td.img as img"
                + "FROM dbo.TourDetail td "
                + "join dbo.TourList tl on td.idTour = tl.idTour "
                + "where td.idTour = ? ";
@@ -47,11 +47,8 @@ public class TourDetailDAO implements IDAO<TourDetailDTO, String>{
                                                         rs.getString("day1descrip"), 
                                                         rs.getString("day2descrip"), 
                                                         rs.getString("day3descrip"),
-                                                        rs.getString("day1img"), 
-                                                        rs.getString("day2img"),
-                                                        rs.getString("day3img"), 
-                                                        rs.getString("hotelimg"), 
-                                                        "day la list anh ban can tim");
+                                                        rs.getString("img")); 
+                                 
                 return tour;
             }
             
