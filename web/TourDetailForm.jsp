@@ -221,6 +221,146 @@
                 margin-left: 10px;
                 cursor: pointer;
             }
+            /*====================================================================  css anh dau trang*/
+
+            .muiten {
+                width: 2% !important;
+                transition: transform 0.3s ease;
+                vertical-align: middle;
+                cursor: pointer;
+            }
+
+            .collapsible.active .muiten {
+                transform: rotate(180deg);
+            }
+
+
+            .gallery {
+                display: flex;
+                gap: 15px;
+                margin-top: 20px;
+            }
+
+            .thumbnails {
+                display: flex;
+                flex-direction: column;
+                max-height: 450px;
+                overflow-y: auto;
+                width: 100px;
+            }
+
+            .thumbnail-img {
+                width: 100%;
+                margin-bottom: 12px;
+                cursor: pointer;
+                border-radius: 8px;
+                transition: transform 0.2s ease;
+            }
+
+            .thumbnail-img:hover {
+                transform: scale(1.05);
+                box-shadow: 0 0 8px rgba(0,0,0,0.3);
+            }
+
+            .main-image {
+                flex-grow: 1;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .main-img {
+                width: 600px;
+                border-radius: 12px;
+                cursor: pointer;
+                box-shadow: 0 0 15px rgba(0,0,0,0.2);
+            }
+
+            /* Modal styles */
+            .modal {
+                display: none;
+                position: fixed;
+                z-index: 9999;
+                padding-top: 60px;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                overflow: auto;
+                background-color: rgba(0,0,0,0.8);
+            }
+
+            .modal-content {
+                margin: auto;
+                display: block;
+                width: 80%;
+                max-width: 900px;
+                border-radius: 12px;
+            }
+
+            .close {
+                position: absolute;
+                top: 20px;
+                right: 35px;
+                color: white;
+                font-size: 40px;
+                font-weight: bold;
+                cursor: pointer;
+            }
+
+            .prev, .next {
+                cursor: pointer;
+                position: fixed;
+                top: 50%;
+                width: auto;
+                padding: 16px;
+                color: white;
+                font-weight: bold;
+                font-size: 40px;
+                user-select: none;
+                -webkit-user-select: none;
+                transition: 0.3s ease;
+            }
+
+            .prev:hover, .next:hover {
+                color: #ddd;
+            }
+
+            .prev {
+                left: 15px;
+            }
+
+            .next {
+                right: 15px;
+            }
+
+            .modal-thumbnails-wrapper {
+                width: 80%;
+                max-width: 900px;
+                margin: 15px auto 0 auto;
+                overflow-x: auto;
+            }
+
+            .modal-thumbnails {
+                display: flex;
+                gap: 10px;
+                padding-bottom: 10px;
+            }
+
+            .modal-thumbnails img {
+                width: 100px;
+                height: 60px;
+                object-fit: cover;
+                cursor: pointer;
+                border: 2px solid transparent;
+                border-radius: 6px;
+                transition: border-color 0.3s ease;
+            }
+
+            .modal-thumbnails img.selected {
+                border-color: #ff4b2b; /* viền đỏ highlight ảnh nhỏ đang chọn */
+            }
+             
 
         </style>
     </head>
@@ -238,10 +378,47 @@
 
                 <h1><%= tourTicket.getDestination() %>: <%= tourDetail.getNameTour() %></h1>
                 <!-- Khách sạn -->
-                <div>
-                    <h2>hinh anh</h2>
-                    <p><%= tourDetail.getImg() %></p>
+
+                <!--                ============================================================-->
+                <div class="gallery">
+                    <div class="thumbnails">
+                        <% 
+                          String[] img = tourDetail.getImg().split("#"); 
+                          for (int i = 0; i < img.length; i++) { 
+                        %>
+                        <img src="assets/images/imgticket/<%= img[i] %>" 
+                             onclick="showMainImage(<%= i %>)" 
+                             class="thumbnail-img">
+                        <% } %>
+                    </div>
+                    <div class="main-image">
+                        <img id="mainImg" 
+                             src="assets/images/imgticket/<%= img.length > 0 ? img[0] : "" %>" 
+                             onclick="openModal()" 
+                             class="main-img">
+                    </div>
                 </div>
+
+                <!-- Modal xem ảnh lớn chi tiết -->
+                <div id="modal" class="modal" onclick="closeModal(event)">
+                    <span class="close" onclick="closeModal(event)">&times;</span>
+                    <div class="modal-content-wrapper">
+                        <a class="prev" onclick="changeImage(-1)">&#10094;</a>
+                        <img class="modal-content" id="modalImg">
+                        <a class="next" onclick="changeImage(1)">&#10095;</a>
+                    </div>
+                    <!-- Thêm phần thumbnails nhỏ phía dưới -->
+                    <div class="modal-thumbnails-wrapper">
+                        <div id="modalThumbnails" class="modal-thumbnails">
+                            <%-- Ảnh nhỏ modal sẽ được JS đổ vào đây --%>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+                <!--               ===========================================================-->
                 <!-- Ngày 1 -->
                 <div>
                     <%
@@ -316,20 +493,87 @@
                 coll[i].addEventListener("click", function () {
                     this.classList.toggle("active");
                     var content = this.nextElementSibling;
-                    var toggleText = this.querySelector(".toggle-text");
-
                     if (content.style.maxHeight) {
-                        content.style.maxHeight = null;
-                        if (toggleText)
-                            toggleText.textContent = "chi tiết";
+                        content.style.maxHeight = null; 
                     } else {
-                        content.style.maxHeight = content.scrollHeight + "px";
-                        if (toggleText)
-                            toggleText.textContent = "thu gọn";
+                        content.style.maxHeight = content.scrollHeight + "px";  
                     }
                 });
             }
         });
+//====================================================================== moi sua doan duoi
+        let currentIndex = 0;
+        const images = [];
+
+// Lấy ảnh từ thumbnails ngoài gallery để tạo mảng images
+        document.querySelectorAll('.thumbnails img').forEach((img, index) => {
+            images.push(img.src);
+        });
+
+// Hiển thị ảnh chính bên ngoài gallery
+        function showMainImage(index) {
+            currentIndex = index;
+            const mainImg = document.getElementById('mainImg');
+            mainImg.src = images[currentIndex];
+        }
+
+// Mở modal và khởi tạo ảnh chính + ảnh nhỏ
+        function openModal() {
+            const modal = document.getElementById('modal');
+            modal.style.display = "block";
+            showModalImage(currentIndex);
+            initModalThumbnails();
+        }
+
+// Đóng modal
+        function closeModal(event) {
+            if (event.target.id === 'modal' || event.target.className === 'close') {
+                document.getElementById('modal').style.display = "none";
+            }
+        }
+
+// Chuyển ảnh trong modal (prev/next)
+        function changeImage(direction) {
+            currentIndex += direction;
+            if (currentIndex < 0)
+                currentIndex = images.length - 1;
+            if (currentIndex >= images.length)
+                currentIndex = 0;
+            showModalImage(currentIndex);
+        }
+
+// Hiển thị ảnh trong modal
+        function showModalImage(index) {
+            currentIndex = index;
+            document.getElementById('modalImg').src = images[currentIndex];
+            highlightThumbnail(currentIndex);
+            // Đồng bộ main image bên ngoài gallery
+            document.getElementById('mainImg').src = images[currentIndex];
+        }
+
+// Khởi tạo ảnh nhỏ trong modal
+        function initModalThumbnails() {
+            const container = document.getElementById('modalThumbnails');
+            container.innerHTML = '';
+            images.forEach((src, index) => {
+                const img = document.createElement('img');
+                img.src = src;
+                img.onclick = () => {
+                    showModalImage(index);
+                };
+                container.appendChild(img);
+            });
+            highlightThumbnail(currentIndex);
+        }
+
+// Tô viền đỏ ảnh thumbnail đang chọn trong modal
+        function highlightThumbnail(index) {
+            const thumbnails = document.querySelectorAll('#modalThumbnails img');
+            thumbnails.forEach((thumb, i) => {
+                thumb.classList.toggle('selected', i === index);
+            });
+        }
+
 
     </script>
 </html>
@@ -337,7 +581,8 @@
     public void renderDescription(String descript, jakarta.servlet.jsp.JspWriter out) throws java.io.IOException {
         String[] list = descript.split("#");
         out.println("<div>");
-        out.println("<div class='collapsible'><h2>" + list[0] + "</h2> <span class='toggle-text'>chi tiết</span></div>");
+//        out.println("<div class='collapsible'><h2>" + list[0] + "</h2> <span class='toggle-text'>chi tiết</span></div>");
+        out.println("<div class='collapsible'><span><h2>" + list[0] + "</h2></span> <img class=\"muiten\" src=\"https://icons.iconarchive.com/icons/fa-team/fontawesome/128/FontAwesome-Angles-Down-icon.png\" width=\"128\" height=\"128\"></div>");
         out.println("<div class='content'>"); 
             for (int i = 1; i < list.length; i++) {
                 if (i % 2 != 0) {
