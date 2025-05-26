@@ -369,7 +369,7 @@
         <!-- Slider -->
         <div class="slider-container">
             <div class="slider">
-                <div class="slider-title">Khám phá Việt Nam theo cách của bạn!</div>
+                    <div class="slider-title">Việt Nam – Nơi mỗi bước chân là một câu chuyện.</div>
                 <img src="assets/images/danangimg.jpg" alt="Đà Nẵng" class="slide active">
                 <img src="assets/images/slider/dalatsl.webp" alt="Đà Lạt" class="slide">
                 <img src="assets/images/slider/vungtausl.jpg" alt="Vũng Tàu" class="slide">
