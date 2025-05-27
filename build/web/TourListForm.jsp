@@ -20,7 +20,7 @@
             }
             body {
                 margin: 0;
-                padding-top: 90px;
+                padding-top: 70px;
                 font-family: Arial, sans-serif;
                 background: #f5f5f5;
             }
@@ -136,6 +136,30 @@
                 outline: none;
             }
 
+/*====================================================================  css anh dau trang*/
+            .breadcrumb {
+                margin: 1rem 2rem; /* cách đều trái phải giống header padding */
+                font-size: 1rem;
+                color: #555;
+                font-family: Arial, sans-serif;
+            }
+
+            .breadcrumb a {
+                color: #2980b9; /* màu xanh link */
+                text-decoration: none;
+                font-weight: 600;
+            }
+
+            .breadcrumb a:hover {
+                text-decoration: underline;
+            }
+
+            .breadcrumb .current {
+                color: #2c3e50; /* màu đậm hơn, font bold */
+                font-weight: 700;
+            }
+
+
         </style>
     </head>
     <body>
@@ -143,7 +167,12 @@
         <%
             List<TourDTO> tourList = (List<TourDTO>) request.getAttribute("tourList");
         %>
-
+        
+        <div class="breadcrumb">
+            <a href="index.jsp">Trang chu</a> /
+            <a href="DestinationForm.jsp">Điểm đến</a> /
+            <span class="current">Du lịch <%= tourList.get(0).getDestination() %></span>
+        </div>
         <div class="container">
             <h1 style="margin-bottom: 20px;">Danh sách Tour <%=tourList.get(0).getDestination()%> </h1>
             <p  style="margin-bottom: 20px;"><%=tourList.get(0).getPlaceDescription()%></p>

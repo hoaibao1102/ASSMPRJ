@@ -221,7 +221,7 @@
                 margin-left: 10px;
                 cursor: pointer;
             }
-            /*====================================================================  css anh dau trang*/
+
 
             .muiten {
                 width: 2% !important;
@@ -360,19 +360,52 @@
             .modal-thumbnails img.selected {
                 border-color: #ff4b2b; /* viền đỏ highlight ảnh nhỏ đang chọn */
             }
-             
 
+            /*====================================================================  css back form*/
+            .breadcrumb {
+                margin: 1rem 2rem; /* cách đều trái phải giống header padding */
+                font-size: 1rem;
+                color: #555;
+                font-family: Arial, sans-serif;
+            }
+
+            .breadcrumb a {
+                color: #2980b9; /* màu xanh link */
+                text-decoration: none;
+                font-weight: 600;
+            }
+
+            .breadcrumb a:hover {
+                text-decoration: underline;
+            }
+
+            .breadcrumb .current {
+                color: #2c3e50; /* màu đậm hơn, font bold */
+                font-weight: 700;
+            }
         </style>
     </head>
     <body>
         <%@include file="header.jsp" %>
-
-        <div class="container1">
-            <div class="left-content">
-                <%
+        <%
                     TourDetailDTO tourDetail = (TourDetailDTO) request.getAttribute("tourDetail");
                     TourDTO tourTicket = (TourDTO) request.getAttribute("tourTicket");
                     DecimalFormat vnd = new DecimalFormat("#,###");
+        %>
+        <div class="breadcrumb">
+            <a href="index.jsp">Trang chủ</a> / 
+            <a href="DestinationForm.jsp">Điểm đến</a>/
+            <form action="placeController" method="post" style="display:inline;">
+                <input type="hidden" name="location" value="<%= tourTicket.getDestination()%>" />
+                <button type="submit" style="background:none; border:none; padding:0; margin:0; color:#2980b9; cursor:pointer; font-weight:600; font-size:1rem; font-family: Arial, sans-serif;">
+                    Du lịch <%= tourTicket.getDestination() %>
+                </button>
+            </form> / 
+            <span class="current">chi tiết tour</span>
+        </div>
+        <div class="container1">
+            <div class="left-content">
+                <%
                     if (tourDetail != null && tourTicket != null) {
                 %>
 
@@ -494,9 +527,9 @@
                     this.classList.toggle("active");
                     var content = this.nextElementSibling;
                     if (content.style.maxHeight) {
-                        content.style.maxHeight = null; 
+                        content.style.maxHeight = null;
                     } else {
-                        content.style.maxHeight = content.scrollHeight + "px";  
+                        content.style.maxHeight = content.scrollHeight + "px";
                     }
                 });
             }
