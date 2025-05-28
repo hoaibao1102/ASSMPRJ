@@ -13,10 +13,11 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Chi tiết Tour</title>
+        <link rel="stylesheet" href="assets/css/bodyCss.css"/>
         <style>
 
 
-            .container1 {
+            .containerdetail {
                 display: flex;
                 max-width: 1200px;
                 margin: 30px auto;
@@ -201,7 +202,7 @@
                 padding-bottom: 4px;
             }
 
-            .content {
+            .sub_content {
                 max-height: 0;
                 overflow: hidden;
                 transition: max-height 0.3s ease-out;
@@ -392,127 +393,134 @@
                     TourDTO tourTicket = (TourDTO) request.getAttribute("tourTicket");
                     DecimalFormat vnd = new DecimalFormat("#,###");
         %>
-        <div class="breadcrumb">
-            <a href="index.jsp">Trang chủ</a> / 
-            <a href="DestinationForm.jsp">Điểm đến</a>/
-            <form action="placeController" method="post" style="display:inline;">
-                <input type="hidden" name="location" value="<%= tourTicket.getDestination()%>" />
-                <button type="submit" style="background:none; border:none; padding:0; margin:0; color:#2980b9; cursor:pointer; font-weight:600; font-size:1rem; font-family: Arial, sans-serif;">
-                    Du lịch <%= tourTicket.getDestination() %>
-                </button>
-            </form> / 
-            <span class="current">chi tiết tour</span>
-        </div>
-        <div class="container1">
-            <div class="left-content">
-                <%
-                    if (tourDetail != null && tourTicket != null) {
-                %>
 
-                <h1><%= tourTicket.getDestination() %>: <%= tourDetail.getNameTour() %></h1>
-                <!-- Khách sạn -->
+        <div class="content">
+            <!<!-- dieu huong  -->
+            <div class="breadcrumb">
+                <a href="index.jsp">Trang chủ</a> / 
+                <a href="DestinationForm.jsp">Điểm đến</a>/
+                <form action="placeController" method="post" style="display:inline;">
+                    <input type="hidden" name="location" value="<%= tourTicket.getDestination()%>" />
+                    <button type="submit" style="background:none; border:none; padding:0; margin:0; color:#2980b9; cursor:pointer; font-weight:600; font-size:1rem; font-family: Arial, sans-serif;">
+                        Du lịch <%= tourTicket.getDestination() %>
+                    </button>
+                </form> / 
+                <span class="current">chi tiết tour</span>
+            </div>
 
-                <!--                ============================================================-->
-                <div class="gallery">
-                    <div class="thumbnails">
-                        <% 
-                          String[] img = tourDetail.getImg().split("#"); 
-                          for (int i = 0; i < img.length; i++) { 
-                        %>
-                        <img src="assets/images/imgticket/<%= img[i] %>" 
-                             onclick="showMainImage(<%= i %>)" 
-                             class="thumbnail-img">
-                        <% } %>
-                    </div>
-                    <div class="main-image">
-                        <img id="mainImg" 
-                             src="assets/images/imgticket/<%= img.length > 0 ? img[0] : "" %>" 
-                             onclick="openModal()" 
-                             class="main-img">
-                    </div>
-                </div>
+            <!--                ============================================================-->
+            <div class="containerdetail">
+                <div class="left-content">
+                    <%
+                        if (tourDetail != null && tourTicket != null) {
+                    %>
 
-                <!-- Modal xem ảnh lớn chi tiết -->
-                <div id="modal" class="modal" onclick="closeModal(event)">
-                    <span class="close" onclick="closeModal(event)">&times;</span>
-                    <div class="modal-content-wrapper">
-                        <a class="prev" onclick="changeImage(-1)">&#10094;</a>
-                        <img class="modal-content" id="modalImg">
-                        <a class="next" onclick="changeImage(1)">&#10095;</a>
-                    </div>
-                    <!-- Thêm phần thumbnails nhỏ phía dưới -->
-                    <div class="modal-thumbnails-wrapper">
-                        <div id="modalThumbnails" class="modal-thumbnails">
-                            <%-- Ảnh nhỏ modal sẽ được JS đổ vào đây --%>
+                    <h1><%= tourTicket.getDestination() %>: <%= tourDetail.getNameTour() %></h1>
+                    <!-- Khách sạn -->
+
+                    <!--                ============================================================-->
+                    <div class="gallery">
+                        <div class="thumbnails">
+                            <% 
+                              String[] img = tourDetail.getImg().split("#"); 
+                              for (int i = 0; i < img.length; i++) { 
+                            %>
+                            <img src="assets/images/imgticket/<%= img[i] %>" 
+                                 onclick="showMainImage(<%= i %>)" 
+                                 class="thumbnail-img">
+                            <% } %>
+                        </div>
+                        <div class="main-image">
+                            <img id="mainImg" 
+                                 src="assets/images/imgticket/<%= img.length > 0 ? img[0] : "" %>" 
+                                 onclick="openModal()" 
+                                 class="main-img">
                         </div>
                     </div>
+
+                    <!-- Modal xem ảnh lớn chi tiết -->
+                    <div id="modal" class="modal" onclick="closeModal(event)">
+                        <span class="close" onclick="closeModal(event)">&times;</span>
+                        <div class="modal-content-wrapper">
+                            <a class="prev" onclick="changeImage(-1)">&#10094;</a>
+                            <img class="modal-content" id="modalImg">
+                            <a class="next" onclick="changeImage(1)">&#10095;</a>
+                        </div>
+                        <!-- Thêm phần thumbnails nhỏ phía dưới -->
+                        <div class="modal-thumbnails-wrapper">
+                            <div id="modalThumbnails" class="modal-thumbnails">
+                                <%-- Ảnh nhỏ modal sẽ được JS đổ vào đây --%>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+                    <!--               ===========================================================-->
+                    <!-- Ngày 1 -->
+                    <div>
+                        <%
+                        renderDescription(tourDetail.getDescriptD1(), out);
+                        %>
+                    </div>
+
+                    <!-- Ngày 2 -->
+                    <div>
+                        <%
+                        renderDescription(tourDetail.getDescriptD2(), out);
+                        %>
+
+                    </div>
+                    <% if (tourDetail.getDescriptD3() != null) { %>
+                    <!-- Ngày 3 -->
+                    <div>
+                        <%
+                        renderDescription(tourDetail.getDescriptD3(), out);
+                        %>
+
+                    </div>
+                    <% } %>
+
+
+
+                    <% } else { %>
+                    <p>Không tìm thấy thông tin chi tiết cho tour này.</p>
+                    <% } %>
                 </div>
+                <!--///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+                <div class="right-content">
 
+                    <div class="price">
+                        <span class="label">Giá:</span>
+                        <span class="original-price"><%= vnd.format(tourTicket.getPrice()+1000000) %> ₫</span> 
+                    </div>
+                    <span class="current-price"><%= vnd.format(tourTicket.getPrice())%> <span class="currency">₫</span></span> / Khách
 
+                    <div class="discount-note">
+                        🎁 Đặt ngay để nhận được Ưu đãi online tiết kiệm thêm <strong>1,000K</strong>
+                    </div>
 
+                    <ul class="tour-details">
+                        <li><span class="icon">🧾</span> Mã tour: <a href="#" class="blue"><%=tourTicket.getIdTour() %></a></li>
+                        <li><span class="icon">📍</span> Khởi hành: <span class="blue"><%=tourTicket.getPlacestart() %></span></li>
+                        <li><span class="icon">📅</span> Ngày khởi hành: <span class="blue"><%=tourTicket.getStartDate() %></span></li>
+                        <li><span class="icon">⏳</span> Thời gian: <span class="blue"><%=tourTicket.getDuration() %></span></li>
+                        <li><span class="icon">🪑</span> Số chỗ còn: <span class="blue">CHUA RO PHAI SU LY SAO</span></li>
+                    </ul>
 
-                <!--               ===========================================================-->
-                <!-- Ngày 1 -->
-                <div>
-                    <%
-                    renderDescription(tourDetail.getDescriptD1(), out);
-                    %>
+                    <div class="tour-actions">
+                        <button class="btn-outline">Ngày khác</button>
+                        <button class="btn-primary">Đặt ngay</button>
+                    </div>
+
+                    <div class="tour-support">
+                        <button class="btn-call">📞 Gọi miễn phí qua internet</button>
+                        <button class="btn-outline">💬 Liên hệ tư vấn</button>
+                    </div>
                 </div>
-
-                <!-- Ngày 2 -->
-                <div>
-                    <%
-                    renderDescription(tourDetail.getDescriptD2(), out);
-                    %>
-
-                </div>
-                <% if (tourDetail.getDescriptD3() != null) { %>
-                <!-- Ngày 3 -->
-                <div>
-                    <%
-                    renderDescription(tourDetail.getDescriptD3(), out);
-                    %>
-
-                </div>
-                <% } %>
-
-
-
-                <% } else { %>
-                <p>Không tìm thấy thông tin chi tiết cho tour này.</p>
-                <% } %>
             </div>
-            <!--///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
-            <div class="right-content">
 
-                <div class="price">
-                    <span class="label">Giá:</span>
-                    <span class="original-price"><%= vnd.format(tourTicket.getPrice()+1000000) %> ₫</span> 
-                </div>
-                <span class="current-price"><%= vnd.format(tourTicket.getPrice())%> <span class="currency">₫</span></span> / Khách
-
-                <div class="discount-note">
-                    🎁 Đặt ngay để nhận được Ưu đãi online tiết kiệm thêm <strong>1,000K</strong>
-                </div>
-
-                <ul class="tour-details">
-                    <li><span class="icon">🧾</span> Mã tour: <a href="#" class="blue"><%=tourTicket.getIdTour() %></a></li>
-                    <li><span class="icon">📍</span> Khởi hành: <span class="blue"><%=tourTicket.getPlacestart() %></span></li>
-                    <li><span class="icon">📅</span> Ngày khởi hành: <span class="blue"><%=tourTicket.getStartDate() %></span></li>
-                    <li><span class="icon">⏳</span> Thời gian: <span class="blue"><%=tourTicket.getDuration() %></span></li>
-                    <li><span class="icon">🪑</span> Số chỗ còn: <span class="blue">CHUA RO PHAI SU LY SAO</span></li>
-                </ul>
-
-                <div class="tour-actions">
-                    <button class="btn-outline">Ngày khác</button>
-                    <button class="btn-primary">Đặt ngay</button>
-                </div>
-
-                <div class="tour-support">
-                    <button class="btn-call">📞 Gọi miễn phí qua internet</button>
-                    <button class="btn-outline">💬 Liên hệ tư vấn</button>
-                </div>
-            </div>
         </div>
 
         <%@include file="footer.jsp" %>
@@ -616,7 +624,7 @@
         out.println("<div>");
 //        out.println("<div class='collapsible'><h2>" + list[0] + "</h2> <span class='toggle-text'>chi tiết</span></div>");
         out.println("<div class='collapsible'><span><h2>" + list[0] + "</h2></span> <img class=\"muiten\" src=\"https://icons.iconarchive.com/icons/fa-team/fontawesome/128/FontAwesome-Angles-Down-icon.png\" width=\"128\" height=\"128\"></div>");
-        out.println("<div class='content'>"); 
+        out.println("<div class='sub_content'>"); 
             for (int i = 1; i < list.length; i++) {
                 if (i % 2 != 0) {
                     out.println("<h3>" + list[i] + "</h3>");

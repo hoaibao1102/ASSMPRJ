@@ -203,19 +203,32 @@
 
                     <ul class="menu" id="menu">
                         <li class="menu-item"><a href="index.jsp">Trang chủ</a></li>
-                        <li class="menu-item"><a href="DestinationForm.jsp">Điểm đến</a></li>
+                        <li class="menu-item">
+                            <form action="placeController" method="get">
+                                <input type="hidden" name="action" value="destination">
+                                <a href="DestinationForm.jsp">Điểm đến</a>
+                            </form>
+                            
+                        </li>
                         <li class="menu-item"><a href="about.jsp">Giới thiệu</a></li>
                         <li class="menu-item"><a href="contact.jsp">Liên hệ</a></li>
                     </ul>
 
                     <div class="right-section">
+
+                        <%
+                                String searchTour = request.getAttribute("searchTourInfor")+"";
+                                if(searchTour.equals("null")){
+                                     searchTour = "";
+                                }
+                        %>
                         <form action="placeController" method="get">
                             <div class="search-bar">
-                                <input type="text" class="search-input" name="searchTour" placeholder="Tìm kiếm ...">
+                                <input type="text" class="search-input" name="searchTour" placeholder="Tìm Kiếm...." value="<%=searchTour%>">
                                 <button class="search-button">🔍</button>
                             </div>
                         </form>
-                        
+
                         <div class="auth-buttons">
                             <%
                                  UserDTO user = (UserDTO)session.getAttribute("nameUser");
@@ -231,7 +244,7 @@
                             </div>                            
                             <form action="loginController" method="post" style="display:inline;">
                                 <input type="hidden" name="action" value="logout" />
-                                 <button type="submit" class="logout-btn">Đăng xuất</button>
+                                <button type="submit" class="logout-btn">Đăng xuất</button>
                             </form>
                             <%
                                 }

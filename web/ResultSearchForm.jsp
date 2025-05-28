@@ -12,25 +12,9 @@
     <head>
         <meta charset="UTF-8">
         <title>Danh sách Tour</title>
+        <link rel="stylesheet" href="assets/css/bodyCss.css"/>
         <style>
-            header {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                background-color: #2c3e50;
-                color: white;
-                padding: 1rem 2rem;
-                z-index: 1000;
-                box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-            }
-            body {
-                margin: 0;
-                padding-top: 70px;
-                font-family: Arial, sans-serif;
-                background: #f5f5f5;
-
-            }
+            
 
             h1 {
                 font-weight: 900;
