@@ -209,10 +209,13 @@
                     </ul>
 
                     <div class="right-section">
-                        <div class="search-bar">
-                            <input type="text" class="search-input" placeholder="Tìm kiếm tour...">
-                            <button class="search-button">🔍</button>
-                        </div>
+                        <form action="placeController" method="get">
+                            <div class="search-bar">
+                                <input type="text" class="search-input" name="searchTour" placeholder="Tìm kiếm ...">
+                                <button class="search-button">🔍</button>
+                            </div>
+                        </form>
+                        
                         <div class="auth-buttons">
                             <%
                                  UserDTO user = (UserDTO)session.getAttribute("nameUser");

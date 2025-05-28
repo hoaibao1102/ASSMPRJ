@@ -61,6 +61,18 @@ public class placeController extends HttpServlet {
             request.setAttribute("tourTicket", tourTicket);
             request.getRequestDispatcher("TourDetailForm.jsp").forward(request, response);
         }
+        
+        
+        //lay ra thông tin search
+        String searchTour = request.getParameter("searchTour");
+        //lay ra list tour
+        if (searchTour != null && !searchTour.trim().isEmpty()) {
+            searchTour = searchTour.trim(); // loại bỏ khoảng trắng đầu/cuối
+            List<TourDTO> tour2 = tdao.searchAnyInfor(searchTour);
+            request.setAttribute("tourList2", tour2);
+            request.setAttribute("searchTourInfor", searchTour);
+            request.getRequestDispatcher("ResultSearchForm.jsp").forward(request, response);
+        }
 
     }
 

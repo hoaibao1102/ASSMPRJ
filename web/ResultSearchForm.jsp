@@ -1,3 +1,9 @@
+<%-- 
+    Document   : ResultSearchForm
+    Created on : May 27, 2025, 11:40:01 PM
+    Author     : MSI PC
+--%>
+
 <%@page import="java.util.List"%>
 <%@page import="DTO.TourDTO"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -23,6 +29,7 @@
                 padding-top: 70px;
                 font-family: Arial, sans-serif;
                 background: #f5f5f5;
+
             }
 
             h1 {
@@ -49,9 +56,10 @@
                 letter-spacing: 0.5px;
             }
 
-            .container {
+            .container1      {
                 max-width: 1100px;
-                margin: 85px auto 0 auto;
+                margin: 50px auto 0 auto;
+
             }
 
             .tour-card {
@@ -136,50 +144,115 @@
                 outline: none;
             }
 
-/*====================================================================  css anh dau trang*/
-            .breadcrumb {
-                margin: 1rem 2rem; /* cách đều trái phải giống header padding */
-                font-size: 1rem;
-                color: #555;
-                font-family: Arial, sans-serif;
+/*            CSS PHAN THONG TIN NOI BAT*/
+
+            .section {
+                padding: 20px;
+                max-width: 1200px;
+                margin: 0 auto;
             }
 
-            .breadcrumb a {
-                color: #2980b9; /* màu xanh link */
-                text-decoration: none;
-                font-weight: 600;
-            }
-
-            .breadcrumb a:hover {
-                text-decoration: underline;
-            }
-
-            .breadcrumb .current {
-                color: #2c3e50; /* màu đậm hơn, font bold */
+            .title {
+                font-size: 28px;
                 font-weight: 700;
+                margin-bottom: 30px;
+                text-align: center;
+                color: #222;
             }
 
+            .grid {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr); /* 3 cột đều nhau */
+                gap: 24px;
+            }
+
+            form.card {
+                display: flex;
+                flex-direction: column;
+                background: white;
+                border-radius: 14px;
+                box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+                overflow: hidden;
+                cursor: pointer;
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+                height: 350px; /* chiều cao card cố định */
+            }
+
+            form.card:hover {
+                transform: scale(1.05);
+                box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+            }
+
+            form.card .image-wrapper {
+                flex: 1;
+                overflow: hidden;
+                border-radius: 14px 14px 0 0;
+                position: relative;
+            }
+
+            form.card img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                display: block;
+                transition: transform 0.3s ease;
+            }
+
+            form.card:hover img {
+                transform: scale(1.1);
+            }
+
+            form.card h4 {
+                padding: 12px 0;
+                margin: 0;
+                font-weight: 700;
+                font-size: 18px;
+                color: #222;
+                text-align: center;
+                user-select: none;
+            }
+
+            /* Nút overlay (nếu dùng) */
+            .btn-overlay {
+                position: absolute;
+                bottom: 16px;
+                left: 50%;
+                transform: translateX(-50%);
+                background-color: rgba(52, 152, 219, 0.8);
+                color: white;
+                border-radius: 24px;
+                padding: 10px 28px;
+                font-weight: 600;
+                font-size: 14px;
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity 0.3s ease;
+            }
+
+            form.card:hover .btn-overlay {
+                opacity: 1;
+                pointer-events: auto;
+            }
 
         </style>
     </head>
     <body>
         <%@include file="header.jsp" %>
         <%
-            List<TourDTO> tourList = (List<TourDTO>) request.getAttribute("tourList");
+            List<TourDTO> tourList = (List<TourDTO>) request.getAttribute("tourList2");
+            String searchTourInfor = request.getAttribute("searchTourInfor")+"";
         %>
-        
-        <div class="breadcrumb">
-            <a href="index.jsp">Trang chu</a> /
-            <a href="DestinationForm.jsp">Điểm đến</a> /
-            <span class="current">Du lịch <%= tourList.get(0).getDestination() %></span>
-        </div>
-        <div class="container">
-            <h1 style="margin-bottom: 20px;">Danh sách Tour <%=tourList.get(0).getDestination()%> </h1>
-            <p  style="margin-bottom: 20px;"><%=tourList.get(0).getPlaceDescription()%></p>
+
+
+        <div class="container1">
             <%
                 if (tourList != null && !tourList.isEmpty()) {
-                    for (TourDTO t : tourList) {
             %>
+            <h2 style="margin-bottom: 15px">DAY LA CAC TOUR LIEN QUAN TOI "<%=searchTourInfor%>"</h2>
+            <%
+            for (TourDTO t : tourList) {
+            %>
+
             <div class="tour-card">
                 <img class="tour-img" src="assets/images/places/<%=t.getImg()%>" alt="<%= t.getNameTour() %>">
                 <div class="tour-content">
@@ -205,14 +278,52 @@
             </div>
             <%
                     }
-                } else {
-            %>
-            <p>Không có tour nào được tìm thấy.</p>
-            <%
-                }
-            %>
+                } else { %>
+            <h2>Không tìm thấy thông tin liên quan đến: "<%=searchTourInfor%>"</h2>
+
+            <% } %>
         </div>
 
+        <div class="section">
+            <div class="title">Điểm đến nổi bật</div>
+            <div class="grid">
+                <div class="card1">
+                    <form class="card " action="placeController" method="post">
+                        <div class="image-wrapper">
+                            <img src="assets/images/danang2img.jpg" alt="Đà Nẵng" />
+                            <button type="submit" class="btn-overlay">Xem thêm</button>
+                        </div>
+                        <h4>Đà Nẵng</h4>
+                        <input type="hidden" name="location" value="Đà Nẵng" />
+                    </form>
+                </div>
+
+                <div class="card2">
+                    <form class="card " action="placeController" method="post">
+                        <div class="image-wrapper">
+                            <img src="assets/images/vungtauimg.jpg" alt="Vũng Tàu" />
+                            <button type="submit" class="btn-overlay">Xem thêm</button>
+                        </div>
+                        <h4>Vũng Tàu</h4>
+                        <input type="hidden" name="location" value="Vũng Tàu" />
+                    </form>
+                </div>
+
+                <div class="card3">
+                    <form class="card " action="placeController" method="post">
+                        <div class="image-wrapper">
+                            <img src="assets/images/nhatrangimg.jpg" alt="Nha Trang" />
+                            <button type="submit" class="btn-overlay">Xem thêm</button>
+                        </div>
+                        <h4>Nha Trang</h4>
+                        <input type="hidden" name="location" value="Nha Trang" />
+                    </form>
+                </div>
+
+
+            </div>
+        </div>
         <%@include file="footer.jsp" %>
     </body>
 </html>
+
