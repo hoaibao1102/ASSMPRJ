@@ -142,6 +142,10 @@
 
             <%
                 }
+            }else{
+                %>
+                <h1>khong co thong tin</h1>
+                <%
             }
             %>
         </div>

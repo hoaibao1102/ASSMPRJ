@@ -42,7 +42,6 @@ public class loginController extends HttpServlet {
 
         String url = LOGIN_PAGE;
         String action = request.getParameter("action");
-        String checkLogin = request.getParameter("checkLogin");
         HttpSession session = request.getSession(false);
 
         try {
@@ -65,12 +64,7 @@ public class loginController extends HttpServlet {
                         url = redirectUrl;
                         session.removeAttribute("redirectAfterLogin");
                     } else {
-                        // Nếu có checkLogin = daqua thì redirect Destination.jsp
-                        if ("daqua".equals(checkLogin)) {
-                            url = "Destination.jsp";
-                        } else {
-                            url = "index.jsp";
-                        }
+                        url = "index.jsp";
                     }
                 } else {
                     request.setAttribute("message", "Invalid login account");
@@ -91,9 +85,9 @@ public class loginController extends HttpServlet {
                 } else {
                     // Chưa login => lưu trang cần redirect sau login, rồi chuyển tới login page
                     session = request.getSession(true);
-                    session.setAttribute("redirectAfterLogin", "DestinationForm.jsp");
+                    session.setAttribute("redirectAfterLogin", "TourDetailForm.jsp");
                     url = LOGIN_PAGE;
-                    request.setAttribute("message", "Bạn cần đăng nhập để đặt hàng");
+                    request.setAttribute("message", "Login to place order");
                 }
 
             } else {
