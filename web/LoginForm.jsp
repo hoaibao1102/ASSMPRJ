@@ -11,42 +11,13 @@
     <head>
         <meta charset="UTF-8">
         <title>Đăng nhập</title>
+        <link rel="stylesheet" href="assets/css/bodyCss.css"/>
         <!-- Đưa CSS vào trực tiếp -->
         <style>
-
-            body {
-                font-family: Arial, sans-serif;
-                background-color: #f4f6f9;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                min-height: 100vh;
-                margin: 0;
-                flex-direction: column;
+            .content_sub{
+                margin: 0 auto;
             }
-
-            header {
-                width: 100%;
-                background-color: #2c3e50;
-                padding: 1rem;
-                text-align: center;
-                color: white;
-                position: fixed;
-                top: 0;
-                left: 0;
-                z-index: 999;
-            }
-
-            footer {
-                width: 100%;
-                background-color: #2c3e50;
-                padding: 1rem;
-                text-align: center;
-                color: white;
-                position: relative;
-                bottom: 0;
-            }
-
+          
             .login-container {
                 flex-grow: 1;
                 background-color: #ffffff;
@@ -57,7 +28,7 @@
                 max-width: 400px;
                 box-sizing: border-box;
                 text-align: center;
-                margin-top: 10rem; /* Đảm bảo form không bị che khuất bởi header */
+                margin-top: 9rem; /* Đảm bảo form không bị che khuất bởi header */
                 margin-bottom: 3rem; /* Để form không bị đè lên footer */
             }
 
@@ -138,7 +109,8 @@
     </head>
     <body>
         <%@include file="header.jsp"%>
-        <div class="login-container">
+        <div class="content content_sub">
+            <div class=" login-container">
             <h2>Đăng nhập</h2>
 
             <form action="loginController" method="post"> 
@@ -160,6 +132,8 @@
                 Bạn chưa có tài khoản? <a href="RegisForm.jsp">Đăng ký ngay</a>
             </div>
         </div>
+        </div>
+        
         <%@include file="footer.jsp"%>
     </body>
 </html>

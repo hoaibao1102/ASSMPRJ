@@ -32,6 +32,7 @@
         .footer-column {
             flex: 1;
             min-width: 250px;
+            margin-left: 13%;
         }
 
         .footer-column h4 {
@@ -79,7 +80,7 @@
             <!-- Cột liên hệ -->
             <div class="footer-column">
                 <h4>Liên hệ</h4>
-                <p>Địa chỉ: 123 Đường Du Lịch, Quận 1, TP.HCM</p>
+                <p>Địa chỉ: Lô E2a-7, Đường D1, Khu CNC, P. Long Thạnh Mỹ, TP. Thủ Đức, TP. HCM</p>
                 <p>Email: support@vntours.com</p>
                 <p>Hotline: 0123 456 789</p>
             </div>

@@ -6,25 +6,8 @@
     <head>
         <meta charset="UTF-8">
         <title>Danh sách Tour</title>
+        <link rel="stylesheet" href="assets/css/bodyCss.css"/>
         <style>
-            header {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                background-color: #2c3e50;
-                color: white;
-                padding: 1rem 2rem;
-                z-index: 1000;
-                box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-            }
-            body {
-                margin: 0;
-                padding-top: 70px;
-                font-family: Arial, sans-serif;
-                background: #f5f5f5;
-            }
-
             h1 {
                 font-weight: 900;
                 font-size: 3rem;
@@ -136,7 +119,7 @@
                 outline: none;
             }
 
-/*====================================================================  css anh dau trang*/
+            /*====================================================================  css anh dau trang*/
             .breadcrumb {
                 margin: 1rem 2rem; /* cách đều trái phải giống header padding */
                 font-size: 1rem;
@@ -167,50 +150,51 @@
         <%
             List<TourDTO> tourList = (List<TourDTO>) request.getAttribute("tourList");
         %>
-        
-        <div class="breadcrumb">
-            <a href="index.jsp">Trang chu</a> /
-            <a href="DestinationForm.jsp">Điểm đến</a> /
-            <span class="current">Du lịch <%= tourList.get(0).getDestination() %></span>
-        </div>
-        <div class="container">
-            <h1 style="margin-bottom: 20px;">Danh sách Tour <%=tourList.get(0).getDestination()%> </h1>
-            <p  style="margin-bottom: 20px;"><%=tourList.get(0).getPlaceDescription()%></p>
-            <%
-                if (tourList != null && !tourList.isEmpty()) {
-                    for (TourDTO t : tourList) {
-            %>
-            <div class="tour-card">
-                <img class="tour-img" src="assets/images/places/<%=t.getImg()%>" alt="<%= t.getNameTour() %>">
-                <div class="tour-content">
-                    <div>
-                        <div class="tour-title"><%= t.getNameTour() %></div>
-                        <div class="tour-meta">🆔 Mã tour: <strong><%= t.getIdTour() %></strong></div>
-                        <div class="tour-meta">📍 Khởi hành: <strong><%= t.getPlacestart() %></strong></div>
-                        <div class="tour-meta">🕒 Thời gian: <strong><%= t.getDuration() %></strong></div>
-                        <div class="tour-meta">✈️ Phương tiện: <strong><%= t.getTransport() %></strong></div>
-                        <div class="tour-meta tour-dates">
-                            📅 Ngày khởi hành: <span><%= t.getStartDate() %></span>
-                        </div>
-                        <div class="price">Giá từ: <%= String.format("%,.0f", t.getPrice()) %> đ</div>
-                    </div>
-
-                    <!-- Form sử dụng input submit cho nút Xem chi tiết -->
-                    <form action="placeController" method="get">
-                        <input type="hidden" name="action" value="tourDetail" />
-                        <input type="hidden" name="idTour" value="<%=t.getIdTour()%>" />
-                        <input class="btn-detail" type="submit" value="Xem chi tiết" />
-                    </form>
-                </div>
+        <div class="content">
+            <div class="breadcrumb">
+                <a href="index.jsp">Trang chu</a> /
+                <a href="DestinationForm.jsp">Điểm đến</a> /
+                <span class="current">Du lịch <%= tourList.get(0).getDestination() %></span>
             </div>
-            <%
+            <div class="container">
+                <h1 style="margin-bottom: 20px;">Danh sách Tour <%=tourList.get(0).getDestination()%> </h1>
+                <p  style="margin-bottom: 20px;"><%=tourList.get(0).getPlaceDescription()%></p>
+                <%
+                    if (tourList != null && !tourList.isEmpty()) {
+                        for (TourDTO t : tourList) {
+                %>
+                <div class="tour-card">
+                    <img class="tour-img" src="assets/images/places/<%=t.getImg()%>" alt="<%= t.getNameTour() %>">
+                    <div class="tour-content">
+                        <div>
+                            <div class="tour-title"><%= t.getNameTour() %></div>
+                            <div class="tour-meta">🆔 Mã tour: <strong><%= t.getIdTour() %></strong></div>
+                            <div class="tour-meta">📍 Khởi hành: <strong><%= t.getPlacestart() %></strong></div>
+                            <div class="tour-meta">🕒 Thời gian: <strong><%= t.getDuration() %></strong></div>
+                            <div class="tour-meta">✈️ Phương tiện: <strong><%= t.getTransport() %></strong></div>
+                            <div class="tour-meta tour-dates">
+                                📅 Ngày khởi hành: <span><%= t.getStartDate() %></span>
+                            </div>
+                            <div class="price">Giá từ: <%= String.format("%,.0f", t.getPrice()) %> đ</div>
+                        </div>
+
+                        <!-- Form sử dụng input submit cho nút Xem chi tiết -->
+                        <form action="placeController" method="get">
+                            <input type="hidden" name="action" value="tourDetail" />
+                            <input type="hidden" name="idTour" value="<%=t.getIdTour()%>" />
+                            <input class="btn-detail" type="submit" value="Xem chi tiết" />
+                        </form>
+                    </div>
+                </div>
+                <%
+                        }
+                    } else {
+                %>
+                <p>Không có tour nào được tìm thấy.</p>
+                <%
                     }
-                } else {
-            %>
-            <p>Không có tour nào được tìm thấy.</p>
-            <%
-                }
-            %>
+                %>
+            </div>
         </div>
 
         <%@include file="footer.jsp" %>

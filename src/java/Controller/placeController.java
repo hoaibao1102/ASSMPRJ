@@ -5,8 +5,10 @@
  */
 package Controller;
 
+import DAO.PlacesDAO;
 import DAO.TourDAO;
 import DAO.TourDetailDAO;
+import DTO.PlacesDTO;
 import DTO.TourDTO;
 import DTO.TourDetailDTO;
 import jakarta.servlet.RequestDispatcher;
@@ -26,6 +28,8 @@ import java.util.List;
 @WebServlet(name = "placeController", urlPatterns = {"/placeController"})
 public class placeController extends HttpServlet {
 
+    private static String URL = "index.jsp";
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -39,39 +43,62 @@ public class placeController extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         TourDAO tdao = new TourDAO();
-        String location = request.getParameter("location");
+        PlacesDAO pdao = new PlacesDAO();
+        String action = request.getParameter("action");
+        String url = URL;
 
-        //lay ra list tour
-        if (location != null && !location.trim().isEmpty()) {
-            location = location.trim(); // loại bỏ khoảng trắng đầu/cuối
-            List<TourDTO> tour = tdao.search(location);
-            request.setAttribute("tourList", tour);
-            request.getRequestDispatcher("TourListForm.jsp").forward(request, response);
-        }
+        try {
+            if (action.equals("destination")) {
+                List<PlacesDTO> places = pdao.readAll();
+                if (places == null) {
+                    System.out.println("khong co anh oi");
+                } else {
+                    for (PlacesDTO place : places) {
+                        System.out.println(place);
+                    }
+                }
 
-        //di vao chi tiet tour    
-        TourDetailDAO tdDao = new TourDetailDAO();
-        String idTour = request.getParameter("idTour");
-        if (idTour != null && !idTour.trim().isEmpty()) {
-            TourDetailDTO tourDetail = tdDao.readbyID(idTour);
+                request.setAttribute("placeList", places);
 
-            TourDTO tourTicket = tdao.readbyID(idTour); 
-            
-            request.setAttribute("tourDetail", tourDetail);
-            request.setAttribute("tourTicket", tourTicket);
-            request.getRequestDispatcher("TourDetailForm.jsp").forward(request, response);
-        }
-        
-        
-        //lay ra thông tin search
-        String searchTour = request.getParameter("searchTour");
-        //lay ra list tour
-        if (searchTour != null && !searchTour.trim().isEmpty()) {
-            searchTour = searchTour.trim(); // loại bỏ khoảng trắng đầu/cuối
-            List<TourDTO> tour2 = tdao.searchAnyInfor(searchTour);
-            request.setAttribute("tourList2", tour2);
-            request.setAttribute("searchTourInfor", searchTour);
-            request.getRequestDispatcher("ResultSearchForm.jsp").forward(request, response);
+                url = "DestinationForm.jsp";
+
+            }
+
+//            String location = request.getParameter("location");
+//            //lay ra list tour
+//            if (location != null && !location.trim().isEmpty()) {
+//                location = location.trim(); // loại bỏ khoảng trắng đầu/cuối
+//                List<TourDTO> tour = tdao.search(location);
+//                request.setAttribute("tourList", tour);
+//                request.getRequestDispatcher("TourListForm.jsp").forward(request, response);
+//            }
+//
+//            //di vao chi tiet tour    
+//            TourDetailDAO tdDao = new TourDetailDAO();
+//            String idTour = request.getParameter("idTour");
+//            if (idTour != null && !idTour.trim().isEmpty()) {
+//                TourDetailDTO tourDetail = tdDao.readbyID(idTour);
+//
+//                TourDTO tourTicket = tdao.readbyID(idTour);
+//
+//                request.setAttribute("tourDetail", tourDetail);
+//                request.setAttribute("tourTicket", tourTicket);
+//                request.getRequestDispatcher("TourDetailForm.jsp").forward(request, response);
+//            }
+//
+//            //lay ra thông tin search
+//            String searchTour = request.getParameter("searchTour");
+//            //lay ra list tour
+//            if (searchTour != null && !searchTour.trim().isEmpty()) {
+//                searchTour = searchTour.trim(); // loại bỏ khoảng trắng đầu/cuối
+//                List<TourDTO> tour2 = tdao.searchAnyInfor(searchTour);
+//                request.setAttribute("tourList2", tour2);
+//                request.setAttribute("searchTourInfor", searchTour);
+//                request.getRequestDispatcher("ResultSearchForm.jsp").forward(request, response);
+//            }
+        } catch (Exception e) {
+        } finally {
+            request.getRequestDispatcher(url).forward(request, response);
         }
 
     }

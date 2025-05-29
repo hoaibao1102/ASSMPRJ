@@ -10,38 +10,10 @@
     <head>
         <meta charset="UTF-8">
         <title>Register - Tour Booking</title>
+        <link rel="stylesheet" href="assets/css/bodyCss.css"/>
         <style>
-            body {
-                font-family: Arial, sans-serif;
-                background-color: #f4f6f9;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                min-height: 100vh;
-                margin: 0;
-                flex-direction: column;
-            }
-
-            header {
-                width: 100%;
-                background-color: #2c3e50;
-                padding: 1rem;
-                text-align: center;
-                color: white;
-                position: fixed;
-                top: 0;
-                left: 0;
-                z-index: 999;
-            }
-
-            footer {
-                width: 100%;
-                background-color: #2c3e50;
-                padding: 1rem;
-                text-align: center;
-                color: white;
-                position: relative;
-                bottom: 0;
+            .content_sub{
+                margin: 0 auto;
             }
 
             /* Định dạng container của form đăng ký */
@@ -54,7 +26,7 @@
                 max-width: 450px;
                 box-sizing: border-box;
                 text-align: center;
-                margin-top: 6rem;/* Đảm bảo form không bị che khuất bởi header */
+                margin-top: 2rem;/* Đảm bảo form không bị che khuất bởi header */
                 margin-bottom: 2rem; /* Để form không bị đè lên footer */
             }
 
@@ -140,72 +112,75 @@
     <body>
 
         <%@include file="header.jsp" %>
-        <div class="register-container">
-            <h2>Create Your Account</h2>
+        <div class="content content_sub">
+            <div class="register-container">
+                <h2>Create Your Account</h2>
 
-            <form action="regisController" method="post">
-                <input type="hidden" value="regis" name="action"> 
-                <label for="name">Full Name</label>
-                <input type="text" id="name" name="txtFullname" placeholder="John Doe" required >
-                <%
-                        String txtFullname_error = request.getAttribute("txtFullname_error")+"";
-                %>
-                <div class="error-mess">
-                   <i> <%=txtFullname_error.equals("null")?"":txtFullname_error%></i>  
+                <form action="regisController" method="post">
+                    <input type="hidden" value="regis" name="action"> 
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" name="txtFullname" placeholder="John Doe" required >
+                    <%
+                            String txtFullname_error = request.getAttribute("txtFullname_error")+"";
+                    %>
+                    <div class="error-mess">
+                        <i> <%=txtFullname_error.equals("null")?"":txtFullname_error%></i>  
+                    </div>
+
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="txtEmail" placeholder="example@email.com" required>
+                    <%
+                            String txtEmail_error = request.getAttribute("txtEmail_error")+"";
+                    %>
+                    <div class="error-mess">
+                        <i> <%=txtEmail_error.equals("null")?"":txtEmail_error%></i> 
+                    </div>
+
+
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone"  name="txtPhone" placeholder="0123 456 789" required>
+                    <%
+                                            String txtPhone_error = request.getAttribute("txtPhone_error")+"";
+                    %>
+                    <div class="error-mess">
+                        <i> <%=txtPhone_error.equals("null")?"":txtPhone_error%></i> 
+                    </div>
+
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="txtPassword" placeholder="********" required>
+                    <%
+                                            String txtPassword_error = request.getAttribute("txtPassword_error")+"";
+                    %>
+                    <div class="error-mess">
+                        <i> <%=txtPassword_error.equals("null")?"":txtPassword_error%></i> 
+                    </div>
+
+
+
+                    <label for="confirm">Confirm Password</label>
+                    <input type="password" id="confirm" name="txtConfirmPassword" placeholder="********" required>
+                    <%
+                                            String txtConfirmPassword_error = request.getAttribute("txtConfirmPassword_error")+"";
+                    %>
+                    <div class="error-mess">
+                        <span "><i> <%=txtConfirmPassword_error.equals("null")?"":txtConfirmPassword_error%></i> </span>  
+                    </div>
+
+
+                    <div class="terms">
+                        <input type="checkbox" id="agree" required>
+                        <label for="agree">I agree to the <a href="#">Terms & Conditions</a></label>
+                    </div>
+
+                    <button type="submit">Sign Up</button>
+                </form>
+
+                <div class="login-link">
+                    Already have an account? <a href="LoginForm.jsp">Login here</a>
                 </div>
-
-                <label for="email">Email Address</label>
-                <input type="email" id="email" name="txtEmail" placeholder="example@email.com" required>
-                <%
-                        String txtEmail_error = request.getAttribute("txtEmail_error")+"";
-                %>
-                <div class="error-mess">
-                    <i> <%=txtEmail_error.equals("null")?"":txtEmail_error%></i> 
-                </div>
-
-
-                <label for="phone">Phone Number</label>
-                <input type="tel" id="phone"  name="txtPhone" placeholder="0123 456 789" required>
-                <%
-                                        String txtPhone_error = request.getAttribute("txtPhone_error")+"";
-                %>
-                <div class="error-mess">
-                    <i> <%=txtPhone_error.equals("null")?"":txtPhone_error%></i> 
-                </div>
-
-                <label for="password">Password</label>
-                <input type="password" id="password" name="txtPassword" placeholder="********" required>
-                <%
-                                        String txtPassword_error = request.getAttribute("txtPassword_error")+"";
-                %>
-                <div class="error-mess">
-                    <i> <%=txtPassword_error.equals("null")?"":txtPassword_error%></i> 
-                </div>
-
-
-
-                <label for="confirm">Confirm Password</label>
-                <input type="password" id="confirm" name="txtConfirmPassword" placeholder="********" required>
-                <%
-                                        String txtConfirmPassword_error = request.getAttribute("txtConfirmPassword_error")+"";
-                %>
-                <div class="error-mess">
-                    <span "><i> <%=txtConfirmPassword_error.equals("null")?"":txtConfirmPassword_error%></i> </span>  
-                </div>
-
-
-                <div class="terms">
-                    <input type="checkbox" id="agree" required>
-                    <label for="agree">I agree to the <a href="#">Terms & Conditions</a></label>
-                </div>
-
-                <button type="submit">Sign Up</button>
-            </form>
-
-            <div class="login-link">
-                Already have an account? <a href="LoginForm.jsp">Login here</a>
             </div>
         </div>
+
         <%@include file="footer.jsp" %>
     </body>
 </html>
