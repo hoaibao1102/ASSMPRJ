@@ -509,10 +509,11 @@
                         <li><span class="icon">🪑</span> Số chỗ còn: <span class="blue">CHUA RO PHAI SU LY SAO</span></li>
                     </ul>
 
-                    <div class="tour-actions">
+                    <form action="loginController" method="get" class="tour-actions">
+                        <input type="hidden" name="action" value="order">
                         <button class="btn-outline">Ngày khác</button>
-                        <button class="btn-primary">Đặt ngay</button>
-                    </div>
+                        <button class="btn-primary" >Đặt ngay</button>
+                    </form>
 
                     <div class="tour-support">
                         <button class="btn-call">📞 Gọi miễn phí qua internet</button>
