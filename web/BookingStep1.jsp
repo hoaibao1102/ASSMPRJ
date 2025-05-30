@@ -450,6 +450,7 @@
                 </div>
 
                 <div class="note-section">
+                    
                     <label class="note-label"><strong>GHI CHÚ</strong></label>
                     <p class="note-subtext">Quý khách có ghi chú lưu ý gì, hãy nói với chúng tôi</p>
                     <textarea
@@ -457,6 +458,7 @@
                         rows="4"
                         class="note-textarea"
                         placeholder="Vui lòng nhập nội dung lời nhắn..."></textarea>
+                    
                 </div>
 
 
