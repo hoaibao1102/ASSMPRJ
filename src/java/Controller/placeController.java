@@ -77,7 +77,7 @@ public class placeController extends HttpServlet {
                     request.setAttribute("tourTicket", tourTicket);
                     url = "TourDetailForm.jsp";
                 }
-            } else if (action.equals("search")) {
+                } else if (action.equals("search")) {
                 //lay ra thông tin search
                 String searchTour = request.getParameter("searchTour");
                 //lay ra list tour
