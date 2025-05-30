@@ -46,7 +46,7 @@ public class placeController extends HttpServlet {
         PlacesDAO pdao = new PlacesDAO();
         String action = request.getParameter("action");
         String url = URL;
-
+        
         try {
             if (action.equals("destination")) {
                 List<PlacesDTO> places = pdao.readAll();
