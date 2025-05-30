@@ -51,7 +51,6 @@ public class placeController extends HttpServlet {
             if (action.equals("destination")) {
                 List<PlacesDTO> places = pdao.readAll();
                 request.setAttribute("placeList", places);
-
                 url = "DestinationForm.jsp";
 
             } else if (action.equals("takeListTour")) {
