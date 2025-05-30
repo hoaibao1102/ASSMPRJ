@@ -197,6 +197,7 @@
                                 <button type="submit" class="btn-overlay">Xem thêm</button>
                             </div>
                             <h4>Đà Nẵng</h4>
+                            <input type="hidden" name="action" value="takeListTour" />
                             <input type="hidden" name="location" value="Đà Nẵng" />
                         </form>
                     </div>
@@ -208,6 +209,7 @@
                                 <button type="submit" class="btn-overlay">Xem thêm</button>
                             </div>
                             <h4>Vũng Tàu</h4>
+                            <input type="hidden" name="action" value="takeListTour" />
                             <input type="hidden" name="location" value="Vũng Tàu" />
                         </form>
                     </div>
@@ -219,6 +221,7 @@
                                 <button type="submit" class="btn-overlay">Xem thêm</button>
                             </div>
                             <h4>Nha Trang</h4>
+                            <input type="hidden" name="action" value="takeListTour" />
                             <input type="hidden" name="location" value="Nha Trang" />
                         </form>
                     </div>

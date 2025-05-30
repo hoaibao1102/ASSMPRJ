@@ -3,6 +3,7 @@
     Created on : May 29, 2025, 11:08:57 PM
     Author     : MSI PC
 --%>
+<%@ page import="java.time.LocalDate, java.time.format.DateTimeFormatter" %>
 <%@ page import="DTO.UserDTO"%>
 <%@ page import="DTO.TourDTO"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -146,7 +147,7 @@
                 color: red;
             }
 
-            input[type="text"], input[type="email"] {
+            .form-group input[type="text"], input[type="email"] {
                 padding: 10px;
                 border: 1px solid #ccc;
                 border-radius: 6px;
@@ -416,10 +417,7 @@
                             <label>Email <span class="required">*</span></label>
                             <input type="email" value="<%=account.getEmail()%>" />
                         </div>
-                        <div class="form-group">
-                            <label>Địa chỉ</label>
-                            <input type="text" placeholder="CHUA XU LY" />
-                        </div>
+
                     </div>
 
                     <h3>HÀNH KHÁCH</h3>
@@ -481,16 +479,27 @@
                     </div>
                     <!--============================================================================= CAN DUOC XU LY
                     =============================================================================-->
+                    <%
+                        String startDateStr = tour.getStartDate();
+                        LocalDate startDate = LocalDate.parse(startDateStr, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                        LocalDate endDate;
+                        String duration = tour.getDuration();
+                        
+                        if("2 ngày 1 đêm".equals(duration)){
+                            endDate = startDate.plusDays(2);
+                        } else {
+                            endDate = startDate.plusDays(3);
+                        }
+                        String endDateStr = endDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                    %>
+
+                    
                     <div class="flight-info">
                         <div>
                             <p><strong>Ngày đi: <%=tour.getStartDate()%></strong></p>
-                            <p>GIÒ NAO NÈ</p>
-
                         </div>
                         <div>
-                            <p><strong>Ngày về:  NGHI CÁCH XU LY ÐI</strong></p>
-                            <p>GIO NAO NÈ</p>
-
+                            <p><strong>Ngày về: <%=endDateStr%></strong></p>
                         </div>
                     </div>
 
@@ -534,13 +543,15 @@
                         <p class="total-amount">0 đ</p>
                     </div>
 
-                            <form action="orderController" method="get" onsubmit="return prepareSubmit()">
-                                <input type="hidden" name="action" value="oder_step2">
-                                <input type="hidden" id="totalBill" name="totalBill" value="">
-                                <button class="btn-submit" style="submit">Ðặt tour</button>
-                            </form>
+                    <form action="orderController" method="get" onsubmit="return prepareSubmit()">
+                        <input type="hidden" name="action" value="call_oder_step2">
+                        <input type="hidden" id="totalBill" name="totalBill" value="">
+                        <input type="hidden" id="numberTicket" name="numberTicket" value="">
+                       
+                        <button class="btn-submit" style="submit">Ðặt tour</button>
+                    </form>
 
-                            
+
 
                     <!-- =============================================================================
                     =============================================================================                   -->
@@ -553,7 +564,7 @@
     <%@include file="footer.jsp" %>
 
 
-    
+
     <script>
         const pricePerAdult = <%= tour.getPrice()%>; // Lấy giá tour từ server
         const discountChild = 0.05;
@@ -573,13 +584,15 @@
             const adultCount = parseInt(document.getElementById("adult-count").innerText);
             const childCount = parseInt(document.getElementById("child-count").innerText);
             const babyCount = parseInt(document.getElementById("baby-count").innerText);
-
+            const totalCount = adultCount + childCount + babyCount;
+            
             const totalAdult = adultCount * pricePerAdult;
             const totalChild = childCount * pricePerAdult * (1 - discountChild);
             const totalBaby = babyCount * pricePerAdult * (1 - discountBaby);
             const total = totalAdult + totalChild + totalBaby;
-            
+
             document.getElementById("totalBill").value = Math.floor(total);
+            document.getElementById("numberTicket").value = Math.floor(totalCount);
 
             const totalChild_down = childCount * pricePerAdult * discountChild;
             const totalBaby_down = babyCount * pricePerAdult * discountBaby;
