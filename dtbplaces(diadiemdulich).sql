@@ -13,6 +13,17 @@ CREATE TABLE Places (
     placename NVARCHAR(100) NOT NULL,
     description nvarchar(500)
 );
+--update thêm ảnh trong bảng này nhé
+ALTER TABLE Places
+ADD img_places varchar(50) ;
+-- sau đó thêm ảnh nè
+UPDATE Places SET img_places = 'nhatrangimg.jpg' WHERE idplace = 1;
+UPDATE Places SET img_places = 'vungtauimg.jpg' WHERE idplace = 2;
+UPDATE Places SET img_places = 'hueimg.jpg' WHERE idplace = 3;
+UPDATE Places SET img_places = 'hanoiimg.jpg' WHERE idplace = 4;
+UPDATE Places SET img_places = 'dalatimg.webp' WHERE idplace = 5;
+UPDATE Places SET img_places = 'danang2img.jpg' WHERE idplace = 6;
+-- và tiếp tục cho các nơi khác...
 
 CREATE TABLE Transport (
     transport_id INT PRIMARY KEY,

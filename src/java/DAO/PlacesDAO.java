@@ -29,27 +29,27 @@ public class PlacesDAO implements IDAO<PlacesDTO, String>{
 
     @Override
     public List<PlacesDTO> readAll() {
-//        String sql = "SELECT idplace, placename,description,img_places FROM dbo.Places ";
-//        List<PlacesDTO> list = new ArrayList<>();
-//        try {
-//            Connection conn = DBUtils.getConnection();
-//            PreparedStatement ps = conn.prepareStatement(sql);
-//            ResultSet rs = ps.executeQuery();
-//
-//            while (rs.next()) {
-//                PlacesDTO newT = new PlacesDTO( rs.getInt("idplace"),
-//                                                rs.getString("placename"), 
-//                                                rs.getString("description"), 
-//                                                rs.getString("img_places"));
-//                list.add(newT);
-//            }
-//            return list;
-//
-//        } catch (ClassNotFoundException ex) {
-//            Logger.getLogger(TourDAO.class.getName()).log(Level.SEVERE, null, ex);
-//        } catch (SQLException ex) {
-//            Logger.getLogger(TourDAO.class.getName()).log(Level.SEVERE, null, ex);
-//        }
+        String sql = "SELECT idplace, placename,description,img_places FROM dbo.Places ";
+        List<PlacesDTO> list = new ArrayList<>();
+        try {
+            Connection conn = DBUtils.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                PlacesDTO newT = new PlacesDTO( rs.getInt("idplace"),
+                                                rs.getString("placename"), 
+                                                rs.getString("description"), 
+                                                rs.getString("img_places"));
+                list.add(newT);
+            }
+            return list;
+
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(TourDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(TourDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return null;
         
     }

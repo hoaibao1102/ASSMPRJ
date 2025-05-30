@@ -13,6 +13,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 
 /**
@@ -36,37 +37,61 @@ public class loginController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+
         String url = LOGIN_PAGE;
+        String action = request.getParameter("action");
+        HttpSession session = request.getSession(false);
+
         try {
-            String action = request.getParameter("action");
             if (action == null) {
                 url = LOGIN_PAGE;
-            } else {
-                if (action.equals("login")) {
-                    String txtEmailOrPhone = request.getParameter("txtEmailOrPhone");
-                    String txtPassword = request.getParameter("txtPassword");
-                    
-                    //Add null/empty check
-                    if (txtEmailOrPhone == null || txtPassword == null 
-                        || txtEmailOrPhone.trim().isEmpty() || txtPassword.trim().isEmpty()) {
-                        request.setAttribute("message", "Please provide both account and password.");
-                        url = LOGIN_PAGE;
-                    }else if (isValidLogin(txtEmailOrPhone, txtPassword)) {
-                        url = "index.jsp";
-                        UserDTO user = getUser(txtEmailOrPhone);
-                        request.getSession().setAttribute("nameUser", user); //should be better naming like 'loggedInUser'
+            } else if ("login".equals(action)) {
+                // Lấy thông tin đăng nhập từ form
+                String txtEmailOrPhone = request.getParameter("txtEmailOrPhone");
+                String txtPassword = request.getParameter("txtPassword");
 
+                if (isValidLogin(txtEmailOrPhone, txtPassword)) {
+                    // Lấy user và lưu vào session
+                    UserDTO user = getUser(txtEmailOrPhone);
+                    session = request.getSession(true);
+                    session.setAttribute("nameUser", user);
+
+                    // Kiểm tra session có lưu URL redirect không
+                    String redirectUrl = (String) session.getAttribute("redirectAfterLogin");
+                    if (redirectUrl != null) {
+                        url = redirectUrl;
+                        session.removeAttribute("redirectAfterLogin");
                     } else {
-                        request.setAttribute("message", "Invalid login account ");
-                        url = LOGIN_PAGE;
+                        url = "index.jsp";
                     }
-                } else if (action.equals("logout")) {
-                    url = "index.jsp";
-                    request.getSession().invalidate();
+                } else {
+                    request.setAttribute("message", "Invalid login account");
+                    url = LOGIN_PAGE;
                 }
 
-            }
+            } else if ("logout".equals(action)) {
+                // Xử lý logout: invalidate session nếu có
+                if (session != null) {
+                    session.invalidate();
+                }
+                url = "index.jsp";
 
+            } else if ("order".equals(action)) {
+                // Truy cập trang đặt hàng
+                if (session != null && session.getAttribute("nameUser") != null) {
+                    url = "OrderForm.jsp";
+                } else {
+                    // Chưa login => lưu trang cần redirect sau login, rồi chuyển tới login page
+                    session = request.getSession(true);
+                    session.setAttribute("redirectAfterLogin", "TourDetailForm.jsp");
+                    url = LOGIN_PAGE;
+                    request.setAttribute("message", "Login to place order");
+                }
+
+            } else {
+                // Các action khác, về trang đăng nhập mặc định
+                url = LOGIN_PAGE;
+            }
         } catch (Exception e) {
             log("Error in loginController: " + e.toString());
         } finally {

@@ -50,52 +50,47 @@ public class placeController extends HttpServlet {
         try {
             if (action.equals("destination")) {
                 List<PlacesDTO> places = pdao.readAll();
-                if (places == null) {
-                    LOGGER.warning("No places found!");
-                } else {
-                    for (PlacesDTO place : places) {
-                        LOGGER.info(place.toString());
-                    }
-                }
-
                 request.setAttribute("placeList", places);
 
                 url = "DestinationForm.jsp";
 
+            } else if (action.equals("takeListTour")) {
+                String location = request.getParameter("location");
+                //lay ra list tour
+                if (location != null && !location.trim().isEmpty()) {
+                    location = location.trim(); // loại bỏ khoảng trắng đầu/cuối
+                    List<TourDTO> tour = tdao.search(location);
+                    request.setAttribute("tourList", tour);
+                    url = "TourListForm.jsp";
+                }
+
+            } else if (action.equals("tourDetail")) {
+                //di vao chi tiet tour    
+                TourDetailDAO tdDao = new TourDetailDAO();
+                String idTour = request.getParameter("idTour");
+                if (idTour != null && !idTour.trim().isEmpty()) {
+                    TourDetailDTO tourDetail = tdDao.readbyID(idTour);
+
+                    TourDTO tourTicket = tdao.readbyID(idTour);
+
+                    request.setAttribute("tourDetail", tourDetail);
+                    request.setAttribute("tourTicket", tourTicket);
+                    url = "TourDetailForm.jsp";
+                }
+            } else if (action.equals("search ")) {
+                //lay ra thông tin search
+                String searchTour = request.getParameter("searchTour");
+                //lay ra list tour
+                if (searchTour != null && !searchTour.trim().isEmpty()) {
+                    searchTour = searchTour.trim(); // loại bỏ khoảng trắng đầu/cuối
+                    List<TourDTO> tour2 = tdao.searchAnyInfor(searchTour);
+                    request.setAttribute("tourList2", tour2);
+                    request.setAttribute("searchTourInfor", searchTour);
+                    url ="ResultSearchForm.jsp";
+                   
+                }
             }
 
-//            String location = request.getParameter("location");
-//            //lay ra list tour
-//            if (location != null && !location.trim().isEmpty()) {
-//                location = location.trim(); // loại bỏ khoảng trắng đầu/cuối
-//                List<TourDTO> tour = tdao.search(location);
-//                request.setAttribute("tourList", tour);
-//                request.getRequestDispatcher("TourListForm.jsp").forward(request, response);
-//            }
-//
-//            //di vao chi tiet tour    
-//            TourDetailDAO tdDao = new TourDetailDAO();
-//            String idTour = request.getParameter("idTour");
-//            if (idTour != null && !idTour.trim().isEmpty()) {
-//                TourDetailDTO tourDetail = tdDao.readbyID(idTour);
-//
-//                TourDTO tourTicket = tdao.readbyID(idTour);
-//
-//                request.setAttribute("tourDetail", tourDetail);
-//                request.setAttribute("tourTicket", tourTicket);
-//                request.getRequestDispatcher("TourDetailForm.jsp").forward(request, response);
-//            }
-//
-//            //lay ra thông tin search
-//            String searchTour = request.getParameter("searchTour");
-//            //lay ra list tour
-//            if (searchTour != null && !searchTour.trim().isEmpty()) {
-//                searchTour = searchTour.trim(); // loại bỏ khoảng trắng đầu/cuối
-//                List<TourDTO> tour2 = tdao.searchAnyInfor(searchTour);
-//                request.setAttribute("tourList2", tour2);
-//                request.setAttribute("searchTourInfor", searchTour);
-//                request.getRequestDispatcher("ResultSearchForm.jsp").forward(request, response);
-//            }
         } catch (Exception e) {
             LOGGER.severe("Error in placeController: " + e.toString());
         } finally {
