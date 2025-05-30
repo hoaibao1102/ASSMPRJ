@@ -5,7 +5,11 @@
  */
 package Controller;
 
+import DAO.TourDAO;
+import DAO.TourDetailDAO;
 import DAO.UserDAO;
+import DTO.TourDTO;
+import DTO.TourDetailDTO;
 import DTO.UserDTO;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -59,8 +63,20 @@ public class loginController extends HttpServlet {
                     // Kiểm tra session có lưu URL redirect không
                     String redirectUrl = (String) session.getAttribute("redirectAfterLogin");
                     if (redirectUrl != null) {
+                        //di vao chi tiet tour    
+                        String idTour = (String) session.getAttribute("idTour");
+                        TourDetailDAO tdDao = new TourDetailDAO();
+                        TourDAO tdao = new TourDAO();
+                        if (idTour != null && !idTour.trim().isEmpty()) {
+                            TourDetailDTO tourDetail = tdDao.readbyID(idTour);
+                            TourDTO tourTicket = tdao.readbyID(idTour);
+                            request.setAttribute("tourDetail", tourDetail);
+                            request.setAttribute("tourTicket", tourTicket);
+                            session.removeAttribute("idTour"); // Xóa sau khi dùng
+                        }
                         url = redirectUrl;
                         session.removeAttribute("redirectAfterLogin");
+
                     } else {
                         url = "index.jsp";
                     }
@@ -83,6 +99,10 @@ public class loginController extends HttpServlet {
                 } else {
                     // Chưa login => lưu trang cần redirect sau login, rồi chuyển tới login page
                     session = request.getSession(true);
+                    String idTour = request.getParameter("idTour");
+                    if (idTour != null) {
+                        session.setAttribute("idTour", idTour);
+                    }
                     session.setAttribute("redirectAfterLogin", "TourDetailForm.jsp");
                     url = LOGIN_PAGE;
                     request.setAttribute("message", "Login to place order");

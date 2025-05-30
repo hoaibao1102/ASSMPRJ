@@ -510,6 +510,7 @@
                     </ul>
 
                     <form action="loginController" method="get" class="tour-actions">
+                        <input type="hidden" name="idTour" value="<%=tourTicket.getIdTour()%>">
                         <input type="hidden" name="action" value="order">
                         <button class="btn-outline">Ngày khác</button>
                         <button class="btn-primary" >Đặt ngay</button>
