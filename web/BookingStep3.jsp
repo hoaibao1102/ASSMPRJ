@@ -1,7 +1,7 @@
 <%-- 
-    Document   : OrderForm
-    Created on : May 29, 2025, 11:08:57 PM
-    Author     : MSI PC
+    Document   : BookingStep3
+    Created on : May 30, 2025, 3:57:52 PM
+    Author     : Admin
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -12,6 +12,6 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <h1>DAT O DAY</h1>
+        <h1>Hello World!</h1>
     </body>
 </html>

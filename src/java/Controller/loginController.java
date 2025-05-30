@@ -19,8 +19,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
-import java.io.PrintWriter;
-import static jdk.nashorn.internal.objects.NativeString.search;
+
 
 /**
  *
@@ -43,10 +42,11 @@ public class loginController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-
         String url = LOGIN_PAGE;
         String action = request.getParameter("action");
         HttpSession session = request.getSession(false);
+        TourDetailDAO tdDao = new TourDetailDAO();
+        TourDAO tdao = new TourDAO();
 
         try {
             if (action == null) {
@@ -67,13 +67,12 @@ public class loginController extends HttpServlet {
                     if (redirectUrl != null) {
                         //di vao chi tiet tour    
                         String idTour = (String) session.getAttribute("idTour");
-                        TourDetailDAO tdDao = new TourDetailDAO();
-                        TourDAO tdao = new TourDAO();
+
                         if (idTour != null && !idTour.trim().isEmpty()) {
                             TourDetailDTO tourDetail = tdDao.readbyID(idTour);
                             TourDTO tourTicket = tdao.readbyID(idTour);
                             request.setAttribute("tourDetail", tourDetail);
-                            request.setAttribute("tourTicket", tourTicket);
+                            request.getSession().setAttribute("tourTicket", tourTicket);
                             session.removeAttribute("idTour"); // Xóa sau khi dùng
                         }
                         url = redirectUrl;
@@ -97,7 +96,14 @@ public class loginController extends HttpServlet {
             } else if ("order".equals(action)) {
                 // Truy cập trang đặt hàng
                 if (session != null && session.getAttribute("nameUser") != null) {
-                    url = "OrderForm.jsp";
+
+                    String idTour = (String) session.getAttribute("idTour");
+
+                    if (idTour != null && !idTour.trim().isEmpty()) {
+                        TourDTO tour = tdao.readbyID(idTour);
+                        session.setAttribute("tourTicket", tour);
+                        url = "BookingStep1.jsp";
+                    } 
                 } else {
                     // Chưa login => lưu trang cần redirect sau login, rồi chuyển tới login page
                     session = request.getSession(true);
@@ -105,7 +111,7 @@ public class loginController extends HttpServlet {
                     if (idTour != null) {
                         session.setAttribute("idTour", idTour);
                     }
-                    session.setAttribute("redirectAfterLogin", "TourDetailForm.jsp");
+                    session.setAttribute("redirectAfterLogin", "BookingStep1.jsp");
                     url = LOGIN_PAGE;
                     request.setAttribute("message", "Login to place order");
                 }
