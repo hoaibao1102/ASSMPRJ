@@ -11,15 +11,14 @@ import DAO.TourDetailDAO;
 import DTO.PlacesDTO;
 import DTO.TourDTO;
 import DTO.TourDetailDTO;
-import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  *
@@ -29,6 +28,7 @@ import java.util.List;
 public class placeController extends HttpServlet {
 
     private static String URL = "index.jsp";
+    private static final Logger LOGGER = Logger.getLogger(placeController.class.getName());
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -51,10 +51,10 @@ public class placeController extends HttpServlet {
             if (action.equals("destination")) {
                 List<PlacesDTO> places = pdao.readAll();
                 if (places == null) {
-                    System.out.println("khong co anh oi");
+                    LOGGER.warning("No places found!");
                 } else {
                     for (PlacesDTO place : places) {
-                        System.out.println(place);
+                        LOGGER.info(place.toString());
                     }
                 }
 
@@ -97,6 +97,7 @@ public class placeController extends HttpServlet {
 //                request.getRequestDispatcher("ResultSearchForm.jsp").forward(request, response);
 //            }
         } catch (Exception e) {
+            LOGGER.severe("Error in placeController: " + e.toString());
         } finally {
             request.getRequestDispatcher(url).forward(request, response);
         }

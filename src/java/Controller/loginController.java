@@ -14,8 +14,6 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
-import static jdk.nashorn.internal.objects.NativeString.search;
 
 /**
  *
@@ -25,7 +23,7 @@ import static jdk.nashorn.internal.objects.NativeString.search;
 public class loginController extends HttpServlet {
 
     private static final String LOGIN_PAGE = "LoginForm.jsp";
-
+    
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -47,11 +45,16 @@ public class loginController extends HttpServlet {
                 if (action.equals("login")) {
                     String txtEmailOrPhone = request.getParameter("txtEmailOrPhone");
                     String txtPassword = request.getParameter("txtPassword");
-
-                    if (isValidLogin(txtEmailOrPhone, txtPassword)) {
+                    
+                    //Add null/empty check
+                    if (txtEmailOrPhone == null || txtPassword == null 
+                        || txtEmailOrPhone.trim().isEmpty() || txtPassword.trim().isEmpty()) {
+                        request.setAttribute("message", "Please provide both account and password.");
+                        url = LOGIN_PAGE;
+                    }else if (isValidLogin(txtEmailOrPhone, txtPassword)) {
                         url = "index.jsp";
                         UserDTO user = getUser(txtEmailOrPhone);
-                        request.getSession().setAttribute("nameUser", user);
+                        request.getSession().setAttribute("nameUser", user); //should be better naming like 'loggedInUser'
 
                     } else {
                         request.setAttribute("message", "Invalid login account ");
@@ -65,7 +68,7 @@ public class loginController extends HttpServlet {
             }
 
         } catch (Exception e) {
-            log("Error in MainController: " + e.toString());
+            log("Error in loginController: " + e.toString());
         } finally {
             RequestDispatcher rd = request.getRequestDispatcher(url);
             rd.forward(request, response);

@@ -217,10 +217,8 @@
                     <div class="right-section">
 
                         <%
-                                String searchTour = request.getAttribute("searchTourInfor")+"";
-                                if(searchTour.equals("null")){
-                                     searchTour = "";
-                                }
+                                String searchTour = (request.getAttribute("searchTourInfor") != null) ? 
+                                        request.getAttribute("searchTourInfor").toString() : "";
                         %>
                         <form action="placeController" method="get">
                             <div class="search-bar">
