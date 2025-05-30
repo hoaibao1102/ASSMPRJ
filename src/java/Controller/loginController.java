@@ -29,7 +29,7 @@ import java.io.IOException;
 public class loginController extends HttpServlet {
 
     private static final String LOGIN_PAGE = "LoginForm.jsp";
-
+    
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -121,7 +121,7 @@ public class loginController extends HttpServlet {
                 url = LOGIN_PAGE;
             }
         } catch (Exception e) {
-            log("Error in MainController: " + e.toString());
+            log("Error in loginController: " + e.toString());
         } finally {
             RequestDispatcher rd = request.getRequestDispatcher(url);
             rd.forward(request, response);
