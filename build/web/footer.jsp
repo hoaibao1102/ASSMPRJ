@@ -99,7 +99,7 @@
         <div class="footer-bottom">
             © 2025 VN Tours. All rights reserved.
         </div>
-
+    </footer>
 </body>
 
 </html>
