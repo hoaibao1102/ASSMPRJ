@@ -3,6 +3,7 @@
     Created on : May 29, 2025, 11:08:57 PM
     Author     : MSI PC
 --%>
+<%@ page import="java.time.LocalDate, java.time.format.DateTimeFormatter" %>
 <%@ page import="DTO.TourDTO"%>
 <%@ page import="DTO.UserDTO"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -170,11 +171,17 @@
                 UserDTO account = (UserDTO)session.getAttribute("nameUser");
                 TourDTO tour = (TourDTO)session.getAttribute("tourTicket");
                 int total = Integer.parseInt((String)request.getAttribute("total"));
+                int numberTicket = Integer.parseInt((String)request.getAttribute("numberTicket"));
                 DecimalFormat vnd = new DecimalFormat("#,###");
                 
+                //láy ra ngày dat
+                LocalDate today = LocalDate.now();
+                LocalDate tomorrow = today.plusDays(1);
+                String todayStr = today.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                String tomorrowStr = tomorrow.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
              %>
         
-            
+           
             
             <div class="containerdetail">
                 <div class="left-content">
@@ -188,8 +195,8 @@
                     <h3>CHI TIẾT BOOKING</h3>
                     <table>
                         <tr><td><strong>Mã đặt chỗ:</strong></td><td style="color:red;">CHUA XU LÝ CAN LAY DB</td></tr>
-                        <tr><td><strong>Ngày tạo:</strong></td><td>CHUA XU LY</td></tr>
-                        <tr><td><strong>Số lượng:</strong></td><td>CHUA XU LY</td></tr>
+                        <tr><td><strong>Ngày tạo:</strong></td><td><%=todayStr%></td></tr>
+                        <tr><td><strong>Số lượng:</strong></td><td> <%=numberTicket%></td></tr>
                         <tr><td><strong>Trị giá booking:</strong></td><td><%= vnd.format(total)%> đ</td></tr>
                         <tr><td><strong>Số tiền đã thanh toán:</strong></td><td>0 đ</td></tr>
                         <tr><td><strong>Số tiền còn lại:</strong></td><td><%= vnd.format(total)%> đ</td></tr>
@@ -197,9 +204,24 @@
                             <td><strong>Tình trạng:</strong></td>
                             <td style="color: blue;">Booking của quý khách đã được chúng tôi xác nhận thành công</td>
                         </tr>
-                        <tr><td><strong>Thời hạn thanh toán:</strong></td><td style="color: red;">CHUA XU LY</td></tr>
+                        <tr><td><strong>Thời hạn thanh toán:</strong></td><td style="color: red;"><%=tomorrowStr%></td></tr>
                     </table>
                 </div>
+
+                    <%
+                        String startDateStr = tour.getStartDate();
+                        LocalDate startDate = LocalDate.parse(startDateStr, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                        LocalDate endDate;
+                        String duration = tour.getDuration();
+                        
+                        if("2 ngày 1 đêm".equals(duration)){
+                            endDate = startDate.plusDays(2);
+                        } else {
+                            endDate = startDate.plusDays(3);
+                        }
+                        String endDateStr = endDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                        
+                    %>
 
                 <!-- RIGHT: PHIẾU XÁC NHẬN -->
                 <div class="right-content">
@@ -211,15 +233,18 @@
                     <h4>THÔNG TIN CHUYẾN ÐI</h4>
                     <p>
                         Ngày đi: <%=tour.getStartDate()%> &nbsp;&nbsp;  <br>
-                        00:45 &nbsp; SGN → 06:30 &nbsp
+                        
                     </p>
                     <p>
-                        Ngày về: CHUA XU LY &nbsp;&nbsp; <br>
-                        15:10 &nbsp; PVG → 18:30 &nbsp; 
+                        Ngày về: <%=endDateStr%>&nbsp;&nbsp; <br>
+                        
                     </p>
-                    <button style="width: 100%; padding: 15px; background-color: red; color: white; font-size: 16px; border: none; border-radius: 8px; margin-top: 20px;">
+                    <form action="orderController" method="get">
+                        <input type="hidden" name="action" value="call_oder_step3">
+                        <button style="width: 100%; padding: 15px; background-color: red; color: white; font-size: 16px; border: none; border-radius: 8px; margin-top: 20px;">
                         Thanh toán ngay
-                    </button>
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>

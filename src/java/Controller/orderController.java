@@ -12,6 +12,8 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.jsp.PageContext;
 
 /**
  *
@@ -33,14 +35,19 @@ public class orderController extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         String action = request.getParameter("action");
+        HttpSession session = request.getSession(false);
+       
         try {
-            if("oder_step2".equals(action)){
+            if("call_oder_step2".equals(action)){
                 String total = request.getParameter("totalBill");
+                String numberTicket = request.getParameter("numberTicket");
                 url="BookingStep2.jsp";
                 request.setAttribute("total", total);
-            }
-            
-            
+                request.setAttribute("numberTicket", numberTicket);
+            }else if("call_oder_step3".equals(action)){
+                url="BookingStep3.jsp";
+                
+            }    
         } catch (Exception e) {
         } finally {
             RequestDispatcher rd = request.getRequestDispatcher(url);
