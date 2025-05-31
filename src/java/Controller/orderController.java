@@ -47,16 +47,13 @@ public class orderController extends HttpServlet {
                 request.setAttribute("total", total);
                 request.setAttribute("numberTicket", numberTicket);
             } else if ("call_oder_step3".equals(action)) {
-                url = "BookingStep3.jsp";
 
-            }
-            String paymentMethod = request.getParameter("paymentMethod");
-            if ("momo".equals(paymentMethod)) {
-                // redirect sang cổng Momo
-            } else if ("vnpay".equals(paymentMethod)) {
-                // redirect sang cổng VNPay
-            } else {
-                // xử lý thanh toán tại quầy, v.v.
+                String total = request.getParameter("totalBill2");
+                String numberTicket = request.getParameter("numberTicket2");
+                url = "BookingStep3.jsp";
+                request.setAttribute("total", total);
+                request.setAttribute("numberTicket", numberTicket);
+
             }
         } catch (Exception e) {
         } finally {

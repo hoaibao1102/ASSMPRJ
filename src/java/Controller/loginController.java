@@ -97,8 +97,7 @@ public class loginController extends HttpServlet {
                 // Truy cập trang đặt hàng
                 if (session != null && session.getAttribute("nameUser") != null) {
 
-                    String idTour = (String) request.getParameter("idTour");
-
+                    String idTour = (String)request.getParameter("idTour");
                     if (idTour != null && !idTour.trim().isEmpty()) {
                         TourDTO tour = tdao.readbyID(idTour);
                         session.setAttribute("tourTicket", tour);
