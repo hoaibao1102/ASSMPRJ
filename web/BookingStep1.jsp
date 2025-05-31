@@ -495,6 +495,10 @@
                             endDate = startDate.plusDays(3);
                         }
                         String endDateStr = endDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                         //láy ra ngày dat
+                        LocalDate today = LocalDate.now();
+                        String todayStr = today.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+               
                     %>
 
                     
@@ -549,9 +553,20 @@
 
                     <form action="orderController" method="get" onsubmit="return prepareSubmit()">
                         <input type="hidden" name="action" value="call_oder_step2">
+                        
+                        
+                        
+                           
+                        <!-- gửi thông tin để tạo dtb booking table -->
+                        <input type="hidden" name="idUser" value="<%=account.getIdUser()%>">
+                        <input type="hidden" name="idTour" value="<%=tour.getIdTour()%>">
+                        <input type="hidden" name="bookingDate" value="<%=today%>">
                         <input type="hidden" id="totalBill" name="totalBill" value="">
                         <input type="hidden" id="numberTicket" name="numberTicket" value="">
-                       
+                        <input type="hidden" name="status" value="0">
+                        
+                        
+                        
                         <button class="btn-submit" style="submit">Ðặt tour</button>
                     </form>
 

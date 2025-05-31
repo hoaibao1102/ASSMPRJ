@@ -46,11 +46,11 @@ public class orderController extends HttpServlet {
                 url = "BookingStep2.jsp";
                 request.setAttribute("total", total);
                 request.setAttribute("numberTicket", numberTicket);
-            } else if ("call_oder_step3".equals(action)) {
+            } else if ("call_payment".equals(action)) {
 
                 String total = request.getParameter("totalBill2");
                 String numberTicket = request.getParameter("numberTicket2");
-                url = "BookingStep3.jsp";
+                url = "Payment.jsp";
                 request.setAttribute("total", total);
                 request.setAttribute("numberTicket", numberTicket);
 
