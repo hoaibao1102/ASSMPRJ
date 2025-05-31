@@ -198,8 +198,7 @@
                         <tr><td><strong>Ngày tạo:</strong></td><td><%=todayStr%></td></tr>
                         <tr><td><strong>Số lượng:</strong></td><td> <%=numberTicket%></td></tr>
                         <tr><td><strong>Trị giá booking:</strong></td><td><%= vnd.format(total)%> đ</td></tr>
-                        <tr><td><strong>Số tiền đã thanh toán:</strong></td><td>0 đ</td></tr>
-                        <tr><td><strong>Số tiền còn lại:</strong></td><td><%= vnd.format(total)%> đ</td></tr>
+                        
                         <tr>
                             <td><strong>Tình trạng:</strong></td>
                             <td style="color: blue;">Booking của quý khách đã được chúng tôi xác nhận thành công</td>
@@ -241,6 +240,8 @@
                     </p>
                     <form action="orderController" method="get">
                         <input type="hidden" name="action" value="call_oder_step3">
+                        <input type="hidden" name="totalBill2" value="<%=total%>">
+                        <input type="hidden" name="numberTicket2" value="<%=numberTicket%>">
                         <button style="width: 100%; padding: 15px; background-color: red; color: white; font-size: 16px; border: none; border-radius: 8px; margin-top: 20px;">
                         Thanh toán ngay
                         </button>

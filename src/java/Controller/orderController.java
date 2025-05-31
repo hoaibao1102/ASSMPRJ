@@ -21,7 +21,9 @@ import jakarta.servlet.jsp.PageContext;
  */
 @WebServlet(name = "orderController", urlPatterns = {"/orderController"})
 public class orderController extends HttpServlet {
+
     private static String url = "BookingStep1.jsp";
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -36,27 +38,28 @@ public class orderController extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         String action = request.getParameter("action");
         HttpSession session = request.getSession(false);
-       
+
         try {
-            if("call_oder_step2".equals(action)){
+            if ("call_oder_step2".equals(action)) {
                 String total = request.getParameter("totalBill");
                 String numberTicket = request.getParameter("numberTicket");
-                url="BookingStep2.jsp";
+                url = "BookingStep2.jsp";
                 request.setAttribute("total", total);
                 request.setAttribute("numberTicket", numberTicket);
-            }else if("call_oder_step3".equals(action)){
-                url="BookingStep3.jsp";
-                
-            }    
+            } else if ("call_oder_step3".equals(action)) {
+                String total = request.getParameter("totalBill2");
+                String numberTicket = request.getParameter("numberTicket2");
+                url = "BookingStep3.jsp";
+                request.setAttribute("total", total);
+                request.setAttribute("numberTicket", numberTicket);
+
+            }
         } catch (Exception e) {
         } finally {
             RequestDispatcher rd = request.getRequestDispatcher(url);
             rd.forward(request, response);
         }
-        
-        
-        
-        
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
