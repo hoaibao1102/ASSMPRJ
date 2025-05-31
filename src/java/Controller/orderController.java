@@ -55,6 +55,14 @@ public class orderController extends HttpServlet {
                 request.setAttribute("numberTicket", numberTicket);
 
             }
+            String paymentMethod = request.getParameter("paymentMethod");
+            if ("momo".equals(paymentMethod)) {
+                // redirect sang cổng Momo
+            } else if ("vnpay".equals(paymentMethod)) {
+                // redirect sang cổng VNPay
+            } else {
+                // xử lý thanh toán tại quầy, v.v.
+            }
         } catch (Exception e) {
         } finally {
             RequestDispatcher rd = request.getRequestDispatcher(url);
