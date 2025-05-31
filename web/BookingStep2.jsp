@@ -125,45 +125,45 @@
         </style>
     </head>
     <body>
-        
-        
-        
+
+
+
         <%@include file="header.jsp" %>
         <div class="content">
             <div class="step-container">
                 <h2 class="step-title">ĐẶT TOUR</h2>
                 <div class="step-tracker">
-                    <a href="BookingStep1.jsp">
-                         <div class="step active">
+
+                    <div class="step active">
                         <div class="icon green">
                             <img src="assets/images/icon/icon_fillfile.jpg" alt="info" />
                         </div>
                         <div class="label">NHẬP THÔNG TIN</div>
                     </div>
                     </a>
-                   
+
                     <div class="arrow">➜</div>
-                    
-                    
-                        <div class="step current">
+
+
+                    <div class="step current">
                         <div class="icon blue">
                             <img src="assets/images/icon/icon_thanhtoan.jpg" alt="pay" />
                         </div>
                         <div class="label">THANH TOÁN</div>
                     </div>
-                    
-                    
+
+
                     <div class="arrow">➜</div>
-                    
-                  
-                        <div class="step">
+
+
+                    <div class="step">
                         <div class="icon gray">
                             <img src="assets/images/icon/icon_done.jpg" alt="done" />
                         </div>
                         <div class="label">HOÀN TẤT</div>
                     </div>
-                   
-                    
+
+
                 </div>
             </div>
 
@@ -179,10 +179,10 @@
                 LocalDate tomorrow = today.plusDays(1);
                 String todayStr = today.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
                 String tomorrowStr = tomorrow.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-             %>
-        
-           
-            
+            %>
+
+
+
             <div class="containerdetail">
                 <div class="left-content">
                     <h3>THÔNG TIN LIÊN LẠC</h3>
@@ -208,20 +208,20 @@
                     </table>
                 </div>
 
-                    <%
-                        String startDateStr = tour.getStartDate();
-                        LocalDate startDate = LocalDate.parse(startDateStr, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-                        LocalDate endDate;
-                        String duration = tour.getDuration();
+                <%
+                    String startDateStr = tour.getStartDate();
+                    LocalDate startDate = LocalDate.parse(startDateStr, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                    LocalDate endDate;
+                    String duration = tour.getDuration();
                         
-                        if("2 ngày 1 đêm".equals(duration)){
-                            endDate = startDate.plusDays(2);
-                        } else {
-                            endDate = startDate.plusDays(3);
-                        }
-                        String endDateStr = endDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                    if("2 ngày 1 đêm".equals(duration)){
+                        endDate = startDate.plusDays(2);
+                    } else {
+                        endDate = startDate.plusDays(3);
+                    }
+                    String endDateStr = endDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
                         
-                    %>
+                %>
 
                 <!-- RIGHT: PHIẾU XÁC NHẬN -->
                 <div class="right-content">
@@ -233,21 +233,55 @@
                     <h4>THÔNG TIN CHUYẾN ÐI</h4>
                     <p>
                         Ngày đi: <%=tour.getStartDate()%> &nbsp;&nbsp;  <br>
-                        
+
                     </p>
                     <p>
                         Ngày về: <%=endDateStr%>&nbsp;&nbsp; <br>
-                        
+
                     </p>
                     <form action="orderController" method="get">
                         <input type="hidden" name="action" value="call_oder_step3">
-                        <button style="width: 100%; padding: 15px; background-color: red; color: white; font-size: 16px; border: none; border-radius: 8px; margin-top: 20px;">
-                        Thanh toán ngay
+                        <!-- Thay thế nút submit hiện tại -->
+                        <button type="button" onclick="openPaymentModal()" style="width: 100%; padding: 15px; background-color: red; ">
+                            Thanh toán ngay
                         </button>
                     </form>
                 </div>
             </div>
         </div>
         <%@include file="footer.jsp" %>
+        <!-- Popup/modal chọn phương thức thanh toán -->
+        <div id="paymentModal" style="display:none;position:fixed;z-index:9999;top:0;left:0;width:100vw;height:100vh;
+             background:rgba(0,0,0,0.3);align-items:center;justify-content:center;">
+            <div style="background:#fff;padding:32px 24px;border-radius:16px;width:350px;max-width:90vw;position:relative;">
+                <h3 style="margin-bottom:22px;">Chọn phương thức thanh toán</h3>
+                <form id="paymentForm" method="get" action="orderController">
+                    <input type="hidden" name="action" value="call_oder_step3"/>
+                    <label style="display:block;margin-bottom:10px;">
+                        <input type="radio" name="paymentMethod" value="momo" checked> Momo
+                    </label>
+                    <label style="display:block;margin-bottom:10px;">
+                        <input type="radio" name="paymentMethod" value="vnpay"> VNPay
+                    </label>
+                    <label style="display:block;margin-bottom:10px;">
+                        <input type="radio" name="paymentMethod" value="cod"> Thanh toán tại quầy
+                    </label>
+                    <div style="margin-top:18px;text-align:right;">
+                        <button type="button" onclick="closePaymentModal()" style="margin-right:10px;">Hủy</button>
+                        <button type="submit" style="background:red;color:#fff;padding:8px 20px;border-radius:6px;border:none;">Xác nhận</button>
+                    </div>
+                </form>
+                <span style="position:absolute;top:8px;right:16px;cursor:pointer;font-size:20px;" onclick="closePaymentModal()">×</span>
+            </div>
+        </div>
+        <script>
+            function openPaymentModal() {
+                document.getElementById('paymentModal').style.display = 'flex';
+            }
+            function closePaymentModal() {
+                document.getElementById('paymentModal').style.display = 'none';
+            }
+        </script>
+        
     </body>
 </html>
