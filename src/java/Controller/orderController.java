@@ -4,6 +4,8 @@
  */
 package Controller;
 
+import DAO.OrderDAO;
+import DTO.OrderDTO;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -40,13 +42,29 @@ public class orderController extends HttpServlet {
         HttpSession session = request.getSession(false);
 
         try {
+
             if ("call_oder_step2".equals(action)) {
-                String total = request.getParameter("totalBill");
-                String numberTicket = request.getParameter("numberTicket");
-                url = "BookingStep2.jsp";
-                request.setAttribute("total", total);
-                request.setAttribute("numberTicket", numberTicket);
-            } else if ("call_payment".equals(action)) {
+                OrderDAO odao = new OrderDAO();
+                //lay thong tin de tao dtb booking
+                double total = Double.parseDouble(request.getParameter("totalBill"));
+                int numberTicket = Integer.parseInt(request.getParameter("numberTicket"));
+                String idTour = request.getParameter("idTour");
+                int idUser = Integer.parseInt(request.getParameter("idUser")) ;
+                String bookingDate = String.valueOf(request.getParameter("bookingDate"));
+                int status = Integer.parseInt(request.getParameter("status"));
+                String note = request.getParameter("noteValueInput");
+                String idBooking = odao.generateBookingId(idTour);
+
+                OrderDTO newBooking = new OrderDTO(idUser, idTour, bookingDate, numberTicket, total, status, idBooking, note);
+                if (odao.create(newBooking)) {
+                    url = "BookingStep2.jsp";
+                    request.setAttribute("total", total);
+                    request.setAttribute("numberTicket", numberTicket);
+                }else {
+                    System.out.println("tao loi roi ma");
+                }
+
+            } else if ("call_oder_step3".equals(action)) {
 
                 String total = request.getParameter("totalBill2");
                 String numberTicket = request.getParameter("numberTicket2");

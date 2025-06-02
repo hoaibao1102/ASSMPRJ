@@ -11,6 +11,7 @@ CREATE TABLE Users (
     role VARCHAR(50) DEFAULT 'user'
 );
 
+
 CREATE TABLE Places (
     idplace INT PRIMARY KEY IDENTITY(1,1),
     placename NVARCHAR(100) NOT NULL,
@@ -26,6 +27,7 @@ UPDATE Places SET img_places = 'hueimg.jpg' WHERE idplace = 3;
 UPDATE Places SET img_places = 'hanoiimg.jpg' WHERE idplace = 4;
 UPDATE Places SET img_places = 'dalatimg.webp' WHERE idplace = 5;
 UPDATE Places SET img_places = 'danang2img.jpg' WHERE idplace = 6;
+
 
 CREATE TABLE Transport (
     transport_id INT PRIMARY KEY,
@@ -496,4 +498,19 @@ INSERT INTO TourDetail (idTour, day1descrip, day2descrip, day3descrip, imgDetail
   Di chuyển về TP.HCM, kết thúc chuyến đi./',
 
   'DN3img1.jpg#DN3img2.jpg#DN3img3.jpg#DN3img4.jpg#DN3img5.jpg#DN3img6.jpg#DN3img7.jpg#DN3img8.jpg'
+);
+
+
+-- Tạo bảng Orders :
+CREATE TABLE Orders (
+    idBooking VARCHAR(20) PRIMARY KEY,
+    idUser int NOT NULL,
+    idTour VARCHAR(5) NOT NULL,
+    BookingDate DATE NOT NULL,
+    NumberTicket INT NOT NULL,
+    TotalPrice DECIMAL(15,2) NOT NULL,
+    Status int NOT NULL,
+	Note nvarchar(250),
+	FOREIGN KEY (idTour) REFERENCES TourList(idTour),
+	FOREIGN KEY (idUser) REFERENCES Users(id)
 );

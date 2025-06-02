@@ -449,8 +449,8 @@
                     </div>
                 </div>
 
-                <div class="note-section">
-                    
+                <div class="note-section" >
+
                     <label class="note-label"><strong>GHI CHÚ</strong></label>
                     <p class="note-subtext">Quý khách có ghi chú lưu ý gì, hãy nói với chúng tôi</p>
                     <textarea
@@ -458,12 +458,12 @@
                         rows="4"
                         class="note-textarea"
                         placeholder="Vui lòng nhập nội dung lời nhắn..."></textarea>
-                    
+
                 </div>
 
 
-                        
-                        
+
+
             </div>
 
             <!--    =====================================================thong tin ben phai            -->
@@ -501,7 +501,7 @@
                
                     %>
 
-                    
+
                     <div class="flight-info">
                         <div>
                             <p><strong>Ngày đi: <%=tour.getStartDate()%></strong></p>
@@ -553,20 +553,17 @@
 
                     <form action="orderController" method="get" onsubmit="return prepareSubmit()">
                         <input type="hidden" name="action" value="call_oder_step2">
-                        
-                        
-                        
-                           
+
                         <!-- gửi thông tin để tạo dtb booking table -->
                         <input type="hidden" name="idUser" value="<%=account.getIdUser()%>">
                         <input type="hidden" name="idTour" value="<%=tour.getIdTour()%>">
                         <input type="hidden" name="bookingDate" value="<%=today%>">
                         <input type="hidden" id="totalBill" name="totalBill" value="">
                         <input type="hidden" id="numberTicket" name="numberTicket" value="">
+                        <input type="hidden" id="noteValueInput" name="noteValueInput" value="">
                         <input type="hidden" name="status" value="0">
-                        
-                        
-                        
+
+
                         <button class="btn-submit" style="submit">Ðặt tour</button>
                     </form>
 
@@ -583,53 +580,75 @@
     <%@include file="footer.jsp" %>
 
 
-
     <script>
-        const pricePerAdult = <%= tour.getPrice()%>; // Lấy giá tour từ server
-        const discountChild = 0.05;
-        const discountBaby = 0.20;
+        // Lấy giá tour từ server (giá một vé người lớn)
+        const pricePerAdult = <%= tour.getPrice() %>;
 
+        // Các mức giảm giá cho trẻ em và em bé
+        const discountChild = 0.05; // Giảm 5% cho trẻ em (2–11 tuổi)
+        const discountBaby = 0.20;  // Giảm 20% cho em bé (< 2 tuổi)
+
+        /**
+         * Hàm thay đổi số lượng hành khách theo loại (adult, child, baby)
+         * delta: +1 hoặc -1
+         */
         function changeCount(type, delta) {
-            const id = type + '-count';
-            let countElem = document.getElementById(id);
+            const id = type + '-count'; // Ví dụ: adult-count
+            const countElem = document.getElementById(id);
             let count = parseInt(countElem.innerText);
-            count = Math.max(0, count + delta);
+            count = Math.max(0, count + delta); // Không cho nhỏ hơn 0
             countElem.innerText = count;
 
-            updateTotal();
+            updateTotal(); // Cập nhật lại tổng tiền và số lượng
         }
 
+        /**
+         * Hàm cập nhật tổng tiền, số lượng vé và ghi chú ẩn gửi server
+         */
         function updateTotal() {
+            // Đọc số lượng từng loại hành khách
             const adultCount = parseInt(document.getElementById("adult-count").innerText);
             const childCount = parseInt(document.getElementById("child-count").innerText);
             const babyCount = parseInt(document.getElementById("baby-count").innerText);
             const totalCount = adultCount + childCount + babyCount;
-            
+
+            // Lấy giá trị ghi chú từ textarea
+            const noteTextarea = document.querySelector('textarea[name="note"]');
+            const noteValue = noteTextarea.value;
+
+            // Tính tổng tiền từng nhóm sau khi áp dụng giảm giá
             const totalAdult = adultCount * pricePerAdult;
             const totalChild = childCount * pricePerAdult * (1 - discountChild);
             const totalBaby = babyCount * pricePerAdult * (1 - discountBaby);
+
             const total = totalAdult + totalChild + totalBaby;
 
+            // Gán giá trị ẩn cho form gửi server
             document.getElementById("totalBill").value = Math.floor(total);
-            document.getElementById("numberTicket").value = Math.floor(totalCount);
+            document.getElementById("numberTicket").value = totalCount;
+            document.getElementById("noteValueInput").value = noteValue;
 
+            // Tính tổng tiền được giảm (ví dụ cho hiển thị)
             const totalChild_down = childCount * pricePerAdult * discountChild;
             const totalBaby_down = babyCount * pricePerAdult * discountBaby;
-            const total_down = totalChild_down + totalBaby_down + 1000000; // giả định mã giảm giá 1tr
+            const total_down = totalChild_down + totalBaby_down + 1000000; // Giả định thêm mã giảm giá 1 triệu
 
-            // Cập nhật giao diện
+            // Cập nhật giao diện hiển thị
             document.querySelector(".total-amount").innerText = formatCurrency(total);
-            document.getElementById("price_down").innerText = formatCurrency(total_down);  // ĐÃ SỬA ĐÚNG ID
+            document.getElementById("price_down").innerText = formatCurrency(total_down);
 
             document.getElementById("adult-line-value").innerText = adultCount + " x " + formatCurrency(pricePerAdult);
             document.getElementById("child-line-value").innerText = childCount + " x " + formatCurrency(pricePerAdult * (1 - discountChild));
             document.getElementById("baby-line-value").innerText = babyCount + " x " + formatCurrency(pricePerAdult * (1 - discountBaby));
 
+            // Hiển thị hoặc ẩn dòng trẻ em và em bé tùy số lượng
             document.getElementById("child-line").style.display = childCount > 0 ? "flex" : "none";
             document.getElementById("baby-line").style.display = babyCount > 0 ? "flex" : "none";
         }
 
-
+        /**
+         * Hàm định dạng số thành chuỗi tiền tệ Việt Nam
+         */
         function formatCurrency(amount) {
             return amount.toLocaleString("vi-VN", {
                 style: "currency",
@@ -637,8 +656,18 @@
             });
         }
 
-        document.addEventListener("DOMContentLoaded", updateTotal);
+        // Khi trang tải xong:
+        document.addEventListener("DOMContentLoaded", function () {
+            updateTotal(); // Cập nhật tổng tiền lúc đầu
+
+            // Lắng nghe sự kiện nhập liệu ở ô ghi chú để cập nhật input ẩn ngay lập tức
+            const noteTextarea = document.querySelector('textarea[name="note"]');
+            noteTextarea.addEventListener('input', function () {
+                document.getElementById("noteValueInput").value = noteTextarea.value;
+            });
+        });
     </script>
+
 
 
 
