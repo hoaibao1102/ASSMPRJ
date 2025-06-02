@@ -4,6 +4,7 @@
     Author     : MSI PC
 --%>
 <%@ page import="java.time.LocalDate, java.time.format.DateTimeFormatter" %>
+<%@ page import="DTO.OrderDTO"%>
 <%@ page import="DTO.TourDTO"%>
 <%@ page import="DTO.UserDTO"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -169,15 +170,12 @@
 
             <%
                 UserDTO account = (UserDTO)session.getAttribute("nameUser");
-                TourDTO tour = (TourDTO)session.getAttribute("tourTicket");
-                int total = Integer.parseInt((String)request.getAttribute("total"));
-                int numberTicket = Integer.parseInt((String)request.getAttribute("numberTicket"));
+                OrderDTO newBooking = (OrderDTO)request.getAttribute("newBooking");
                 DecimalFormat vnd = new DecimalFormat("#,###");
                 
                 //láy ra ngày dat
-                LocalDate today = LocalDate.now();
+                LocalDate today = LocalDate.parse(newBooking.getBookingDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd")); ;
                 LocalDate tomorrow = today.plusDays(1);
-                String todayStr = today.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
                 String tomorrowStr = tomorrow.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
             %>
 
@@ -195,24 +193,25 @@
                     <h3>CHI TIẾT BOOKING</h3>
                     <table>
                         <tr><td><strong>Mã đặt chỗ:</strong></td><td style="color:red;">CHUA XU LÝ CAN LAY DB</td></tr>
-                        <tr><td><strong>Ngày tạo:</strong></td><td><%=todayStr%></td></tr>
-                        <tr><td><strong>Số lượng:</strong></td><td> <%=numberTicket%></td></tr>
-                        <tr><td><strong>Trị giá booking:</strong></td><td><%= vnd.format(total)%> đ</td></tr>
+                        <tr><td><strong>Ngày tạo:</strong></td><td><%=newBooking.getBookingDate()%></td></tr>
+                        <tr><td><strong>Số lượng:</strong></td><td> <%=newBooking.getNumberTicket()%></td></tr>
+                        <tr><td><strong>Trị giá booking:</strong></td><td><%= vnd.format(newBooking.getTotalPrice())%> đ</td></tr>
 
                         <tr>
                             <td><strong>Tình trạng:</strong></td>
                             <td style="color: blue;">Booking của quý khách đã được chúng tôi xác nhận thành công</td>
                         </tr>
-                        <tr><td><strong>Thời hạn thanh toán:</strong></td><td style="color: red;"><%=tomorrowStr%></td></tr>
+                        <tr><td><strong>Thời hạn thanh toán:</strong></td><td style="color: red;"><%=tomorrow%></td></tr>
                     </table>
                 </div>
 
-                <%
+                <% 
+                    TourDTO tour = (TourDTO)session.getAttribute("tourTicket");
                     String startDateStr = tour.getStartDate();
                     LocalDate startDate = LocalDate.parse(startDateStr, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
                     LocalDate endDate;
                     String duration = tour.getDuration();
-                        
+                    
                     if("2 ngày 1 đêm".equals(duration)){
                         endDate = startDate.plusDays(2);
                     } else {
@@ -241,8 +240,8 @@
                     <form action="orderController" method="get">
                         <input type="hidden" name="action" value="call_oder_step3">
 
-                        <input type="hidden" name="totalBill2" value="<%=total%>">
-                        <input type="hidden" name="numberTicket2" value="<%=numberTicket%>">
+                        <input type="hidden" name="totalBill2" value="<%=newBooking.getTotalPrice()%>">
+                        <input type="hidden" name="numberTicket2" value="<%=newBooking.getNumberTicket()%>">
                         
                         <!-- Thay thế nút submit hiện tại -->
                         <button type="button" onclick="openPaymentModal()" style="width: 100%; padding: 15px; background-color: red; color: white; font-size: 16px; border: none; border-radius: 8px; margin-top: 20px;">
@@ -260,6 +259,9 @@
                 <h3 style="margin-bottom:22px;">Chọn phương thức thanh toán</h3>
                 <form id="paymentForm" method="get" action="orderController">
                     <input type="hidden" name="action" value="call_oder_step3"/>
+                    <input type="hidden" name="totalBill2" value="<%=newBooking.getTotalPrice()%>">
+                    <input type="hidden" name="numberTicket2" value="<%=newBooking.getNumberTicket()%>">
+                    <input type="hidden" name="status" value="1"/>
                     <label style="display:block;margin-bottom:10px;">
                         <input type="radio" name="paymentMethod" value="momo" checked> Momo
                     </label>

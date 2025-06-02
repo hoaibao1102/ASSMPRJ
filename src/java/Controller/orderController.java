@@ -58,20 +58,22 @@ public class orderController extends HttpServlet {
                 OrderDTO newBooking = new OrderDTO(idUser, idTour, bookingDate, numberTicket, total, status, idBooking, note);
                 if (odao.create(newBooking)) {
                     url = "BookingStep2.jsp";
-                    request.setAttribute("total", total);
-                    request.setAttribute("numberTicket", numberTicket);
+                    request.setAttribute("newBooking", newBooking);
+                   
                 }else {
                     System.out.println("tao loi roi ma");
+                    
                 }
 
             } else if ("call_oder_step3".equals(action)) {
 
-                String total = request.getParameter("totalBill2");
-                String numberTicket = request.getParameter("numberTicket2");
-                url = "Payment.jsp";
+                Double total =Double.parseDouble(request.getParameter("totalBill2")) ;
+                int numberTicket = Integer.parseInt(request.getParameter("numberTicket2"));
+                url = "BookingStep3.jsp";
                 request.setAttribute("total", total);
                 request.setAttribute("numberTicket", numberTicket);
-
+                int numberTicket = Integer.parseInt(request.getParameter("numberTicket2"));
+                
             }
             String paymentMethod = request.getParameter("paymentMethod");
             if ("momo".equals(paymentMethod)) {

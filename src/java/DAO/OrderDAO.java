@@ -73,7 +73,7 @@ public class OrderDAO implements IDAO<OrderDTO, String> {
 
     public String generateBookingId(String idTour) {
         String prefix = idTour + "B"; // Ví dụ: NT001B
-        String sql = "SELECT idBooking FROM Booking WHERE idBooking LIKE ? ORDER BY idBooking DESC LIMIT 1";
+        String sql = "SELECT TOP 1 idBooking FROM Orders WHERE idBooking LIKE ? ORDER BY idBooking DESC";
 
         try {
             Connection conn = DBUtils.getConnection();
@@ -95,7 +95,6 @@ public class OrderDAO implements IDAO<OrderDTO, String> {
             Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, ex);
     }
     catch (SQLException ex
-
         ) {
             Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, ex);
     }

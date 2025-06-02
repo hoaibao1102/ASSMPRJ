@@ -144,8 +144,8 @@
          <%
                 UserDTO account = (UserDTO)session.getAttribute("nameUser");
                 TourDTO tour = (TourDTO)session.getAttribute("tourTicket");
-                int total = Integer.parseInt((String)request.getAttribute("total"));
-                int numberTicket = Integer.parseInt((String)request.getAttribute("numberTicket"));
+                double total = Double.parseDouble(request.getAttribute("total")+"");
+                int numberTicket = Integer.parseInt(request.getAttribute("numberTicket")+"");
                 DecimalFormat vnd = new DecimalFormat("#,###");
                 
                 LocalDate today = LocalDate.now();
