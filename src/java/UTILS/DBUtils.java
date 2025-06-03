@@ -16,7 +16,7 @@ import java.util.logging.Logger;
  * @author MSI PC
  */
 public class DBUtils {
-    private static final String DB_NAME = "travel_assistant";
+    private static final String DB_NAME = "Booking_Tour";
     private static final String DB_USERNAME = "sa";
     private static final String DB_PASSWORD = "12345";
     

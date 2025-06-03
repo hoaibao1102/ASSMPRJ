@@ -192,7 +192,7 @@
                     <hr style="margin: 30px 0;">
                     <h3>CHI TIẾT BOOKING</h3>
                     <table>
-                        <tr><td><strong>Mã đặt chỗ:</strong></td><td style="color:red;">CHUA XU LÝ CAN LAY DB</td></tr>
+                        <tr><td><strong>Mã đặt chỗ:</strong></td><td style="color:red;"><%=newBooking.getIdBooking()%></td></tr>
                         <tr><td><strong>Ngày tạo:</strong></td><td><%=newBooking.getBookingDate()%></td></tr>
                         <tr><td><strong>Số lượng:</strong></td><td> <%=newBooking.getNumberTicket()%></td></tr>
                         <tr><td><strong>Trị giá booking:</strong></td><td><%= vnd.format(newBooking.getTotalPrice())%> đ</td></tr>
@@ -226,7 +226,6 @@
                     <h3>PHIẾU XÁC NHẬN BOOKING</h3>
                     <img src="assets/images/places/<%=tour.getImg()%>" alt="Tour" style="width:100%; border-radius: 8px; margin-bottom: 15px;">
                     <p><strong><%=tour.getDestination()%>:   </strong> <%=tour.getNameTour()%></p>
-                    <p><strong>Số booking:</strong> <span style="color:red;">CHUA XU LY</span></p>
                     <p><strong>Mã tour:</strong> <%=tour.getIdTour()%></p>
                     <h4>THÔNG TIN CHUYẾN ÐI</h4>
                     <p>
@@ -261,7 +260,7 @@
                     <input type="hidden" name="action" value="call_oder_step3"/>
                     <input type="hidden" name="totalBill2" value="<%=newBooking.getTotalPrice()%>">
                     <input type="hidden" name="numberTicket2" value="<%=newBooking.getNumberTicket()%>">
-                    <input type="hidden" name="status" value="1"/>
+                    <input type="hidden" name="idBooking" value="<%=newBooking.getIdBooking()%>"/>
                     <label style="display:block;margin-bottom:10px;">
                         <input type="radio" name="paymentMethod" value="momo" checked> Momo
                     </label>

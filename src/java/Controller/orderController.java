@@ -40,11 +40,12 @@ public class orderController extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         String action = request.getParameter("action");
         HttpSession session = request.getSession(false);
-
+        OrderDAO odao = new OrderDAO();
+        
         try {
 
             if ("call_oder_step2".equals(action)) {
-                OrderDAO odao = new OrderDAO();
+                
                 //lay thong tin de tao dtb booking
                 double total = Double.parseDouble(request.getParameter("totalBill"));
                 int numberTicket = Integer.parseInt(request.getParameter("numberTicket"));
@@ -66,14 +67,18 @@ public class orderController extends HttpServlet {
                 }
 
             } else if ("call_oder_step3".equals(action)) {
-
+                String idBooking = request.getParameter("idBooking");
                 Double total =Double.parseDouble(request.getParameter("totalBill2")) ;
                 int numberTicket = Integer.parseInt(request.getParameter("numberTicket2"));
-                url = "BookingStep3.jsp";
-                request.setAttribute("total", total);
-                request.setAttribute("numberTicket", numberTicket);
-                int numberTicket = Integer.parseInt(request.getParameter("numberTicket2"));
-                
+                //update trang thai
+                if(odao.updateStatus(idBooking)){
+                     url = "BookingStep3.jsp";
+                    request.setAttribute("total", total);
+                    request.setAttribute("numberTicket", numberTicket);
+                }else{
+                    System.out.println("khong update duoc tu tim lai");
+                }
+              
             }
             String paymentMethod = request.getParameter("paymentMethod");
             if ("momo".equals(paymentMethod)) {

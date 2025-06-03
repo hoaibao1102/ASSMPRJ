@@ -101,4 +101,22 @@ public class OrderDAO implements IDAO<OrderDTO, String> {
         return null;
 }
 
+    public boolean updateStatus(String idBooking) {
+       String sql ="UPDATE dbo.Orders SET Status = 1 WHERE idBooking = ?";
+        try {
+            Connection conn = DBUtils.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, idBooking);
+            int n = ps.executeUpdate();
+            return n > 0;
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+       
+    }
+
+
 }

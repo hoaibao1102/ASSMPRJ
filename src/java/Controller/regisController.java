@@ -54,6 +54,8 @@ public class regisController extends HttpServlet {
                     String confirmPassword = request.getParameter("txtConfirmPassword");
 
                     UserDTO newUser = new UserDTO(fullName, email, phone, password, "customer");
+                    
+                    
                     // Regex cho tên: chỉ cho phép chữ cái, dấu cách, độ dài 2-20 ký tự
                     String regexFullName = "^[\\p{L} ]{2,20}$";
                     // Regex cho email cơ bản
