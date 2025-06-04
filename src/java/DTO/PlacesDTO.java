@@ -15,15 +15,25 @@ public class PlacesDTO {
     private String placeName;
     private String description;
     private String img;
-
+    private boolean featured;
+    
     public PlacesDTO() {
     }
 
-    public PlacesDTO(int idPlace, String placeName, String description, String img) {
+    public PlacesDTO(int idPlace, String placeName, String description, String img, boolean featured) {
         this.idPlace = idPlace;
         this.placeName = placeName;
         this.description = description;
         this.img = img;
+        this.featured = featured;
+    }
+
+    public boolean getFeatured() {
+        return featured;
+    }
+
+    public void setFeatured(boolean featured) {
+        this.featured = featured;
     }
 
     public int getIdPlace() {

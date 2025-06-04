@@ -406,7 +406,8 @@
                 <a href="index.jsp">Trang chủ</a> / 
                 <a href="DestinationForm.jsp">Điểm đến</a>/
                 <form action="placeController" method="post" style="display:inline;">
-                    <input type="hidden" name="location" value="<%= tourTicket.getDestination()%>" />
+                    <input type="hidden" name="location" value="<%=tourTicket.getDestination()%>" />   
+                    <input type="hidden" name="action" value="takeListTicket" /> 
                     <button type="submit" style="background:none; border:none; padding:0; margin:0; color:#2980b9; cursor:pointer; font-weight:600; font-size:1rem; font-family: Arial, sans-serif;">
                         Du lịch <%= tourTicket.getDestination() %>
                     </button>
@@ -476,6 +477,8 @@
                     <p>Không tìm thấy thông tin chi tiết cho tour này.</p>
                     <% } %>
                 </div>
+                
+                
                 <!--///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
                 <div class="right-content">
 

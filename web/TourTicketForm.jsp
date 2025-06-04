@@ -156,9 +156,9 @@
         
         <div class="content">
             <div class="breadcrumb">
-                <a href="index.jsp">Trang chu</a> /
-                <a href="DestinationForm.jsp">Điểm đến</a> /
-                <span class="current">Du lịch <%= tourList.get(0).getDestination() %></span>
+                <a href="placeController?action=destination&page=indexjsp">Trang chủ</a> /
+                <a href="placeController?action=destination&page=destinationjsp">Điểm đến</a> /
+                <span class="current">Du lịch <%=tourList.get(0).getDestination() %></span>
             </div>
                 <div class="container">
 

@@ -18,6 +18,14 @@ CREATE TABLE Places (
     description NVARCHAR(500),
     img_places VARCHAR(255)
 );
+--THÊM THANH TRANG THÁI NỔI BẬT HAY KHÔNG
+ALTER TABLE places
+ADD Featured INT default 0;
+
+UPDATE Places SET Featured = 1 WHERE idplace = 1  or idplace = 2 or idplace = 6;
+UPDATE Places SET Featured = 0 WHERE idplace = 3  or idplace = 4 or idplace = 5;
+
+
 
 -- sau đó thêm ảnh nè
 UPDATE Places SET img_places = 'nhatrangimg.jpg' WHERE idplace = 1;

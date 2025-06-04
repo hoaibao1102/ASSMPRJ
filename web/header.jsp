@@ -260,11 +260,19 @@
                     <div class="menu-toggle" onclick="toggleMenu()">☰</div>
 
                     <ul class="menu" id="menu">
-                        <li class="menu-item"><a href="index.jsp">Trang chủ</a></li>
                         <li class="menu-item">
                             <form action="placeController" method="get">
                                 <input type="hidden" name="action" value="destination">
-                                <input type="submit"  value="Điểm đến">
+                                <input type="hidden" name="page" value="indexjsp">
+                                <input type="submit" value="Trang chủ">
+                            </form>
+                        </li>
+                        
+                        <li class="menu-item">
+                            <form action="placeController" method="get">
+                                <input type="hidden" name="action" value="destination">
+                                <input type="hidden" name="page" value="destinationjsp">
+                                <input type="submit" value="Điểm đến">
                             </form>
 
                         </li>

@@ -44,7 +44,8 @@ public class PlacesDAO implements IDAO<PlacesDTO, String> {
                     PlacesDTO newT = new PlacesDTO(rs.getInt("idplace"),
                             rs.getString("placename"),
                             rs.getString("description"),
-                            rs.getString("img_places"));
+                            rs.getString("img_places"),
+                            rs.getInt("Featured") == 1);
 
                     list.add(newT);
                 }
@@ -67,7 +68,8 @@ public class PlacesDAO implements IDAO<PlacesDTO, String> {
                     i.getIdPlace(),
                     i.getPlaceName(),
                     i.getDescription(),
-                    i.getImg());
+                    i.getImg(),
+                    i.getFeatured());
             return newT;
         }
         return null;
@@ -75,12 +77,13 @@ public class PlacesDAO implements IDAO<PlacesDTO, String> {
     
     @Override
     public PlacesDTO readbyID(String id) {
-        List<PlacesDTO> rs = this.searchWithCondition(id, "idplace");
+        List<PlacesDTO> rs = this.searchWithCondition(id, "idPlace");
         for (PlacesDTO i : rs) {
             PlacesDTO newT = new PlacesDTO(i.getIdPlace(),
                     i.getPlaceName(),
                     i.getDescription(),
-                    i.getImg());
+                    i.getImg(),
+                    i.getFeatured());
             return newT;
         }
         return null;
@@ -93,7 +96,7 @@ public class PlacesDAO implements IDAO<PlacesDTO, String> {
 
     @Override
     public List<PlacesDTO> readAll() {
-        String sql = "SELECT idplace, placename,description,img_places FROM dbo.Places ";
+        String sql = "SELECT idplace,placename,description,img_places,Featured FROM dbo.Places ";
         List<PlacesDTO> list = new ArrayList<>();
         try {
             Connection conn = DBUtils.getConnection();
@@ -104,7 +107,8 @@ public class PlacesDAO implements IDAO<PlacesDTO, String> {
                 PlacesDTO newT = new PlacesDTO(rs.getInt("idplace"),
                         rs.getString("placename"),
                         rs.getString("description"),
-                        rs.getString("img_places"));
+                        rs.getString("img_places"),
+                        rs.getInt("Featured") == 1);
                 list.add(newT);
             }
             return list;

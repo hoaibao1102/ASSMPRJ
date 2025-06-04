@@ -1,3 +1,5 @@
+<%@page import="java.util.List"%>
+<%@page import="DTO.PlacesDTO"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="vi">
@@ -187,68 +189,69 @@
                 </div>
             </div>
 
+            <!-- Auto-submit form -->
+            <form id="autoSubmitForm" action="placeController" method="get">
+                <input type="hidden" name="action" value="destination">
+                <input type="hidden" name="page" value="indexjsp">
+                
+            </form>
+
             <div class="section">
                 <div class="title">Điểm đến nổi bật</div>
                 <div class="grid">
-                    <div class="card1">
-                        <form class="card " action="placeController" method="post">
-                            <div class="image-wrapper">
-                                <img src="assets/images/danang2img.jpg" alt="Đà Nẵng" />
-                                <button type="submit" class="btn-overlay">Xem thêm</button>
-                            </div>
-                            <h4>Đà Nẵng</h4>
-                            <input type="hidden" name="action" value="takeListTour" />
-                            <input type="hidden" name="location" value="Đà Nẵng" />
-                        </form>
-                    </div>
-
-                    <div class="card2">
-                        <form class="card " action="placeController" method="post">
-                            <div class="image-wrapper">
-                                <img src="assets/images/vungtauimg.jpg" alt="Vũng Tàu" />
-                                <button type="submit" class="btn-overlay">Xem thêm</button>
-                            </div>
-                            <h4>Vũng Tàu</h4>
-                            <input type="hidden" name="action" value="takeListTour" />
-                            <input type="hidden" name="location" value="Vũng Tàu" />
-                        </form>
-                    </div>
-
-                    <div class="card3">
-                        <form class="card " action="placeController" method="post">
-                            <div class="image-wrapper">
-                                <img src="assets/images/nhatrangimg.jpg" alt="Nha Trang" />
-                                <button type="submit" class="btn-overlay">Xem thêm</button>
-                            </div>
-                            <h4>Nha Trang</h4>
-                            <input type="hidden" name="action" value="takeListTour" />
-                            <input type="hidden" name="location" value="Nha Trang" />
-                        </form>
-                    </div>
-
-
+                    <%
+                        List<PlacesDTO> placeList = (List<PlacesDTO>)request.getAttribute("placeList");
+                        if (placeList != null && !placeList.isEmpty()) {
+                            for (PlacesDTO p : placeList) {
+                                if (p.getFeatured()) {
+                    %>
+                    <form class="card" action="placeController" method="post">
+                        <div class="image-wrapper">
+                            <img src="assets/images/<%=p.getImg()%>" alt="<%=p.getPlaceName()%>" />
+                            <button type="submit" class="btn-overlay">Xem thêm</button>
+                        </div>
+                        <h4><%=p.getPlaceName()%></h4>
+                        <input type="hidden" name="action" value="takeListTicket" />
+                        <input type="hidden" name="location" value="<%=p.getPlaceName()%>" />
+                    </form>
+                    <%
+                                }
+                            }
+                        }
+                    %>
                 </div>
             </div>
         </div>
+    </div>
 
 
-        <jsp:include page="footer.jsp"/>
+    <jsp:include page="footer.jsp"/>
 
-        <script>
-            const slides = document.querySelectorAll('.slide');
-            let currentIndex = 0;
+    <script>
 
-            function showSlide(index) {
-                slides.forEach((slide, i) => {
-                    slide.classList.toggle('active', i === index);
-                });
-            }
+        // Function to auto-submit the form once on the first page load
+        if (!sessionStorage.getItem("formSubmitted")) {
+            // If form has not been submitted yet, submit it
+            document.getElementById('autoSubmitForm').submit();
 
-            setInterval(() => {
-                currentIndex = (currentIndex + 1) % slides.length;
-                showSlide(currentIndex);
-            }, 7000); // 7 giây
-        </script>
+            // Set a flag to prevent future auto-submissions during the session
+            sessionStorage.setItem("formSubmitted", "true");
+        }
+        
+        const slides = document.querySelectorAll('.slide');
+        let currentIndex = 0;
 
-    </body>
+        function showSlide(index) {
+            slides.forEach((slide, i) => {
+                slide.classList.toggle('active', i === index);
+            });
+        }
+
+        setInterval(() => {
+            currentIndex = (currentIndex + 1) % slides.length;
+            showSlide(currentIndex);
+        }, 7000); // 7 giây
+    </script>
+
+</body>
 </html>

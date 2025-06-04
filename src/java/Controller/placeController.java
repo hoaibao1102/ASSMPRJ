@@ -57,8 +57,13 @@ public class placeController extends HttpServlet {
             if (action.equals("destination")) {
                 List<PlacesDTO> places = pdao.readAll();
                 request.setAttribute("placeList", places);
-
-                url = "DestinationForm.jsp";
+                 String page = request.getParameter("page");
+                if(page.equals("indexjsp")){
+                    url = "index.jsp";
+                }else{
+                    url = "DestinationForm.jsp";
+                }
+               
 
             } else if (action.equals("takeListTicket")) {
                 String location = request.getParameter("location");
@@ -72,6 +77,8 @@ public class placeController extends HttpServlet {
                     request.setAttribute("discriptionPlaces", discriptionPlaces);
                     request.setAttribute("tourList", tour);
                     url = "TourTicketForm.jsp";
+                }else{
+                    System.out.println("không qua du?c ba ");
                 }
 
             } else if (action.equals("ticketDetail")) {
