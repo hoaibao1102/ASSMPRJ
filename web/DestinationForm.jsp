@@ -135,7 +135,7 @@
                     <h4><%=p.getPlaceName()%></h4>
                     <p><%=p.getDescription() %></p>
                     <input type="hidden" name="location" value="<%=p.getPlaceName()%>" />   
-                    <input type="hidden" name="action" value="takeListTour" /> 
+                    <input type="hidden" name="action" value="takeListTicket" /> 
                     <button type="submit" class="btn-overlay">Xem thêm</button>
                 </div>
             </form>

@@ -4,10 +4,13 @@
     Author     : MSI PC
 --%>
 <%@page import="java.util.List"%>
-<%@page import="DTO.TourDTO"%>
-<%@page import="DTO.TourDetailDTO"%>
+<%@page import="DTO.TourTicketDTO"%>
+<%@page import="DTO.TicketDayDetailDTO"%>
+<%@page import="DTO.TicketImgDTO"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ page import="java.text.DecimalFormat" %>
+<%@ page import="java.util.ArrayList" %>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -388,9 +391,12 @@
     </head>
     <body>
         <%@include file="header.jsp" %>
-        <%
-                    TourDetailDTO tourDetail = (TourDetailDTO) request.getAttribute("tourDetail");
-                    TourDTO tourTicket = (TourDTO) request.getAttribute("tourTicket");
+        <%  
+                    List<TicketImgDTO> listImg = (List<TicketImgDTO>)request.getAttribute("ticketImgDetail");
+                    List<TicketDayDetailDTO> listDayDetail = (List<TicketDayDetailDTO>)request.getAttribute("ticketDayDetail");
+                    TourTicketDTO tourTicket = (TourTicketDTO)request.getAttribute("tourTicket");
+                            
+                    
                     DecimalFormat vnd = new DecimalFormat("#,###");
         %>
 
@@ -411,34 +417,39 @@
             <!--                ============================================================-->
             <div class="containerdetail">
                 <div class="left-content">
-                    <%
-                        if (tourDetail != null && tourTicket != null) {
+
+                    <% 
+                                List<String> img = new ArrayList<>();
+                                if (listImg != null) {
+                                    for (TicketImgDTO i : listImg) {
+                                        img.add(i.getImgUrl());
+                                    }
+                                }
+                              
                     %>
+                    <% if (listImg != null && listDayDetail != null && tourTicket != null) { %>
 
-                    <h1><%= tourTicket.getDestination() %>: <%= tourDetail.getNameTour() %></h1>
-                    <!-- Khách sạn -->
+                    <h1><%= tourTicket.getDestination() %>: <%= tourTicket.getNametour() %></h1>
 
-                    <!--                ============================================================-->
+                    <!-- Gallery hiển thị ảnh -->
                     <div class="gallery">
                         <div class="thumbnails">
-                            <% 
-                              String[] img = tourDetail.getImg().split("#"); 
-                              for (int i = 0; i < img.length; i++) { 
-                            %>
-                            <img src="assets/images/imgticket/<%= img[i] %>" 
-                                 onclick="showMainImage(<%= i %>)" 
+                            <% for (int i = 0; i < img.size(); i++) { %>
+                            <img src="assets/images/imgticket/<%= img.get(i) %>" 
+                                 onclick="showMainImage('<%= img.get(i) %>')" 
                                  class="thumbnail-img">
                             <% } %>
                         </div>
+
                         <div class="main-image">
                             <img id="mainImg" 
-                                 src="assets/images/imgticket/<%= img.length > 0 ? img[0] : "" %>" 
+                                 src="assets/images/imgticket/<%= img.size() > 0 ? img.get(0) : "" %>" 
                                  onclick="openModal()" 
                                  class="main-img">
                         </div>
                     </div>
 
-                    <!-- Modal xem ảnh lớn chi tiết -->
+                    <!-- Modal xem ảnh lớn -->
                     <div id="modal" class="modal" onclick="closeModal(event)">
                         <span class="close" onclick="closeModal(event)">&times;</span>
                         <div class="modal-content-wrapper">
@@ -446,43 +457,20 @@
                             <img class="modal-content" id="modalImg">
                             <a class="next" onclick="changeImage(1)">&#10095;</a>
                         </div>
-                        <!-- Thêm phần thumbnails nhỏ phía dưới -->
                         <div class="modal-thumbnails-wrapper">
                             <div id="modalThumbnails" class="modal-thumbnails">
-                                <%-- Ảnh nhỏ modal sẽ được JS đổ vào đây --%>
+                                <%-- ảnh nhỏ sẽ được JS đổ --%>
                             </div>
                         </div>
                     </div>
 
-
-
-
-                    <!--               ===========================================================-->
-                    <!-- Ngày 1 -->
+                    <!-- Chi tiết ngày -->
                     <div>
-                        <%
-                        renderDescription(tourDetail.getDescriptD1(), out);
+                        <% for (TicketDayDetailDTO i : listDayDetail) {
+                               renderDescription(i.getDescription(), out);
+                           }
                         %>
                     </div>
-
-                    <!-- Ngày 2 -->
-                    <div>
-                        <%
-                        renderDescription(tourDetail.getDescriptD2(), out);
-                        %>
-
-                    </div>
-                    <% if (tourDetail.getDescriptD3() != null) { %>
-                    <!-- Ngày 3 -->
-                    <div>
-                        <%
-                        renderDescription(tourDetail.getDescriptD3(), out);
-                        %>
-
-                    </div>
-                    <% } %>
-
-
 
                     <% } else { %>
                     <p>Không tìm thấy thông tin chi tiết cho tour này.</p>
@@ -502,15 +490,15 @@
                     </div>
 
                     <ul class="tour-details">
-                        <li><span class="icon">🧾</span> Mã tour: <a href="#" class="blue"><%=tourTicket.getIdTour() %></a></li>
+                        <li><span class="icon">🧾</span> Mã tour: <a href="#" class="blue"><%=tourTicket.getIdTourTicket() %></a></li>
                         <li><span class="icon">📍</span> Khởi hành: <span class="blue"><%=tourTicket.getPlacestart() %></span></li>
-                        <li><span class="icon">📅</span> Ngày khởi hành: <span class="blue"><%=tourTicket.getStartDate() %></span></li>
+                        <li><span class="icon">📅</span> Ngày khởi hành: <span class="blue"><%=tourTicket.getStartdate() %></span></li>
                         <li><span class="icon">⏳</span> Thời gian: <span class="blue"><%=tourTicket.getDuration() %></span></li>
-                        <li><span class="icon">🪑</span> Số chỗ còn: <span class="blue">CHUA RO PHAI SU LY SAO</span></li>
+                        <li><span class="icon">🪑</span> Số chỗ còn: <span class="blue"><%=tourTicket.getQuantity() %></span></li>
                     </ul>
 
                     <form action="loginController" method="get" class="tour-actions">
-                        <input type="hidden" name="idTour" value="<%=tourTicket.getIdTour()%>">
+                        <input type="hidden" name="idTour" value="<%=tourTicket.getIdTourTicket()%>">
                         <input type="hidden" name="action" value="order">
                         <button class="btn-outline">Ngày khác</button>
                         <button class="btn-primary" >Đặt ngay</button>
@@ -554,10 +542,8 @@
         });
 
 // Hiển thị ảnh chính bên ngoài gallery
-        function showMainImage(index) {
-            currentIndex = index;
-            const mainImg = document.getElementById('mainImg');
-            mainImg.src = images[currentIndex];
+        function showMainImage(url) {
+            document.getElementById('mainImg').src = "assets/images/imgticket/" + url;
         }
 
 // Mở modal và khởi tạo ảnh chính + ảnh nhỏ
