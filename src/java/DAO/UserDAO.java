@@ -57,6 +57,7 @@ public class UserDAO implements IDAO<UserDTO, String>{
             ResultSet rs = pst.executeQuery();
             if (rs.next()) {
                 return new UserDTO( 
+                        rs.getInt("id"),
                         rs.getString("full_name"),
                         rs.getString("email"),
                         rs.getString("phone"),

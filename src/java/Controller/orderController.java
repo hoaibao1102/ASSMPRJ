@@ -4,6 +4,8 @@
  */
 package Controller;
 
+import DAO.OrderDAO;
+import DTO.OrderDTO;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -21,7 +23,9 @@ import jakarta.servlet.jsp.PageContext;
  */
 @WebServlet(name = "orderController", urlPatterns = {"/orderController"})
 public class orderController extends HttpServlet {
+
     private static String url = "BookingStep1.jsp";
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -36,27 +40,60 @@ public class orderController extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         String action = request.getParameter("action");
         HttpSession session = request.getSession(false);
-       
+        OrderDAO odao = new OrderDAO();
+        
         try {
-            if("call_oder_step2".equals(action)){
-                String total = request.getParameter("totalBill");
-                String numberTicket = request.getParameter("numberTicket");
-                url="BookingStep2.jsp";
-                request.setAttribute("total", total);
-                request.setAttribute("numberTicket", numberTicket);
-            }else if("call_oder_step3".equals(action)){
-                url="BookingStep3.jsp";
+
+            if ("call_oder_step2".equals(action)) {
                 
-            }    
+                //lay thong tin de tao dtb booking
+                double total = Double.parseDouble(request.getParameter("totalBill"));
+                int numberTicket = Integer.parseInt(request.getParameter("numberTicket"));
+                String idTour = request.getParameter("idTour");
+                int idUser = Integer.parseInt(request.getParameter("idUser")) ;
+                String bookingDate = String.valueOf(request.getParameter("bookingDate"));
+                int status = Integer.parseInt(request.getParameter("status"));
+                String note = request.getParameter("noteValueInput");
+                String idBooking = odao.generateBookingId(idTour);
+
+                OrderDTO newBooking = new OrderDTO(idUser, idTour, bookingDate, numberTicket, total, status, idBooking, note);
+                if (odao.create(newBooking)) {
+                    url = "BookingStep2.jsp";
+                    request.setAttribute("newBooking", newBooking);
+                   
+                }else {
+                    System.out.println("tao loi roi ma");
+                    
+                }
+
+            } else if ("call_oder_step3".equals(action)) {
+                String idBooking = request.getParameter("idBooking");
+                Double total =Double.parseDouble(request.getParameter("totalBill2")) ;
+                int numberTicket = Integer.parseInt(request.getParameter("numberTicket2"));
+                //update trang thai
+                if(odao.updateStatus(idBooking)){
+                     url = "BookingStep3.jsp";
+                    request.setAttribute("total", total);
+                    request.setAttribute("numberTicket", numberTicket);
+                }else{
+                    System.out.println("khong update duoc tu tim lai");
+                }
+              
+            }
+            String paymentMethod = request.getParameter("paymentMethod");
+            if ("momo".equals(paymentMethod)) {
+                // redirect sang cổng Momo
+            } else if ("vnpay".equals(paymentMethod)) {
+                // redirect sang cổng VNPay
+            } else {
+                // xử lý thanh toán tại quầy, v.v.
+            }
         } catch (Exception e) {
         } finally {
             RequestDispatcher rd = request.getRequestDispatcher(url);
             rd.forward(request, response);
         }
-        
-        
-        
-        
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

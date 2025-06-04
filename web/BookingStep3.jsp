@@ -3,7 +3,10 @@
     Created on : May 30, 2025, 3:57:52 PM
     Author     : Admin
 --%>
-
+<%@ page import="java.time.LocalDate, java.time.format.DateTimeFormatter" %>
+<%@ page import="java.text.DecimalFormat" %>
+<%@ page import="DTO.TourDTO"%>
+<%@ page import="DTO.UserDTO"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -138,28 +141,40 @@
         </style>
     </head>
     <body>
+         <%
+                UserDTO account = (UserDTO)session.getAttribute("nameUser");
+                TourDTO tour = (TourDTO)session.getAttribute("tourTicket");
+                double total = Double.parseDouble(request.getAttribute("total")+"");
+                int numberTicket = Integer.parseInt(request.getAttribute("numberTicket")+"");
+                DecimalFormat vnd = new DecimalFormat("#,###");
+                
+                LocalDate today = LocalDate.now();
+                String todayStr = today.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                
+             %>
+        
         <%@include file="header.jsp" %>
         <div class="content">
             <div class="step-container">
                 <h2 class="step-title">ĐẶT TOUR</h2>
                 <div class="step-tracker">
-                    <a href="BookingStep1.jsp">
+                    
                         <div class="step active">
                             <div class="icon green">
                                 <img src="assets/images/icon/icon_fillfile.jpg" alt="info" />
                             </div>
                             <div class="label">NHẬP THÔNG TIN</div>
                         </div>
-                    </a>
+                    
                     <div class="arrow">➜</div>
-                    <a href="BookingStep2.jsp">
+                   
                         <div class="step active">
                             <div class="icon green">
                                 <img src="assets/images/icon/icon_thanhtoan.jpg" alt="pay" />
                             </div>
                             <div class="label">THANH TOÁN</div>
                         </div>
-                    </a>
+                    
                     <div class="arrow">➜</div>
                     <div class="step current">
                         <div class="icon blue">
@@ -179,7 +194,7 @@
                     <div class="summary-done">
                         Cảm ơn bạn đã đặt tour tại VN Tours.<br>
                         Thông tin booking của bạn đã được xác nhận.<br>
-                        Chúng tôi đã gửi email xác nhận đến: <b>example@email.com</b>
+                        Chúng tôi đã gửi email xác nhận đến: <b><%=account.getEmail()%></b>
                     </div>
                     <div class="info-row">
                         <span class="info-label">Mã đặt chỗ:</span> 
@@ -187,19 +202,19 @@
                     </div>
                     <div class="info-row">
                         <span class="info-label">Ngày tạo:</span>
-                        <span class="info-value">30/05/2025</span>
+                        <span class="info-value"><%=todayStr%></span>
                     </div>
                     <div class="info-row">
                         <span class="info-label">Khách hàng:</span> 
-                        <span class="info-value">Doan Dinh Huy (K18 HCM)</span>
+                        <span class="info-value"><%=account.getFullName()%></span>
                     </div>
                     <div class="info-row">
                         <span class="info-label">Điện thoại:</span>
-                        <span class="info-value">0123456789</span>
+                        <span class="info-value"><%=account.getPhone()%></span>
                     </div>
                     <div class="info-row">
                         <span class="info-label">Trị giá booking:</span> 
-                        <span class="info-value" style="color:#d32f2f;">24.190.000 đ</span>
+                        <span class="info-value" style="color:#d32f2f;"><%= vnd.format(total)%> đ</span>
                     </div>
                     <div class="info-row">
                         <span class="info-label">Tình trạng:</span>
@@ -210,23 +225,36 @@
                     </div>
                 </div>
                 <!-- RIGHT: Phiếu xác nhận tour -->
+                
+                <%
+                        String startDateStr = tour.getStartDate();
+                        LocalDate startDate = LocalDate.parse(startDateStr, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                        LocalDate endDate;
+                        String duration = tour.getDuration();
+                        
+                        if("2 ngày 1 đêm".equals(duration)){
+                            endDate = startDate.plusDays(2);
+                        } else {
+                            endDate = startDate.plusDays(3);
+                        }
+                        String endDateStr = endDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                        
+                    %>
                 <div class="right-content">
                     <h3>PHIẾU XÁC NHẬN BOOKING</h3>
-                    <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=600" alt="Tour" style="width:100%; border-radius: 8px; margin-bottom: 15px;">
-                    <p><strong>Trung Quốc: </strong>Thượng Hải - Chu Gia Giác - Bắc Kinh - Chinh phục Vạn Lý Trường Thành</p>
-                    <p><strong>Mã tour:</strong> NNSGN320-018-160625VN-D</p>
+                    <img src="assets/images/places/<%=tour.getImg()%>" alt="Tour" style="width:100%; border-radius: 8px; margin-bottom: 15px;">
+                    <p><strong><%=tour.getDestination()%>:  </strong><%=tour.getNameTour()%></p>
+                    <p><strong>Mã tour:</strong> <%=tour.getIdTour()%></p>
                     <h4>THÔNG TIN CHUYẾN ĐI</h4>
                     <p>
-                        Ngày đi: 16/06/2025 &nbsp;&nbsp; <br>
-                        07:20 &nbsp; SGN → 12:40 &nbsp; PVG
+                        Ngày đi: <%=tour.getStartDate()%> &nbsp;&nbsp; <br>
                     </p>
                     <p>
-                        Ngày về: 21/06/2025 &nbsp;&nbsp; <br>
-                        15:45 &nbsp; PEK → 23:10 &nbsp; SGN
+                        Ngày về: <%=endDateStr%>&nbsp;&nbsp; <br>
                     </p>
                     <div style="border-top:1px dashed #ccc;margin:20px 0;"></div>
                     <div class="info-label" style="margin-bottom:6px;">TỔNG TIỀN ĐÃ THANH TOÁN:</div>
-                    <div style="font-size:19px; color:#d32f2f; font-weight:bold;margin-bottom:20px;">24.190.000 đ</div>
+                    <div style="font-size:19px; color:#d32f2f; font-weight:bold;margin-bottom:20px;"><%= vnd.format(total)%></div>
                     <a href="index.jsp" class="btn-main" style="text-align:center;display:block;">Tiếp tục khám phá tour khác</a>
                 </div>
                  

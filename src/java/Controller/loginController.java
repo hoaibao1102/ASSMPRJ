@@ -5,11 +5,11 @@
  */
 package Controller;
 
-import DAO.TourDAO;
-import DAO.TourDetailDAO;
+import DAO.TourTicketDAO;
+import DAO.TicketImgDAO;
 import DAO.UserDAO;
-import DTO.TourDTO;
-import DTO.TourDetailDTO;
+import DTO.TourTicketDTO;
+import DTO.TicketImgDTO;
 import DTO.UserDTO;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -45,8 +45,8 @@ public class loginController extends HttpServlet {
         String url = LOGIN_PAGE;
         String action = request.getParameter("action");
         HttpSession session = request.getSession(false);
-        TourDetailDAO tdDao = new TourDetailDAO();
-        TourDAO tdao = new TourDAO();
+        TicketImgDAO tdDao = new TicketImgDAO();
+        TourTicketDAO tdao = new TourTicketDAO();
 
         try {
             if (action == null) {
@@ -69,8 +69,8 @@ public class loginController extends HttpServlet {
                         String idTour = (String) session.getAttribute("idTour");
 
                         if (idTour != null && !idTour.trim().isEmpty()) {
-                            TourDetailDTO tourDetail = tdDao.readbyID(idTour);
-                            TourDTO tourTicket = tdao.readbyID(idTour);
+                            TicketImgDTO tourDetail = tdDao.readbyID(idTour);
+                            TourTicketDTO tourTicket = tdao.readbyID(idTour);
                             request.setAttribute("tourDetail", tourDetail);
                             request.getSession().setAttribute("tourTicket", tourTicket);
                             session.removeAttribute("idTour"); // Xóa sau khi dùng
@@ -96,9 +96,10 @@ public class loginController extends HttpServlet {
             } else if ("order".equals(action)) {
                 // Truy cập trang đặt hàng
                 if (session != null && session.getAttribute("nameUser") != null) {
+
                     String idTour = (String)request.getParameter("idTour");
                     if (idTour != null && !idTour.trim().isEmpty()) {
-                        TourDTO tour = tdao.readbyID(idTour);
+                        TourTicketDTO tour = tdao.readbyID(idTour);
                         session.setAttribute("tourTicket", tour);
                         url = "BookingStep1.jsp";
                     } 
