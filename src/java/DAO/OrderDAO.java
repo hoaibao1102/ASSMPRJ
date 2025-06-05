@@ -22,7 +22,7 @@ public class OrderDAO implements IDAO<OrderDTO, String> {
 
     @Override
     public boolean create(OrderDTO entity) {
-            String sql = "INSERT INTO Orders (idBooking, idUser, idTour, BookingDate, NumberTicket, TotalPrice, Status, Note) VALUES (?, ?, ?, ?, ?, ?, ?, ?) ";
+            String sql = "INSERT INTO Orders (idBooking, idUser, idTourTicket, BookingDate, NumberTicket, TotalPrice, Status, Note) VALUES (?, ?, ?, ?, ?, ?, ?, ?) ";
         try {
             Connection conn = DBUtils.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);

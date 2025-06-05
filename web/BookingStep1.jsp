@@ -5,7 +5,7 @@
 --%>
 <%@ page import="java.time.LocalDate, java.time.format.DateTimeFormatter" %>
 <%@ page import="DTO.UserDTO"%>
-<%@ page import="DTO.TourDTO"%>
+<%@ page import="DTO.TourTicketDTO"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -394,7 +394,7 @@
 
         <%
             UserDTO account = (UserDTO)session.getAttribute("nameUser");
-            TourDTO tour = (TourDTO)session.getAttribute("tourTicket");
+            TourTicketDTO tour = (TourTicketDTO)session.getAttribute("tourTicket");
         %>
 
         <!--    ===================================================thong tin ben trai        -->
@@ -472,11 +472,11 @@
                     <h3>TÓM TẮT CHUYẾN ĐI</h3>
 
                     <div class="tour-info">
-                        <img src="assets/images/places/<%=tour.getImg()%>" alt="<%=tour.getDestination()%>" />
+                        <img src="assets/images/places/<%=tour.getImg_Tour()%>" alt="<%=tour.getDestination()%>" />
                         <div class="tour-details">
-                            <p class="tour-code">Mã tour <strong><%=tour.getIdTour()%></strong></p>
+                            <p class="tour-code">Mã tour <strong><%=tour.getIdTourTicket()%></strong></p>
 
-                            <p><strong><%=tour.getDestination()%>: </strong> <%=tour.getNameTour()%></p>
+                            <p><strong><%=tour.getDestination()%>: </strong> <%=tour.getNametour()%></p>
 
 
                         </div>
@@ -484,7 +484,7 @@
                     <!--============================================================================= CAN DUOC XU LY
                     =============================================================================-->
                     <%
-                        String startDateStr = tour.getStartDate();
+                        String startDateStr = tour.getStartdate();
                         LocalDate startDate = LocalDate.parse(startDateStr, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
                         LocalDate endDate;
                         String duration = tour.getDuration();
@@ -504,7 +504,7 @@
 
                     <div class="flight-info">
                         <div>
-                            <p><strong>Ngày đi: <%=tour.getStartDate()%></strong></p>
+                            <p><strong>Ngày đi: <%=tour.getStartdate()%></strong></p>
                         </div>
                         <div>
                             <p><strong>Ngày về: <%=endDateStr%></strong></p>
@@ -556,7 +556,7 @@
 
                         <!-- gửi thông tin để tạo dtb booking table -->
                         <input type="hidden" name="idUser" value="<%=account.getIdUser()%>">
-                        <input type="hidden" name="idTour" value="<%=tour.getIdTour()%>">
+                        <input type="hidden" name="idTour" value="<%=tour.getIdTourTicket()%>">
                         <input type="hidden" name="bookingDate" value="<%=today%>">
                         <input type="hidden" id="totalBill" name="totalBill" value="">
                         <input type="hidden" id="numberTicket" name="numberTicket" value="">

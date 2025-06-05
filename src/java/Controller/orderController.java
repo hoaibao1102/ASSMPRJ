@@ -72,8 +72,9 @@ public class orderController extends HttpServlet {
                 int numberTicket = Integer.parseInt(request.getParameter("numberTicket2"));
                 //update trang thai
                 if(odao.updateStatus(idBooking)){
-                     url = "BookingStep3.jsp";
+                    url = "BookingStep3.jsp";
                     request.setAttribute("total", total);
+                    request.setAttribute("idBooking", idBooking);
                     request.setAttribute("numberTicket", numberTicket);
                 }else{
                     System.out.println("khong update duoc tu tim lai");

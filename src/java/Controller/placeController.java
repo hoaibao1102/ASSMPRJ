@@ -32,6 +32,14 @@ public class placeController extends HttpServlet {
 
     private static String URL = "index.jsp";
 
+    protected void getFeaturedPlaces(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String url = URL;
+        PlacesDAO pdao = new PlacesDAO();
+        List<PlacesDTO> places = pdao.readAll();
+        request.setAttribute("placeList", places);
+    }
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -49,21 +57,21 @@ public class placeController extends HttpServlet {
         PlacesDAO pdao = new PlacesDAO();
         TicketDayDetailDAO tddDao = new TicketDayDetailDAO();
         TicketImgDAO tiDAO = new TicketImgDAO();
-        
+
         String action = request.getParameter("action");
         String url = URL;
-        
+
         try {
             if (action.equals("destination")) {
-                List<PlacesDTO> places = pdao.readAll();
-                request.setAttribute("placeList", places);
-                 String page = request.getParameter("page");
-                if(page.equals("indexjsp")){
+                // Gọi hàm getFeaturedPlaces để lấy danh sách địa điểm và gán vào request
+                getFeaturedPlaces(request, response);
+
+                String page = request.getParameter("page");
+                if (page.equals("indexjsp")) {
                     url = "index.jsp";
-                }else{
+                } else {
                     url = "DestinationForm.jsp";
                 }
-               
 
             } else if (action.equals("takeListTicket")) {
                 String location = request.getParameter("location");
@@ -73,40 +81,42 @@ public class placeController extends HttpServlet {
                     List<TourTicketDTO> tour = tdao.searchByDestination(location);
                     //Lay ra mo ta cua tung noi 
                     String discriptionPlaces = pdao.readByName(location).getDescription();
-                    
+
                     request.setAttribute("discriptionPlaces", discriptionPlaces);
                     request.setAttribute("tourList", tour);
                     url = "TourTicketForm.jsp";
-                }else{
+                } else {
                     System.out.println("không qua du?c ba ");
                 }
 
             } else if (action.equals("ticketDetail")) {
                 //di vao chi tiet tour    
-                
                 String idTour = request.getParameter("idTourTicket");
                 if (idTour != null && !idTour.trim().isEmpty()) {
                     List<TicketImgDTO> ticketImgDetail = tiDAO.readbyIdTourTicket(idTour);
                     List<TicketDayDetailDTO> ticketDayDetail = tddDao.readbyIdTourTicket(idTour);
                     TourTicketDTO tourTicket = tdao.readbyID(idTour);
-                    
+
                     request.setAttribute("ticketImgDetail", ticketImgDetail);
                     request.setAttribute("ticketDayDetail", ticketDayDetail);
                     request.setAttribute("tourTicket", tourTicket);
                     url = "TicketDetailForm.jsp";
                 }
-//                } else if (action.equals("search")) {
-//                //lay ra thông tin search
-//                String searchTour = request.getParameter("searchTour");
-//                //lay ra list tour
-//                if (searchTour != null && !searchTour.trim().isEmpty()) {
-//                    searchTour = searchTour.trim(); // loại bỏ khoảng trắng đầu/cuối
-//                    List<TourTicketDTO> tour2 = tdao.searchAnyInfor(searchTour);
-//                    request.setAttribute("tourList2", tour2);
-//                    request.setAttribute("searchTourInfor", searchTour);
-//                    url ="ResultSearchForm.jsp";
-//                   
-//                }
+            } else if (action.equals("search")) {
+                //lay ra thông tin search
+                String searchItem = request.getParameter("searchItem");
+                //lay ra list tour
+                if (searchItem != null && !searchItem.trim().isEmpty()) {
+                    // Gọi hàm getFeaturedPlaces để lấy danh sách địa điểm và gán vào request
+                    getFeaturedPlaces(request, response);
+                    
+                    searchItem = searchItem.trim(); // loại bỏ khoảng trắng đầu/cuối
+                    List<TourTicketDTO> tour2 = tdao.searchAnyInfor(searchItem);
+                    request.setAttribute("tourList2", tour2);
+                    request.setAttribute("searchTourInfor", searchItem);
+                    url = "ResultSearchForm.jsp";
+
+                }
             }
 
         } catch (Exception e) {

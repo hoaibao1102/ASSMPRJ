@@ -4,8 +4,9 @@
     Author     : MSI PC
 --%>
 
+<%@page import="DTO.PlacesDTO"%>
 <%@page import="java.util.List"%>
-<%@page import="DTO.TourDTO"%>
+<%@page import="DTO.TourTicketDTO"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="vi">
@@ -14,7 +15,7 @@
         <title>Danh sách Tour</title>
         <link rel="stylesheet" href="assets/css/bodyCss.css"/>
         <style>
-            
+
 
             h1 {
                 font-weight: 900;
@@ -128,7 +129,7 @@
                 outline: none;
             }
 
-/*            CSS PHAN THONG TIN NOI BAT*/
+            /*            CSS PHAN THONG TIN NOI BAT*/
 
             .section {
                 padding: 20px;
@@ -223,91 +224,80 @@
     <body>
         <%@include file="header.jsp" %>
         <%
-            List<TourDTO> tourList = (List<TourDTO>) request.getAttribute("tourList2");
+            List<TourTicketDTO> tourList = (List<TourTicketDTO>) request.getAttribute("tourList2");
             String searchTourInfor = request.getAttribute("searchTourInfor")+"";
         %>
 
+        <div class="content">
+            <div class="container1">
+                <%
+                    if (tourList != null && !tourList.isEmpty()) {
+                %>
+                <h2 style="margin-bottom: 15px">Dưới đây là các tour liên quan tới "<%=searchTourInfor%>"</h2>
+                <%
+                for (TourTicketDTO t : tourList) {
+                %>
 
-        <div class="container1">
-            <%
-                if (tourList != null && !tourList.isEmpty()) {
-            %>
-            <h2 style="margin-bottom: 15px">DAY LA CAC TOUR LIEN QUAN TOI "<%=searchTourInfor%>"</h2>
-            <%
-            for (TourDTO t : tourList) {
-            %>
-
-            <div class="tour-card">
-                <img class="tour-img" src="assets/images/places/<%=t.getImg()%>" alt="<%= t.getNameTour() %>">
-                <div class="tour-content">
-                    <div>
-                        <div class="tour-title"><%= t.getNameTour() %></div>
-                        <div class="tour-meta">🆔 Mã tour: <strong><%= t.getIdTour() %></strong></div>
-                        <div class="tour-meta">📍 Khởi hành: <strong><%= t.getPlacestart() %></strong></div>
-                        <div class="tour-meta">🕒 Thời gian: <strong><%= t.getDuration() %></strong></div>
-                        <div class="tour-meta">✈️ Phương tiện: <strong><%= t.getTransport() %></strong></div>
-                        <div class="tour-meta tour-dates">
-                            📅 Ngày khởi hành: <span><%= t.getStartDate() %></span>
+                <div class="tour-card">
+                    <img class="tour-img" src="assets/images/places/<%=t.getImg_Tour()%>" alt="<%= t.getNametour() %>">
+                    <div class="tour-content">
+                        <div>
+                            <div class="tour-title"><%= t.getNametour() %></div>
+                            <div class="tour-meta">🆔 Mã tour: <strong><%= t.getIdTourTicket() %></strong></div>
+                            <div class="tour-meta">📍 Khởi hành: <strong><%= t.getPlacestart() %></strong></div>
+                            <div class="tour-meta">🕒 Thời gian: <strong><%= t.getDuration() %></strong></div>
+                            <div class="tour-meta">✈️ Phương tiện: <strong><%= t.getTransport_name() %></strong></div>
+                            <div class="tour-meta tour-dates">
+                                📅 Ngày khởi hành: <span><%= t.getStartdate() %></span>
+                            </div>
+                            <div class="price">Giá từ: <%= String.format("%,.0f", t.getPrice()) %> đ</div>
                         </div>
-                        <div class="price">Giá từ: <%= String.format("%,.0f", t.getPrice()) %> đ</div>
+
+                        <!-- Form sử dụng input submit cho nút Xem chi tiết -->
+                        <form action="placeController" method="get">
+                            <input type="hidden" name="action" value="ticketDetail" />
+                            <input type="hidden" name="idTourTicket" value="<%=t.getIdTourTicket()%>" />
+                            <input class="btn-detail" type="submit" value="Xem chi tiết" />
+                        </form>
                     </div>
+                </div>
+                <%
+                        }
+                    } else { %>
+                <h2>Không tìm thấy thông tin liên quan đến: "<%=searchTourInfor%>"</h2>
 
-                    <!-- Form sử dụng input submit cho nút Xem chi tiết -->
-                    <form action="placeController" method="get">
-                        <input type="hidden" name="action" value="tourDetail" />
-                        <input type="hidden" name="idTour" value="<%=t.getIdTour()%>" />
-                        <input class="btn-detail" type="submit" value="Xem chi tiết" />
+                <% } %>
+            </div>
+
+            <div class="section">
+                <div class="title">Điểm đến nổi bật</div>
+                <div class="grid">
+                    <%
+                        List<PlacesDTO> placeList = (List<PlacesDTO>)request.getAttribute("placeList");
+                        if (placeList != null && !placeList.isEmpty()) {
+                            for (PlacesDTO p : placeList) {
+                                if (p.getFeatured()) {
+                    %>
+                    <form class="card" action="placeController" method="post">
+                        <div class="image-wrapper">
+                            <img src="assets/images/<%=p.getImg()%>" alt="<%=p.getPlaceName()%>" />
+                            <button type="submit" class="btn-overlay">Xem thêm</button>
+                        </div>
+                        <h4><%=p.getPlaceName()%></h4>
+                        <input type="hidden" name="action" value="takeListTicket" />
+                        <input type="hidden" name="location" value="<%=p.getPlaceName()%>" />
                     </form>
+                    <%
+                                }
+                            }
+                        }
+                    %>
                 </div>
             </div>
-            <%
-                    }
-                } else { %>
-            <h2>Không tìm thấy thông tin liên quan đến: "<%=searchTourInfor%>"</h2>
-
-            <% } %>
         </div>
+    </div>
 
-        <div class="section">
-            <div class="title">Điểm đến nổi bật</div>
-            <div class="grid">
-                <div class="card1">
-                    <form class="card " action="placeController" method="post">
-                        <div class="image-wrapper">
-                            <img src="assets/images/danang2img.jpg" alt="Đà Nẵng" />
-                            <button type="submit" class="btn-overlay">Xem thêm</button>
-                        </div>
-                        <h4>Đà Nẵng</h4>
-                        <input type="hidden" name="location" value="Đà Nẵng" />
-                    </form>
-                </div>
-
-                <div class="card2">
-                    <form class="card " action="placeController" method="post">
-                        <div class="image-wrapper">
-                            <img src="assets/images/vungtauimg.jpg" alt="Vũng Tàu" />
-                            <button type="submit" class="btn-overlay">Xem thêm</button>
-                        </div>
-                        <h4>Vũng Tàu</h4>
-                        <input type="hidden" name="location" value="Vũng Tàu" />
-                    </form>
-                </div>
-
-                <div class="card3">
-                    <form class="card " action="placeController" method="post">
-                        <div class="image-wrapper">
-                            <img src="assets/images/nhatrangimg.jpg" alt="Nha Trang" />
-                            <button type="submit" class="btn-overlay">Xem thêm</button>
-                        </div>
-                        <h4>Nha Trang</h4>
-                        <input type="hidden" name="location" value="Nha Trang" />
-                    </form>
-                </div>
-
-
-            </div>
-        </div>
-        <%@include file="footer.jsp" %>
-    </body>
+    <%@include file="footer.jsp" %>
+</body>
 </html>
 
