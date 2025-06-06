@@ -3,7 +3,7 @@
     Created on : May 13, 2025, 4:54:54 PM
     Author     : MSI PC
 --%>
-
+<%@ page import="DTO.UserDTO"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
@@ -115,11 +115,18 @@
         <div class="content content_sub">
             <div class="register-container">
                 <h2>Create Your Account</h2>
+                <%
+                          
+                           UserDTO userRegis = (UserDTO)request.getAttribute("newUser");
+                           String userName = userRegis != null && userRegis.getFullName() != null ? userRegis.getFullName() : "";
+                           String userPhone = userRegis != null && userRegis.getPhone() != null ? userRegis.getPhone() : "";
+                           String userEmail = userRegis != null && userRegis.getEmail() != null ? userRegis.getEmail() : "";
 
+                %>
                 <form action="regisController" method="post">
                     <input type="hidden" value="regis" name="action"> 
                     <label for="name">Full Name</label>
-                    <input type="text" id="name" name="txtFullname" placeholder="John Doe" required >
+                    <input type="text" id="name" name="txtFullname" placeholder="John Doe" required value =" <%=userName%>" >
                     <%
                             String txtFullname_error = request.getAttribute("txtFullname_error")+"";
                     %>
@@ -128,7 +135,7 @@
                     </div>
 
                     <label for="email">Email Address</label>
-                    <input type="email" id="email" name="txtEmail" placeholder="example@email.com" required>
+                    <input type="email" id="email" name="txtEmail" placeholder="example@email.com" required value =" <%=userEmail%>">
                     <%
                             String txtEmail_error = request.getAttribute("txtEmail_error")+"";
                     %>
@@ -138,7 +145,7 @@
 
 
                     <label for="phone">Phone Number</label>
-                    <input type="tel" id="phone"  name="txtPhone" placeholder="0123 456 789" required>
+                    <input type="tel" id="phone"  name="txtPhone" placeholder="0123 456 789" required value =" <%=userPhone%>">
                     <%
                                             String txtPhone_error = request.getAttribute("txtPhone_error")+"";
                     %>

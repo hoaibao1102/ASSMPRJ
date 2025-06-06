@@ -129,8 +129,8 @@ public class TourTicketDAO implements IDAO<TourTicketDTO, String> {
 
     public List<TourTicketDTO> searchAnyInfor(String searchItem) {
         String sql = SELECT_QUERY
-                + "  WHERE destination like ? or "
-                + " nametour like ? ";
+                + "  WHERE destination COLLATE Latin1_General_CI_AI like ? or "
+                + " nametour COLLATE Latin1_General_CI_AI like ? ";
         List<TourTicketDTO> list = new ArrayList<>();
         try {
             String searchTerm2 = "%"+searchItem+"%";

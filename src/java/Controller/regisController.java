@@ -6,6 +6,7 @@ package Controller;
 
 import DAO.UserDAO;
 import DTO.UserDTO;
+import UTILS.PasswordUtils;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -53,7 +54,7 @@ public class regisController extends HttpServlet {
                     String password = request.getParameter("txtPassword");
                     String confirmPassword = request.getParameter("txtConfirmPassword");
 
-                    UserDTO newUser = new UserDTO(fullName, email, phone, password, "customer");
+                    
                     
                     
                     // Regex cho tên: chỉ cho phép chữ cái, dấu cách, độ dài 2-20 ký tự
@@ -101,12 +102,15 @@ public class regisController extends HttpServlet {
                         checkedError = true;
                         request.setAttribute("txtConfirmPassword_error", "Xác nhận mật khẩu sai");
                     }
-
+                    
                     if (!checkedError) {
-                        uDAO.create(newUser);
+                        String newPassWord = PasswordUtils.hashPassword(password);
+                        UserDTO userSuccess = new UserDTO(fullName, email, phone, newPassWord, "CUS");
+                        uDAO.create(userSuccess);
                         url = LOGIN_PAGE;
                     } else {
-                        request.setAttribute("newUser", newUser);
+                        UserDTO userFail = new UserDTO(fullName, email, phone, password, "CUS");
+                        request.setAttribute("newUser", userFail);
                         url = REGIS_PAGE;
                     }
 
