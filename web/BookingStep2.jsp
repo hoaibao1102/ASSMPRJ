@@ -4,12 +4,9 @@
     Author     : MSI PC
 --%>
 <%@ page import="java.time.LocalDate, java.time.format.DateTimeFormatter" %>
-<%@ page import="DTO.UserDTO"%>
 <%@ page import="DTO.OrderDTO"%>
 <%@ page import="DTO.TourTicketDTO"%>
-<%@ page import="DTO.TicketDayDetailDTO"%>
-<%@ page import="DTO.TicketImgDTO"%>
-
+<%@ page import="DTO.UserDTO"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ page import="java.text.DecimalFormat" %>
 <!DOCTYPE html>
@@ -209,8 +206,8 @@
                 </div>
 
                 <% 
-                    TourDTO tour = (TourDTO)session.getAttribute("tourTicket");
-                    String startDateStr = tour.getStartDate();
+                    TourTicketDTO tour = (TourTicketDTO)session.getAttribute("tourTicket");
+                    String startDateStr = tour.getStartdate();
                     LocalDate startDate = LocalDate.parse(startDateStr, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
                     LocalDate endDate;
                     String duration = tour.getDuration();
@@ -227,12 +224,12 @@
                 <!-- RIGHT: PHIẾU XÁC NHẬN -->
                 <div class="right-content">
                     <h3>PHIẾU XÁC NHẬN BOOKING</h3>
-                    <img src="assets/images/places/<%=tour.getImg()%>" alt="Tour" style="width:100%; border-radius: 8px; margin-bottom: 15px;">
-                    <p><strong><%=tour.getDestination()%>:   </strong> <%=tour.getNameTour()%></p>
-                    <p><strong>Mã tour:</strong> <%=tour.getIdTour()%></p>
+                    <img src="assets/images/places/<%=tour.getImg_Tour()%>" alt="Tour" style="width:100%; border-radius: 8px; margin-bottom: 15px;">
+                    <p><strong><%=tour.getDestination()%>:   </strong> <%=tour.getNametour()%></p>
+                    <p><strong>Mã tour:</strong> <%=tour.getIdTourTicket()%></p>
                     <h4>THÔNG TIN CHUYẾN ÐI</h4>
                     <p>
-                        Ngày đi: <%=tour.getStartDate()%> &nbsp;&nbsp;  <br>
+                        Ngày đi: <%=tour.getStartdate()%> &nbsp;&nbsp;  <br>
 
                     </p>
                     <p>

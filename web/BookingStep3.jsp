@@ -5,7 +5,7 @@
 --%>
 <%@ page import="java.time.LocalDate, java.time.format.DateTimeFormatter" %>
 <%@ page import="java.text.DecimalFormat" %>
-<%@ page import="DTO.TourDTO"%>
+<%@ page import="DTO.TourTicketDTO"%>
 <%@ page import="DTO.UserDTO"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -143,11 +143,11 @@
     <body>
          <%
                 UserDTO account = (UserDTO)session.getAttribute("nameUser");
-                TourDTO tour = (TourDTO)session.getAttribute("tourTicket");
+                TourTicketDTO tour = (TourTicketDTO)session.getAttribute("tourTicket");
                 double total = Double.parseDouble(request.getAttribute("total")+"");
                 int numberTicket = Integer.parseInt(request.getAttribute("numberTicket")+"");
                 DecimalFormat vnd = new DecimalFormat("#,###");
-                
+                String idBooking = request.getAttribute("idBooking")+"";
                 LocalDate today = LocalDate.now();
                 String todayStr = today.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
                 
@@ -198,7 +198,7 @@
                     </div>
                     <div class="info-row">
                         <span class="info-label">Mã đặt chỗ:</span> 
-                        <span class="info-value" style="color:red">ABC123456</span>
+                        <span class="info-value" style="color:red"><%=idBooking%></span>
                     </div>
                     <div class="info-row">
                         <span class="info-label">Ngày tạo:</span>
@@ -227,7 +227,7 @@
                 <!-- RIGHT: Phiếu xác nhận tour -->
                 
                 <%
-                        String startDateStr = tour.getStartDate();
+                        String startDateStr = tour.getStartdate();
                         LocalDate startDate = LocalDate.parse(startDateStr, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
                         LocalDate endDate;
                         String duration = tour.getDuration();
@@ -242,12 +242,12 @@
                     %>
                 <div class="right-content">
                     <h3>PHIẾU XÁC NHẬN BOOKING</h3>
-                    <img src="assets/images/places/<%=tour.getImg()%>" alt="Tour" style="width:100%; border-radius: 8px; margin-bottom: 15px;">
-                    <p><strong><%=tour.getDestination()%>:  </strong><%=tour.getNameTour()%></p>
-                    <p><strong>Mã tour:</strong> <%=tour.getIdTour()%></p>
+                    <img src="assets/images/places/<%=tour.getImg_Tour()%>" alt="Tour" style="width:100%; border-radius: 8px; margin-bottom: 15px;">
+                    <p><strong><%=tour.getDestination()%>:  </strong><%=tour.getNametour()%></p>
+                    <p><strong>Mã tour:</strong> <%=tour.getIdTourTicket()%></p>
                     <h4>THÔNG TIN CHUYẾN ĐI</h4>
                     <p>
-                        Ngày đi: <%=tour.getStartDate()%> &nbsp;&nbsp; <br>
+                        Ngày đi: <%=tour.getStartdate()%> &nbsp;&nbsp; <br>
                     </p>
                     <p>
                         Ngày về: <%=endDateStr%>&nbsp;&nbsp; <br>

@@ -5,9 +5,11 @@
  */
 package Controller;
 
+import DAO.PlacesDAO;
 import DAO.TourTicketDAO;
 import DAO.TicketImgDAO;
 import DAO.UserDAO;
+import DTO.PlacesDTO;
 import DTO.TourTicketDTO;
 import DTO.TicketImgDTO;
 import DTO.UserDTO;
@@ -19,7 +21,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
-
+import java.util.List;
 
 /**
  *
@@ -29,7 +31,7 @@ import java.io.IOException;
 public class loginController extends HttpServlet {
 
     private static final String LOGIN_PAGE = "LoginForm.jsp";
-    
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -79,6 +81,9 @@ public class loginController extends HttpServlet {
                         session.removeAttribute("redirectAfterLogin");
 
                     } else {
+                        PlacesDAO pdao = new PlacesDAO();
+                        List<PlacesDTO> places = pdao.readAll();
+                        request.setAttribute("placeList", places);
                         url = "index.jsp";
                     }
                 } else {
@@ -91,18 +96,21 @@ public class loginController extends HttpServlet {
                 if (session != null) {
                     session.invalidate();
                 }
+                PlacesDAO pdao = new PlacesDAO();
+                List<PlacesDTO> places = pdao.readAll();
+                request.setAttribute("placeList", places);
                 url = "index.jsp";
 
             } else if ("order".equals(action)) {
                 // Truy cập trang đặt hàng
                 if (session != null && session.getAttribute("nameUser") != null) {
 
-                    String idTour = (String)request.getParameter("idTour");
+                    String idTour = (String) request.getParameter("idTour");
                     if (idTour != null && !idTour.trim().isEmpty()) {
                         TourTicketDTO tour = tdao.readbyID(idTour);
                         session.setAttribute("tourTicket", tour);
                         url = "BookingStep1.jsp";
-                    } 
+                    }
                 } else {
                     // Chưa login => lưu trang cần redirect sau login, rồi chuyển tới login page
                     session = request.getSession(true);

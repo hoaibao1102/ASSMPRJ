@@ -255,7 +255,7 @@
         <header class="header">
             <div class="container">
                 <nav class="nav">
-                    <a href="index.jsp" class="logo">VN Tours</a>
+                    <a href="placeController?action=destination&page=indexjsp" class="logo">VN Tours</a>
 
                     <div class="menu-toggle" onclick="toggleMenu()">☰</div>
 
@@ -289,7 +289,7 @@
                         <form action="placeController" method="get">
                             <div class="search-bar">
                                 <input type="hidden" name="action" value="search">
-                                <input type="text" class="search-input" name="searchTour" placeholder="Tìm Kiếm...." value="<%=searchTour%>">
+                                <input type="text" class="search-input" name="searchItem" placeholder="Tìm Kiếm...." value="<%=searchTour%>">
                                 <button class="search-button">🔍</button>
                             </div>
                         </form>
@@ -309,6 +309,7 @@
                             </div>                            
                             <form action="loginController" method="post" style="display:inline;">
                                 <input type="hidden" name="action" value="logout" />
+                                
                                 <button type="submit" class="logout-btn">Đăng xuất</button>
                             </form>
                             <%
