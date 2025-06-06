@@ -4,9 +4,12 @@
     Author     : MSI PC
 --%>
 <%@ page import="java.time.LocalDate, java.time.format.DateTimeFormatter" %>
-<%@ page import="DTO.OrderDTO"%>
-<%@ page import="DTO.TourDTO"%>
 <%@ page import="DTO.UserDTO"%>
+<%@ page import="DTO.OrderDTO"%>
+<%@ page import="DTO.TourTicketDTO"%>
+<%@ page import="DTO.TicketDayDetailDTO"%>
+<%@ page import="DTO.TicketImgDTO"%>
+
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ page import="java.text.DecimalFormat" %>
 <!DOCTYPE html>
