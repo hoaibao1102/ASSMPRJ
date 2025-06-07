@@ -190,7 +190,7 @@
             </div>
 
             <!-- Auto-submit form -->
-            <form id="autoSubmitForm" action="placeController" method="get">
+            <form id="autoSubmitForm" action="placeController" method="post">
                 <input type="hidden" name="action" value="destination">
                 <input type="hidden" name="page" value="indexjsp">
                 

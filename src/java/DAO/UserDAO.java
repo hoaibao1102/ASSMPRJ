@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,7 +19,7 @@ import java.util.logging.Logger;
  *
  * @author MSI PC
  */
-public class UserDAO implements IDAO<UserDTO, String>{
+public class UserDAO implements IDAO<UserDTO, String> {
 
     @Override
     public boolean create(UserDTO entity) {
@@ -43,6 +44,27 @@ public class UserDAO implements IDAO<UserDTO, String>{
 
     @Override
     public List<UserDTO> readAll() {
+        String sql = "SELECT * FROM users  ";
+        List<UserDTO> list = new ArrayList<>();
+        try {
+            Connection conn = DBUtils.getConnection();
+            PreparedStatement pst = conn.prepareStatement(sql);
+            ResultSet rs = pst.executeQuery();
+            while(rs.next()) {
+                UserDTO user = new UserDTO(
+                        rs.getInt("id"),
+                        rs.getString("full_name"),
+                        rs.getString("email"),
+                        rs.getString("phone"),
+                        rs.getString("password"),
+                        rs.getString("role")
+                );
+                list.add(user);
+            }
+            return list;
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return null;
     }
 
@@ -56,7 +78,7 @@ public class UserDAO implements IDAO<UserDTO, String>{
             pst.setString(2, searchTerm);
             ResultSet rs = pst.executeQuery();
             if (rs.next()) {
-                return new UserDTO( 
+                return new UserDTO(
                         rs.getInt("id"),
                         rs.getString("full_name"),
                         rs.getString("email"),
@@ -73,29 +95,29 @@ public class UserDAO implements IDAO<UserDTO, String>{
 
     @Override
     public boolean update(UserDTO entity) {
-//        String sql = "UPDATE users set "
-//                    + "full_name = ?,"
-//                    + "email = ?, "
-//                    + "phone = ?, "
-//                    + "password = ?, "
-//                    + "role = ? "
-//                    + "where id = ?";
-//        try {
-//            Connection conn = DBUtils.getConnection();
-//            PreparedStatement ps = conn.prepareStatement(sql);
-//            ps.setString(1, entity.getFullName());
-//            ps.setString(2, entity.getEmail());
-//            ps.setString(3, entity.getPhone());
-//            ps.setString(4, entity.getPassword());
-//            ps.setString(5, entity.getRole());
-//            ps.setString(5, entity.getRole());
-//            int n = ps.executeUpdate();
-//            return n > 0;
-//        } catch (ClassNotFoundException ex) {
-//            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
-//        } catch (SQLException ex) {
-//            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
-//        }
+        String sql = "UPDATE users set "
+                + "full_name = ?, "
+                + "email = ?, "
+                + "phone = ?, "
+                + "password = ?, "
+                + "role = ? "
+                + "where id = ?";
+        try {
+            Connection conn = DBUtils.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, entity.getFullName());
+            ps.setString(2, entity.getEmail());
+            ps.setString(3, entity.getPhone());
+            ps.setString(4, entity.getPassword());
+            ps.setString(5, entity.getRole());
+            ps.setInt(6, entity.getIdUser());
+            int n = ps.executeUpdate();
+            return n > 0;
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return false;
     }
 
@@ -124,11 +146,9 @@ public class UserDAO implements IDAO<UserDTO, String>{
     public List<UserDTO> search(String searchTerm) {
         return null;
     }
-    
-    
+
     public List<UserDTO> searchLogin(String textLogin) {
         return null;
     }
 
-    
 }

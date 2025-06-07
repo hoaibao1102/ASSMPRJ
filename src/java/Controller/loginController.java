@@ -5,6 +5,7 @@
  */
 package Controller;
 
+
 import DAO.PlacesDAO;
 import DAO.TourTicketDAO;
 import DAO.TicketImgDAO;
@@ -13,6 +14,8 @@ import DTO.PlacesDTO;
 import DTO.TourTicketDTO;
 import DTO.TicketImgDTO;
 import DTO.UserDTO;
+import UTILS.AuthUtils;
+import UTILS.PasswordUtils;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -22,6 +25,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
+
 
 /**
  *
@@ -49,6 +53,7 @@ public class loginController extends HttpServlet {
         HttpSession session = request.getSession(false);
         TicketImgDAO tdDao = new TicketImgDAO();
         TourTicketDAO tdao = new TourTicketDAO();
+        placeController pcl = new placeController();
 
         try {
             if (action == null) {
@@ -58,9 +63,9 @@ public class loginController extends HttpServlet {
                 String txtEmailOrPhone = request.getParameter("txtEmailOrPhone");
                 String txtPassword = request.getParameter("txtPassword");
 
-                if (isValidLogin(txtEmailOrPhone, txtPassword)) {
+                if (AuthUtils.isValidLogin(txtEmailOrPhone, txtPassword)) {
                     // Lấy user và lưu vào session
-                    UserDTO user = getUser(txtEmailOrPhone);
+                    UserDTO user = AuthUtils.getUser(txtEmailOrPhone);
                     session = request.getSession(true);
                     session.setAttribute("nameUser", user);
 
@@ -81,9 +86,8 @@ public class loginController extends HttpServlet {
                         session.removeAttribute("redirectAfterLogin");
 
                     } else {
-                        PlacesDAO pdao = new PlacesDAO();
-                        List<PlacesDTO> places = pdao.readAll();
-                        request.setAttribute("placeList", places);
+                       // Gọi hàm getFeaturedPlaces để lấy danh sách địa điểm và gán vào request
+                        pcl.getFeaturedPlaces(request, response);
                         url = "index.jsp";
                     }
                 } else {
@@ -96,25 +100,24 @@ public class loginController extends HttpServlet {
                 if (session != null) {
                     session.invalidate();
                 }
-                PlacesDAO pdao = new PlacesDAO();
-                List<PlacesDTO> places = pdao.readAll();
-                request.setAttribute("placeList", places);
+                // Gọi hàm getFeaturedPlaces để lấy danh sách địa điểm và gán vào request
+                pcl.getFeaturedPlaces(request, response);
                 url = "index.jsp";
 
             } else if ("order".equals(action)) {
+                String idTour = (String) request.getParameter("idTour");
                 // Truy cập trang đặt hàng
-                if (session != null && session.getAttribute("nameUser") != null) {
-
-                    String idTour = (String) request.getParameter("idTour");
+                // kiểm tra login chưa 
+                if (AuthUtils.isLoggedIn(session)) {
                     if (idTour != null && !idTour.trim().isEmpty()) {
                         TourTicketDTO tour = tdao.readbyID(idTour);
                         session.setAttribute("tourTicket", tour);
                         url = "BookingStep1.jsp";
                     }
+                    
                 } else {
                     // Chưa login => lưu trang cần redirect sau login, rồi chuyển tới login page
                     session = request.getSession(true);
-                    String idTour = request.getParameter("idTour");
                     if (idTour != null) {
                         session.setAttribute("idTour", idTour);
                     }
@@ -174,16 +177,6 @@ public class loginController extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
-    private boolean isValidLogin(String txtEmailOrPhone, String txtPassword) {
-        UserDTO user = getUser(txtEmailOrPhone);
-        return user != null && user.getPassword().equals(txtPassword);
-
-    }
-
-    private UserDTO getUser(String txtEmailOrPhone) {
-        UserDAO udao = new UserDAO();
-        UserDTO user = udao.readbyID(txtEmailOrPhone);
-        return user;
-    }
-
+    
+   
 }

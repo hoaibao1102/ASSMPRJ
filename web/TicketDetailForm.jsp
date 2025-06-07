@@ -395,7 +395,6 @@
                     List<TicketImgDTO> listImg = (List<TicketImgDTO>)request.getAttribute("ticketImgDetail");
                     List<TicketDayDetailDTO> listDayDetail = (List<TicketDayDetailDTO>)request.getAttribute("ticketDayDetail");
                     TourTicketDTO tourTicket = (TourTicketDTO)request.getAttribute("tourTicket");
-                            
                     
                     DecimalFormat vnd = new DecimalFormat("#,###");
         %>
@@ -403,18 +402,12 @@
         <div class="content">
             <!<!-- dieu huong  -->
             <div class="breadcrumb">
-                <a href="index.jsp">Trang chủ</a> / 
-                <a href="DestinationForm.jsp">Điểm đến</a>/
-                <form action="placeController" method="post" style="display:inline;">
-                    <input type="hidden" name="location" value="<%=tourTicket.getDestination()%>" />   
-                    <input type="hidden" name="action" value="takeListTicket" /> 
-                    <button type="submit" style="background:none; border:none; padding:0; margin:0; color:#2980b9; cursor:pointer; font-weight:600; font-size:1rem; font-family: Arial, sans-serif;">
-                        Du lịch <%= tourTicket.getDestination() %>
-                    </button>
-                </form> / 
+                <div class="breadcrumb">
+                <a href="placeController?action=destination&page=indexjsp">Trang chủ</a> /
+                <a href="placeController?action=destination&page=destinationjsp">Điểm đến</a> /
+                <a href="placeController?action=takeListTicket&location=<%=tourTicket.getDestination()%>"> Du lịch <%= tourTicket.getDestination() %></a>/
                 <span class="current">chi tiết tour</span>
-            </div>
-
+                
             <!--                ============================================================-->
             <div class="containerdetail">
                 <div class="left-content">

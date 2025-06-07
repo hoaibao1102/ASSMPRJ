@@ -32,7 +32,7 @@ public class placeController extends HttpServlet {
 
     private static String URL = "index.jsp";
 
-    protected void getFeaturedPlaces(HttpServletRequest request, HttpServletResponse response)
+    public void getFeaturedPlaces(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String url = URL;
         PlacesDAO pdao = new PlacesDAO();
