@@ -115,7 +115,7 @@ public class placeController extends HttpServlet {
                     request.setAttribute("tourList2", tour2);
                     request.setAttribute("searchTourInfor", searchItem);
                     url = "ResultSearchForm.jsp";
-
+                    
                 }
             }
 

@@ -221,7 +221,7 @@
                         <span class="info-value" style="color: #4cd964;">ĐÃ THANH TOÁN ĐẦY ĐỦ</span>
                     </div>
                     <div class="info-row" style="margin-top:28px;">
-                        <a href="index.jsp" class="btn-main" style="text-align:center;display:block;">Về trang chủ</a>
+                        <a href="placeController?action=destination&page=indexjsp" class="btn-main" style="text-align:center;display:block;">Về trang chủ</a>
                     </div>
                 </div>
                 <!-- RIGHT: Phiếu xác nhận tour -->
@@ -255,7 +255,7 @@
                     <div style="border-top:1px dashed #ccc;margin:20px 0;"></div>
                     <div class="info-label" style="margin-bottom:6px;">TỔNG TIỀN ĐÃ THANH TOÁN:</div>
                     <div style="font-size:19px; color:#d32f2f; font-weight:bold;margin-bottom:20px;"><%= vnd.format(total)%></div>
-                    <a href="index.jsp" class="btn-main" style="text-align:center;display:block;">Tiếp tục khám phá tour khác</a>
+                    <a href="placeController?action=destination" class="btn-main" style="text-align:center;display:block;">Tiếp tục khám phá tour khác</a>
                 </div>
                  
             </div>
