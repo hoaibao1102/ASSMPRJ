@@ -25,8 +25,6 @@ public class TourTicketDAO implements IDAO<TourTicketDTO, String> {
     private final String SELECT_QUERY = "SELECT * FROM dbo.TourTickets";
     private final String UPDATE_QUERY = "UPDATE TourTickets SET " 
                            + "placestart = ?, "          
-                           
-                           + "startdate = ?, " 
                            + "price = ?, " 
                            + "transport_name = ?, " 
                            + "nametour = ?, " 
@@ -42,13 +40,12 @@ public class TourTicketDAO implements IDAO<TourTicketDTO, String> {
             Connection conn = DBUtils.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, entity.getPlacestart());
-            ps.setString(2, entity.getDuration());
-            ps.setDouble(3, entity.getPrice());
-            ps.setString(4, entity.getTransport_name());
-            ps.setString(5, entity.getNametour());
-            ps.setString(6, entity.getImg_Tour());
-            ps.setInt(5, entity.getQuantity());
-            ps.setString(6, entity.getIdTourTicket());
+            ps.setDouble(2, entity.getPrice());
+            ps.setString(3, entity.getTransport_name());
+            ps.setString(4, entity.getNametour());
+            ps.setString(5, entity.getImg_Tour());
+            ps.setInt(6, entity.getQuantity());
+            ps.setString(7, entity.getIdTourTicket());
             int n = ps.executeUpdate();
             return n > 0;
         } catch (ClassNotFoundException ex) {

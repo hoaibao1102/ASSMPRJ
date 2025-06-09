@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,7 +23,7 @@ public class OrderDAO implements IDAO<OrderDTO, String> {
 
     @Override
     public boolean create(OrderDTO entity) {
-            String sql = "INSERT INTO Orders (idBooking, idUser, idTourTicket, BookingDate, NumberTicket, TotalPrice, Status, Note) VALUES (?, ?, ?, ?, ?, ?, ?, ?) ";
+        String sql = "INSERT INTO Orders (idBooking, idUser, idTourTicket, BookingDate, NumberTicket, TotalPrice, Status, Note) VALUES (?, ?, ?, ?, ?, ?, ?, ?) ";
         try {
             Connection conn = DBUtils.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -34,7 +35,7 @@ public class OrderDAO implements IDAO<OrderDTO, String> {
             ps.setDouble(6, entity.getTotalPrice());
             ps.setInt(7, entity.isStatus());
             ps.setString(8, entity.getNote());
-       
+
             int n = ps.executeUpdate();
             return n > 0;
         } catch (ClassNotFoundException ex) {
@@ -43,7 +44,7 @@ public class OrderDAO implements IDAO<OrderDTO, String> {
             Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return false;
-        
+
     }
 
     @Override
@@ -53,7 +54,32 @@ public class OrderDAO implements IDAO<OrderDTO, String> {
 
     @Override
     public OrderDTO readbyID(String id) {
+        String sql = "SELECT * FROM Orders Where idBooking = ? ";
+        try {
+            Connection conn = DBUtils.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, id);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                OrderDTO newT = new OrderDTO(rs.getInt("idUser"),
+                        rs.getString("idTourTicket"),
+                        rs.getString("BookingDate"),
+                        rs.getInt("NumberTicket"),
+                        rs.getDouble("TotalPrice"),
+                        rs.getInt("Status"),
+                        rs.getString("idBooking"),
+                        rs.getString("Note"));
+                return newT;
+            }
+
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(TourTicketDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(TourTicketDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return null;
+
     }
 
     @Override
@@ -88,35 +114,38 @@ public class OrderDAO implements IDAO<OrderDTO, String> {
                 return String.format("%s%02d", prefix, nextNumber); // NT001B04
             } else {
                 return prefix + "01"; // NT001B01 nếu chưa có booking nào
+
+            }
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(OrderDAO.class
+                    .getName()).log(Level.SEVERE, null, ex);
+
+        } catch (SQLException ex) {
+            Logger.getLogger(OrderDAO.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
-    }
-    catch (ClassNotFoundException ex
-        ) {
-            Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, ex);
-    }
-    catch (SQLException ex
-        ) {
-            Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, ex);
-    }
         return null;
-}
+    }
 
     public boolean updateStatus(String idBooking) {
-       String sql ="UPDATE dbo.Orders SET Status = 1 WHERE idBooking = ?";
+        String sql = "UPDATE dbo.Orders SET Status = 1 WHERE idBooking = ?";
         try {
             Connection conn = DBUtils.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, idBooking);
             int n = ps.executeUpdate();
             return n > 0;
+
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(OrderDAO.class
+                    .getName()).log(Level.SEVERE, null, ex);
+
         } catch (SQLException ex) {
-            Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(OrderDAO.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
         return false;
-       
-    }
 
+    }
 
 }

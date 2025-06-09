@@ -490,7 +490,7 @@
                         <li><span class="icon">📍</span> Khởi hành: <span class="blue"><%=tourTicket.getPlacestart() %></span></li>
                         <li><span class="icon">📅</span> Ngày khởi hành: <span class="blue"><%=tourTicket.getStartdate() %></span></li>
                         <li><span class="icon">⏳</span> Thời gian: <span class="blue"><%=tourTicket.getDuration() %></span></li>
-                        <li><span class="icon">🪑</span> Số chỗ còn: <span class="blue"><%=tourTicket.getQuantity() %></span></li>
+                        <li><span class="icon">🪑</span> Số chỗ còn: <span class="blue"><%=tourTicket.getQuantity()>0 ?tourTicket.getQuantity() : "đã hết vé vui lòng chọn ngày khác" %></span></li>
                     </ul>
 
                     <form action="loginController" method="get" class="tour-actions">
