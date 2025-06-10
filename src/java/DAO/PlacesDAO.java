@@ -134,7 +134,7 @@ public class PlacesDAO implements IDAO<PlacesDTO, String> {
 
     @Override
     public List<PlacesDTO> search(String searchTerm) {
-        return null;
+        return null; 
     }
 
 }

@@ -14,28 +14,24 @@ public class TourTicketDTO {
         private String destination;
         private String placestart;
         private String duration;
-        private String startdate;
         private double price;
         private String transport_name;
         private String nametour;
         private String img_Tour;
-        private int quantity;
 
     public TourTicketDTO() {
     }
 
-    public TourTicketDTO(String idTourTicket, int idplace, String destination, String placestart, String duration, String startdate, double price, String transport_name, String nametour, String img_Tour, int quantity) {
+    public TourTicketDTO(String idTourTicket, int idplace, String destination, String placestart, String duration, double price, String transport_name, String nametour, String img_Tour) {
         this.idTourTicket = idTourTicket;
         this.idplace = idplace;
         this.destination = destination;
         this.placestart = placestart;
         this.duration = duration;
-        this.startdate = startdate;
         this.price = price;
         this.transport_name = transport_name;
         this.nametour = nametour;
         this.img_Tour = img_Tour;
-        this.quantity = quantity;
     }
 
     public String getIdTourTicket() {
@@ -78,14 +74,7 @@ public class TourTicketDTO {
         this.duration = duration;
     }
 
-    public String getStartdate() {
-        return startdate;
-    }
-
-    public void setStartdate(String startdate) {
-        this.startdate = startdate;
-    }
-
+    
     public double getPrice() {
         return price;
     }
@@ -118,13 +107,7 @@ public class TourTicketDTO {
         this.img_Tour = img_Tour;
     }
 
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
+    
         
         
         

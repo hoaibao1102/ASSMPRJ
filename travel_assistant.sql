@@ -48,10 +48,40 @@ CREATE TABLE TourTickets (
     nametour NVARCHAR(150),
     img_Tour nvarchar(255),
     FOREIGN KEY (idplace) REFERENCES Places(idplace),
-	quantity int not null default 20,
 );
 -- update thêm số lượng trong bảng TourList
 
+--xóa cột startDate đi và tạo thêm bảng mới cho nó
+-- 3. Xóa cột startdate khỏi TourTickets
+ALTER TABLE TourTickets
+DROP CONSTRAINT DF__TourTicke__quant__3E52440B;
+
+ALTER TABLE TourTickets DROP COLUMN quantity;
+-- 1. Tạo bảng mới chứa ngày khởi hành
+CREATE TABLE TourStartDates (
+    idTourTicket VARCHAR(5) NOT NULL,
+    startdate DATE NOT NULL,
+    startNum INT NOT NULL,
+    PRIMARY KEY (idTourTicket, startNum),
+    FOREIGN KEY (idTourTicket) REFERENCES TourTickets(idTourTicket)
+);
+--insert data
+INSERT INTO TourStartDates (idTourTicket, startdate, startNum) VALUES
+('NT001', '2025-07-10', 1),('NT001', '2025-07-15', 2),('NT001', '2025-07-20', 3),
+('NT002', '2025-07-20', 1),('NT002', '2025-07-25', 2),('NT002', '2025-07-30', 3),
+('VT001', '2025-08-01', 1),('VT001', '2025-08-05', 2),('VT001', '2025-08-10', 3),
+('VT002', '2025-08-15', 1),('VT002', '2025-08-20', 2),('VT002', '2025-08-25', 3),
+('HU001', '2025-09-05', 1),('HU001', '2025-09-10', 2),('HU001', '2025-09-15', 3),
+('HU002', '2025-09-20', 1),('HU002', '2025-09-25', 2),('HU002', '2025-09-30', 3),
+('HN001', '2025-10-05', 1),('HN001', '2025-10-10', 2),('HN001', '2025-10-15', 3),
+('HN002', '2025-10-18', 1),('HN002', '2025-10-22', 2),('HN002', '2025-10-26', 3),
+('DL001', '2025-11-01', 1),('DL001', '2025-11-05', 2),('DL001', '2025-11-09', 3),
+('DL002', '2025-11-10', 1),('DL002', '2025-11-15', 2),('DL002', '2025-11-20', 3),
+('DN001', '2025-12-01', 1),('DN001', '2025-12-05', 2),('DN001', '2025-12-09', 3),
+('DN002', '2025-12-15', 1),('DN002', '2025-12-20', 2),('DN002', '2025-12-25', 3);
+--thêm số lượng phía sau
+ALTER TABLE TourStartDates
+ADD quantity INT NOT NULL DEFAULT 20;
 
 CREATE TABLE TicketImgs(
     idTourTicket varchar(5) ,
@@ -72,13 +102,16 @@ CREATE TABLE TicketDayDetails (
 -- Tạo bảng Orders :
 CREATE TABLE Orders (
     idBooking VARCHAR(20) PRIMARY KEY,
-    idUser int NOT NULL,
+    idUser INT NOT NULL,
     idTourTicket VARCHAR(5) NOT NULL,
+    startNum INT NOT NULL,  -- ghi rõ ngày khởi hành (số thứ tự)
     BookingDate DATE NOT NULL,
     NumberTicket INT NOT NULL,
     TotalPrice DECIMAL(15,2) NOT NULL,
-    Status INT  NOT NULL,
-	Note nvarchar(250),
+    Status INT NOT NULL,
+    Note NVARCHAR(250),
+
+	FOREIGN KEY (idTourTicket, startNum) REFERENCES TourStartDates(idTourTicket, startNum),
 	FOREIGN KEY (idTourTicket) REFERENCES TourTickets(idTourTicket),
 	FOREIGN KEY (idUser) REFERENCES Users(id)
 );
@@ -95,9 +128,9 @@ INSERT INTO Places (placename, description) VALUES
 -- Lấy ID Nha Trang vừa tạo
 DECLARE @idNhaTrang INT = SCOPE_IDENTITY();
 -- Insert danh sách tour Nha Trang
-INSERT INTO TourTickets (idTourTicket, idplace, destination, placestart, duration, startdate, price, transport_name, nametour, img_Tour) VALUES
-('NT001', @idNhaTrang, N'Nha Trang', N'TP. Hồ Chí Minh', N'2 ngày 1 đêm', '2025-07-10', 2300000, N'Máy bay', N'Khám phá Nha Trang - VinWonders & biển đảo','nhatrang1.jpg'),
-('NT002', @idNhaTrang, N'Nha Trang', N'TP. Hồ Chí Minh', N'3 ngày 2 đêm', '2025-07-20', 3500000, N'Tàu hỏa', N'Du lịch Nha Trang - Tháp Bà, Hòn Mun & nghỉ dưỡng', 'nhatrang2.jpg');
+INSERT INTO TourTickets (idTourTicket, idplace, destination, placestart, duration, price, transport_name, nametour, img_Tour) VALUES
+('NT001', @idNhaTrang, N'Nha Trang', N'TP. Hồ Chí Minh', N'2 ngày 1 đêm', 2300000, N'Máy bay', N'Khám phá Nha Trang - VinWonders & biển đảo','nhatrang1.jpg'),
+('NT002', @idNhaTrang, N'Nha Trang', N'TP. Hồ Chí Minh', N'3 ngày 2 đêm', 3500000, N'Tàu hỏa', N'Du lịch Nha Trang - Tháp Bà, Hòn Mun & nghỉ dưỡng', 'nhatrang2.jpg');
 
 
 --NHA TRANG THÌ VÀO ĐÂY NHA
@@ -187,9 +220,9 @@ INSERT INTO Places (placename, description) VALUES
 DECLARE @idVungTau INT = SCOPE_IDENTITY();
 
 -- Insert danh sách tour Vũng Tàu
-INSERT INTO TourTickets (idTourTicket, idplace, destination, placestart, duration, startdate, price, transport_name, nametour, img_Tour) VALUES
-('VT001', @idVungTau, N'Vũng Tàu', N'TP. Hồ Chí Minh', N'2 ngày 1 đêm', '2025-08-01', 1800000, N'Xe khách', N'Thư giãn cuối tuần tại Vũng Tàu - Bãi Sau & Tượng Chúa', 'vungtau1.jpg'),
-('VT002', @idVungTau, N'Vũng Tàu', N'TP. Hồ Chí Minh', N'3 ngày 2 đêm', '2025-08-15', 2700000, N'Xe khách', N'Trải nghiệm Vũng Tàu - Hải đăng & du lịch tâm linh', 'vungtau2.jpg');
+INSERT INTO TourTickets (idTourTicket, idplace, destination, placestart, duration, price, transport_name, nametour, img_Tour) VALUES
+('VT001', @idVungTau, N'Vũng Tàu', N'TP. Hồ Chí Minh', N'2 ngày 1 đêm', 1800000, N'Xe khách', N'Thư giãn cuối tuần tại Vũng Tàu - Bãi Sau & Tượng Chúa', 'vungtau1.jpg'),
+('VT002', @idVungTau, N'Vũng Tàu', N'TP. Hồ Chí Minh', N'3 ngày 2 đêm', 2700000, N'Xe khách', N'Trải nghiệm Vũng Tàu - Hải đăng & du lịch tâm linh', 'vungtau2.jpg');
 
 
 
@@ -279,9 +312,9 @@ INSERT INTO Places (placename, description) VALUES
 DECLARE @idHue INT = SCOPE_IDENTITY();
 
 -- Insert danh sách tour Huế
-INSERT INTO TourTickets (idTourTicket, idplace, destination, placestart, duration, startdate, price, transport_name, nametour, img_Tour) VALUES
-('HU001', @idHue, N'Huế', N'TP. Hồ Chí Minh', N'3 ngày 2 đêm', '2025-09-05', 2900000, N'Máy bay', N'Du lịch Huế - Đại Nội, chùa Thiên Mụ & sông Hương', 'hue1.jpg'),
-('HU002', @idHue, N'Huế', N'TP. Hồ Chí Minh', N'4 ngày 3 đêm', '2025-09-20', 3600000, N'Tàu hỏa', N'Hành trình khám phá cố đô Huế & ẩm thực miền Trung', 'hue2.jpg');
+INSERT INTO TourTickets (idTourTicket, idplace, destination, placestart, duration, price, transport_name, nametour, img_Tour) VALUES
+('HU001', @idHue, N'Huế', N'TP. Hồ Chí Minh', N'3 ngày 2 đêm', 2900000, N'Máy bay', N'Du lịch Huế - Đại Nội, chùa Thiên Mụ & sông Hương', 'hue1.jpg'),
+('HU002', @idHue, N'Huế', N'TP. Hồ Chí Minh', N'4 ngày 3 đêm', 3600000, N'Tàu hỏa', N'Hành trình khám phá cố đô Huế & ẩm thực miền Trung', 'hue2.jpg');
 
 
 --TOUR HU001
@@ -360,9 +393,9 @@ INSERT INTO Places (placename, description) VALUES
 DECLARE @idHanoi INT = SCOPE_IDENTITY();
 
 -- Insert danh sách tour Hà Nội
-INSERT INTO TourTickets (idTourTicket, idplace, destination, placestart, duration, startdate, price, transport_name, nametour, img_Tour) VALUES
-('HN001', @idHanoi, N'Hà Nội', N'TP. Hồ Chí Minh', N'3 ngày 2 đêm', '2025-10-05', 3100000, N'Máy bay', N'Khám phá Hà Nội - Hồ Gươm, Lăng Bác & phố cổ', 'hanoi1.jpg'),
-('HN002', @idHanoi, N'Hà Nội', N'TP. Hồ Chí Minh', N'4 ngày 3 đêm', '2025-10-18', 3900000, N'Tàu hỏa', N'Tour Hà Nội - Văn Miếu, chùa Trấn Quốc & ẩm thực phố cổ', 'hanoi2.jpg');
+INSERT INTO TourTickets (idTourTicket, idplace, destination, placestart, duration,  price, transport_name, nametour, img_Tour) VALUES
+('HN001', @idHanoi, N'Hà Nội', N'TP. Hồ Chí Minh', N'3 ngày 2 đêm', 3100000, N'Máy bay', N'Khám phá Hà Nội - Hồ Gươm, Lăng Bác & phố cổ', 'hanoi1.jpg'),
+('HN002', @idHanoi, N'Hà Nội', N'TP. Hồ Chí Minh', N'4 ngày 3 đêm', 3900000, N'Tàu hỏa', N'Tour Hà Nội - Văn Miếu, chùa Trấn Quốc & ẩm thực phố cổ', 'hanoi2.jpg');
 
 
 --TOUR HN001
@@ -449,9 +482,9 @@ INSERT INTO Places (placename, description) VALUES
 DECLARE @idDalat INT = SCOPE_IDENTITY();
 
 -- Tour Đà Lạt
-INSERT INTO TourTickets (idTourTicket, idplace, destination, placestart, duration, startdate, price, transport_name, nametour, img_Tour) VALUES
-('DL001', @idDalat, N'Đà Lạt', N'TP. Hồ Chí Minh', N'2 ngày 1 đêm', '2025-11-01', 1900000, N'Xe khách', N'Du lịch Đà Lạt - Thung lũng Tình yêu & chợ đêm', 'dalat1.jpg'),
-('DL002', @idDalat, N'Đà Lạt', N'TP. Hồ Chí Minh', N'3 ngày 2 đêm', '2025-11-10', 2800000, N'Xe khách', N'Thành phố sương mù - đồi chè & Langbiang', 'dalat2.jpg');
+INSERT INTO TourTickets (idTourTicket, idplace, destination, placestart, duration,  price, transport_name, nametour, img_Tour) VALUES
+('DL001', @idDalat, N'Đà Lạt', N'TP. Hồ Chí Minh', N'2 ngày 1 đêm',  1900000, N'Xe khách', N'Du lịch Đà Lạt - Thung lũng Tình yêu & chợ đêm', 'dalat1.jpg'),
+('DL002', @idDalat, N'Đà Lạt', N'TP. Hồ Chí Minh', N'3 ngày 2 đêm',  2800000, N'Xe khách', N'Thành phố sương mù - đồi chè & Langbiang', 'dalat2.jpg');
 
 
 
@@ -530,8 +563,8 @@ DECLARE @idDanang INT = SCOPE_IDENTITY();
 
 -- Tour Đà Nẵng
 INSERT INTO TourTickets (idTourTicket, idplace, destination, placestart, duration, startdate, price, transport_name, nametour, img_Tour) VALUES
-('DN001', @idDanang, N'Đà Nẵng', N'TP. Hồ Chí Minh', N'2 ngày 1 đêm', '2025-12-01', 2200000, N'Máy bay', N'Tour Đà Nẵng - Bà Nà Hills & cầu Vàng', 'danang1.jpg'),
-('DN002', @idDanang, N'Đà Nẵng', N'TP. Hồ Chí Minh', N'3 ngày 2 đêm', '2025-12-15', 3200000, N'Máy bay', N'Khám phá Đà Nẵng - Sơn Trà, Ngũ Hành Sơn & biển Mỹ Khê', 'danang2.jpg');
+('DN001', @idDanang, N'Đà Nẵng', N'TP. Hồ Chí Minh', N'2 ngày 1 đêm', 2200000, N'Máy bay', N'Tour Đà Nẵng - Bà Nà Hills & cầu Vàng', 'danang1.jpg'),
+('DN002', @idDanang, N'Đà Nẵng', N'TP. Hồ Chí Minh', N'3 ngày 2 đêm', 3200000, N'Máy bay', N'Khám phá Đà Nẵng - Sơn Trà, Ngũ Hành Sơn & biển Mỹ Khê', 'danang2.jpg');
 
 -- DN001 (2 ngày)
 INSERT INTO TicketDayDetails (idTourTicket, Day, Description) VALUES

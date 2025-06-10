@@ -28,8 +28,7 @@ public class TourTicketDAO implements IDAO<TourTicketDTO, String> {
                            + "price = ?, " 
                            + "transport_name = ?, " 
                            + "nametour = ?, " 
-                           + "img_Tour = ?, " 
-                           + "quantity = ? " 
+                           + "img_Tour = ?, "  
                            + "WHERE idTourTicket = ?;";
 
     
@@ -44,8 +43,7 @@ public class TourTicketDAO implements IDAO<TourTicketDTO, String> {
             ps.setString(3, entity.getTransport_name());
             ps.setString(4, entity.getNametour());
             ps.setString(5, entity.getImg_Tour());
-            ps.setInt(6, entity.getQuantity());
-            ps.setString(7, entity.getIdTourTicket());
+            ps.setString(6, entity.getIdTourTicket());
             int n = ps.executeUpdate();
             return n > 0;
         } catch (ClassNotFoundException ex) {
@@ -85,12 +83,11 @@ public class TourTicketDAO implements IDAO<TourTicketDTO, String> {
                             rs.getString("destination"),
                             rs.getString("placestart"),
                             rs.getString("duration"),
-                            rs.getString("startdate"),
                             rs.getDouble("price"),
                             rs.getString("transport_name"),
                             rs.getString("nametour"),
-                            rs.getString("img_Tour"),
-                            rs.getInt("quantity"));
+                            rs.getString("img_Tour")
+                    );
 
                     list.add(newT);
                 }
@@ -128,12 +125,10 @@ public class TourTicketDAO implements IDAO<TourTicketDTO, String> {
                     i.getDestination(),
                     i.getPlacestart(),
                     i.getDuration(),
-                    i.getStartdate(),
                     i.getPrice(),
                     i.getTransport_name(),
                     i.getNametour(),
-                    i.getImg_Tour(),
-                    i.getQuantity());
+                    i.getImg_Tour());
             return newT;
         }
         return null;
@@ -176,12 +171,10 @@ public class TourTicketDAO implements IDAO<TourTicketDTO, String> {
                             rs.getString("destination"),
                             rs.getString("placestart"),
                             rs.getString("duration"),
-                            rs.getString("startdate"),
                             rs.getDouble("price"),
                             rs.getString("transport_name"),
                             rs.getString("nametour"),
-                            rs.getString("img_Tour"),
-                            rs.getInt("quantity"));
+                            rs.getString("img_Tour"));
 
                     list.add(newT);
             }

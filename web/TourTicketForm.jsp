@@ -1,5 +1,6 @@
 <%@page import="java.util.List"%>
 <%@page import="DTO.TourTicketDTO"%>
+<%@page import="DTO.StartDateDTO"%>
 <%@page import="DAO.PlacesDAO"%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -149,28 +150,31 @@
     </head>
     <body>
         <%@include file="header.jsp" %>
+
         <%
             List<TourTicketDTO> tourList = (List<TourTicketDTO>) request.getAttribute("tourList");
             String discriptionPlaces = (String) request.getAttribute("discriptionPlaces");
         %>
-        
+
         <div class="content">
             <div class="breadcrumb">
                 <a href="placeController?action=destination&page=indexjsp">Trang chủ</a> /
                 <a href="placeController?action=destination&page=destinationjsp">Điểm đến</a> /
-                <span class="current">Du lịch <%=tourList.get(0).getDestination() %></span>
+                <span class="current">Du lịch <%=tourList != null && !tourList.isEmpty() ? tourList.get(0).getDestination() : "" %></span>
             </div>
-                <div class="container">
 
-                    <%
-                    if (tourList != null && !tourList.isEmpty()) {  %>
-                    <h1 style="margin-bottom: 20px;">Danh sách Tour <%=tourList.get(0).getDestination()%> </h1>
-                    <p  style="margin-bottom: 20px;"><%=discriptionPlaces%></p>
+            <div class="container">
+                <%
+                if (tourList != null && !tourList.isEmpty()) {
+                %>
+                <h1 style="margin-bottom: 20px;">Danh sách Tour <%=tourList.get(0).getDestination()%> </h1>
+                <p style="margin-bottom: 20px;"><%=discriptionPlaces%></p>
 
-                    <%
-                        for (TourTicketDTO t : tourList) {
-                    %>
-
+                <%
+                for (TourTicketDTO t : tourList) {
+                    int index = tourList.indexOf(t) + 1;
+                    List<StartDateDTO> startDates = (List<StartDateDTO>) request.getAttribute("startDateTour" + index);
+                %>
 
                 <div class="tour-card">
                     <img class="tour-img" src="assets/images/places/<%=t.getImg_Tour()%>" alt="<%= t.getNametour() %>">
@@ -181,13 +185,22 @@
                             <div class="tour-meta">📍 Khởi hành: <strong><%= t.getPlacestart() %></strong></div>
                             <div class="tour-meta">🕒 Thời gian: <strong><%= t.getDuration() %></strong></div>
                             <div class="tour-meta">✈️ Phương tiện: <strong><%= t.getTransport_name() %></strong></div>
+
                             <div class="tour-meta tour-dates">
-                                📅 Ngày khởi hành: <span><%= t.getStartdate() %></span>
+                                📅 Ngày khởi hành:
+                                <% if (startDates != null && !startDates.isEmpty()) {
+                                    for (StartDateDTO sd : startDates) {
+                                %>
+                                <span><%= sd.getStartDate() %></span>
+                                <%  }
+                        } else { %>
+                                <span>Chưa có lịch</span>
+                                <% } %>
                             </div>
+
                             <div class="price">Giá từ: <%= String.format("%,.0f", t.getPrice()) %> đ</div>
                         </div>
 
-                        <!-- Form sử dụng input submit cho nút Xem chi tiết -->
                         <form action="placeController" method="get">
                             <input type="hidden" name="action" value="ticketDetail" />
                             <input type="hidden" name="idTourTicket" value="<%=t.getIdTourTicket()%>" />
@@ -195,13 +208,14 @@
                         </form>
                     </div>
                 </div>
+
                 <%
-                        }
-                    } else {
+                    } // end for
+                } else {
                 %>
                 <p>Không có tour nào được tìm thấy.</p>
                 <%
-                    }
+                } // end if
                 %>
             </div>
         </div>
