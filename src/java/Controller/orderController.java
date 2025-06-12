@@ -5,8 +5,10 @@
 package Controller;
 
 import DAO.OrderDAO;
+import DAO.StartDateDAO;
 import DAO.TourTicketDAO;
 import DTO.OrderDTO;
+import DTO.StartDateDTO;
 import DTO.TourTicketDTO;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
@@ -44,6 +46,7 @@ public class orderController extends HttpServlet {
         HttpSession session = request.getSession(false);
         OrderDAO odao = new OrderDAO();
         TourTicketDAO tourTicketdao = new TourTicketDAO();
+        StartDateDAO stDao = new StartDateDAO();
         
         try {
 
@@ -58,8 +61,9 @@ public class orderController extends HttpServlet {
                 int status = Integer.parseInt(request.getParameter("status"));
                 String note = request.getParameter("noteValueInput");
                 String idBooking = odao.generateBookingId(idTour);
+                int startNum = Integer.parseInt(request.getParameter("startNum"));
 
-                OrderDTO newBooking = new OrderDTO(idUser, idTour, bookingDate, numberTicket, total, status, idBooking, note);
+                OrderDTO newBooking = new OrderDTO(idUser, idTour, bookingDate, numberTicket, total, status, idBooking, note,startNum);
                 if (odao.create(newBooking)) {
                     url = "BookingStep2.jsp";
                     request.setAttribute("newBooking", newBooking);
@@ -77,13 +81,18 @@ public class orderController extends HttpServlet {
                 // lấy ra quantities để trừ đặt vé
                 OrderDTO orderdto = odao.readbyID(idBooking);
                 String idTour = orderdto.getIdTour();
-                TourTicketDTO tourTicketdto = tourTicketdao.readbyID(idTour);
-                tourTicketdto.setQuantity(tourTicketdto.getQuantity()-numberTicket);
-                boolean isUpdate = tourTicketdao.update(tourTicketdto);
+                int startNum = orderdto.getStartNum();
+                StartDateDTO startDate = stDao.searchDetailDate(idTour, startNum);
+                int newQuan = startDate.getQuantity()- numberTicket;
+                startDate.setQuantity(newQuan);
+                
+                boolean isUpdate = stDao.update(startDate);
                 System.out.println(isUpdate);
                 //update trang thai
                 if(odao.updateStatus(idBooking) && isUpdate ){
                     url = "BookingStep3.jsp";
+                    
+                    request.setAttribute("startDate", startDate);
                     request.setAttribute("total", total);
                     request.setAttribute("idBooking", idBooking);
                     request.setAttribute("numberTicket", numberTicket);

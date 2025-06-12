@@ -7,10 +7,12 @@ package Controller;
 
 
 import DAO.PlacesDAO;
+import DAO.StartDateDAO;
 import DAO.TourTicketDAO;
 import DAO.TicketImgDAO;
 import DAO.UserDAO;
 import DTO.PlacesDTO;
+import DTO.StartDateDTO;
 import DTO.TourTicketDTO;
 import DTO.TicketImgDTO;
 import DTO.UserDTO;
@@ -54,6 +56,8 @@ public class loginController extends HttpServlet {
         TicketImgDAO tdDao = new TicketImgDAO();
         TourTicketDAO tdao = new TourTicketDAO();
         placeController pcl = new placeController();
+        StartDateDAO stDao = new StartDateDAO();
+        
 
         try {
             if (action == null) {
@@ -74,11 +78,13 @@ public class loginController extends HttpServlet {
                     if (redirectUrl != null) {
                         //di vao chi tiet tour    
                         String idTour = (String) session.getAttribute("idTour");
-
+                        int startNum = (int) session.getAttribute("startNum");
+                        
                         if (idTour != null && !idTour.trim().isEmpty()) {
-                            TicketImgDTO tourDetail = tdDao.readbyID(idTour);
                             TourTicketDTO tourTicket = tdao.readbyID(idTour);
-                            request.setAttribute("tourDetail", tourDetail);
+                            StartDateDTO stDate = stDao.searchDetailDate(idTour, startNum);
+                            
+                            session.setAttribute("stDate", stDate);
                             request.getSession().setAttribute("tourTicket", tourTicket);
                             session.removeAttribute("idTour"); // Xóa sau khi dùng
                         }
@@ -106,12 +112,17 @@ public class loginController extends HttpServlet {
 
             } else if ("order".equals(action)) {
                 String idTour = (String) request.getParameter("idTour");
+                int startNum = Integer.parseInt(request.getParameter("startNum"));
                 // Truy cập trang đặt hàng
                 // kiểm tra login chưa 
                 if (AuthUtils.isLoggedIn(session)) {
                     if (idTour != null && !idTour.trim().isEmpty()) {
                         TourTicketDTO tour = tdao.readbyID(idTour);
+                        StartDateDTO stDate = stDao.searchDetailDate(idTour, startNum);
+                        
+                        session.setAttribute("stDate", stDate);
                         session.setAttribute("tourTicket", tour);
+                        
                         url = "BookingStep1.jsp";
                     }
                     
@@ -120,6 +131,7 @@ public class loginController extends HttpServlet {
                     session = request.getSession(true);
                     if (idTour != null) {
                         session.setAttribute("idTour", idTour);
+                        session.setAttribute("startNum", startNum);
                     }
                     session.setAttribute("redirectAfterLogin", "BookingStep1.jsp");
                     url = LOGIN_PAGE;

@@ -5,6 +5,7 @@
 --%>
 <%@ page import="java.time.LocalDate, java.time.format.DateTimeFormatter" %>
 <%@ page import="DTO.UserDTO"%>
+<%@ page import="DTO.StartDateDTO"%>
 <%@ page import="DTO.TourTicketDTO"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -350,7 +351,11 @@
     </style>
 </head>
 <body>
-
+    <%
+            UserDTO account = (UserDTO)session.getAttribute("nameUser");
+            TourTicketDTO tour = (TourTicketDTO)session.getAttribute("tourTicket");
+            StartDateDTO stDate = (StartDateDTO)session.getAttribute("stDate");
+    %>
 
 
     <%@include file="header.jsp" %>
@@ -392,10 +397,7 @@
             </div>
         </div>
 
-        <%
-            UserDTO account = (UserDTO)session.getAttribute("nameUser");
-            TourTicketDTO tour = (TourTicketDTO)session.getAttribute("tourTicket");
-        %>
+        
 
         <!--    ===================================================thong tin ben trai        -->
 
@@ -484,7 +486,7 @@
                     <!--============================================================================= CAN DUOC XU LY
                     =============================================================================-->
                     <%
-                        String startDateStr = tour.getStartdate();
+                        String startDateStr = stDate.getStartDate();
                         LocalDate startDate = LocalDate.parse(startDateStr, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
                         LocalDate endDate;
                         String duration = tour.getDuration();
@@ -504,7 +506,7 @@
 
                     <div class="flight-info">
                         <div>
-                            <p><strong>Ngày đi: <%=tour.getStartdate()%></strong></p>
+                            <p><strong>Ngày đi: <%=stDate.getStartDate()%></strong></p>
                         </div>
                         <div>
                             <p><strong>Ngày về: <%=endDateStr%></strong></p>
@@ -555,6 +557,7 @@
                         <input type="hidden" name="action" value="call_oder_step2">
 
                         <!-- gửi thông tin để tạo dtb booking table -->
+                        <input type="hidden" name="startNum" value="<%=stDate.getStartNum()%>">
                         <input type="hidden" name="idUser" value="<%=account.getIdUser()%>">
                         <input type="hidden" name="idTour" value="<%=tour.getIdTourTicket()%>">
                         <input type="hidden" name="bookingDate" value="<%=today%>">
@@ -592,16 +595,7 @@
          * Hàm thay đổi số lượng hành khách theo loại (adult, child, baby)
          * delta: +1 hoặc -1
          */
-        function changeCount(type, delta) {
-            const id = type + '-count'; // Ví dụ: adult-count
-            const countElem = document.getElementById(id);
-            let count = parseInt(countElem.innerText);
-            count = Math.max(0, count + delta); // Không cho nhỏ hơn 0
-            countElem.innerText = count;
-
-            updateTotal(); // Cập nhật lại tổng tiền và số lượng
-        }
-
+        
         /**
          * Hàm cập nhật tổng tiền, số lượng vé và ghi chú ẩn gửi server
          */
@@ -666,6 +660,34 @@
                 document.getElementById("noteValueInput").value = noteTextarea.value;
             });
         });
+        
+        
+        //hàm check sao cho không vượt quá quantity
+        function changeCount(type, delta) {
+        const id = type + '-count';
+        const countElem = document.getElementById(id);
+        let count = parseInt(countElem.innerText);
+
+        // Tổng số vé hiện tại
+        const adultCount = parseInt(document.getElementById("adult-count").innerText);
+        const childCount = parseInt(document.getElementById("child-count").innerText);
+        const babyCount = parseInt(document.getElementById("baby-count").innerText);
+        const totalCurrent = adultCount + childCount + babyCount;
+
+        // Nếu tăng và đã đủ 20 vé, thì không cho tăng
+        if (delta > 0 && totalCurrent >= <%=stDate.getQuantity()%>) {
+            alert("Tổng số vé không được vượt quá <%=stDate.getQuantity()%>!");
+            return;
+        }
+
+        // Giảm nhưng không được nhỏ hơn 0
+        count = Math.max(0, count + delta);
+        countElem.innerText = count;
+
+        updateTotal();
+        }
+
+        
     </script>
 
 

@@ -13,6 +13,7 @@ public class OrderDTO {
     private String idTour;
     private String bookingDate;
     private int numberTicket;
+    private int startNum;
     private double totalPrice;
     private int status;
     private String idBooking;
@@ -21,7 +22,7 @@ public class OrderDTO {
     public OrderDTO() {
     }
 
-    public OrderDTO(int idUser, String idTour, String bookingDate, int numberTicket, double totalPrice, int status, String idBooking, String note) {
+    public OrderDTO(int idUser, String idTour, String bookingDate, int numberTicket, double totalPrice, int status, String idBooking, String note,int startNum) {
         this.idUser = idUser;
         this.idTour = idTour;
         this.bookingDate = bookingDate;
@@ -30,6 +31,15 @@ public class OrderDTO {
         this.status = status;
         this.idBooking = idBooking;
         this.note = note;
+        this.startNum = startNum;
+    }
+
+    public int getStartNum() {
+        return startNum;
+    }
+
+    public void setStartNum(int startNum) {
+        this.startNum = startNum;
     }
 
     public int getIdUser() {
