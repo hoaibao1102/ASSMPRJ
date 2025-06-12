@@ -127,7 +127,12 @@ public class placeController extends HttpServlet {
 
                     searchItem = searchItem.trim(); // loại bỏ khoảng trắng đầu/cuối
                     List<TourTicketDTO> tour2 = tdao.searchAnyInfor(searchItem);
-                    
+        
+                    for (int i = 0; i < tour2.size(); i++) {
+                        // lấy ra các ngày đi 
+                        List<StartDateDTO> startDateTour = stdDAO.search(tour2.get(i).getIdTourTicket());
+                        request.setAttribute("startDateTour"+(i+1), startDateTour);
+                    }
                     request.setAttribute("tourList2", tour2);
                     request.setAttribute("searchTourInfor", searchItem);
                     url = "ResultSearchForm.jsp";
