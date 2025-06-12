@@ -6,10 +6,12 @@
 package Controller;
 
 import DAO.PlacesDAO;
+import DAO.StartDateDAO;
 import DAO.TicketDayDetailDAO;
 import DAO.TicketImgDAO;
 import DAO.TourTicketDAO;
 import DTO.PlacesDTO;
+import DTO.StartDateDTO;
 import DTO.TicketDayDetailDTO;
 import DTO.TourTicketDTO;
 import DTO.TicketImgDTO;
@@ -57,6 +59,7 @@ public class placeController extends HttpServlet {
         PlacesDAO pdao = new PlacesDAO();
         TicketDayDetailDAO tddDao = new TicketDayDetailDAO();
         TicketImgDAO tiDAO = new TicketImgDAO();
+        StartDateDAO stdDAO = new StartDateDAO();
 
         String action = request.getParameter("action");
         String url = URL;
@@ -78,10 +81,18 @@ public class placeController extends HttpServlet {
                 //lay ra list tour
                 if (location != null && !location.trim().isEmpty()) {
                     location = location.trim(); // loại bỏ khoảng trắng đầu/cuối
+                    //lấy ra các cái vé từ tên location
                     List<TourTicketDTO> tour = tdao.searchByDestination(location);
+
                     //Lay ra mo ta cua tung noi 
                     String discriptionPlaces = pdao.readByName(location).getDescription();
-
+                    System.out.println("vào thành công");
+                    for (int i = 0; i < tour.size(); i++) {
+                        // lấy ra các ngày đi 
+                        List<StartDateDTO> startDateTour = stdDAO.search(tour.get(i).getIdTourTicket());
+                        request.setAttribute("startDateTour"+(i+1), startDateTour);
+                    }
+                    System.out.println("vào thành công");
                     request.setAttribute("discriptionPlaces", discriptionPlaces);
                     request.setAttribute("tourList", tour);
                     url = "TourTicketForm.jsp";
@@ -96,7 +107,11 @@ public class placeController extends HttpServlet {
                     List<TicketImgDTO> ticketImgDetail = tiDAO.readbyIdTourTicket(idTour);
                     List<TicketDayDetailDTO> ticketDayDetail = tddDao.readbyIdTourTicket(idTour);
                     TourTicketDTO tourTicket = tdao.readbyID(idTour);
-
+                    
+                    // lấy ra các ngày đi 
+                    List<StartDateDTO> startDateTour = stdDAO.search(tourTicket.getIdTourTicket());
+                    
+                    request.setAttribute("startDateTour", startDateTour);
                     request.setAttribute("ticketImgDetail", ticketImgDetail);
                     request.setAttribute("ticketDayDetail", ticketDayDetail);
                     request.setAttribute("tourTicket", tourTicket);
@@ -109,7 +124,7 @@ public class placeController extends HttpServlet {
                 if (searchItem != null && !searchItem.trim().isEmpty()) {
                     // Gọi hàm getFeaturedPlaces để lấy danh sách địa điểm và gán vào request
                     getFeaturedPlaces(request, response);
-                    
+
                     searchItem = searchItem.trim(); // loại bỏ khoảng trắng đầu/cuối
                     List<TourTicketDTO> tour2 = tdao.searchAnyInfor(searchItem);
                     request.setAttribute("tourList2", tour2);

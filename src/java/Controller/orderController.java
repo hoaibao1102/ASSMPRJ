@@ -5,7 +5,9 @@
 package Controller;
 
 import DAO.OrderDAO;
+import DAO.TourTicketDAO;
 import DTO.OrderDTO;
+import DTO.TourTicketDTO;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -41,6 +43,7 @@ public class orderController extends HttpServlet {
         String action = request.getParameter("action");
         HttpSession session = request.getSession(false);
         OrderDAO odao = new OrderDAO();
+        TourTicketDAO tourTicketdao = new TourTicketDAO();
         
         try {
 
@@ -70,8 +73,16 @@ public class orderController extends HttpServlet {
                 String idBooking = request.getParameter("idBooking");
                 Double total =Double.parseDouble(request.getParameter("totalBill2")) ;
                 int numberTicket = Integer.parseInt(request.getParameter("numberTicket2"));
+                
+                // lấy ra quantities để trừ đặt vé
+                OrderDTO orderdto = odao.readbyID(idBooking);
+                String idTour = orderdto.getIdTour();
+                TourTicketDTO tourTicketdto = tourTicketdao.readbyID(idTour);
+                tourTicketdto.setQuantity(tourTicketdto.getQuantity()-numberTicket);
+                boolean isUpdate = tourTicketdao.update(tourTicketdto);
+                System.out.println(isUpdate);
                 //update trang thai
-                if(odao.updateStatus(idBooking)){
+                if(odao.updateStatus(idBooking) && isUpdate ){
                     url = "BookingStep3.jsp";
                     request.setAttribute("total", total);
                     request.setAttribute("idBooking", idBooking);
@@ -96,6 +107,8 @@ public class orderController extends HttpServlet {
         }
 
     }
+    
+    
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**

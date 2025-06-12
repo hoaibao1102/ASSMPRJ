@@ -7,6 +7,7 @@
 <%@page import="DTO.TourTicketDTO"%>
 <%@page import="DTO.TicketDayDetailDTO"%>
 <%@page import="DTO.TicketImgDTO"%>
+<%@page import="DTO.StartDateDTO"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ page import="java.text.DecimalFormat" %>
 <%@ page import="java.util.ArrayList" %>
@@ -87,6 +88,63 @@
                 width: 100%;
                 max-width: 360px;
                 height: 40%;
+            }
+
+            .startdate-box {
+                margin-top: 10px; /* giảm khoảng cách phía trên */
+                margin-bottom: 15px;
+                font-size: 15px;
+                font-weight: 600;
+                color: #444;
+            }
+
+            .startdate-box label {
+                display: block;
+                margin-bottom: 6px;
+                font-weight: bold;
+                color: #333;
+            }
+
+            .startdate-select-wrap {
+                display: flex;
+                gap: 10px;
+                align-items: center;
+            }
+
+            .startdate-select-wrap select {
+                flex: 1;
+                padding: 10px 40px 10px 14px; /* thêm padding phải để tránh mũi tên đè */
+                font-size: 15px;
+                border-radius: 8px;
+                border: 1px solid #ccc;
+                background-color: #fff;
+                color: #2c3e50;
+                box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+                transition: border 0.3s ease;
+                appearance: none;
+                background-image: url('https://cdn-icons-png.flaticon.com/512/271/271210.png');
+                background-repeat: no-repeat;
+                background-position: right 14px center; /* dịch mũi tên ra xa chữ */
+                background-size: 12px;
+                min-width: 220px; /* tăng chiều rộng tối thiểu */
+            }
+
+            .startdate-select-wrap select:focus {
+                outline: none;
+                border-color: #2980b9;
+                box-shadow: 0 0 0 3px rgba(41, 128, 185, 0.15);
+            }
+
+
+            .btn-go {
+                padding: 10px 18px;
+                background-color: #e74c3c;
+                color: white;
+                font-weight: bold;
+                border: none;
+                border-radius: 8px;
+                cursor: pointer;
+                transition: background-color 0.25s;
             }
 
             .label {
@@ -395,7 +453,7 @@
                     List<TicketImgDTO> listImg = (List<TicketImgDTO>)request.getAttribute("ticketImgDetail");
                     List<TicketDayDetailDTO> listDayDetail = (List<TicketDayDetailDTO>)request.getAttribute("ticketDayDetail");
                     TourTicketDTO tourTicket = (TourTicketDTO)request.getAttribute("tourTicket");
-                    
+                    List<StartDateDTO> startDates = (List<StartDateDTO>) request.getAttribute("startDateTour");
                     DecimalFormat vnd = new DecimalFormat("#,###");
         %>
 
@@ -403,220 +461,211 @@
             <!<!-- dieu huong  -->
             <div class="breadcrumb">
                 <div class="breadcrumb">
-                <a href="placeController?action=destination&page=indexjsp">Trang chủ</a> /
-                <a href="placeController?action=destination&page=destinationjsp">Điểm đến</a> /
-                <a href="placeController?action=takeListTicket&location=<%=tourTicket.getDestination()%>"> Du lịch <%= tourTicket.getDestination() %></a>/
-                <span class="current">chi tiết tour</span>
-                
-            <!--                ============================================================-->
-            <div class="containerdetail">
-                <div class="left-content">
+                    <a href="placeController?action=destination&page=indexjsp">Trang chủ</a> /
+                    <a href="placeController?action=destination&page=destinationjsp">Điểm đến</a> /
+                    <a href="placeController?action=takeListTicket&location=<%=tourTicket.getDestination()%>"> Du lịch <%= tourTicket.getDestination() %></a>/
+                    <span class="current">chi tiết tour</span>
 
-                    <% 
+                    <!--                ============================================================-->
+                    <div class="containerdetail">
+                        <div class="left-content">
+                            <%
                                 List<String> img = new ArrayList<>();
                                 if (listImg != null) {
                                     for (TicketImgDTO i : listImg) {
                                         img.add(i.getImgUrl());
                                     }
                                 }
-                              
-                    %>
-                    <% if (listImg != null && listDayDetail != null && tourTicket != null) { %>
-
-                    <h1><%= tourTicket.getDestination() %>: <%= tourTicket.getNametour() %></h1>
-
-                    <!-- Gallery hiển thị ảnh -->
-                    <div class="gallery">
-                        <div class="thumbnails">
-                            <% for (int i = 0; i < img.size(); i++) { %>
-                            <img src="assets/images/imgticket/<%= img.get(i) %>" 
-                                 onclick="showMainImage('<%= img.get(i) %>')" 
-                                 class="thumbnail-img">
+                            %>
+                            <% if (listImg != null && listDayDetail != null && tourTicket != null) { %>
+                            <h1><%= tourTicket.getDestination() %>: <%= tourTicket.getNametour() %></h1>
+                            <div class="gallery">
+                                <div class="thumbnails">
+                                    <% for (int i = 0; i < img.size(); i++) { %>
+                                    <img src="assets/images/imgticket/<%= img.get(i) %>"
+                                         onclick="showMainImage('<%= img.get(i) %>')"
+                                         class="thumbnail-img">
+                                    <% } %>
+                                </div>
+                                <div class="main-image">
+                                    <img id="mainImg" 
+                                         src="assets/images/imgticket/<%= img.size() > 0 ? img.get(0) : "" %>"
+                                         onclick="openModal()" 
+                                         class="main-img">
+                                </div>
+                            </div>
+                            <div id="modal" class="modal" onclick="closeModal(event)">
+                                <span class="close" onclick="closeModal(event)">&times;</span>
+                                <div class="modal-content-wrapper">
+                                    <a class="prev" onclick="changeImage(-1)">&#10094;</a>
+                                    <img class="modal-content" id="modalImg">
+                                    <a class="next" onclick="changeImage(1)">&#10095;</a>
+                                </div>
+                                <div class="modal-thumbnails-wrapper">
+                                    <div id="modalThumbnails" class="modal-thumbnails"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <% for (TicketDayDetailDTO i : listDayDetail) {
+                                       renderDescription(i.getDescription(), out);
+                                   }
+                                %>
+                            </div>
+                            <% } else { %>
+                            <p>Không tìm thấy thông tin chi tiết cho tour này.</p>
                             <% } %>
                         </div>
 
-                        <div class="main-image">
-                            <img id="mainImg" 
-                                 src="assets/images/imgticket/<%= img.size() > 0 ? img.get(0) : "" %>" 
-                                 onclick="openModal()" 
-                                 class="main-img">
-                        </div>
-                    </div>
+                        <!--///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+                        <div class="right-content">
+                            <div class="price">
+                                <span class="label">Giá:</span>
+                                <span class="original-price"><%= vnd.format(tourTicket.getPrice() + 1000000) %> ₫</span> 
+                            </div>
+                            <span class="current-price"><%= vnd.format(tourTicket.getPrice())%> <span class="currency">₫</span></span> / Khách
+                            <div class="discount-note">
+                                🎁 Đặt ngay để nhận được Ưu đãi online tiết kiệm thêm <strong>1,000K</strong>
+                            </div>
+                            <ul class="tour-details">
+                                <li><span class="icon">🧾</span> Mã tour: <a href="#" class="blue"><%=tourTicket.getIdTourTicket() %></a></li>
+                                <li><span class="icon">📍</span> Khởi hành: <span class="blue"><%=tourTicket.getPlacestart() %></span></li>
 
-                    <!-- Modal xem ảnh lớn -->
-                    <div id="modal" class="modal" onclick="closeModal(event)">
-                        <span class="close" onclick="closeModal(event)">&times;</span>
-                        <div class="modal-content-wrapper">
-                            <a class="prev" onclick="changeImage(-1)">&#10094;</a>
-                            <img class="modal-content" id="modalImg">
-                            <a class="next" onclick="changeImage(1)">&#10095;</a>
-                        </div>
-                        <div class="modal-thumbnails-wrapper">
-                            <div id="modalThumbnails" class="modal-thumbnails">
-                                <%-- ảnh nhỏ sẽ được JS đổ --%>
+                                <li><span class="icon">⏳</span> Thời gian: <span class="blue"><%=tourTicket.getDuration()%></span></li>
+                            </ul>
+                            <form action="loginController" method="get" class="tour-actions">
+                                <input type="hidden" name="idTour" value="<%=tourTicket.getIdTourTicket()%>">
+                                <input type="hidden" name="action" value="order">
+                                <div class="startdate-box">
+                                    <label for="startNum">🗓️ Ngày khởi hành:</label>
+                                    <div class="startdate-select-wrap">
+                                        <select name="startNum" id="startNum">
+                                            <% if (startDates != null) {
+                                                    for (StartDateDTO sd : startDates) { %>
+                                            <option value="<%= sd.getStartNum() %>">
+                                                <%= sd.getStartDate() %> (còn <%= sd.getQuantity() %> vé)
+                                            </option>
+                                            <% } } %>
+                                        </select>
+                                        <button type="submit" class="btn-go">Đặt ngay</button>
+                                    </div>
+                                </div>
+
+                            </form>
+                            <div class="tour-support">
+                                <button class="btn-call">📞 Gọi miễn phí qua internet</button>
+                                <button class="btn-outline">💬 Liên hệ tư vấn</button>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Chi tiết ngày -->
-                    <div>
-                        <% for (TicketDayDetailDTO i : listDayDetail) {
-                               renderDescription(i.getDescription(), out);
-                           }
-                        %>
-                    </div>
-
-                    <% } else { %>
-                    <p>Không tìm thấy thông tin chi tiết cho tour này.</p>
-                    <% } %>
-                </div>
-                
-                
-                <!--///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
-                <div class="right-content">
-
-                    <div class="price">
-                        <span class="label">Giá:</span>
-                        <span class="original-price"><%= vnd.format(tourTicket.getPrice()+1000000) %> ₫</span> 
-                    </div>
-                    <span class="current-price"><%= vnd.format(tourTicket.getPrice())%> <span class="currency">₫</span></span> / Khách
-
-                    <div class="discount-note">
-                        🎁 Đặt ngay để nhận được Ưu đãi online tiết kiệm thêm <strong>1,000K</strong>
-                    </div>
-
-                    <ul class="tour-details">
-                        <li><span class="icon">🧾</span> Mã tour: <a href="#" class="blue"><%=tourTicket.getIdTourTicket() %></a></li>
-                        <li><span class="icon">📍</span> Khởi hành: <span class="blue"><%=tourTicket.getPlacestart() %></span></li>
-                        <li><span class="icon">📅</span> Ngày khởi hành: <span class="blue"><%=tourTicket.getStartdate() %></span></li>
-                        <li><span class="icon">⏳</span> Thời gian: <span class="blue"><%=tourTicket.getDuration() %></span></li>
-                        <li><span class="icon">🪑</span> Số chỗ còn: <span class="blue"><%=tourTicket.getQuantity() %></span></li>
-                    </ul>
-
-                    <form action="loginController" method="get" class="tour-actions">
-                        <input type="hidden" name="idTour" value="<%=tourTicket.getIdTourTicket()%>">
-                        <input type="hidden" name="action" value="order">
-                        <button class="btn-outline">Ngày khác</button>
-                        <button class="btn-primary" >Đặt ngay</button>
-                    </form>
-
-                    <div class="tour-support">
-                        <button class="btn-call">📞 Gọi miễn phí qua internet</button>
-                        <button class="btn-outline">💬 Liên hệ tư vấn</button>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-        <%@include file="footer.jsp" %>
-    </body>
+                    <%@include file="footer.jsp" %>
+                    </body>
 
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            var coll = document.getElementsByClassName("collapsible");
-            for (var i = 0; i < coll.length; i++) {
-                coll[i].addEventListener("click", function () {
-                    this.classList.toggle("active");
-                    var content = this.nextElementSibling;
-                    if (content.style.maxHeight) {
-                        content.style.maxHeight = null;
-                    } else {
-                        content.style.maxHeight = content.scrollHeight + "px";
-                    }
-                });
-            }
-        });
-//====================================================================== moi sua doan duoi
-        let currentIndex = 0;
-        const images = [];
+                    <script>
+                        document.addEventListener("DOMContentLoaded", function () {
+                            var coll = document.getElementsByClassName("collapsible");
+                            for (var i = 0; i < coll.length; i++) {
+                                coll[i].addEventListener("click", function () {
+                                    this.classList.toggle("active");
+                                    var content = this.nextElementSibling;
+                                    if (content.style.maxHeight) {
+                                        content.style.maxHeight = null;
+                                    } else {
+                                        content.style.maxHeight = content.scrollHeight + "px";
+                                    }
+                                });
+                            }
+                        });
+                        //====================================================================== moi sua doan duoi
+                        let currentIndex = 0;
+                        const images = [];
 
-// Lấy ảnh từ thumbnails ngoài gallery để tạo mảng images
-        document.querySelectorAll('.thumbnails img').forEach((img, index) => {
-            images.push(img.src);
-        });
+                        // Lấy ảnh từ thumbnails ngoài gallery để tạo mảng images
+                        document.querySelectorAll('.thumbnails img').forEach((img, index) => {
+                            images.push(img.src);
+                        });
 
-// Hiển thị ảnh chính bên ngoài gallery
-        function showMainImage(url) {
-            document.getElementById('mainImg').src = "assets/images/imgticket/" + url;
-        }
+                        // Hiển thị ảnh chính bên ngoài gallery
+                        function showMainImage(url) {
+                            document.getElementById('mainImg').src = "assets/images/imgticket/" + url;
+                        }
 
-// Mở modal và khởi tạo ảnh chính + ảnh nhỏ
-        function openModal() {
-            const modal = document.getElementById('modal');
-            modal.style.display = "block";
-            showModalImage(currentIndex);
-            initModalThumbnails();
-        }
+                        // Mở modal và khởi tạo ảnh chính + ảnh nhỏ
+                        function openModal() {
+                            const modal = document.getElementById('modal');
+                            modal.style.display = "block";
+                            showModalImage(currentIndex);
+                            initModalThumbnails();
+                        }
 
-// Đóng modal
-        function closeModal(event) {
-            if (event.target.id === 'modal' || event.target.className === 'close') {
-                document.getElementById('modal').style.display = "none";
-            }
-        }
+                        // Đóng modal
+                        function closeModal(event) {
+                            if (event.target.id === 'modal' || event.target.className === 'close') {
+                                document.getElementById('modal').style.display = "none";
+                            }
+                        }
 
-// Chuyển ảnh trong modal (prev/next)
-        function changeImage(direction) {
-            currentIndex += direction;
-            if (currentIndex < 0)
-                currentIndex = images.length - 1;
-            if (currentIndex >= images.length)
-                currentIndex = 0;
-            showModalImage(currentIndex);
-        }
+                        // Chuyển ảnh trong modal (prev/next)
+                        function changeImage(direction) {
+                            currentIndex += direction;
+                            if (currentIndex < 0)
+                                currentIndex = images.length - 1;
+                            if (currentIndex >= images.length)
+                                currentIndex = 0;
+                            showModalImage(currentIndex);
+                        }
 
-// Hiển thị ảnh trong modal
-        function showModalImage(index) {
-            currentIndex = index;
-            document.getElementById('modalImg').src = images[currentIndex];
-            highlightThumbnail(currentIndex);
-            // Đồng bộ main image bên ngoài gallery
-            document.getElementById('mainImg').src = images[currentIndex];
-        }
+                        // Hiển thị ảnh trong modal
+                        function showModalImage(index) {
+                            currentIndex = index;
+                            document.getElementById('modalImg').src = images[currentIndex];
+                            highlightThumbnail(currentIndex);
+                            // Đồng bộ main image bên ngoài gallery
+                            document.getElementById('mainImg').src = images[currentIndex];
+                        }
 
-// Khởi tạo ảnh nhỏ trong modal
-        function initModalThumbnails() {
-            const container = document.getElementById('modalThumbnails');
-            container.innerHTML = '';
-            images.forEach((src, index) => {
-                const img = document.createElement('img');
-                img.src = src;
-                img.onclick = () => {
-                    showModalImage(index);
-                };
-                container.appendChild(img);
-            });
-            highlightThumbnail(currentIndex);
-        }
+                        // Khởi tạo ảnh nhỏ trong modal
+                        function initModalThumbnails() {
+                            const container = document.getElementById('modalThumbnails');
+                            container.innerHTML = '';
+                            images.forEach((src, index) => {
+                                const img = document.createElement('img');
+                                img.src = src;
+                                img.onclick = () => {
+                                    showModalImage(index);
+                                };
+                                container.appendChild(img);
+                            });
+                            highlightThumbnail(currentIndex);
+                        }
 
-// Tô viền đỏ ảnh thumbnail đang chọn trong modal
-        function highlightThumbnail(index) {
-            const thumbnails = document.querySelectorAll('#modalThumbnails img');
-            thumbnails.forEach((thumb, i) => {
-                thumb.classList.toggle('selected', i === index);
-            });
-        }
+                        // Tô viền đỏ ảnh thumbnail đang chọn trong modal
+                        function highlightThumbnail(index) {
+                            const thumbnails = document.querySelectorAll('#modalThumbnails img');
+                            thumbnails.forEach((thumb, i) => {
+                                thumb.classList.toggle('selected', i === index);
+                            });
+                        }
 
 
-    </script>
-</html>
-<%! 
-    public void renderDescription(String descript, jakarta.servlet.jsp.JspWriter out) throws java.io.IOException {
-        String[] list = descript.split("#");
-        out.println("<div>");
-//        out.println("<div class='collapsible'><h2>" + list[0] + "</h2> <span class='toggle-text'>chi tiết</span></div>");
-        out.println("<div class='collapsible'><span><h2>" + list[0] + "</h2></span> <img class=\"muiten\" src=\"https://icons.iconarchive.com/icons/fa-team/fontawesome/128/FontAwesome-Angles-Down-icon.png\" width=\"128\" height=\"128\"></div>");
-        out.println("<div class='sub_content'>"); 
-            for (int i = 1; i < list.length; i++) {
-                if (i % 2 != 0) {
-                    out.println("<h3>" + list[i] + "</h3>");
-                } else {
-                    out.println("<p>" + list[i].replace("/", "<br>")  + "</p>");
-                }
-            }
-        out.println("</div>");
-        out.println("</div>");
-    }
-%>
+                    </script>
+                    </html>
+                    <%! 
+                        public void renderDescription(String descript, jakarta.servlet.jsp.JspWriter out) throws java.io.IOException {
+                            String[] list = descript.split("#");
+                            out.println("<div>");
+                    //        out.println("<div class='collapsible'><h2>" + list[0] + "</h2> <span class='toggle-text'>chi tiết</span></div>");
+                            out.println("<div class='collapsible'><span><h2>" + list[0] + "</h2></span> <img class=\"muiten\" src=\"https://icons.iconarchive.com/icons/fa-team/fontawesome/128/FontAwesome-Angles-Down-icon.png\" width=\"128\" height=\"128\"></div>");
+                            out.println("<div class='sub_content'>"); 
+                                for (int i = 1; i < list.length; i++) {
+                                    if (i % 2 != 0) {
+                                        out.println("<h3>" + list[i] + "</h3>");
+                                    } else {
+                                        out.println("<p>" + list[i].replace("/", "<br>")  + "</p>");
+                                    }
+                                }
+                            out.println("</div>");
+                            out.println("</div>");
+                        }
+                    %>

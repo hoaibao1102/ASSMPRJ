@@ -23,7 +23,37 @@ import java.util.logging.Logger;
 public class TourTicketDAO implements IDAO<TourTicketDTO, String> {
 
     private final String SELECT_QUERY = "SELECT * FROM dbo.TourTickets";
+    private final String UPDATE_QUERY = "UPDATE TourTickets SET " 
+                           + "placestart = ?, "          
+                           + "price = ?, " 
+                           + "transport_name = ?, " 
+                           + "nametour = ?, " 
+                           + "img_Tour = ?, "  
+                           + "WHERE idTourTicket = ?;";
 
+    
+    @Override
+    public boolean update(TourTicketDTO entity) {
+        String sql = UPDATE_QUERY;
+        try {
+            Connection conn = DBUtils.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, entity.getPlacestart());
+            ps.setDouble(2, entity.getPrice());
+            ps.setString(3, entity.getTransport_name());
+            ps.setString(4, entity.getNametour());
+            ps.setString(5, entity.getImg_Tour());
+            ps.setString(6, entity.getIdTourTicket());
+            int n = ps.executeUpdate();
+            return n > 0;
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+    
     @Override
     public boolean create(TourTicketDTO entity) {
         return false;
@@ -53,12 +83,11 @@ public class TourTicketDAO implements IDAO<TourTicketDTO, String> {
                             rs.getString("destination"),
                             rs.getString("placestart"),
                             rs.getString("duration"),
-                            rs.getString("startdate"),
                             rs.getDouble("price"),
                             rs.getString("transport_name"),
                             rs.getString("nametour"),
-                            rs.getString("img_Tour"),
-                            rs.getInt("quantity"));
+                            rs.getString("img_Tour")
+                    );
 
                     list.add(newT);
                 }
@@ -96,22 +125,17 @@ public class TourTicketDAO implements IDAO<TourTicketDTO, String> {
                     i.getDestination(),
                     i.getPlacestart(),
                     i.getDuration(),
-                    i.getStartdate(),
                     i.getPrice(),
                     i.getTransport_name(),
                     i.getNametour(),
-                    i.getImg_Tour(),
-                    i.getQuantity());
+                    i.getImg_Tour());
             return newT;
         }
         return null;
 
     }
 
-    @Override
-    public boolean update(TourTicketDTO entity) {
-        return false;
-    }
+    
 
     @Override
     public boolean delete(String id) {
@@ -147,12 +171,10 @@ public class TourTicketDAO implements IDAO<TourTicketDTO, String> {
                             rs.getString("destination"),
                             rs.getString("placestart"),
                             rs.getString("duration"),
-                            rs.getString("startdate"),
                             rs.getDouble("price"),
                             rs.getString("transport_name"),
                             rs.getString("nametour"),
-                            rs.getString("img_Tour"),
-                            rs.getInt("quantity"));
+                            rs.getString("img_Tour"));
 
                     list.add(newT);
             }
@@ -166,5 +188,7 @@ public class TourTicketDAO implements IDAO<TourTicketDTO, String> {
         return null;
         
     }
+
+    
 
 }
