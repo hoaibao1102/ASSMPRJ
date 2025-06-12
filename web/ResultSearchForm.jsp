@@ -7,6 +7,7 @@
 <%@page import="DTO.PlacesDTO"%>
 <%@page import="java.util.List"%>
 <%@page import="DTO.TourTicketDTO"%>
+<%@page import="DTO.StartDateDTO"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="vi">
@@ -234,8 +235,11 @@
                     if (tourList != null && !tourList.isEmpty()) {
                 %>
                 <h2 style="margin-bottom: 15px">Dưới đây là các tour liên quan tới "<%=searchTourInfor%>"</h2>
+
                 <%
                 for (TourTicketDTO t : tourList) {
+                    int index = tourList.indexOf(t) + 1;
+                    List<StartDateDTO> startDates = (List<StartDateDTO>) request.getAttribute("startDateTour" + index);
                 %>
 
                 <div class="tour-card">
@@ -247,13 +251,12 @@
                             <div class="tour-meta">📍 Khởi hành: <strong><%= t.getPlacestart() %></strong></div>
                             <div class="tour-meta">🕒 Thời gian: <strong><%= t.getDuration() %></strong></div>
                             <div class="tour-meta">✈️ Phương tiện: <strong><%= t.getTransport_name() %></strong></div>
-                            <div class="tour-meta tour-dates">
-                                📅 Ngày khởi hành: <span><%= t.getStartdate() %></span>
-                            </div>
+
+                           
+
                             <div class="price">Giá từ: <%= String.format("%,.0f", t.getPrice()) %> đ</div>
                         </div>
 
-                        <!-- Form sử dụng input submit cho nút Xem chi tiết -->
                         <form action="placeController" method="get">
                             <input type="hidden" name="action" value="ticketDetail" />
                             <input type="hidden" name="idTourTicket" value="<%=t.getIdTourTicket()%>" />
@@ -261,43 +264,36 @@
                         </form>
                     </div>
                 </div>
-                <%
-                        }
-                    } else { %>
-                <h2>Không tìm thấy thông tin liên quan đến: "<%=searchTourInfor%>"</h2>
 
-                <% } %>
-            </div>
-
-            <div class="section">
-                <div class="title">Điểm đến nổi bật</div>
-                <div class="grid">
-                    <%
-                        List<PlacesDTO> placeList = (List<PlacesDTO>)request.getAttribute("placeList");
-                        if (placeList != null && !placeList.isEmpty()) {
-                            for (PlacesDTO p : placeList) {
-                                if (p.getFeatured()) {
-                    %>
-                    <form class="card" action="placeController" method="post">
-                        <div class="image-wrapper">
-                            <img src="assets/images/<%=p.getImg()%>" alt="<%=p.getPlaceName()%>" />
-                            <button type="submit" class="btn-overlay">Xem thêm</button>
-                        </div>
-                        <h4><%=p.getPlaceName()%></h4>
-                        <input type="hidden" name="action" value="takeListTicket" />
-                        <input type="hidden" name="location" value="<%=p.getPlaceName()%>" />
-                    </form>
-                    <%
+                <div class="section">
+                    <div class="title">Điểm đến nổi bật</div>
+                    <div class="grid">
+                        <%
+                            List<PlacesDTO> placeList = (List<PlacesDTO>)request.getAttribute("placeList");
+                            if (placeList != null && !placeList.isEmpty()) {
+                                for (PlacesDTO p : placeList) {
+                                    if (p.getFeatured()) {
+                        %>
+                        <form class="card" action="placeController" method="post">
+                            <div class="image-wrapper">
+                                <img src="assets/images/<%=p.getImg()%>" alt="<%=p.getPlaceName()%>" />
+                                <button type="submit" class="btn-overlay">Xem thêm</button>
+                            </div>
+                            <h4><%=p.getPlaceName()%></h4>
+                            <input type="hidden" name="action" value="takeListTicket" />
+                            <input type="hidden" name="location" value="<%=p.getPlaceName()%>" />
+                        </form>
+                        <%
+                                    }
                                 }
                             }
-                        }
-                    %>
+                        %>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <%@include file="footer.jsp" %>
-</body>
+        <%@include file="footer.jsp" %>
+    </body>
 </html>
 

@@ -6,6 +6,7 @@
 <%@ page import="java.time.LocalDate, java.time.format.DateTimeFormatter" %>
 <%@ page import="java.text.DecimalFormat" %>
 <%@ page import="DTO.TourTicketDTO"%>
+<%@ page import="DTO.StartDateDTO"%>
 <%@ page import="DTO.UserDTO"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -227,7 +228,8 @@
                 <!-- RIGHT: Phiếu xác nhận tour -->
                 
                 <%
-                        String startDateStr = tour.getStartdate();
+                        StartDateDTO stDate = (StartDateDTO)session.getAttribute("stDate");
+                        String startDateStr = stDate.getStartDate();
                         LocalDate startDate = LocalDate.parse(startDateStr, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
                         LocalDate endDate;
                         String duration = tour.getDuration();
@@ -247,7 +249,7 @@
                     <p><strong>Mã tour:</strong> <%=tour.getIdTourTicket()%></p>
                     <h4>THÔNG TIN CHUYẾN ĐI</h4>
                     <p>
-                        Ngày đi: <%=tour.getStartdate()%> &nbsp;&nbsp; <br>
+                        Ngày đi: <%=startDateStr%> &nbsp;&nbsp; <br>
                     </p>
                     <p>
                         Ngày về: <%=endDateStr%>&nbsp;&nbsp; <br>

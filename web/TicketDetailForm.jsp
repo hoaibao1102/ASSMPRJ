@@ -539,12 +539,18 @@
                                     <label for="startNum">🗓️ Ngày khởi hành:</label>
                                     <div class="startdate-select-wrap">
                                         <select name="startNum" id="startNum">
+                                            <!--/xử lí vé nếu hết thì không hiện-->
                                             <% if (startDates != null) {
-                                                    for (StartDateDTO sd : startDates) { %>
-                                            <option value="<%= sd.getStartNum() %>">
-                                                <%= sd.getStartDate() %> (còn <%= sd.getQuantity() %> vé)
-                                            </option>
-                                            <% } } %>
+                                                    for (StartDateDTO sd : startDates) { 
+                                                            if(sd.getQuantity() != 0){
+                                                    %>
+                                                    <option value="<%= sd.getStartNum() %>">
+                                                        <%= sd.getStartDate() %> (còn <%= sd.getQuantity()%> vé)
+                                                    </option>
+                                                    <%
+                                                            }
+                                                    } 
+                                            } %>
                                         </select>
                                         <button type="submit" class="btn-go">Đặt ngay</button>
                                     </div>

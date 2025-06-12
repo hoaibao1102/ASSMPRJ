@@ -38,6 +38,27 @@ public class StartDateDAO implements IDAO<StartDateDTO, String>{
 
     @Override
     public boolean update(StartDateDTO entity) {
+        String sql = "UPDATE TourStartDates " +  
+                    "SET startdate = ? , " +
+                        "quantity = ?  " +
+                        "WHERE idTourTicket = ? AND startNum = ? ";
+        try {
+            Connection conn = DBUtils.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1,entity.getStartDate());
+            ps.setInt(2,entity.getQuantity());
+            ps.setString(3,entity.getIdTourTicket());
+            ps.setInt(4,entity.getStartNum());
+            
+            int n = ps.executeUpdate();
+            return n > 0;
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(StartDateDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(StartDateDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
         return false;
     }
 
@@ -47,14 +68,14 @@ public class StartDateDAO implements IDAO<StartDateDTO, String>{
     }
 
     @Override
-    public List<StartDateDTO> search(String searchTerm) {
+    public List<StartDateDTO> search(String idTourTicket) {
         List<StartDateDTO> dateList = new ArrayList<>();
         String sql = "SELECT * FROM TourStartDates WHERE idTourTicket = ? ";
        
         try {
             Connection conn = DBUtils.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1,searchTerm);
+            ps.setString(1,idTourTicket);
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
                 StartDateDTO std = new StartDateDTO(rs.getString("idTourTicket"),
@@ -72,5 +93,33 @@ public class StartDateDAO implements IDAO<StartDateDTO, String>{
         }
         return null;
     }
+    
+    public StartDateDTO searchDetailDate(String idTourTicket,int startNum) {
+        StartDateDTO std = null;
+        String sql = "SELECT * FROM TourStartDates WHERE idTourTicket = ? and startNum = ? ";
+       
+        try {
+            Connection conn = DBUtils.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1,idTourTicket);
+            ps.setInt(2,startNum);
+            ResultSet rs = ps.executeQuery();
+            if(rs.next()){
+                    std = new StartDateDTO(rs.getString("idTourTicket"),
+                                                    rs.getString("startdate"),
+                                                    rs.getInt("startNum"), 
+                                                    rs.getInt("quantity"));
+                
+            }
+            return std;
+            
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(PlacesDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(PlacesDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    
     
 }

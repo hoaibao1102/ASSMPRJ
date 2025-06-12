@@ -127,6 +127,7 @@ public class placeController extends HttpServlet {
 
                     searchItem = searchItem.trim(); // loại bỏ khoảng trắng đầu/cuối
                     List<TourTicketDTO> tour2 = tdao.searchAnyInfor(searchItem);
+                    
                     request.setAttribute("tourList2", tour2);
                     request.setAttribute("searchTourInfor", searchItem);
                     url = "ResultSearchForm.jsp";
