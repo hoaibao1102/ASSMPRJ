@@ -34,7 +34,7 @@ public class placeController extends HttpServlet {
 
     private static String URL = "index.jsp";
 
-    public void getFeaturedPlaces(HttpServletRequest request, HttpServletResponse response)
+    public void getAllDestination(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String url = URL;
         PlacesDAO pdao = new PlacesDAO();
@@ -67,7 +67,7 @@ public class placeController extends HttpServlet {
         try {
             if (action.equals("destination")) {
                 // Gọi hàm getFeaturedPlaces để lấy danh sách địa điểm và gán vào request
-                getFeaturedPlaces(request, response);
+                getAllDestination(request, response);
 
                 String page = request.getParameter("page");
                 if (page.equals("indexjsp")) {
@@ -123,7 +123,7 @@ public class placeController extends HttpServlet {
                 //lay ra list tour
                 if (searchItem != null && !searchItem.trim().isEmpty()) {
                     // Gọi hàm getFeaturedPlaces để lấy danh sách địa điểm và gán vào request
-                    getFeaturedPlaces(request, response);
+                    getAllDestination(request, response);
 
                     searchItem = searchItem.trim(); // loại bỏ khoảng trắng đầu/cuối
                     List<TourTicketDTO> tour2 = tdao.searchAnyInfor(searchItem);

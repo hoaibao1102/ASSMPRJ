@@ -350,7 +350,7 @@
 
     </style>
 </head>
-<body>
+<body class="<%= isAdmin ? "admin-layout" : "" %>">
     <%
             UserDTO account = (UserDTO)session.getAttribute("nameUser");
             TourTicketDTO tour = (TourTicketDTO)session.getAttribute("tourTicket");

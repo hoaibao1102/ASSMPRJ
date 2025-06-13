@@ -288,17 +288,17 @@
                         if (placeList != null && !placeList.isEmpty()) {
                             for (PlacesDTO p : placeList) {
                                 if (p.getFeatured()) {
-                    %>
-                    <form class="card" action="placeController" method="post">
-                        <div class="image-wrapper">
-                            <img src="assets/images/<%=p.getImg()%>" alt="<%=p.getPlaceName()%>" />
-                            <button type="submit" class="btn-overlay">Xem thêm</button>
-                        </div>
-                        <h4><%=p.getPlaceName()%></h4>
-                        <input type="hidden" name="action" value="takeListTicket" />
-                        <input type="hidden" name="location" value="<%=p.getPlaceName()%>" />
-                    </form>
-                    <%
+                            %>
+                            <form class="card" action="placeController" method="post">
+                                <div class="image-wrapper">
+                                    <img src="assets/images/<%=p.getImg()%>" alt="<%=p.getPlaceName()%>" />
+                                    <button type="submit" class="btn-overlay">Xem thêm</button>
+                                </div>
+                                <h4><%=p.getPlaceName()%></h4>
+                                <input type="hidden" name="action" value="takeListTicket" />
+                                <input type="hidden" name="location" value="<%=p.getPlaceName()%>" />
+                            </form>
+                            <%
                                 }
                             }
                         }
