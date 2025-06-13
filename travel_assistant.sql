@@ -54,7 +54,7 @@ CREATE TABLE TourTickets (
 --xóa cột startDate đi và tạo thêm bảng mới cho nó
 -- 3. Xóa cột startdate khỏi TourTickets
 ALTER TABLE TourTickets
-DROP CONSTRAINT DF__TourTicke__quant__3E52440B;
+DROP CONSTRAINT DF__TourTicke__quant__5070F446;
 
 ALTER TABLE TourTickets DROP COLUMN quantity;
 -- 1. Tạo bảng mới chứa ngày khởi hành
