@@ -224,6 +224,9 @@
                 background-color: #2c3e50;
                 padding: 1.5rem 1rem;
                 color: #fff;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
             }
 
             .sidebar-header {
@@ -231,14 +234,22 @@
                 font-weight: bold;
                 margin-bottom: 2rem;
                 text-align: center;
+                width: 100%;
             }
 
             .sidebar-menu {
                 list-style: none;
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding: 0;
             }
 
             .sidebar-menu li {
-                margin: 1rem 0;
+                width: 100%;
+                margin: 0.5rem 0;
+                text-align: center;
             }
 
             .sidebar-menu a,
@@ -249,9 +260,9 @@
                 border: none;
                 cursor: pointer;
                 transition: color 0.3s ease;
-                display: inline-block;
                 width: 100%;
-                text-align: left;
+                padding: 0.6rem 0;
+                display: inline-block;
             }
 
             .sidebar-menu a:hover,
@@ -261,7 +272,9 @@
 
             .sidebar-menu form {
                 margin: 0;
+                width: 100%;
             }
+
         </style>
     </head>
     <body>
@@ -279,7 +292,7 @@
             <ul class="sidebar-menu">
                 <li><a href="placeController?action=destination&page=indexjsp">Trang chủ</a></li>
                 <li><a href="placeController?action=destination&page=destinationjsp">Điểm đến</a></li>
-                
+
                 <li><a href="UserManager.jsp">User</a></li>
                 <li>
                     <form action="loginController" method="post">
