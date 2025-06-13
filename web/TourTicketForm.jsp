@@ -2,7 +2,7 @@
 <%@page import="DTO.TourTicketDTO"%>
 <%@page import="DTO.StartDateDTO"%>
 <%@page import="DAO.PlacesDAO"%>
-
+<%@ page import="UTILS.AuthUtils"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="vi">
@@ -148,7 +148,7 @@
 
         </style>
     </head>
-    <body>
+    <body class="<%= AuthUtils.isAdmin(session)? "admin-layout" : "" %>">
         <%@include file="header.jsp" %>
 
         <%

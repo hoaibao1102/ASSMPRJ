@@ -447,7 +447,7 @@
             }
         </style>
     </head>
-    <body>
+    <body class="<%= AuthUtils.isAdmin(session)? "admin-layout" : "" %>">
         <%@include file="header.jsp" %>
         <%  
                     List<TicketImgDTO> listImg = (List<TicketImgDTO>)request.getAttribute("ticketImgDetail");
@@ -543,14 +543,14 @@
                                             <% if (startDates != null) {
                                                     for (StartDateDTO sd : startDates) { 
                                                             if(sd.getQuantity() != 0){
-                                                    %>
-                                                    <option value="<%= sd.getStartNum() %>">
-                                                        <%= sd.getStartDate() %> (còn <%= sd.getQuantity()%> vé)
-                                                    </option>
-                                                    <%
-                                                            }
-                                                    } 
-                                            } %>
+                                            %>
+                                            <option value="<%= sd.getStartNum() %>">
+                                                <%= sd.getStartDate() %> (còn <%= sd.getQuantity()%> vé)
+                                            </option>
+                                            <%
+                                                    }
+                                            } 
+                                    } %>
                                         </select>
                                         <button type="submit" class="btn-go">Đặt ngay</button>
                                     </div>
@@ -563,115 +563,116 @@
                             </div>
                         </div>
                     </div>
-
-                    <%@include file="footer.jsp" %>
-                    </body>
-
-
-                    <script>
-                        document.addEventListener("DOMContentLoaded", function () {
-                            var coll = document.getElementsByClassName("collapsible");
-                            for (var i = 0; i < coll.length; i++) {
-                                coll[i].addEventListener("click", function () {
-                                    this.classList.toggle("active");
-                                    var content = this.nextElementSibling;
-                                    if (content.style.maxHeight) {
-                                        content.style.maxHeight = null;
-                                    } else {
-                                        content.style.maxHeight = content.scrollHeight + "px";
-                                    }
-                                });
-                            }
-                        });
-                        //====================================================================== moi sua doan duoi
-                        let currentIndex = 0;
-                        const images = [];
-
-                        // Lấy ảnh từ thumbnails ngoài gallery để tạo mảng images
-                        document.querySelectorAll('.thumbnails img').forEach((img, index) => {
-                            images.push(img.src);
-                        });
-
-                        // Hiển thị ảnh chính bên ngoài gallery
-                        function showMainImage(url) {
-                            document.getElementById('mainImg').src = "assets/images/imgticket/" + url;
-                        }
-
-                        // Mở modal và khởi tạo ảnh chính + ảnh nhỏ
-                        function openModal() {
-                            const modal = document.getElementById('modal');
-                            modal.style.display = "block";
-                            showModalImage(currentIndex);
-                            initModalThumbnails();
-                        }
-
-                        // Đóng modal
-                        function closeModal(event) {
-                            if (event.target.id === 'modal' || event.target.className === 'close') {
-                                document.getElementById('modal').style.display = "none";
-                            }
-                        }
-
-                        // Chuyển ảnh trong modal (prev/next)
-                        function changeImage(direction) {
-                            currentIndex += direction;
-                            if (currentIndex < 0)
-                                currentIndex = images.length - 1;
-                            if (currentIndex >= images.length)
-                                currentIndex = 0;
-                            showModalImage(currentIndex);
-                        }
-
-                        // Hiển thị ảnh trong modal
-                        function showModalImage(index) {
-                            currentIndex = index;
-                            document.getElementById('modalImg').src = images[currentIndex];
-                            highlightThumbnail(currentIndex);
-                            // Đồng bộ main image bên ngoài gallery
-                            document.getElementById('mainImg').src = images[currentIndex];
-                        }
-
-                        // Khởi tạo ảnh nhỏ trong modal
-                        function initModalThumbnails() {
-                            const container = document.getElementById('modalThumbnails');
-                            container.innerHTML = '';
-                            images.forEach((src, index) => {
-                                const img = document.createElement('img');
-                                img.src = src;
-                                img.onclick = () => {
-                                    showModalImage(index);
-                                };
-                                container.appendChild(img);
-                            });
-                            highlightThumbnail(currentIndex);
-                        }
-
-                        // Tô viền đỏ ảnh thumbnail đang chọn trong modal
-                        function highlightThumbnail(index) {
-                            const thumbnails = document.querySelectorAll('#modalThumbnails img');
-                            thumbnails.forEach((thumb, i) => {
-                                thumb.classList.toggle('selected', i === index);
-                            });
-                        }
+                </div>
+            </div>
+                <%@include file="footer.jsp" %>
+                </body>
 
 
-                    </script>
-                    </html>
-                    <%! 
-                        public void renderDescription(String descript, jakarta.servlet.jsp.JspWriter out) throws java.io.IOException {
-                            String[] list = descript.split("#");
-                            out.println("<div>");
-                    //        out.println("<div class='collapsible'><h2>" + list[0] + "</h2> <span class='toggle-text'>chi tiết</span></div>");
-                            out.println("<div class='collapsible'><span><h2>" + list[0] + "</h2></span> <img class=\"muiten\" src=\"https://icons.iconarchive.com/icons/fa-team/fontawesome/128/FontAwesome-Angles-Down-icon.png\" width=\"128\" height=\"128\"></div>");
-                            out.println("<div class='sub_content'>"); 
-                                for (int i = 1; i < list.length; i++) {
-                                    if (i % 2 != 0) {
-                                        out.println("<h3>" + list[i] + "</h3>");
-                                    } else {
-                                        out.println("<p>" + list[i].replace("/", "<br>")  + "</p>");
-                                    }
+                <script>
+                    document.addEventListener("DOMContentLoaded", function () {
+                        var coll = document.getElementsByClassName("collapsible");
+                        for (var i = 0; i < coll.length; i++) {
+                            coll[i].addEventListener("click", function () {
+                                this.classList.toggle("active");
+                                var content = this.nextElementSibling;
+                                if (content.style.maxHeight) {
+                                    content.style.maxHeight = null;
+                                } else {
+                                    content.style.maxHeight = content.scrollHeight + "px";
                                 }
-                            out.println("</div>");
-                            out.println("</div>");
+                            });
                         }
-                    %>
+                    });
+                    //====================================================================== moi sua doan duoi
+                    let currentIndex = 0;
+                    const images = [];
+
+                    // Lấy ảnh từ thumbnails ngoài gallery để tạo mảng images
+                    document.querySelectorAll('.thumbnails img').forEach((img, index) => {
+                        images.push(img.src);
+                    });
+
+                    // Hiển thị ảnh chính bên ngoài gallery
+                    function showMainImage(url) {
+                        document.getElementById('mainImg').src = "assets/images/imgticket/" + url;
+                    }
+
+                    // Mở modal và khởi tạo ảnh chính + ảnh nhỏ
+                    function openModal() {
+                        const modal = document.getElementById('modal');
+                        modal.style.display = "block";
+                        showModalImage(currentIndex);
+                        initModalThumbnails();
+                    }
+
+                    // Đóng modal
+                    function closeModal(event) {
+                        if (event.target.id === 'modal' || event.target.className === 'close') {
+                            document.getElementById('modal').style.display = "none";
+                        }
+                    }
+
+                    // Chuyển ảnh trong modal (prev/next)
+                    function changeImage(direction) {
+                        currentIndex += direction;
+                        if (currentIndex < 0)
+                            currentIndex = images.length - 1;
+                        if (currentIndex >= images.length)
+                            currentIndex = 0;
+                        showModalImage(currentIndex);
+                    }
+
+                    // Hiển thị ảnh trong modal
+                    function showModalImage(index) {
+                        currentIndex = index;
+                        document.getElementById('modalImg').src = images[currentIndex];
+                        highlightThumbnail(currentIndex);
+                        // Đồng bộ main image bên ngoài gallery
+                        document.getElementById('mainImg').src = images[currentIndex];
+                    }
+
+                    // Khởi tạo ảnh nhỏ trong modal
+                    function initModalThumbnails() {
+                        const container = document.getElementById('modalThumbnails');
+                        container.innerHTML = '';
+                        images.forEach((src, index) => {
+                            const img = document.createElement('img');
+                            img.src = src;
+                            img.onclick = () => {
+                                showModalImage(index);
+                            };
+                            container.appendChild(img);
+                        });
+                        highlightThumbnail(currentIndex);
+                    }
+
+                    // Tô viền đỏ ảnh thumbnail đang chọn trong modal
+                    function highlightThumbnail(index) {
+                        const thumbnails = document.querySelectorAll('#modalThumbnails img');
+                        thumbnails.forEach((thumb, i) => {
+                            thumb.classList.toggle('selected', i === index);
+                        });
+                    }
+
+
+                </script>
+                </html>
+                <%! 
+                    public void renderDescription(String descript, jakarta.servlet.jsp.JspWriter out) throws java.io.IOException {
+                        String[] list = descript.split("#");
+                        out.println("<div>");
+                //        out.println("<div class='collapsible'><h2>" + list[0] + "</h2> <span class='toggle-text'>chi tiết</span></div>");
+                        out.println("<div class='collapsible'><span><h2>" + list[0] + "</h2></span> <img class=\"muiten\" src=\"https://icons.iconarchive.com/icons/fa-team/fontawesome/128/FontAwesome-Angles-Down-icon.png\" width=\"128\" height=\"128\"></div>");
+                        out.println("<div class='sub_content'>"); 
+                            for (int i = 1; i < list.length; i++) {
+                                if (i % 2 != 0) {
+                                    out.println("<h3>" + list[i] + "</h3>");
+                                } else {
+                                    out.println("<p>" + list[i].replace("/", "<br>")  + "</p>");
+                                }
+                            }
+                        out.println("</div>");
+                        out.println("</div>");
+                    }
+                %>

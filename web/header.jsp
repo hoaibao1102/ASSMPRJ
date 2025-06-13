@@ -1,15 +1,16 @@
 <%-- 
     Document   : header
-    Created on : May 12, 2025, 3:41:05 PM
+    Created on : May 12, 2025
     Author     : MSI PC
 --%>
+<%@ page import="UTILS.AuthUtils"%>
 <%@ page import="DTO.UserDTO"%>
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <title>VN Tours</title>
         <style>
             * {
                 margin: 0;
@@ -17,6 +18,16 @@
                 box-sizing: border-box;
             }
 
+            /* ===== COMMON STYLES ===== */
+            a {
+                text-decoration: none;
+            }
+
+            button {
+                font-family: inherit;
+            }
+
+            /* ===== HEADER STYLES (for regular users) ===== */
             .header {
                 background-color: #2c3e50;
                 padding: 1rem 0;
@@ -37,15 +48,12 @@
                 position: relative;
             }
 
-            /* Logo */
             .logo {
                 color: #fff;
                 font-size: 1.5rem;
                 font-weight: 700;
-                text-decoration: none;
             }
 
-            /* Menu toggle (hamburger) */
             .menu-toggle {
                 display: none;
                 font-size: 1.8rem;
@@ -53,7 +61,6 @@
                 cursor: pointer;
             }
 
-            /* Menu list */
             .menu {
                 display: flex;
                 list-style: none;
@@ -61,7 +68,6 @@
             }
 
             .menu-item {
-                /* tránh form bị tràn khi có form trong menu */
                 display: flex;
                 align-items: center;
             }
@@ -75,7 +81,6 @@
                 border: none;
                 cursor: pointer;
                 padding: 0;
-                font-family: inherit;
                 transition: color 0.3s ease;
             }
 
@@ -84,7 +89,6 @@
                 color: #f1c40f;
             }
 
-            /* Right section: search + auth */
             .right-section {
                 display: flex;
                 align-items: center;
@@ -92,7 +96,6 @@
                 flex-wrap: wrap;
             }
 
-            /* Search bar */
             .search-bar {
                 display: flex;
                 align-items: center;
@@ -117,29 +120,38 @@
                 font-size: 1.2rem;
             }
 
-            /* Auth buttons */
             .auth-buttons {
                 display: flex;
                 gap: 0.8rem;
             }
 
-            /* Link buttons */
             .auth-buttons a {
                 background-color: #3498db;
                 color: #fff;
                 padding: 0.4rem 0.8rem;
                 border-radius: 4px;
-                text-decoration: none;
                 font-size: 0.9rem;
                 transition: background-color 0.3s ease;
-                white-space: nowrap;
             }
 
             .auth-buttons a:hover {
                 background-color: #2980b9;
             }
 
-            /* User circle */
+            .logout-btn {
+                background: #3498db;
+                border: none;
+                border-radius: 4px;
+                color: #fff;
+                padding: 0.4rem 0.8rem;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+            }
+
+            .logout-btn:hover {
+                background: #2980b9;
+            }
+
             .user-circle {
                 display: inline-flex;
                 align-items: center;
@@ -151,31 +163,10 @@
                 height: 40px;
                 border-radius: 50%;
                 font-size: 1.2rem;
-                cursor: default;
-                user-select: none;
                 margin-right: 0.5rem;
-                text-transform: uppercase;
             }
 
-            /* Logout button */
-            .logout-btn {
-                background: #3498db;
-                border: none;
-                border-radius: 4px;
-                color: #fff;
-                padding: 0.4rem 0.8rem;
-                cursor: pointer;
-                transition: background-color 0.3s ease;
-                white-space: nowrap;
-            }
-
-            .logout-btn:hover {
-                background: #2980b9;
-            }
-
-            /* Responsive: Mobile */
             @media (max-width: 768px) {
-                /* Menu hidden by default */
                 .menu {
                     display: none;
                     flex-direction: column;
@@ -189,76 +180,122 @@
                     gap: 0;
                 }
 
-                /* Show menu when toggled */
                 .menu.show {
                     display: flex;
                 }
 
-                /* Show hamburger */
                 .menu-toggle {
                     display: block;
                 }
 
-                /* Menu items: full width, center text */
                 .menu-item {
                     width: 100%;
                     text-align: center;
                     padding: 0.5rem 0;
                 }
 
-                .menu-item a,
-                .menu-item input[type="submit"] {
-                    font-size: 1.1rem;
-                    display: block;
-                    width: 100%;
-                }
-
-                /* Right section vertical */
                 .right-section {
                     flex-direction: column;
                     align-items: flex-start;
-                    margin-top: 1rem;
                     width: 100%;
-                    gap: 0.8rem;
                 }
 
-                /* Search bar full width */
                 .search-bar {
                     width: 100%;
-                    padding: 0.5rem 1rem;
                 }
 
-                .search-input {
-                    width: 100%;
-                    font-size: 1rem;
-                }
-
-                /* Auth buttons full width */
                 .auth-buttons {
                     width: 100%;
-                    justify-content: flex-start;
-                    gap: 0.5rem;
                 }
 
                 .auth-buttons a,
                 .logout-btn {
                     width: auto;
-                    font-size: 1rem;
-                    padding: 0.5rem 1rem;
                 }
             }
 
+            /* ===== ADMIN SIDEBAR STYLES ===== */
+            .admin-sidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 100vh;
+                width: 240px;
+                background-color: #2c3e50;
+                padding: 1.5rem 1rem;
+                color: #fff;
+            }
 
+            .sidebar-header {
+                font-size: 1.6rem;
+                font-weight: bold;
+                margin-bottom: 2rem;
+                text-align: center;
+            }
+
+            .sidebar-menu {
+                list-style: none;
+            }
+
+            .sidebar-menu li {
+                margin: 1rem 0;
+            }
+
+            .sidebar-menu a,
+            .sidebar-menu button {
+                color: #fff;
+                font-size: 1rem;
+                background: none;
+                border: none;
+                cursor: pointer;
+                transition: color 0.3s ease;
+                display: inline-block;
+                width: 100%;
+                text-align: left;
+            }
+
+            .sidebar-menu a:hover,
+            .sidebar-menu button:hover {
+                color: #f1c40f;
+            }
+
+            .sidebar-menu form {
+                margin: 0;
+            }
         </style>
     </head>
     <body>
+        <%
+            UserDTO user = (UserDTO) session.getAttribute("nameUser");
+            boolean isAdmin = AuthUtils.isAdmin(session);
+            String searchTour = (request.getAttribute("searchTourInfor") != null) ?
+                    request.getAttribute("searchTourInfor").toString() : "";
+        %>
+
+        <% if (isAdmin) { %>
+        <!-- Admin Sidebar Layout -->
+        <div class="admin-sidebar">
+            <div class="sidebar-header">Admin Panel</div>
+            <ul class="sidebar-menu">
+                <li><a href="placeController?action=destination&page=indexjsp">Trang chủ</a></li>
+                <li><a href="placeController?action=destination&page=destinationjsp">Điểm đến</a></li>
+                
+                <li><a href="UserManager.jsp">User</a></li>
+                <li>
+                    <form action="loginController" method="post">
+                        <input type="hidden" name="action" value="logout" />
+                        <button class="logout-btn">Đăng xuất</button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+        <% } else { %>
+        <!-- Regular Header Layout -->
         <header class="header">
             <div class="container">
                 <nav class="nav">
                     <a href="placeController?action=destination&page=indexjsp" class="logo">VN Tours</a>
-
                     <div class="menu-toggle" onclick="toggleMenu()">☰</div>
-
                     <ul class="menu" id="menu">
                         <li class="menu-item">
                             <form action="placeController" method="get">
@@ -267,59 +304,43 @@
                                 <input type="submit" value="Trang chủ">
                             </form>
                         </li>
-                        
                         <li class="menu-item">
                             <form action="placeController" method="get">
                                 <input type="hidden" name="action" value="destination">
                                 <input type="hidden" name="page" value="destinationjsp">
                                 <input type="submit" value="Điểm đến">
                             </form>
-
                         </li>
                         <li class="menu-item"><a href="about.jsp">Giới thiệu</a></li>
                         <li class="menu-item"><a href="contact.jsp">Liên hệ</a></li>
                     </ul>
-
                     <div class="right-section">
-
-                        <%
-                                String searchTour = (request.getAttribute("searchTourInfor") != null) ? 
-                                        request.getAttribute("searchTourInfor").toString() : "";
-                        %>
                         <form action="placeController" method="get">
                             <div class="search-bar">
                                 <input type="hidden" name="action" value="search">
-                                <input type="text" class="search-input" name="searchItem" placeholder="Tìm Kiếm...." value="<%=searchTour%>">
+                                <input type="text" class="search-input" name="searchItem" placeholder="Tìm Kiếm...." value="<%= searchTour %>">
                                 <button class="search-button">🔍</button>
                             </div>
                         </form>
-
                         <div class="auth-buttons">
-                            <%
-                                 UserDTO user = (UserDTO)session.getAttribute("nameUser");
-                                 if (user == null) {
-                            %>
+                            <% if (user == null) { %>
                             <a href="RegisForm.jsp">Đăng ký</a>
                             <a href="LoginForm.jsp">Đăng nhập</a>
-                            <%
-                                } else {
-                            %>
+                            <% } else { %>
                             <div class="user-circle" title="<%= user.getFullName() %>">
                                 <%= user.getFullName().substring(0,1).toUpperCase() %>
-                            </div>                            
+                            </div>
                             <form action="loginController" method="post" style="display:inline;">
                                 <input type="hidden" name="action" value="logout" />
-                                
                                 <button type="submit" class="logout-btn">Đăng xuất</button>
                             </form>
-                            <%
-                                }
-                            %>
+                            <% } %>
                         </div>
                     </div>
                 </nav>
             </div>
         </header>
+        <% } %>
 
         <script>
             function toggleMenu() {
@@ -327,6 +348,5 @@
                 menu.classList.toggle("show");
             }
         </script>
-
     </body>
 </html>
