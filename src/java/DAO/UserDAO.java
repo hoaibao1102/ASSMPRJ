@@ -59,7 +59,8 @@ public class UserDAO implements IDAO<UserDTO, String> {
                         rs.getString("password"),
                         rs.getString("role")
                 );
-                list.add(user);
+                if(!user.getRole().equalsIgnoreCase("AD")) // Huy added
+                    list.add(user);
             }
             return list;
         } catch (ClassNotFoundException | SQLException ex) {
