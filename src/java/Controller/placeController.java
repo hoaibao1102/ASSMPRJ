@@ -34,11 +34,17 @@ public class placeController extends HttpServlet {
 
     private static String URL = "index.jsp";
 
-    public void getAllDestination(HttpServletRequest request, HttpServletResponse response)
+    public void getAllDestination(HttpServletRequest request, HttpServletResponse response, boolean isAction)
             throws ServletException, IOException {
         String url = URL;
         PlacesDAO pdao = new PlacesDAO();
-        List<PlacesDTO> places = pdao.readAll();
+        List<PlacesDTO> places = null;
+        if(isAction){
+            places = pdao.readAll();
+        }else{
+            places = pdao.searchInactionPlaces();
+        }
+        
         request.setAttribute("placeList", places);
     }
 
@@ -67,7 +73,7 @@ public class placeController extends HttpServlet {
         try {
             if (action.equals("destination")) {
                 // Gọi hàm getFeaturedPlaces để lấy danh sách địa điểm và gán vào request
-                getAllDestination(request, response);
+                getAllDestination(request, response, true);
 
                 String page = request.getParameter("page");
                 if (page.equals("indexjsp")) {
@@ -123,7 +129,7 @@ public class placeController extends HttpServlet {
                 //lay ra list tour
                 if (searchItem != null && !searchItem.trim().isEmpty()) {
                     // Gọi hàm getFeaturedPlaces để lấy danh sách địa điểm và gán vào request
-                    getAllDestination(request, response);
+                    getAllDestination(request, response, true);
 
                     searchItem = searchItem.trim(); // loại bỏ khoảng trắng đầu/cuối
                     List<TourTicketDTO> tour2 = tdao.searchAnyInfor(searchItem);
@@ -138,6 +144,30 @@ public class placeController extends HttpServlet {
                     url = "ResultSearchForm.jsp";
 
                 }
+                
+            }else if (action.equals("updatePlace")) {
+                    url="createPlace.jsp";
+            }
+            else if (action.equals("deletePlace")) {
+                String placeName = request.getParameter("location");
+                PlacesDTO place = pdao.readByName(placeName);
+                place.setStatus(false);
+                pdao.update(place);
+                url = "placeController?action=destination&page=destinationjsp"; 
+            }
+            else if (action.equals("addPlace")) {
+                url="createPlace.jsp";
+            }
+            else if (action.equals("inactiveList")) {
+                getAllDestination(request, response, false);
+
+                String page = request.getParameter("page");
+                if (page.equals("indexjsp")) {
+                    url = "index.jsp";
+                } else {
+                    url = "DestinationForm.jsp";
+                }
+
             }
 
         } catch (Exception e) {

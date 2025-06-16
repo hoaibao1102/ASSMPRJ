@@ -5,6 +5,7 @@
 --%>
 <%@ page import="java.time.LocalDate, java.time.format.DateTimeFormatter" %>
 <%@ page import="DTO.UserDTO"%>
+<%@ page import="UTILS.AuthUtils"%>
 <%@ page import="DTO.StartDateDTO"%>
 <%@ page import="DTO.TourTicketDTO"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -350,7 +351,7 @@
 
     </style>
 </head>
-<body class="<%= isAdmin ? "admin-layout" : "" %>">
+<body class="<%= AuthUtils.isAdmin(session) ? "admin-layout" : "" %>">
     <%
             UserDTO account = (UserDTO)session.getAttribute("nameUser");
             TourTicketDTO tour = (TourTicketDTO)session.getAttribute("tourTicket");

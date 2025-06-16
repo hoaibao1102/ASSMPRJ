@@ -16,18 +16,29 @@ public class PlacesDTO {
     private String description;
     private String img;
     private boolean featured;
+    private boolean status;
     
     public PlacesDTO() {
     }
 
-    public PlacesDTO(int idPlace, String placeName, String description, String img, boolean featured) {
+    public PlacesDTO(int idPlace, String placeName, String description, String img, boolean featured, boolean status) {
         this.idPlace = idPlace;
         this.placeName = placeName;
         this.description = description;
         this.img = img;
         this.featured = featured;
+        this.status = status;
     }
 
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
+    }
+
+    
     public boolean getFeatured() {
         return featured;
     }
