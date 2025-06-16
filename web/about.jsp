@@ -155,7 +155,7 @@
 
         <!-- CTA -->
         <section class="text-center">
-            <a href="index.jsp" class="btn">Quay về Trang chủ</a>
+            <a href="placeController?action=destination&page=indexjsp" class="btn">Quay về Trang chủ</a>
         </section>
 
         <%@ include file="footer.jsp" %>

@@ -290,14 +290,14 @@
         <div class="admin-sidebar">
             <div class="sidebar-header">Admin Panel</div>
             <ul class="sidebar-menu">
-                <li><a href="placeController?action=destination&page=indexjsp">Trang chủ</a></li>
-                <li><a href="placeController?action=destination&page=destinationjsp">Điểm đến</a></li>
+                <li><a href="placeController?action=destination&page=indexjsp">🏠Trang chủ</a></li>
+                <li><a href="placeController?action=destination&page=destinationjsp">📍 Quản lý điểm đến</a></li>
 
-                <li><a href="UserManager.jsp">User</a></li>
+                <li><a href="userController">👤 Quản lý người dùng</a></li>
                 <li>
                     <form action="loginController" method="post">
                         <input type="hidden" name="action" value="logout" />
-                        <button class="logout-btn">Đăng xuất</button>
+                        <button class="logout-btn">🚪 Đăng xuất</button>
                     </form>
                 </li>
             </ul>

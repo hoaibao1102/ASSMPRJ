@@ -349,9 +349,10 @@
         </style>
 
 
-    </style>
 </head>
-<body class="<%= AuthUtils.isAdmin(session) ? "admin-layout" : "" %>">
+
+<body>
+
     <%
             UserDTO account = (UserDTO)session.getAttribute("nameUser");
             TourTicketDTO tour = (TourTicketDTO)session.getAttribute("tourTicket");
