@@ -168,6 +168,17 @@ public class placeController extends HttpServlet {
                     url = "DestinationForm.jsp";
                 }
 
+            }else if (action.equals("addNewPlace")) {
+                //lay ra thông tin newPlace
+                String placename = request.getParameter("placename");
+                String description = request.getParameter("description");
+                String txtImage = request.getParameter("txtImage");
+                boolean Featured = request.getParameter("Featured").equals("1");
+                boolean status = request.getParameter("status").equals("1");
+                
+                PlacesDTO newP = new PlacesDTO(placename, description, txtImage, Featured, status);
+                pdao.create(newP);
+                url="createPlace.jsp";
             }
 
         } catch (Exception e) {

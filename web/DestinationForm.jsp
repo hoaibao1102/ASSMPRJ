@@ -205,10 +205,10 @@
             %>
 
             <%
-                            if (placeList != null && !placeList.isEmpty()) {
+                            if (placeList != null && !placeList.isEmpty() ) {
                                 for (PlacesDTO p : placeList) {
             %>
-            <form class="place-card" action="placeController" method="get">
+            <form class="place-card" action="placeController" method="post">
                 <img class="place-image" src="assets/images/<%=p.getImg()%>" alt="<%=p.getPlaceName()%>" />
                 <div class="place-content">
                     <h4><%=p.getPlaceName()%></h4>

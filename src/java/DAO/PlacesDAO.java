@@ -62,8 +62,8 @@ public class PlacesDAO implements IDAO<PlacesDTO, String> {
 
         return null;
     }
-    
-    public List<PlacesDTO> searchNoActionPlaces() {
+
+    public List<PlacesDTO> searchActionPlaces() {
         String sql = SELECT_QUERY_ACTION;
         List<PlacesDTO> list = new ArrayList<>();
         try {
@@ -73,11 +73,11 @@ public class PlacesDAO implements IDAO<PlacesDTO, String> {
 
             while (rs.next()) {
                 PlacesDTO newT = new PlacesDTO(rs.getInt("idplace"),
-                            rs.getString("placename"),
-                            rs.getString("description"),
-                            rs.getString("img_places"),
-                            rs.getInt("Featured") == 1,
-                            rs.getBoolean("status"));
+                        rs.getString("placename"),
+                        rs.getString("description"),
+                        rs.getString("img_places"),
+                        rs.getInt("Featured") == 1,
+                        rs.getBoolean("status"));
                 list.add(newT);
             }
             return list;
@@ -90,7 +90,34 @@ public class PlacesDAO implements IDAO<PlacesDTO, String> {
         return null;
 
     }
-    
+
+    public List<PlacesDTO> searchInactionPlaces() {
+        String sql = SELECT_QUERY_NO_ACTION;
+        List<PlacesDTO> list = new ArrayList<>();
+        try {
+            Connection conn = DBUtils.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                PlacesDTO newT = new PlacesDTO(rs.getInt("idplace"),
+                        rs.getString("placename"),
+                        rs.getString("description"),
+                        rs.getString("img_places"),
+                        rs.getInt("Featured") == 1,
+                        rs.getBoolean("status"));
+                list.add(newT);
+            }
+            return list;
+
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(TourTicketDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(TourTicketDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
     public PlacesDTO readByName(String namePlace) {
         List<PlacesDTO> rs = this.searchWithCondition(namePlace, "placeName");
         for (PlacesDTO i : rs) {
@@ -104,7 +131,7 @@ public class PlacesDAO implements IDAO<PlacesDTO, String> {
         }
         return null;
     }
-    
+
     @Override
     public PlacesDTO readbyID(String id) {
         List<PlacesDTO> rs = this.searchWithCondition(id, "idPlace");
@@ -122,6 +149,28 @@ public class PlacesDAO implements IDAO<PlacesDTO, String> {
 
     @Override
     public boolean create(PlacesDTO entity) {
+        String sql = "INSERT INTO Places (placename, description, img_places, Featured, status) "
+                + "VALUES (?, ?, ?, ?, ?)";
+
+        Connection conn;
+        try {
+            conn = DBUtils.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, entity.getPlaceName());
+            ps.setString(2, entity.getDescription());
+            ps.setString(3, entity.getImg());
+            ps.setInt(4, entity.getFeatured()?1:0);
+            ps.setInt(5, entity.isStatus()?1:0);
+            
+            int n = ps.executeUpdate();
+            return n >0;
+            
+            
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(PlacesDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(PlacesDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return false;
     }
 
@@ -136,11 +185,11 @@ public class PlacesDAO implements IDAO<PlacesDTO, String> {
 
             while (rs.next()) {
                 PlacesDTO newT = new PlacesDTO(rs.getInt("idplace"),
-                            rs.getString("placename"),
-                            rs.getString("description"),
-                            rs.getString("img_places"),
-                            rs.getInt("Featured") == 1,
-                            rs.getBoolean("status"));
+                        rs.getString("placename"),
+                        rs.getString("description"),
+                        rs.getString("img_places"),
+                        rs.getInt("Featured") == 1,
+                        rs.getBoolean("status"));
                 list.add(newT);
             }
             return list;
@@ -157,22 +206,21 @@ public class PlacesDAO implements IDAO<PlacesDTO, String> {
     @Override
     public boolean update(PlacesDTO entity) {
         String sql = "UPDATE Places SET description = ?, img_places = ?, Featured = ?, status = ? WHERE placename = ?";
-    try (Connection conn = DBUtils.getConnection();
-         PreparedStatement ps = conn.prepareStatement(sql)) {
-        ps.setString(1, entity.getDescription());
-        ps.setString(2, entity.getImg());
-        ps.setInt(3, entity.getFeatured() ? 1 : 0);  // hoặc getFeatured() nếu dùng kiểu int
-        ps.setBoolean(4, entity.isStatus());
-        ps.setString(5, entity.getPlaceName());
+        try ( Connection conn = DBUtils.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, entity.getDescription());
+            ps.setString(2, entity.getImg());
+            ps.setInt(3, entity.getFeatured() ? 1 : 0);  // hoặc getFeatured() nếu dùng kiểu int
+            ps.setBoolean(4, entity.isStatus());
+            ps.setString(5, entity.getPlaceName());
 
-        int rows = ps.executeUpdate();
-        return rows > 0;
+            int rows = ps.executeUpdate();
+            return rows > 0;
 
-    } catch (SQLException | ClassNotFoundException ex) {
-        Logger.getLogger(PlacesDAO.class.getName()).log(Level.SEVERE, null, ex);
-    }
-    return false;
-        
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(PlacesDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+
     }
 
     @Override
@@ -182,7 +230,7 @@ public class PlacesDAO implements IDAO<PlacesDTO, String> {
 
     @Override
     public List<PlacesDTO> search(String searchTerm) {
-        return null; 
+        return null;
     }
 
 }

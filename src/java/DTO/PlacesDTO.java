@@ -30,6 +30,14 @@ public class PlacesDTO {
         this.status = status;
     }
 
+    public PlacesDTO(String placeName, String description, String img, boolean featured, boolean status) {
+        this.placeName = placeName;
+        this.description = description;
+        this.img = img;
+        this.featured = featured;
+        this.status = status;
+    }
+    
     public boolean isStatus() {
         return status;
     }

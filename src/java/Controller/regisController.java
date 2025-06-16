@@ -83,7 +83,7 @@ public class regisController extends HttpServlet {
                         request.setAttribute("txtEmail_error", "Email existed");
                     }
 
-                    if (phone == null || !phone.matches(regexPhone)) {
+                    if (phone.trim() == null || !phone.trim().matches(regexPhone)) {
                         checkedError = true;
                         request.setAttribute("txtPhone_error", "Sđt phải 10 số, bắt đầu 0");
                     }
