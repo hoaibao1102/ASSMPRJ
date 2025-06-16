@@ -1,6 +1,6 @@
 <%@page import="java.util.List"%>
 <%@page import="DTO.PlacesDTO"%>
-<%@ page import="UTILS.AuthUtils"%>
+<%@page import="UTILS.AuthUtils"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="vi">
@@ -223,7 +223,6 @@
                 </div>
             </div>
         </div>
-    </div>
 
 
     <jsp:include page="footer.jsp"/>

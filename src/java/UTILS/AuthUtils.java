@@ -7,6 +7,7 @@ package UTILS;
 
 import DAO.UserDAO;
 import DTO.UserDTO;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 
@@ -43,5 +44,9 @@ public class AuthUtils {
         }
         UserDTO user = (UserDTO)session.getAttribute("nameUser");
         return user.getRole().equals(ADMIN_ROLE);
+    }
+    // Huy added
+     public static String getAccessDeniedMessage(String action){
+        return "You cannnot access to " + action + ". Please contact Adminstrator to know more detail information.";
     }
 }
