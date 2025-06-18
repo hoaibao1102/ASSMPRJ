@@ -176,7 +176,7 @@
                     <c:if test="${!place.status}">
                             <form class="place-card" action="placeController" method="post">
                                
-                                <img class="place-image" src="${place.img}" onerror="this.src='default.jpg'" alt="${place.placeName}" />
+                                <img class="place-image" src="${place.img}" alt="${place.placeName}" />
 
                                 <div class="place-content">
                                     <h4>${place.placeName}</h4>
@@ -214,7 +214,7 @@
                                     <div class="featured-label">Nổi bật</div>
                                 </c:if>
 
-                                <img class="place-image" src="${place.img}" onerror="this.src='default.jpg'" alt="${place.placeName}" />
+                                <img class="place-image" src="${place.img}"  alt="${place.placeName}" />
 
                                 <div class="place-content">
                                     <h4>${place.placeName}</h4>
