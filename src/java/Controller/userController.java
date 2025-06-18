@@ -4,7 +4,11 @@
  */
 package Controller;
 
+import DAO.OrderDAO;
+import DAO.StartDateDAO;
 import DAO.UserDAO;
+import DTO.OrderDTO;
+import DTO.StartDateDTO;
 import DTO.UserDTO;
 import UTILS.AuthUtils;
 import java.io.IOException;
@@ -15,7 +19,9 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -25,6 +31,8 @@ import java.util.List;
 public class userController extends HttpServlet {
 
     UserDAO udao = new UserDAO();
+    OrderDAO odao = new OrderDAO();
+    StartDateDAO stdao= new StartDateDAO();
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -34,9 +42,9 @@ public class userController extends HttpServlet {
         String url = "";
         try {
             String action = request.getParameter("action");
-            if ("deleteUser".equals(action)) {
-                url = handleUserDeleting(request, response);
-            }else if("listUser".equals(action) || action == null){
+            if ("orderOfUser".equals(action)) {
+                url = handleUserOrder(request, response);
+            } else if ("listUser".equals(action) || action == null) {
                 url = handleUserListing(request, response);
             }
         } catch (Exception e) {
@@ -84,18 +92,31 @@ public class userController extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
-    private String handleUserDeleting(HttpServletRequest request, HttpServletResponse response) {
-        HttpSession session = request.getSession(false);
+    private String handleUserOrder(HttpServletRequest request, HttpServletResponse response) {
         String userId = request.getParameter("userId");
-        if (session != null && AuthUtils.isAdmin(session) && userId != null) {
-            udao.delete(userId);
+        String userName = udao.readbyID(userId).getFullName();
+        List<OrderDTO> list = odao.search(userId); // Lấy toàn bộ user từ DAO
+        Map<String,String> startDateMap = new HashMap<>();
+        for (OrderDTO order : list) {
+            int stNum =order.getStartNum();
+            String idTour = order.getIdTour();
+            String idBooking = order.getIdBooking();
+            
+            StartDateDTO st = stdao.searchDetailDate(idTour, stNum);
+            String date = st.getStartDate();
+            
+            startDateMap.put(idBooking,date);
         }
-        return "UserManager.jsp";
+        request.setAttribute("startDateMap", startDateMap);
+        request.setAttribute("list", list); 
+        request.setAttribute("userName", userName);// Đưa list vào attribute để JSP lấy ra hiển thị
+        return "OrderOfUser.jsp";                // Trả về tên file JSP để forward
     }
+
     private String handleUserListing(HttpServletRequest request, HttpServletResponse response) {
-    List<UserDTO> list = udao.readAll(); // Lấy toàn bộ user từ DAO
-    request.setAttribute("list", list);      // Đưa list vào attribute để JSP lấy ra hiển thị
-    return "UserManager.jsp";                // Trả về tên file JSP để forward
-}
+        List<UserDTO> list = udao.readAll(); // Lấy toàn bộ user từ DAO
+        request.setAttribute("list", list);      // Đưa list vào attribute để JSP lấy ra hiển thị
+        return "UserManager.jsp";                // Trả về tên file JSP để forward
+    }
 
 }

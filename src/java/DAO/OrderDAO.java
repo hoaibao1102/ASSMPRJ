@@ -96,7 +96,35 @@ public class OrderDAO implements IDAO<OrderDTO, String> {
 
     @Override
     public List<OrderDTO> search(String searchTerm) {
+        List<OrderDTO> list = new ArrayList<>();
+        String sql = "SELECT * FROM Orders Where idUser = ?  ";
+        try {
+            Connection conn = DBUtils.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, searchTerm);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                OrderDTO newT = new OrderDTO(rs.getInt("idUser"),
+                        rs.getString("idTourTicket"),
+                        rs.getString("BookingDate"),
+                        rs.getInt("NumberTicket"),
+                        rs.getDouble("TotalPrice"),
+                        rs.getInt("Status"),
+                        rs.getString("idBooking"),
+                        rs.getString("Note"),
+                        rs.getInt("startNum"));
+                list.add(newT);
+            }
+            return list;
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(TourTicketDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(TourTicketDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return null;
+
+    
     }
 
     public String generateBookingId(String idTour) {

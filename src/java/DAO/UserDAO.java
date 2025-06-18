@@ -50,17 +50,20 @@ public class UserDAO implements IDAO<UserDTO, String> {
             Connection conn = DBUtils.getConnection();
             PreparedStatement pst = conn.prepareStatement(sql);
             ResultSet rs = pst.executeQuery();
-            while(rs.next()) {
+            while (rs.next()) {
                 UserDTO user = new UserDTO(
                         rs.getInt("id"),
                         rs.getString("full_name"),
                         rs.getString("email"),
                         rs.getString("phone"),
                         rs.getString("password"),
-                        rs.getString("role")
+                        rs.getString("role"),
+                        rs.getInt("status") == 1
                 );
-                if(!user.getRole().equalsIgnoreCase("AD")) // Huy added
+                if (!user.getRole().equalsIgnoreCase("AD")) // Huy added
+                {
                     list.add(user);
+                }
             }
             return list;
         } catch (ClassNotFoundException | SQLException ex) {
@@ -71,12 +74,22 @@ public class UserDAO implements IDAO<UserDTO, String> {
 
     @Override
     public UserDTO readbyID(String searchTerm) {
-        String sql = "SELECT * FROM users WHERE  email = ? OR phone = ? ";
+        String sql = "SELECT * FROM users WHERE id = ? or email = ? OR phone = ? ";
         try {
             Connection conn = DBUtils.getConnection();
             PreparedStatement pst = conn.prepareStatement(sql);
-            pst.setString(1, searchTerm);
-            pst.setString(2, searchTerm);
+            // Ép kiểu id về int nếu có thể, nếu không thì đặt -1 để tránh match
+            int idSearch;
+            try {
+                idSearch = Integer.parseInt(searchTerm);
+            } catch (NumberFormatException e) {
+                idSearch = -1; // Không match với id nào
+            }
+
+            pst.setInt(1, idSearch);           // id = ?
+            pst.setString(2, searchTerm);      // email = ?
+            pst.setString(3, searchTerm);      // phone = ?
+
             ResultSet rs = pst.executeQuery();
             if (rs.next()) {
                 return new UserDTO(
@@ -85,7 +98,8 @@ public class UserDAO implements IDAO<UserDTO, String> {
                         rs.getString("email"),
                         rs.getString("phone"),
                         rs.getString("password"),
-                        rs.getString("role")
+                        rs.getString("role"),
+                        rs.getInt("status") == 1
                 );
             }
         } catch (ClassNotFoundException | SQLException ex) {
@@ -124,22 +138,21 @@ public class UserDAO implements IDAO<UserDTO, String> {
 
     @Override
     public boolean delete(String id) {
-//        String sql = "INSERT INTO users (full_name, email, phone, password, role) VALUES (?,?,?,?,?)";
-//        try {
-//            Connection conn = DBUtils.getConnection();
-//            PreparedStatement ps = conn.prepareStatement(sql);
-//            ps.setString(1, entity.getFullName());
-//            ps.setString(2, entity.getEmail());
-//            ps.setString(3, entity.getPhone());
-//            ps.setString(4, entity.getPassword());
-//            ps.setString(5, entity.getRole());
-//            int n = ps.executeUpdate();
-//            return n > 0;
-//        } catch (ClassNotFoundException ex) {
-//            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
-//        } catch (SQLException ex) {
-//            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
-//        }
+        String sql = "UPDATE users set "
+                + "status = 0 "
+                + "where id = ? ";
+        try {
+            Connection conn = DBUtils.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, id);
+
+            int n = ps.executeUpdate();
+            return n > 0;
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return false;
     }
 

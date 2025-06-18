@@ -206,7 +206,10 @@
 
             <c:choose>
                 <c:when test="${not empty placeList}">
-                    📍 Danh sách điểm đến đang hoạt động
+                    <c:if test="${sessionScope.nameUser.role eq 'AD'}">
+                        📍 Danh sách điểm đến đang hoạt động
+                    </c:if>
+                    
                     <c:forEach var="place" items="${placeList}">
                         <c:if test="${place.status}">
                             <form class="place-card" action="placeController" method="post">

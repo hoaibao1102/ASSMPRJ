@@ -15,6 +15,7 @@ public class UserDTO {
     private String phone;
     private String password;
     private String role;
+    private boolean status;
 
     // Constructor
     public UserDTO( String fullName, String email, String phone, String password, String role) {
@@ -24,16 +25,25 @@ public class UserDTO {
         this.password = password;
         this.role = role;
     }
-
-    public UserDTO(int idUser, String fullName, String email, String phone, String password, String role) {
+    
+    public UserDTO(int idUser, String fullName, String email, String phone, String password, String role,boolean status) {
         this.idUser = idUser;
         this.fullName = fullName;
         this.email = email;
         this.phone = phone;
         this.password = password;
         this.role = role;
+        this.status = status;
     }
 
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
+    }
+    
     public int getIdUser() {
         return idUser;
     }

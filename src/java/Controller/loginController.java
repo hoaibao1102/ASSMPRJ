@@ -67,12 +67,13 @@ public class loginController extends HttpServlet {
                 String txtEmailOrPhone = request.getParameter("txtEmailOrPhone");
                 String txtPassword = request.getParameter("txtPassword");
 
-                if (AuthUtils.isValidLogin(txtEmailOrPhone, txtPassword)) {
+                if (AuthUtils.isValidLogin(txtEmailOrPhone, txtPassword) ) {
                     // Lấy user và lưu vào session
                     UserDTO user = AuthUtils.getUser(txtEmailOrPhone);
                     session = request.getSession(true);
                     session.setAttribute("nameUser", user);
-
+                    
+                    
                     // Kiểm tra session có lưu URL redirect không
                     String redirectUrl = (String) session.getAttribute("redirectAfterLogin");
                     if (redirectUrl != null) {
