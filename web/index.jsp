@@ -1,6 +1,7 @@
 <%@page import="java.util.List"%>
 <%@page import="DTO.PlacesDTO"%>
 <%@page import="UTILS.AuthUtils"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="vi">
@@ -181,6 +182,7 @@
             <div class="slider-container">
                 <div class="slider">
                     <div class="slider-title">Việt Nam – Nơi mỗi bước chân là một câu chuyện.</div>
+
                     <img src="assets/images/danangimg.jpg" alt="Đà Nẵng" class="slide active">
                     <img src="assets/images/slider/dalatsl.webp" alt="Đà Lạt" class="slide">
                     <img src="assets/images/slider/vungtausl.jpg" alt="Vũng Tàu" class="slide">
@@ -194,64 +196,59 @@
             <form id="autoSubmitForm" action="placeController" method="post">
                 <input type="hidden" name="action" value="destination">
                 <input type="hidden" name="page" value="indexjsp">
-                
+
             </form>
 
             <div class="section">
                 <div class="title">Điểm đến nổi bật</div>
                 <div class="grid">
-                    <%
-                        List<PlacesDTO> placeList = (List<PlacesDTO>)request.getAttribute("placeList");
-                        if (placeList != null && !placeList.isEmpty()) {
-                            for (PlacesDTO p : placeList) {
-                                if (p.getFeatured()) {
-                            %>
+                    <c:forEach var="place" items="${placeList }">
+                        <c:if test="${place.featured and place.status }">
                             <form class="card" action="placeController" method="post">
                                 <div class="image-wrapper">
-                                    <img src="assets/images/<%=p.getImg()%>" alt="<%=p.getPlaceName()%>" />
+                                    <img src="${place.img}" alt="${place.placeName}" />
                                     <button type="submit" class="btn-overlay">Xem thêm</button>
                                 </div>
-                                <h4><%=p.getPlaceName()%></h4>
+                                <h4>${place.placeName}</h4>
                                 <input type="hidden" name="action" value="takeListTicket" />
-                                <input type="hidden" name="location" value="<%=p.getPlaceName()%>" />
+                                <input type="hidden" name="location" value="${place.placeName}" />
                             </form>
-                            <%
-                                }
-                            }
-                        }
-                    %>
+                        </c:if>
+                    </c:forEach>
+
+                   
                 </div>
             </div>
         </div>
 
 
-    <jsp:include page="footer.jsp"/>
+        <jsp:include page="footer.jsp"/>
 
-    <script>
+        <script>
 
-        // Function to auto-submit the form once on the first page load
-        if (!sessionStorage.getItem("formSubmitted")) {
-            // If form has not been submitted yet, submit it
-            document.getElementById('autoSubmitForm').submit();
+            // Function to auto-submit the form once on the first page load
+            if (!sessionStorage.getItem("formSubmitted")) {
+                // If form has not been submitted yet, submit it
+                document.getElementById('autoSubmitForm').submit();
 
-            // Set a flag to prevent future auto-submissions during the session
-            sessionStorage.setItem("formSubmitted", "true");
-        }
-        
-        const slides = document.querySelectorAll('.slide');
-        let currentIndex = 0;
+                // Set a flag to prevent future auto-submissions during the session
+                sessionStorage.setItem("formSubmitted", "true");
+            }
 
-        function showSlide(index) {
-            slides.forEach((slide, i) => {
-                slide.classList.toggle('active', i === index);
-            });
-        }
+            const slides = document.querySelectorAll('.slide');
+            let currentIndex = 0;
 
-        setInterval(() => {
-            currentIndex = (currentIndex + 1) % slides.length;
-            showSlide(currentIndex);
-        }, 7000); // 7 giây
-    </script>
+            function showSlide(index) {
+                slides.forEach((slide, i) => {
+                    slide.classList.toggle('active', i === index);
+                });
+            }
 
-</body>
+            setInterval(() => {
+                currentIndex = (currentIndex + 1) % slides.length;
+                showSlide(currentIndex);
+            }, 7000); // 7 giây
+        </script>
+
+    </body>
 </html>

@@ -23,8 +23,8 @@ import java.util.logging.Logger;
  */
 public class PlacesDAO implements IDAO<PlacesDTO, String> {
 
-    private final String SELECT_QUERY_ACTION = "SELECT * FROM dbo.Places WHERE status = 1 ";
-    private final String SELECT_QUERY_NO_ACTION = "SELECT * FROM dbo.Places WHERE status = 0 ";
+    private final String SELECT_QUERY = "SELECT * FROM dbo.Places  ";
+    
 
     public boolean checkAttribute(String attribute) {
         List<String> validAttributes = Arrays.asList("placeName", "idPlace");
@@ -33,7 +33,7 @@ public class PlacesDAO implements IDAO<PlacesDTO, String> {
 
     public List<PlacesDTO> searchWithCondition(String searchTerm, String attribute) {
         if (checkAttribute(attribute)) {
-            String sql = SELECT_QUERY_ACTION + " AND " + attribute + " = ? ";
+            String sql = SELECT_QUERY + " where " + attribute + " = ? ";
             List<PlacesDTO> list = new ArrayList<>();
             try {
                 Connection conn = DBUtils.getConnection();
@@ -63,60 +63,7 @@ public class PlacesDAO implements IDAO<PlacesDTO, String> {
         return null;
     }
 
-    public List<PlacesDTO> searchActionPlaces() {
-        String sql = SELECT_QUERY_ACTION;
-        List<PlacesDTO> list = new ArrayList<>();
-        try {
-            Connection conn = DBUtils.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ResultSet rs = ps.executeQuery();
-
-            while (rs.next()) {
-                PlacesDTO newT = new PlacesDTO(rs.getInt("idplace"),
-                        rs.getString("placename"),
-                        rs.getString("description"),
-                        rs.getString("img_places"),
-                        rs.getInt("Featured") == 1,
-                        rs.getBoolean("status"));
-                list.add(newT);
-            }
-            return list;
-
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(TourTicketDAO.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
-            Logger.getLogger(TourTicketDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return null;
-
-    }
-
-    public List<PlacesDTO> searchInactionPlaces() {
-        String sql = SELECT_QUERY_NO_ACTION;
-        List<PlacesDTO> list = new ArrayList<>();
-        try {
-            Connection conn = DBUtils.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ResultSet rs = ps.executeQuery();
-
-            while (rs.next()) {
-                PlacesDTO newT = new PlacesDTO(rs.getInt("idplace"),
-                        rs.getString("placename"),
-                        rs.getString("description"),
-                        rs.getString("img_places"),
-                        rs.getInt("Featured") == 1,
-                        rs.getBoolean("status"));
-                list.add(newT);
-            }
-            return list;
-
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(TourTicketDAO.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
-            Logger.getLogger(TourTicketDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return null;
-    }
+  
 
     public PlacesDTO readByName(String namePlace) {
         List<PlacesDTO> rs = this.searchWithCondition(namePlace, "placeName");
@@ -176,7 +123,7 @@ public class PlacesDAO implements IDAO<PlacesDTO, String> {
 
     @Override
     public List<PlacesDTO> readAll() {
-        String sql = SELECT_QUERY_ACTION;
+        String sql = SELECT_QUERY;
         List<PlacesDTO> list = new ArrayList<>();
         try {
             Connection conn = DBUtils.getConnection();
@@ -189,7 +136,7 @@ public class PlacesDAO implements IDAO<PlacesDTO, String> {
                         rs.getString("description"),
                         rs.getString("img_places"),
                         rs.getInt("Featured") == 1,
-                        rs.getBoolean("status"));
+                        rs.getInt("status") == 1);
                 list.add(newT);
             }
             return list;
@@ -209,8 +156,8 @@ public class PlacesDAO implements IDAO<PlacesDTO, String> {
         try ( Connection conn = DBUtils.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, entity.getDescription());
             ps.setString(2, entity.getImg());
-            ps.setInt(3, entity.getFeatured() ? 1 : 0);  // hoặc getFeatured() nếu dùng kiểu int
-            ps.setBoolean(4, entity.isStatus());
+            ps.setInt(3, entity.getFeatured()?1:0);  // hoặc getFeatured() nếu dùng kiểu int
+            ps.setInt(4, entity.isStatus()?1:0);
             ps.setString(5, entity.getPlaceName());
 
             int rows = ps.executeUpdate();

@@ -1,3 +1,5 @@
+<%@page import="DTO.PlacesDTO"%>
+<%@page import="UTILS.AuthUtils"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -168,6 +170,18 @@
         </style>
     </head>
     <body>
+        <%if(AuthUtils.isAdmin(session)){
+        %>
+        <%
+        PlacesDTO place = (PlacesDTO)request.getAttribute("place");
+        String action ;
+        if(place != null){
+           action = "updateNewPlace";
+       }else{
+           action = "addNewPlace";
+       }
+  
+        %>
 
         <a href="placeController?action=destination&page=destinationjsp" class="back-button">← Quay lại</a>
 
@@ -175,29 +189,32 @@
             <h2>Thêm Địa Điểm Mới</h2>
 
             <form action="placeController" method="post">
-                <input type="hidden" name="action" value="addNewPlace">
+                <input type="hidden" name="action" value="<%=action%>">
 
                 <label for="placename">Tên địa điểm</label>
-                <input type="text" name="placename" id="placename" required>
+                <input type="text" name="placename" id="placename" required value="<%=(place!= null && place.getPlaceName()!= null)? place.getPlaceName():""%>">
 
                 <label for="description">Mô tả</label>
-                <input type="text" name="description" id="description" required>
+                <input type="text" name="description" id="description" required value="<%=(place!= null && place.getDescription() != null)? place.getDescription():""%>">
 
                 <label for="img_places">Ảnh điểm đến</label>
-                <input type="hidden" id="txtImage" name="txtImage" value=""/>
+                <input type="hidden" id="txtImage" name="txtImage" value="<%=(place!= null &&  place.getImg() != null)?place.getImg():""%>"  >
 
                 <div class="upload-container">
                     <div class="file-upload-wrapper">
                         <button type="button" class="file-upload-button">Chọn ảnh</button>
-                        <input type="file" id="imageUpload" class="file-upload-input" accept="image/*"/>
+                        <input type="file" id="imageUpload" class="file-upload-input" accept="image/*"/ >
                     </div>
-                    <div class="file-info" id="fileInfo">Chưa chọn file</div>
 
                     <div class="progress-bar-container" id="progressContainer" style="display:none;">
                         <div class="progress-bar" id="progressBar"></div>
                     </div>
-
-                    <div class="image-preview" id="imagePreview"></div>
+                   
+                    <div class="image-preview" id="imagePreview">
+                        <% if (place != null && place.getImg() != null && !place.getImg().isEmpty()) { %>
+                        <img src="<%= place.getImg() %>" alt="<%= place.getPlaceName() != null ? place.getPlaceName() : "" %>"/>
+                        <% } %>
+                    </div>
                 </div>
 
                 <label for="Featured">Nổi bật</label>
@@ -277,6 +294,9 @@
                 });
             });
         </script>
+        <%
+        }%>
+
 
     </body>
 </html>

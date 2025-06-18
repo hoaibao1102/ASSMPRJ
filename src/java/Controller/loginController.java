@@ -93,7 +93,7 @@ public class loginController extends HttpServlet {
 
                     } else {
                        // Gọi hàm getFeaturedPlaces để lấy danh sách địa điểm và gán vào request
-                        pcl.getAllDestination(request, response, true);
+                        pcl.getAllDestination(request, response);
                         url = "index.jsp";
                     }
                 } else {
@@ -107,7 +107,7 @@ public class loginController extends HttpServlet {
                     session.invalidate();
                 }
                 // Gọi hàm getFeaturedPlaces để lấy danh sách địa điểm và gán vào request
-                pcl.getAllDestination(request, response, true);
+                pcl.getAllDestination(request, response);
                 url = "index.jsp";
 
             } else if ("order".equals(action)) {

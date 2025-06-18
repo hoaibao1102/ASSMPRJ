@@ -25,6 +25,9 @@ ADD Featured INT default 0;
 UPDATE Places SET Featured = 1 WHERE idplace = 1  or idplace = 2 or idplace = 6;
 UPDATE Places SET Featured = 0 WHERE idplace = 3  or idplace = 4 or idplace = 5;
 
+--thêm trạng thái có hoạt động hay khong của places
+ALTER TABLE Places
+ALTER COLUMN img_places VARCHAR(MAX);
 
 
 -- sau đó thêm ảnh nè

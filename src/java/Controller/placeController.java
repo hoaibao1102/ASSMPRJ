@@ -34,17 +34,12 @@ public class placeController extends HttpServlet {
 
     private static String URL = "index.jsp";
 
-    public void getAllDestination(HttpServletRequest request, HttpServletResponse response, boolean isAction)
+    public void getAllDestination(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String url = URL;
         PlacesDAO pdao = new PlacesDAO();
         List<PlacesDTO> places = null;
-        if(isAction){
-            places = pdao.readAll();
-        }else{
-            places = pdao.searchInactionPlaces();
-        }
-        
+        places = pdao.readAll();
         request.setAttribute("placeList", places);
     }
 
@@ -73,7 +68,7 @@ public class placeController extends HttpServlet {
         try {
             if (action.equals("destination")) {
                 // Gọi hàm getFeaturedPlaces để lấy danh sách địa điểm và gán vào request
-                getAllDestination(request, response, true);
+                getAllDestination(request, response);
 
                 String page = request.getParameter("page");
                 if (page.equals("indexjsp")) {
@@ -96,14 +91,14 @@ public class placeController extends HttpServlet {
                     for (int i = 0; i < tour.size(); i++) {
                         // lấy ra các ngày đi 
                         List<StartDateDTO> startDateTour = stdDAO.search(tour.get(i).getIdTourTicket());
-                        request.setAttribute("startDateTour"+(i+1), startDateTour);
+                        request.setAttribute("startDateTour" + (i + 1), startDateTour);
                     }
                     System.out.println("vào thành công");
                     request.setAttribute("discriptionPlaces", discriptionPlaces);
                     request.setAttribute("tourList", tour);
                     url = "TourTicketForm.jsp";
                 } else {
-                    System.out.println("không qua du?c ba ");
+                    System.out.println("không qua duoc ba ");
                 }
 
             } else if (action.equals("ticketDetail")) {
@@ -113,10 +108,10 @@ public class placeController extends HttpServlet {
                     List<TicketImgDTO> ticketImgDetail = tiDAO.readbyIdTourTicket(idTour);
                     List<TicketDayDetailDTO> ticketDayDetail = tddDao.readbyIdTourTicket(idTour);
                     TourTicketDTO tourTicket = tdao.readbyID(idTour);
-                    
+
                     // lấy ra các ngày đi 
                     List<StartDateDTO> startDateTour = stdDAO.search(tourTicket.getIdTourTicket());
-                    
+
                     request.setAttribute("startDateTour", startDateTour);
                     request.setAttribute("ticketImgDetail", ticketImgDetail);
                     request.setAttribute("ticketDayDetail", ticketDayDetail);
@@ -129,56 +124,60 @@ public class placeController extends HttpServlet {
                 //lay ra list tour
                 if (searchItem != null && !searchItem.trim().isEmpty()) {
                     // Gọi hàm getFeaturedPlaces để lấy danh sách địa điểm và gán vào request
-                    getAllDestination(request, response, true);
+                    getAllDestination(request, response);
 
                     searchItem = searchItem.trim(); // loại bỏ khoảng trắng đầu/cuối
                     List<TourTicketDTO> tour2 = tdao.searchAnyInfor(searchItem);
-        
+
                     for (int i = 0; i < tour2.size(); i++) {
                         // lấy ra các ngày đi 
                         List<StartDateDTO> startDateTour = stdDAO.search(tour2.get(i).getIdTourTicket());
-                        request.setAttribute("startDateTour"+(i+1), startDateTour);
+                        request.setAttribute("startDateTour" + (i + 1), startDateTour);
                     }
                     request.setAttribute("tourList2", tour2);
                     request.setAttribute("searchTourInfor", searchItem);
                     url = "ResultSearchForm.jsp";
 
                 }
-                
-            }else if (action.equals("updatePlace")) {
-                    url="createPlace.jsp";
-            }
-            else if (action.equals("deletePlace")) {
+
+            } else if (action.equals("updatePlace")) {
+                String location = request.getParameter("location");
+                String img = request.getParameter("img");
+                String description = request.getParameter("description");
+
+                PlacesDTO place = new PlacesDTO(location, description, img, true, true);
+                request.setAttribute("place", place);
+                url = "createPlace.jsp";
+            } else if (action.equals("deletePlace")) {
                 String placeName = request.getParameter("location");
                 PlacesDTO place = pdao.readByName(placeName);
                 place.setStatus(false);
                 pdao.update(place);
-                url = "placeController?action=destination&page=destinationjsp"; 
-            }
-            else if (action.equals("addPlace")) {
-                url="createPlace.jsp";
-            }
-            else if (action.equals("inactiveList")) {
-                getAllDestination(request, response, false);
-
-                String page = request.getParameter("page");
-                if (page.equals("indexjsp")) {
-                    url = "index.jsp";
-                } else {
-                    url = "DestinationForm.jsp";
-                }
-
-            }else if (action.equals("addNewPlace")) {
+                url = "placeController?action=destination&page=destinationjsp";
+            } else if (action.equals("addPlace")) {
+                url = "createPlace.jsp";
+            } else if (action.equals("addNewPlace")) {
                 //lay ra thông tin newPlace
                 String placename = request.getParameter("placename");
                 String description = request.getParameter("description");
                 String txtImage = request.getParameter("txtImage");
                 boolean Featured = request.getParameter("Featured").equals("1");
                 boolean status = request.getParameter("status").equals("1");
-                
+
                 PlacesDTO newP = new PlacesDTO(placename, description, txtImage, Featured, status);
                 pdao.create(newP);
-                url="createPlace.jsp";
+                url = "placeController?action=destination&page=destinationjsp";
+            } else if (action.equals("updateNewPlace")) {
+                //lay ra thông tin newPlace
+                String placename = request.getParameter("placename");
+                String description = request.getParameter("description");
+                String txtImage = request.getParameter("txtImage");
+                boolean Featured = request.getParameter("Featured").equals("1");
+                boolean status = request.getParameter("status").equals("1");
+
+                PlacesDTO newP = new PlacesDTO(placename, description, txtImage, Featured, status);
+                pdao.update(newP);
+                url = "placeController?action=destination&page=destinationjsp";
             }
 
         } catch (Exception e) {
