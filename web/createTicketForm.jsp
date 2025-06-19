@@ -39,7 +39,7 @@
                 border: 1px solid #ccc;
                 box-sizing: border-box;
             }
-            input[type="submit"], input[type="reset"] {
+            input[type="submit"], input[type="reset"], button {
                 padding: 12px 24px;
                 margin-top: 20px;
                 border: none;
@@ -54,6 +54,18 @@
             input[type="reset"] {
                 background-color: #e74c3c;
                 color: white;
+            }
+            .toggle-title {
+                cursor: pointer;
+                font-weight: bold;
+                margin-top: 20px;
+                padding: 10px;
+                background-color: #ecf0f1;
+                border-radius: 5px;
+            }
+            .day-content {
+                display: none;
+                margin-top: 10px;
             }
             .image-preview img {
                 margin: 10px;
@@ -73,7 +85,7 @@
                 <input type="text" name="nametour" id="nametour" required/>
 
                 <label for="placestart">Điểm khởi hành</label>
-                <input type="text" name="placestart" id="placestart" value="Hồ Chí Minh" readonly/>
+                <input type="text" name="placestart" id="placestart" placeholder="Nhập điểm khởi hành" required/>
 
                 <label for="duration">Thời gian</label>
                 <select name="duration" id="duration" required onchange="generateDayDescriptions()">
@@ -98,16 +110,17 @@
                 <label for="maxTickets">Số lượng vé tối đa (tối đa 20)</label>
                 <input type="number" name="maxTickets" id="maxTickets" min="1" max="20" required/>
 
-                <label>Ngày xuất phát (tối đa 3 ngày, tương lai)</label>
-                <input type="date" name="departureDate1" required min="<%= java.time.LocalDate.now() %>"/>
-                <input type="date" name="departureDate2" min="<%= java.time.LocalDate.now() %>"/>
-                <input type="date" name="departureDate3" min="<%= java.time.LocalDate.now() %>"/>
+                <label>Ngày xuất phát (tối đa 3 ngày)</label>
+                <div id="departureDatesContainer">
+                    <input type="date" name="departureDate1" id="departureDate1" required min="<%= java.time.LocalDate.now() %>"/>
+                </div>
+                <button type="button" onclick="addDepartureDate()">+ Thêm ngày</button>
 
                 <label for="imgCover">Ảnh đại diện tour</label>
                 <input type="file" name="imgCover" id="imgCover" accept="image/*" required/>
 
                 <label for="imgGallery">Ảnh liên quan đến tour (nhiều ảnh)</label>
-                <input type="file" name="imgGallery" id="imgGallery" accept="image/*" multiple/>
+                <input type="file" name="imgGallery[]" id="imgGallery" accept="image/*" multiple/>
 
                 <div class="form-buttons">
                     <input type="submit" value="Thêm tour">
@@ -130,41 +143,142 @@
                     days = 3;
 
                 for (let i = 1; i <= days; i++) {
-                    const label = document.createElement("label");
-                    label.textContent = `Mô tả ngày ${i}`;
-                    label.setAttribute("for", `dayDescription${i}`);
+                    const section = document.createElement("div");
 
-                    const textarea = document.createElement("textarea");
-                    textarea.name = `dayDescription${i}`;
-                    textarea.id = `dayDescription${i}`;
-                    textarea.rows = 8;
-                    textarea.required = true;
-                    textarea.placeholder =
-                            `#Buổi sáng:#\nHoạt động sáng ngày ${i}/\n\n#Buổi chiều:#\nHoạt động chiều ngày ${i}/\n\n#Buổi tối:#\nHoạt động tối ngày ${i}/`;
+                    const toggle = document.createElement("div");
+                    toggle.className = "toggle-title";
+                    toggle.textContent = `▶ Ngày ` + i;
+                    toggle.onclick = function () {
+                        const content = this.nextElementSibling;
+                        content.style.display = content.style.display === "none" ? "block" : "none";
+                    };
 
-                    wrapper.appendChild(label);
-                    wrapper.appendChild(textarea);
+                    const content = document.createElement("div");
+                    content.className = "day-content";
+                    content.style.display = "none";
+
+                    const fields = [
+                        {label: "Mô tả chung", name: `summary` + i},
+                        {label: "Hoạt động buổi sáng", name: `morning` + i},
+                        {label: "Hoạt động buổi chiều", name: `afternoon` + i},
+                        {label: "Hoạt động buổi tối", name: `evening` + i}
+                    ];
+
+                    fields.forEach(field => {
+                        const label = document.createElement("label");
+                        label.textContent = field.label;
+                        label.setAttribute("for", field.name);
+
+                        const textarea = document.createElement("textarea");
+                        textarea.name = field.name;
+                        textarea.id = field.name;
+                        textarea.rows = 4;
+                        textarea.required = true;
+
+                        content.appendChild(label);
+                        content.appendChild(textarea);
+                    });
+
+                    section.appendChild(toggle);
+                    section.appendChild(content);
+                    wrapper.appendChild(section);
                 }
             }
 
-            // Preview ảnh đại diện
-            document.getElementById('imgCover').addEventListener('change', function (e) {
-                const file = e.target.files[0];
-                if (file && file.type.startsWith('image/')) {
-                    const reader = new FileReader();
-                    reader.onload = function (evt) {
-                        let preview = document.querySelector('.preview-cover');
-                        if (!preview) {
-                            preview = document.createElement('img');
-                            preview.className = 'preview-cover';
-                            preview.style.maxWidth = '200px';
-                            preview.style.marginTop = '10px';
-                            document.getElementById('imgCover').insertAdjacentElement('afterend', preview);
-                        }
-                        preview.src = evt.target.result;
-                    };
-                    reader.readAsDataURL(file);
+            let departureCount = 1;
+            function addDepartureDate() {
+                if (departureCount >= 3)
+                    return;
+
+                departureCount++;
+                const container = document.getElementById("departureDatesContainer");
+
+                const wrapper = document.createElement("div");
+                wrapper.className = "departure-wrapper";
+                wrapper.style.display = "flex";
+                wrapper.style.alignItems = "center";
+                wrapper.style.gap = "10px";
+                wrapper.style.marginTop = "8px";
+
+                const input = document.createElement("input");
+                input.type = "date";
+                input.name = `departureDate${departureCount}`;
+                input.id = `departureDate${departureCount}`;
+                input.min = "<%= java.time.LocalDate.now() %>";
+                input.required = false;
+
+                const removeBtn = document.createElement("button");
+                removeBtn.type = "button";
+                removeBtn.textContent = "✖";
+                removeBtn.style.background = "#e74c3c";
+                removeBtn.style.color = "white";
+                removeBtn.style.border = "none";
+                removeBtn.style.padding = "6px 12px";
+                removeBtn.style.borderRadius = "4px";
+                removeBtn.style.cursor = "pointer";
+
+                removeBtn.onclick = function () {
+                    container.removeChild(wrapper);
+                    departureCount--;
+                };
+
+                wrapper.appendChild(input);
+                wrapper.appendChild(removeBtn);
+                container.appendChild(wrapper);
+            }
+
+            // ✅ Preview ảnh không trùng và hiển thị liên tục
+            const selectedFileNames = new Set();
+            document.getElementById('imgGallery').addEventListener('change', function (e) {
+                const files = e.target.files;
+                let previewContainer = document.getElementById('galleryPreview');
+                if (!previewContainer) {
+                    previewContainer = document.createElement('div');
+                    previewContainer.id = 'galleryPreview';
+                    e.target.insertAdjacentElement('afterend', previewContainer);
                 }
+
+                Array.from(files).forEach(file => {
+                    if (file.type.startsWith('image/') && !selectedFileNames.has(file.name)) {
+                        selectedFileNames.add(file.name);
+                        const reader = new FileReader();
+                        reader.onload = function (evt) {
+                            const img = document.createElement('img');
+                            img.src = evt.target.result;
+                            img.style.maxWidth = '120px';
+                            img.style.margin = '8px';
+                            previewContainer.appendChild(img);
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            });
+
+            // ✅ Reset toàn bộ phần tử động khi bấm nút Reset
+            document.querySelector("form").addEventListener("reset", function () {
+                const previewCover = document.querySelector(".preview-cover");
+                if (previewCover)
+                    previewCover.remove();
+
+                const previewGallery = document.getElementById("galleryPreview");
+                if (previewGallery) {
+                    previewGallery.innerHTML = '';
+                    selectedFileNames.clear();
+                }
+
+                const container = document.getElementById("departureDatesContainer");
+                container.innerHTML = '';
+                departureCount = 1;
+                const firstDate = document.createElement("input");
+                firstDate.type = "date";
+                firstDate.name = "departureDate1";
+                firstDate.id = "departureDate1";
+                firstDate.min = "<%= java.time.LocalDate.now() %>";
+                firstDate.required = true;
+                container.appendChild(firstDate);
+
+                const descWrapper = document.getElementById("descriptionWrapper");
+                descWrapper.innerHTML = '';
             });
         </script>
     </body>
