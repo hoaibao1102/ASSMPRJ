@@ -10,6 +10,9 @@ CREATE TABLE Users (
     phone VARCHAR(20),
     role VARCHAR(50) DEFAULT 'CS'
 );
+--18/06 update status cho user
+ALTER TABLE Users
+ADD status INT DEFAULT 1 not null;
 
 -- Bảng địa điểm
 CREATE TABLE Places (
