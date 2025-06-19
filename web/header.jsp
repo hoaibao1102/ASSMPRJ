@@ -6,6 +6,7 @@
 <%@ page import="UTILS.AuthUtils"%>
 <%@ page import="DTO.UserDTO"%>
 <%@ page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -346,6 +347,12 @@
                             <form action="loginController" method="post" style="display:inline;">
                                 <input type="hidden" name="action" value="logout" />
                                 <button type="submit" class="logout-btn">Đăng xuất</button>
+                            </form>
+                            
+                            <form action="userController" method="post" style="display:inline;">
+                                <input type="hidden" name="action" value="orderOfUser" />
+                                <input type="hidden" name="userId" value="<%= user.getIdUser() %>" />
+                                <button type="submit" class="logout-btn">Lịch sử giao dịch</button>
                             </form>
                             <% } %>
                         </div>

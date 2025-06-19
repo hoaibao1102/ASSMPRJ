@@ -178,6 +178,18 @@ public class placeController extends HttpServlet {
                 PlacesDTO newP = new PlacesDTO(placename, description, txtImage, Featured, status);
                 pdao.update(newP);
                 url = "placeController?action=destination&page=destinationjsp";
+            }else if (action.equals("updateTicket")) {
+                url = "createTicketForm.jsp";
+            } else if (action.equals("addTicket")) {
+                url = "createTicketForm.jsp";
+            }else if (action.equals("deleteTicket")) {
+                String nameOfDestination = request.getParameter("nameOfDestination");
+                String idTour = request.getParameter("idTourTicket");
+                TourTicketDTO tourTicket = tdao.readbyID(idTour);
+                tourTicket.setStatus(false);  
+                if(!tdao.update(tourTicket))
+                    System.out.println("khong update ticket dc ne");;
+                url = "placeController?action=takeListTicket&location=" +nameOfDestination;
             }
 
         } catch (Exception e) {

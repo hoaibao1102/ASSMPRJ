@@ -257,7 +257,7 @@
                     <div style="border-top:1px dashed #ccc;margin:20px 0;"></div>
                     <div class="info-label" style="margin-bottom:6px;">TỔNG TIỀN ĐÃ THANH TOÁN:</div>
                     <div style="font-size:19px; color:#d32f2f; font-weight:bold;margin-bottom:20px;"><%= vnd.format(total)%></div>
-                    <a href="placeController?action=destination" class="btn-main" style="text-align:center;display:block;">Tiếp tục khám phá tour khác</a>
+                    <a href="placeController?action=destination&page=destinationjsp" class="btn-main" style="text-align:center;display:block;">Tiếp tục khám phá tour khác</a>
                 </div>
                  
             </div>
