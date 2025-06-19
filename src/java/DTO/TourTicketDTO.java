@@ -18,11 +18,12 @@ public class TourTicketDTO {
         private String transport_name;
         private String nametour;
         private String img_Tour;
+        private boolean status;
 
     public TourTicketDTO() {
     }
 
-    public TourTicketDTO(String idTourTicket, int idplace, String destination, String placestart, String duration, double price, String transport_name, String nametour, String img_Tour) {
+    public TourTicketDTO(String idTourTicket, int idplace, String destination, String placestart, String duration, double price, String transport_name, String nametour, String img_Tour, boolean status) {
         this.idTourTicket = idTourTicket;
         this.idplace = idplace;
         this.destination = destination;
@@ -32,7 +33,18 @@ public class TourTicketDTO {
         this.transport_name = transport_name;
         this.nametour = nametour;
         this.img_Tour = img_Tour;
+        this.status = status;
     }
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
+    }
+    
+    
 
     public String getIdTourTicket() {
         return idTourTicket;

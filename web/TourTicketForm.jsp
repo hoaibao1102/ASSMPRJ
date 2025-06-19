@@ -4,6 +4,7 @@
 <%@page import="DAO.PlacesDAO"%>
 <%@page import="UTILS.AuthUtils"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html lang="vi">
     <head>
@@ -121,7 +122,53 @@
             .btn-detail:focus {
                 outline: none;
             }
+            
+            .btn-group {
+                display: flex;
+                gap: 10px;
+                margin-top: 16px;
+            }
 
+            .btn-overlay {
+                background-color: #3498db;
+                color: white;
+                border-radius: 20px;
+                padding: 8px 16px;
+                font-weight: 600;
+                font-size: 14px;
+                border: none;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+            }
+
+            .btn-overlay.orange {
+                background-color: #e67e22;
+            }
+
+            .btn-overlay.red {
+                background-color: #e74c3c;
+            }
+
+            .btn-overlay:hover {
+                filter: brightness(1.1);
+            }
+
+            .btn-add-ticket {
+                background-color: #2ecc71;
+                color: white;
+                border: none;
+                border-radius: 24px;
+                padding: 10px 20px;
+                font-weight: 600;
+                font-size: 16px;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+                margin-top: 20px;
+            }
+
+            .btn-add-ticket:hover {
+                background-color: #27ae60;
+            }
             /*====================================================================  css anh dau trang*/
             .breadcrumb {
                 margin: 1rem 2rem; /* cách đều trái phải giống header padding */
@@ -167,16 +214,46 @@
                 <%
                 if (tourList != null && !tourList.isEmpty()) {
                 %>
+                
+<!--              cờ đánh dấu xem liệu trong danh sách có tồn tại ticket isStatus() là true không -->
+                <%! boolean flag = false;  %>
+                
                 <h1 style="margin-bottom: 20px;">Danh sách Tour <%=tourList.get(0).getDestination()%> </h1>
-                <p style="margin-bottom: 20px;"><%=discriptionPlaces%></p>
-
+                <c:if test="${sessionScope.nameUser.role != 'AD'}">
+                    <p style="margin-bottom: 20px;"><%=discriptionPlaces%></p>
+                </c:if>
+                
+                <c:if test="${sessionScope.nameUser.role == 'AD'}">
+                    <h2>📍 Danh sách vé đang ngưng hoạt động</h2>
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    <form action="placeController" method="get">
+                        <input type="hidden" name="action" value="addTicket">
+                        <button type="submit" class="btn-add-ticket">+ Thêm vé</button>
+                    </form>
+                    
+                    <h2>📍 Danh sách vé đang hoạt động</h2>
+                </c:if>
+               
+                
+                
                 <%
                 for (TourTicketDTO t : tourList) {
                     int index = tourList.indexOf(t) + 1;
                     List<StartDateDTO> startDates = (List<StartDateDTO>) request.getAttribute("startDateTour" + index);
-                %>
-
-                <div class="tour-card">
+                    if(t.isStatus()) {
+                        flag = true;
+                %>    
+                    
+                        <div class="tour-card">
                     <img class="tour-img" src="assets/images/places/<%=t.getImg_Tour()%>" alt="<%= t.getNametour() %>">
                     <div class="tour-content">
                         <div>
@@ -202,18 +279,37 @@
                         </div>
 
                         <form action="placeController" method="get">
-                            <input type="hidden" name="action" value="ticketDetail" />
-                            <input type="hidden" name="idTourTicket" value="<%=t.getIdTourTicket()%>" />
-                            <input class="btn-detail" type="submit" value="Xem chi tiết" />
+                            <input type="hidden" name="idTourTicket" value="<%=t.getIdTourTicket()%>"/>
+                            <input type="hidden" name="nameOfDestination" value="<%=tourList.get(0).getDestination()%>"/>
+                            <div class="btn-group">
+                                <button type="submit" name="action" value="ticketDetail" class="btn-overlay blue">Xem chi tiết</button>
+
+                                <c:if test="${sessionScope.nameUser.role eq 'AD'}">
+                                    <button type="submit" name="action" value="updateTicket" class="btn-overlay orange">Cập nhật</button>
+                                    <button type="submit" name="action" value="deleteTicket" class="btn-overlay red"
+                                            onclick="return confirm('Bạn có chắc chắn muốn xóa không?');">Xóa</button>
+                                </c:if>
+                            </div>
                         </form>
                     </div>
                 </div>
 
+                    
+                <%    
+                    }   
+                %>
+
+                
                 <%
                     } // end for
+                   if(!flag){
+                   %>
+                    <p>Không có tour nào được tìm thấy.</p>
+                    <%
+                }
                 } else {
                 %>
-                <p>Không có tour nào được tìm thấy.</p>
+                    <p>Không có tour nào được tìm thấy.</p>
                 <%
                 } // end if
                 %>

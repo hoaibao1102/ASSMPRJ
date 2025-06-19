@@ -153,7 +153,8 @@ public class PlacesDAO implements IDAO<PlacesDTO, String> {
     @Override
     public boolean update(PlacesDTO entity) {
         String sql = "UPDATE Places SET description = ?, img_places = ?, Featured = ?, status = ? WHERE placename = ?";
-        try ( Connection conn = DBUtils.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
+        try ( Connection conn = DBUtils.getConnection();  
+            PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, entity.getDescription());
             ps.setString(2, entity.getImg());
             ps.setInt(3, entity.getFeatured()?1:0);  // hoặc getFeatured() nếu dùng kiểu int
