@@ -82,33 +82,42 @@
                 <input type="hidden" name="action" value="submitAddTour"/>
 
                 <label for="nametour">Tên Tour</label>
-                <input type="text" name="nametour" id="nametour" required/>
+                <input type="text" name="nametour" id="nametour" required value="${requestScope.tourTicket.nametour != null ? requestScope.tourTicket.nametour :""}"/>
 
                 <label for="placestart">Điểm khởi hành</label>
-                <input type="text" name="placestart" id="placestart" placeholder="Nhập điểm khởi hành" required/>
+                <input type="text" name="placestart" id="placestart" placeholder="Nhập điểm khởi hành" required value="${requestScope.tourTicket.placestart != null ? requestScope.tourTicket.placestart :""}"/>
 
                 <label for="duration">Thời gian</label>
                 <select name="duration" id="duration" required onchange="generateDayDescriptions()">
                     <option value="">-- Chọn thời gian --</option>
-                    <option value="2 ngày 1 đêm">2 ngày 1 đêm</option>
-                    <option value="3 ngày 2 đêm">3 ngày 2 đêm</option>
+                    <option value="2 ngày 1 đêm"
+                            ${requestScope.tourTicket.duration == '2 ngày 1 đêm' ? 'selected' : ''}>
+                        2 ngày 1 đêm
+                    </option>
+                    <option value="3 ngày 2 đêm"
+                            ${requestScope.tourTicket.duration == '3 ngày 2 đêm' ? 'selected' : ''}>
+                        3 ngày 2 đêm
+                    </option>
                 </select>
+
 
                 <div id="descriptionWrapper"></div>
 
                 <label for="transport">Phương tiện</label>
                 <select name="transport_name" id="transport" required>
                     <option value="">-- Chọn phương tiện --</option>
-                    <option value="Máy bay">Máy bay</option>
-                    <option value="Xe lửa">Xe lửa</option>
-                    <option value="Xe khách">Xe khách</option>
+                    <option value="Máy bay" ${requestScope.tourTicket.transport_name == 'Máy bay' ? 'selected' : ''}>Máy bay</option>
+                    <option value="Xe lửa" ${requestScope.tourTicket.transport_name == 'Xe lửa' ? 'selected' : ''}>Xe lửa</option>
+                    <option value="Xe khách" ${requestScope.tourTicket.transport_name == 'Xe khách' ? 'selected' : ''}>Xe khách</option>
                 </select>
 
                 <label for="price">Giá (VND)</label>
-                <input type="number" name="price" id="price" min="0" required/>
-
-                <label for="maxTickets">Số lượng vé tối đa (tối đa 20)</label>
-                <input type="number" name="maxTickets" id="maxTickets" min="1" max="20" required/>
+                <input type="number" name="price" id="price" min="0" required value="${requestScope.tourTicket.price != null ? requestScope.tourTicket.price : ''}"/>
+                <c:if test="${requestScope.tourTicket.price == null}">
+                    <label for="maxTickets">Số lượng vé tối đa (tối đa 20)</label>
+                    <input type="number" name="maxTickets" id="maxTickets" min="1" max="20" required/>
+                </c:if>
+                
 
                 <label>Ngày xuất phát (tối đa 3 ngày)</label>
                 <div id="departureDatesContainer">
@@ -202,8 +211,9 @@
 
                 const input = document.createElement("input");
                 input.type = "date";
-                input.name = `departureDate${departureCount}`;
-                input.id = `departureDate${departureCount}`;
+                input.name = `departureDate` + departureCount ;
+                input.id = `departureDate` + departureCount;
+           
                 input.min = "<%= java.time.LocalDate.now() %>";
                 input.required = false;
 
@@ -280,6 +290,43 @@
                 const descWrapper = document.getElementById("descriptionWrapper");
                 descWrapper.innerHTML = '';
             });
+
+            // Tự động tạo lại các ô mô tả ngày nếu đã có sẵn duration
+            window.addEventListener("DOMContentLoaded", function () {
+                const durationValue = document.getElementById("duration").value;
+                if (durationValue === "2 ngày 1 đêm" || durationValue === "3 ngày 2 đêm") {
+                    generateDayDescriptions();
+                }
+            });
+
+            // ✅ Xem trước ảnh đại diện tour
+            document.getElementById('imgCover').addEventListener('change', function (e) {
+                const file = e.target.files[0];
+                let preview = document.querySelector('.preview-cover');
+
+                // Nếu đã có ảnh preview thì xóa để thay bằng ảnh mới
+                if (preview) {
+                    preview.remove();
+                }
+
+                if (file && file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = function (evt) {
+                        const img = document.createElement('img');
+                        img.src = evt.target.result;
+                        img.style.maxWidth = '120px';
+                        img.style.marginTop = '10px';
+                        img.style.borderRadius = '6px';
+                        img.style.border = '1px solid #ccc';
+                        img.className = 'preview-cover';
+
+                        e.target.insertAdjacentElement('afterend', img);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+
         </script>
     </body>
 </html>
