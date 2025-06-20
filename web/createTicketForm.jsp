@@ -2,331 +2,311 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html lang="vi">
-    <head>
-        <meta charset="UTF-8">
-        <title>Thêm Tour</title>
-        <style>
-            body {
-                font-family: 'Segoe UI', Tahoma;
-                background-color: #f4f6f8;
-                padding: 40px;
-            }
-            .form-container {
-                background: white;
-                max-width: 800px;
-                margin: auto;
-                padding: 30px;
-                border-radius: 10px;
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            }
-            h2 {
-                text-align: center;
-                color: #2c3e50;
-            }
-            label {
-                display: block;
-                margin: 15px 0 5px;
-                font-weight: bold;
-            }
-            input[type="text"],
-            input[type="number"],
-            input[type="date"],
-            select,
-            textarea {
-                width: 100%;
-                padding: 10px;
-                border-radius: 6px;
-                border: 1px solid #ccc;
-                box-sizing: border-box;
-            }
-            input[type="submit"], input[type="reset"], button {
-                padding: 12px 24px;
-                margin-top: 20px;
-                border: none;
-                border-radius: 6px;
-                cursor: pointer;
-                font-weight: bold;
-            }
-            input[type="submit"] {
-                background-color: #27ae60;
-                color: white;
-            }
-            input[type="reset"] {
-                background-color: #e74c3c;
-                color: white;
-            }
-            .toggle-title {
-                cursor: pointer;
-                font-weight: bold;
-                margin-top: 20px;
-                padding: 10px;
-                background-color: #ecf0f1;
-                border-radius: 5px;
-            }
-            .day-content {
-                display: none;
-                margin-top: 10px;
-            }
-            .image-preview img {
-                margin: 10px;
-                max-width: 120px;
-                border-radius: 6px;
-                border: 1px solid #ccc;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="form-container">
-            <h2>Thêm Tour Mới</h2>
-            <form action="placeController" method="post" enctype="multipart/form-data">
-                <input type="hidden" name="action" value="submitAddTour"/>
+<head>
+    <meta charset="UTF-8">
+    <title>Thêm Tour</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma;
+            background-color: #f4f6f8;
+            padding: 40px;
+        }
+        .form-container {
+            background: white;
+            max-width: 800px;
+            margin: auto;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #2c3e50;
+        }
+        label {
+            display: block;
+            margin: 15px 0 5px;
+            font-weight: bold;
+        }
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+        input[type="submit"], input[type="reset"], button {
+            padding: 12px 24px;
+            margin-top: 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        input[type="submit"] {
+            background-color: #27ae60;
+            color: white;
+        }
+        input[type="reset"] {
+            background-color: #e74c3c;
+            color: white;
+        }
+        .toggle-title {
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #ecf0f1;
+            border-radius: 5px;
+        }
+        .day-content {
+            display: none;
+            margin-top: 10px;
+        }
+        .image-preview img, .preview-cover {
+            margin: 10px;
+            max-width: 120px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+<div class="form-container">
+    <h2>Thêm Tour Mới</h2>
+    <form action="placeController" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="action" value="submitAddTour"/>
 
-                <label for="nametour">Tên Tour</label>
-                <input type="text" name="nametour" id="nametour" required value="${requestScope.tourTicket.nametour != null ? requestScope.tourTicket.nametour :""}"/>
+        <label for="nametour">Tên Tour</label>
+        <input type="text" name="nametour" id="nametour" required value="${requestScope.tourTicket.nametour != null ? requestScope.tourTicket.nametour :''}"/>
 
-                <label for="placestart">Điểm khởi hành</label>
-                <input type="text" name="placestart" id="placestart" placeholder="Nhập điểm khởi hành" required value="${requestScope.tourTicket.placestart != null ? requestScope.tourTicket.placestart :""}"/>
+        <label for="placestart">Điểm khởi hành</label>
+        <input type="text" name="placestart" id="placestart" placeholder="Nhập điểm khởi hành" required value="${requestScope.tourTicket.placestart != null ? requestScope.tourTicket.placestart :''}"/>
 
-                <label for="duration">Thời gian</label>
-                <select name="duration" id="duration" required onchange="generateDayDescriptions()">
-                    <option value="">-- Chọn thời gian --</option>
-                    <option value="2 ngày 1 đêm"
-                            ${requestScope.tourTicket.duration == '2 ngày 1 đêm' ? 'selected' : ''}>
-                        2 ngày 1 đêm
-                    </option>
-                    <option value="3 ngày 2 đêm"
-                            ${requestScope.tourTicket.duration == '3 ngày 2 đêm' ? 'selected' : ''}>
-                        3 ngày 2 đêm
-                    </option>
-                </select>
+        <label for="duration">Thời gian</label>
+        <select name="duration" id="duration" required onchange="generateDayDescriptions()">
+            <option value="">-- Chọn thời gian --</option>
+            <option value="2 ngày 1 đêm" ${requestScope.tourTicket.duration == '2 ngày 1 đêm' ? 'selected' : ''}>2 ngày 1 đêm</option>
+            <option value="3 ngày 2 đêm" ${requestScope.tourTicket.duration == '3 ngày 2 đêm' ? 'selected' : ''}>3 ngày 2 đêm</option>
+        </select>
 
+        <div id="descriptionWrapper"></div>
 
-                <div id="descriptionWrapper"></div>
+        <label for="transport">Phương tiện</label>
+        <select name="transport_name" id="transport" required>
+            <option value="">-- Chọn phương tiện --</option>
+            <option value="Máy bay" ${requestScope.tourTicket.transport_name == 'Máy bay' ? 'selected' : ''}>Máy bay</option>
+            <option value="Xe lửa" ${requestScope.tourTicket.transport_name == 'Xe lửa' ? 'selected' : ''}>Xe lửa</option>
+            <option value="Xe khách" ${requestScope.tourTicket.transport_name == 'Xe khách' ? 'selected' : ''}>Xe khách</option>
+        </select>
 
-                <label for="transport">Phương tiện</label>
-                <select name="transport_name" id="transport" required>
-                    <option value="">-- Chọn phương tiện --</option>
-                    <option value="Máy bay" ${requestScope.tourTicket.transport_name == 'Máy bay' ? 'selected' : ''}>Máy bay</option>
-                    <option value="Xe lửa" ${requestScope.tourTicket.transport_name == 'Xe lửa' ? 'selected' : ''}>Xe lửa</option>
-                    <option value="Xe khách" ${requestScope.tourTicket.transport_name == 'Xe khách' ? 'selected' : ''}>Xe khách</option>
-                </select>
+        <label for="price">Giá (VND)</label>
+        <input type="number" name="price" id="price" min="0" required value="${requestScope.tourTicket.price != null ? requestScope.tourTicket.price : ''}"/>
 
-                <label for="price">Giá (VND)</label>
-                <input type="number" name="price" id="price" min="0" required value="${requestScope.tourTicket.price != null ? requestScope.tourTicket.price : ''}"/>
-                <c:if test="${requestScope.tourTicket.price == null}">
-                    <label for="maxTickets">Số lượng vé tối đa (tối đa 20)</label>
-                    <input type="number" name="maxTickets" id="maxTickets" min="1" max="20" required/>
-                </c:if>
-                
+        <c:if test="${requestScope.tourTicket.price == null}">
+            <label for="maxTickets">Số lượng vé tối đa (tối đa 20)</label>
+            <input type="number" name="maxTickets" id="maxTickets" min="1" max="20" required/>
+        </c:if>
 
-                <label>Ngày xuất phát (tối đa 3 ngày)</label>
-                <div id="departureDatesContainer">
-                    <input type="date" name="departureDate1" id="departureDate1" required min="<%= java.time.LocalDate.now() %>"/>
-                </div>
-                <button type="button" onclick="addDepartureDate()">+ Thêm ngày</button>
-
-                <label for="imgCover">Ảnh đại diện tour</label>
-                <input type="file" name="imgCover" id="imgCover" accept="image/*" required/>
-
-                <label for="imgGallery">Ảnh liên quan đến tour (nhiều ảnh)</label>
-                <input type="file" name="imgGallery[]" id="imgGallery" accept="image/*" multiple/>
-
-                <div class="form-buttons">
-                    <input type="submit" value="Thêm tour">
-                    <input type="reset" value="Reset">
-                </div>
-                <a href="javascript:history.back()" class="back-link">← Quay lại</a>
-            </form>
+        <label>Ngày xuất phát (tối đa 3 ngày)</label>
+        <div id="departureDatesContainer">
+            <div class="departure-wrapper" style="display:flex;align-items:center;gap:10px;margin-top:8px;">
+                <input type="date" name="departureDate1" id="departureDate1" required min="<%= java.time.LocalDate.now() %>"/>
+            </div>
         </div>
+        <button type="button" onclick="addDepartureDate()">+ Thêm ngày</button>
 
-        <script>
-            function generateDayDescriptions() {
-                const wrapper = document.getElementById("descriptionWrapper");
-                wrapper.innerHTML = "";
-                const duration = document.getElementById("duration").value;
-                let days = 0;
+        <label for="imgCover">Ảnh đại diện tour</label>
+        <input type="file" name="imgCover" id="imgCover" accept="image/*" required/>
 
-                if (duration === "2 ngày 1 đêm")
-                    days = 2;
-                else if (duration === "3 ngày 2 đêm")
-                    days = 3;
+        <label for="imgGallery">Ảnh liên quan đến tour (nhiều ảnh)</label>
+        <input type="file" name="imgGallery[]" id="imgGallery" accept="image/*" multiple/>
 
-                for (let i = 1; i <= days; i++) {
-                    const section = document.createElement("div");
+        <div class="form-buttons">
+            <input type="submit" value="Thêm tour">
+            <input type="reset" value="Reset">
+        </div>
+        <a href="javascript:history.back()" class="back-link">← Quay lại</a>
+    </form>
+</div>
+<script>
+    let departureCount = 1;
+    function addDepartureDate() {
+        if (departureCount >= 3) return;
+        departureCount++;
 
-                    const toggle = document.createElement("div");
-                    toggle.className = "toggle-title";
-                    toggle.textContent = `▶ Ngày ` + i;
-                    toggle.onclick = function () {
-                        const content = this.nextElementSibling;
-                        content.style.display = content.style.display === "none" ? "block" : "none";
-                    };
+        const container = document.getElementById("departureDatesContainer");
+        const wrapper = document.createElement("div");
+        wrapper.className = "departure-wrapper";
+        wrapper.style.display = "flex";
+        wrapper.style.alignItems = "center";
+        wrapper.style.gap = "10px";
+        wrapper.style.marginTop = "8px";
 
-                    const content = document.createElement("div");
-                    content.className = "day-content";
-                    content.style.display = "none";
+        const input = document.createElement("input");
+        input.type = "date";
+        input.name = `departureDate${departureCount}`;
+        input.id = `departureDate${departureCount}`;
+        input.min = new Date().toISOString().split("T")[0];
+        input.required = false;
 
-                    const fields = [
-                        {label: "Mô tả chung", name: `summary` + i},
-                        {label: "Hoạt động buổi sáng", name: `morning` + i},
-                        {label: "Hoạt động buổi chiều", name: `afternoon` + i},
-                        {label: "Hoạt động buổi tối", name: `evening` + i}
-                    ];
+        const removeBtn = document.createElement("button");
+        removeBtn.type = "button";
+        removeBtn.textContent = "✖";
+        removeBtn.style.background = "#e74c3c";
+        removeBtn.style.color = "white";
+        removeBtn.style.border = "none";
+        removeBtn.style.padding = "6px 12px";
+        removeBtn.style.borderRadius = "4px";
+        removeBtn.style.cursor = "pointer";
 
-                    fields.forEach(field => {
-                        const label = document.createElement("label");
-                        label.textContent = field.label;
-                        label.setAttribute("for", field.name);
+        removeBtn.onclick = function () {
+            container.removeChild(wrapper);
+            departureCount--;
+        };
 
-                        const textarea = document.createElement("textarea");
-                        textarea.name = field.name;
-                        textarea.id = field.name;
-                        textarea.rows = 4;
-                        textarea.required = true;
+        wrapper.appendChild(input);
+        wrapper.appendChild(removeBtn);
+        container.appendChild(wrapper);
+    }
 
-                        content.appendChild(label);
-                        content.appendChild(textarea);
-                    });
+    function generateDayDescriptions() {
+        const wrapper = document.getElementById("descriptionWrapper");
+        wrapper.innerHTML = "";
+        const duration = document.getElementById("duration").value;
+        let days = 0;
 
-                    section.appendChild(toggle);
-                    section.appendChild(content);
-                    wrapper.appendChild(section);
-                }
-            }
+        if (duration === "2 ngày 1 đêm") days = 2;
+        else if (duration === "3 ngày 2 đêm") days = 3;
 
-            let departureCount = 1;
-            function addDepartureDate() {
-                if (departureCount >= 3)
-                    return;
+        for (let i = 1; i <= days; i++) {
+            const section = document.createElement("div");
+            const toggle = document.createElement("div");
+            toggle.className = "toggle-title";
+            toggle.textContent = `▶ Ngày ` + i;
+            toggle.onclick = function () {
+                const content = this.nextElementSibling;
+                content.style.display = content.style.display === "none" ? "block" : "none";
+            };
 
-                departureCount++;
-                const container = document.getElementById("departureDatesContainer");
+            const content = document.createElement("div");
+            content.className = "day-content";
+            content.style.display = "none";
 
-                const wrapper = document.createElement("div");
-                wrapper.className = "departure-wrapper";
-                wrapper.style.display = "flex";
-                wrapper.style.alignItems = "center";
-                wrapper.style.gap = "10px";
-                wrapper.style.marginTop = "8px";
+            const fields = [
+                {label: "Mô tả chung", name: `summary${i}`},
+                {label: "Hoạt động buổi sáng", name: `morning${i}`},
+                {label: "Hoạt động buổi chiều", name: `afternoon${i}`},
+                {label: "Hoạt động buổi tối", name: `evening${i}`}
+            ];
 
-                const input = document.createElement("input");
-                input.type = "date";
-                input.name = `departureDate` + departureCount ;
-                input.id = `departureDate` + departureCount;
-           
-                input.min = "<%= java.time.LocalDate.now() %>";
-                input.required = false;
+            fields.forEach(field => {
+                const label = document.createElement("label");
+                label.textContent = field.label;
+                label.setAttribute("for", field.name);
 
-                const removeBtn = document.createElement("button");
-                removeBtn.type = "button";
-                removeBtn.textContent = "✖";
-                removeBtn.style.background = "#e74c3c";
-                removeBtn.style.color = "white";
-                removeBtn.style.border = "none";
-                removeBtn.style.padding = "6px 12px";
-                removeBtn.style.borderRadius = "4px";
-                removeBtn.style.cursor = "pointer";
+                const textarea = document.createElement("textarea");
+                textarea.name = field.name;
+                textarea.id = field.name;
+                textarea.rows = 4;
+                textarea.required = true;
 
-                removeBtn.onclick = function () {
-                    container.removeChild(wrapper);
-                    departureCount--;
+                content.appendChild(label);
+                content.appendChild(textarea);
+            });
+
+            section.appendChild(toggle);
+            section.appendChild(content);
+            wrapper.appendChild(section);
+        }
+    }
+
+    // Tự động sinh mô tả nếu đã có dữ liệu từ server
+    window.addEventListener("DOMContentLoaded", function () {
+        const durationValue = document.getElementById("duration").value;
+        if (durationValue === "2 ngày 1 đêm" || durationValue === "3 ngày 2 đêm") {
+            generateDayDescriptions();
+        }
+    });
+
+    // Xem trước ảnh đại diện tour
+    document.getElementById('imgCover').addEventListener('change', function (e) {
+        const file = e.target.files[0];
+        let preview = document.querySelector('.preview-cover');
+        if (preview) preview.remove();
+
+        if (file && file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = function (evt) {
+                const img = document.createElement('img');
+                img.src = evt.target.result;
+                img.className = 'preview-cover';
+                img.style.maxWidth = '120px';
+                img.style.marginTop = '10px';
+                img.style.borderRadius = '6px';
+                img.style.border = '1px solid #ccc';
+                e.target.insertAdjacentElement('afterend', img);
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Xem trước ảnh gallery
+    const selectedFileNames = new Set();
+    document.getElementById('imgGallery').addEventListener('change', function (e) {
+        const files = e.target.files;
+        let previewContainer = document.getElementById('galleryPreview');
+        if (!previewContainer) {
+            previewContainer = document.createElement('div');
+            previewContainer.id = 'galleryPreview';
+            e.target.insertAdjacentElement('afterend', previewContainer);
+        }
+
+        Array.from(files).forEach(file => {
+            if (file.type.startsWith('image/') && !selectedFileNames.has(file.name)) {
+                selectedFileNames.add(file.name);
+                const reader = new FileReader();
+                reader.onload = function (evt) {
+                    const img = document.createElement('img');
+                    img.src = evt.target.result;
+                    img.style.maxWidth = '120px';
+                    img.style.margin = '8px';
+                    previewContainer.appendChild(img);
                 };
-
-                wrapper.appendChild(input);
-                wrapper.appendChild(removeBtn);
-                container.appendChild(wrapper);
+                reader.readAsDataURL(file);
             }
+        });
+    });
 
-            // ✅ Preview ảnh không trùng và hiển thị liên tục
-            const selectedFileNames = new Set();
-            document.getElementById('imgGallery').addEventListener('change', function (e) {
-                const files = e.target.files;
-                let previewContainer = document.getElementById('galleryPreview');
-                if (!previewContainer) {
-                    previewContainer = document.createElement('div');
-                    previewContainer.id = 'galleryPreview';
-                    e.target.insertAdjacentElement('afterend', previewContainer);
-                }
+    // Reset toàn bộ phần tử động khi bấm Reset
+    document.querySelector("form").addEventListener("reset", function () {
+        const previewCover = document.querySelector(".preview-cover");
+        if (previewCover) previewCover.remove();
 
-                Array.from(files).forEach(file => {
-                    if (file.type.startsWith('image/') && !selectedFileNames.has(file.name)) {
-                        selectedFileNames.add(file.name);
-                        const reader = new FileReader();
-                        reader.onload = function (evt) {
-                            const img = document.createElement('img');
-                            img.src = evt.target.result;
-                            img.style.maxWidth = '120px';
-                            img.style.margin = '8px';
-                            previewContainer.appendChild(img);
-                        };
-                        reader.readAsDataURL(file);
-                    }
-                });
-            });
+        const previewGallery = document.getElementById("galleryPreview");
+        if (previewGallery) {
+            previewGallery.innerHTML = '';
+            selectedFileNames.clear();
+        }
 
-            // ✅ Reset toàn bộ phần tử động khi bấm nút Reset
-            document.querySelector("form").addEventListener("reset", function () {
-                const previewCover = document.querySelector(".preview-cover");
-                if (previewCover)
-                    previewCover.remove();
+        const container = document.getElementById("departureDatesContainer");
+        container.innerHTML = '';
+        departureCount = 1;
+        const firstDate = document.createElement("input");
+        firstDate.type = "date";
+        firstDate.name = "departureDate1";
+        firstDate.id = "departureDate1";
+        firstDate.min = new Date().toISOString().split("T")[0];
+        firstDate.required = true;
+        container.appendChild(firstDate);
 
-                const previewGallery = document.getElementById("galleryPreview");
-                if (previewGallery) {
-                    previewGallery.innerHTML = '';
-                    selectedFileNames.clear();
-                }
-
-                const container = document.getElementById("departureDatesContainer");
-                container.innerHTML = '';
-                departureCount = 1;
-                const firstDate = document.createElement("input");
-                firstDate.type = "date";
-                firstDate.name = "departureDate1";
-                firstDate.id = "departureDate1";
-                firstDate.min = "<%= java.time.LocalDate.now() %>";
-                firstDate.required = true;
-                container.appendChild(firstDate);
-
-                const descWrapper = document.getElementById("descriptionWrapper");
-                descWrapper.innerHTML = '';
-            });
-
-            // Tự động tạo lại các ô mô tả ngày nếu đã có sẵn duration
-            window.addEventListener("DOMContentLoaded", function () {
-                const durationValue = document.getElementById("duration").value;
-                if (durationValue === "2 ngày 1 đêm" || durationValue === "3 ngày 2 đêm") {
-                    generateDayDescriptions();
-                }
-            });
-
-            // ✅ Xem trước ảnh đại diện tour
-            document.getElementById('imgCover').addEventListener('change', function (e) {
-                const file = e.target.files[0];
-                let preview = document.querySelector('.preview-cover');
-
-                // Nếu đã có ảnh preview thì xóa để thay bằng ảnh mới
-                if (preview) {
-                    preview.remove();
-                }
-
-                if (file && file.type.startsWith('image/')) {
-                    const reader = new FileReader();
-                    reader.onload = function (evt) {
-                        const img = document.createElement('img');
-                        img.src = evt.target.result;
-                        img.style.maxWidth = '120px';
-                        img.style.marginTop = '10px';
-                        img.style.borderRadius = '6px';
-                        img.style.border = '1px solid #ccc';
-                        img.className = 'preview-cover';
-
-                        e.target.insertAdjacentElement('afterend', img);
-                    };
-                    reader.readAsDataURL(file);
-                }
-            });
-
-
-        </script>
-    </body>
+        const descWrapper = document.getElementById("descriptionWrapper");
+        descWrapper.innerHTML = '';
+    });
+</script>
+</body>
 </html>
