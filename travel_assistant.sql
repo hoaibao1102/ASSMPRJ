@@ -10,9 +10,9 @@ CREATE TABLE Users (
     phone VARCHAR(20),
     role VARCHAR(50) DEFAULT 'CUS'
 );
---thêm status vào Users table 18/06/25
+--18/06 update status cho user
 ALTER TABLE Users
-ADD [status] BIT DEFAULT 1 NOT NULL;
+ADD status INT DEFAULT 1 not null;
 
 -- Bảng địa điểm
 CREATE TABLE Places (

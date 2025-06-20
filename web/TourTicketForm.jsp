@@ -122,7 +122,7 @@
             .btn-detail:focus {
                 outline: none;
             }
-            
+
             .btn-group {
                 display: flex;
                 gap: 10px;
@@ -214,37 +214,86 @@
                 <%
                 if (tourList != null && !tourList.isEmpty()) {
                 %>
-                
-<!--              cờ đánh dấu xem liệu trong danh sách có tồn tại ticket isStatus() là true không -->
+
+                <!--              cờ đánh dấu xem liệu trong danh sách có tồn tại ticket isStatus() là true không -->
                 <%! boolean flag = false;  %>
-                
+
                 <h1 style="margin-bottom: 20px;">Danh sách Tour <%=tourList.get(0).getDestination()%> </h1>
                 <c:if test="${sessionScope.nameUser.role != 'AD'}">
                     <p style="margin-bottom: 20px;"><%=discriptionPlaces%></p>
                 </c:if>
-                
+
                 <c:if test="${sessionScope.nameUser.role == 'AD'}">
                     <h2>📍 Danh sách vé đang ngưng hoạt động</h2>
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
+                    <%
+                   for (TourTicketDTO t : tourList) {
+                        int index = tourList.indexOf(t) + 1;
+                        List<StartDateDTO> startDates = (List<StartDateDTO>) request.getAttribute("startDateTour" + index);
+                        if(!t.isStatus()) {
+                          
+                    %>    
+
+                    <div class="tour-card">
+                        <img class="tour-img" src="assets/images/places/<%=t.getImg_Tour()%>" alt="<%= t.getNametour() %>">
+                        <div class="tour-content">
+                            <div>
+                                <div class="tour-title"><%= t.getNametour() %></div>
+                                <div class="tour-meta">🆔 Mã tour: <strong><%= t.getIdTourTicket() %></strong></div>
+                                <div class="tour-meta">📍 Khởi hành: <strong><%= t.getPlacestart() %></strong></div>
+                                <div class="tour-meta">🕒 Thời gian: <strong><%= t.getDuration() %></strong></div>
+                                <div class="tour-meta">✈️ Phương tiện: <strong><%= t.getTransport_name() %></strong></div>
+
+                                <div class="tour-meta tour-dates">
+                                    📅 Ngày khởi hành:
+                                    <% if (startDates != null && !startDates.isEmpty()) {
+                                        for (StartDateDTO sd : startDates) {
+                                    %>
+                                    <span><%= sd.getStartDate() %></span>
+                                    <%  }
+                        } else { %>
+                                    <span>Chưa có lịch</span>
+                                    <% } %>
+                                </div>
+
+                                <div class="price">Giá từ: <%= String.format("%,.0f", t.getPrice()) %> đ</div>
+                            </div>
+
+                            <form action="placeController" method="get">
+                                <input type="hidden" name="idTourTicket" value="<%=t.getIdTourTicket()%>"/>
+                                <input type="hidden" name="nameOfDestination" value="<%=tourList.get(0).getDestination()%>"/>
+                                <div class="btn-group">
+                                    <button type="submit" name="action" value="ticketDetail" class="btn-overlay blue">Xem chi tiết</button>
+
+                                    <c:if test="${sessionScope.nameUser.role eq 'AD'}">
+                                        <button type="submit" name="action" value="updateTicket" class="btn-overlay orange">Cập nhật</button>
+
+                                    </c:if>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <%    
+                        } 
+                    }  
+                    %>
+
+
+
+
+
+
+
                     <form action="placeController" method="get">
                         <input type="hidden" name="action" value="addTicket">
                         <button type="submit" class="btn-add-ticket">+ Thêm vé</button>
                     </form>
-                    
+
                     <h2>📍 Danh sách vé đang hoạt động</h2>
                 </c:if>
-               
-                
-                
+
+
+
                 <%
                 for (TourTicketDTO t : tourList) {
                     int index = tourList.indexOf(t) + 1;
@@ -252,8 +301,8 @@
                     if(t.isStatus()) {
                         flag = true;
                 %>    
-                    
-                        <div class="tour-card">
+
+                <div class="tour-card">
                     <img class="tour-img" src="assets/images/places/<%=t.getImg_Tour()%>" alt="<%= t.getNametour() %>">
                     <div class="tour-content">
                         <div>
@@ -294,22 +343,22 @@
                     </div>
                 </div>
 
-                    
+
                 <%    
                     }   
                 %>
 
-                
+
                 <%
                     } // end for
                    if(!flag){
-                   %>
-                    <p>Không có tour nào được tìm thấy.</p>
-                    <%
-                }
-                } else {
                 %>
-                    <p>Không có tour nào được tìm thấy.</p>
+                <p>Không có tour nào được tìm thấy.</p>
+                <%
+            }
+            } else {
+                %>
+                <p>Không có tour nào được tìm thấy.</p>
                 <%
                 } // end if
                 %>

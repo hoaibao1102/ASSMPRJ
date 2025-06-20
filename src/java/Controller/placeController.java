@@ -156,7 +156,9 @@ public class placeController extends HttpServlet {
                 url = "placeController?action=destination&page=destinationjsp";
             } else if (action.equals("addPlace")) {
                 url = "createPlace.jsp";
-            } else if (action.equals("addNewPlace")) {
+            } 
+            // THÊM ĐIỂM ĐẾN
+            else if (action.equals("addNewPlace")) {
                 //lay ra thông tin newPlace
                 String placename = request.getParameter("placename");
                 String description = request.getParameter("description");
@@ -167,7 +169,9 @@ public class placeController extends HttpServlet {
                 PlacesDTO newP = new PlacesDTO(placename, description, txtImage, Featured, status);
                 pdao.create(newP);
                 url = "placeController?action=destination&page=destinationjsp";
-            } else if (action.equals("updateNewPlace")) {
+            } 
+            // CẬP NHẬT ĐIỂM ĐẾN
+            else if (action.equals("updateNewPlace")) {
                 //lay ra thông tin newPlace
                 String placename = request.getParameter("placename");
                 String description = request.getParameter("description");
@@ -178,9 +182,30 @@ public class placeController extends HttpServlet {
                 PlacesDTO newP = new PlacesDTO(placename, description, txtImage, Featured, status);
                 pdao.update(newP);
                 url = "placeController?action=destination&page=destinationjsp";
-            }else if (action.equals("updateTicket")) {
-                url = "createTicketForm.jsp";
-            } else if (action.equals("addTicket")) {
+                
+            }
+            // CẬP NHẬT VÉ
+            else if (action.equals("updateTicket")) {
+                String idTour = request.getParameter("idTourTicket");
+                if (idTour != null && !idTour.trim().isEmpty()) {
+                    List<TicketImgDTO> ticketImgDetail = tiDAO.readbyIdTourTicket(idTour);
+                    List<TicketDayDetailDTO> ticketDayDetail = tddDao.readbyIdTourTicket(idTour);
+                    TourTicketDTO tourTicket = tdao.readbyID(idTour);
+
+                    // lấy ra các ngày đi 
+                    List<StartDateDTO> startDateTour = stdDAO.search(tourTicket.getIdTourTicket());
+
+                    request.setAttribute("startDateTour", startDateTour);
+                    request.setAttribute("ticketImgDetail", ticketImgDetail);
+                    request.setAttribute("ticketDayDetail", ticketDayDetail);
+                    request.setAttribute("tourTicket", tourTicket);
+                    url = "createTicketForm.jsp";
+                }
+                
+                
+            } 
+            // Thêm VÉ
+            else if (action.equals("addTicket")) {
                 url = "createTicketForm.jsp";
             }else if (action.equals("deleteTicket")) {
                 String nameOfDestination = request.getParameter("nameOfDestination");
@@ -188,7 +213,7 @@ public class placeController extends HttpServlet {
                 TourTicketDTO tourTicket = tdao.readbyID(idTour);
                 tourTicket.setStatus(false);  
                 if(!tdao.update(tourTicket))
-                    System.out.println("khong update ticket dc ne");;
+                    System.out.println("khong update ticket dc ne");
                 url = "placeController?action=takeListTicket&location=" +nameOfDestination;
             }
 
