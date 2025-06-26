@@ -493,9 +493,7 @@
                             </div>
                         </c:when>
                         <c:otherwise>
-
                             <p>Không có đơn hàng nào được tìm thấy.</p>
-
                         </c:otherwise>
                     </c:choose>
                     <!-- Popup/modal chọn phương thức thanh toán -->
