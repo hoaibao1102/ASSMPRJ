@@ -412,7 +412,7 @@
     </head>
     <body>
         <div class="container">
-            <a href="javascript:history.back()" class="back-btn">← Quay lại</a>
+            <a href="placeController?action=destination&page=indexjsp" class="back-btn">← Quay lại</a>
             <c:choose>
                 <c:when test="${sessionScope.nameUser.role eq 'AD'}">
                     <h2>Danh sách đơn hàng của ${requestScope.userName}</h2>
@@ -438,7 +438,7 @@
                                     <td>${order.bookingDate}</td>
                                     <td>${order.startNum}</td>
                                     <td>${order.numberTicket}</td>
-                                    <td>${order.totalPrice}</td>
+                                    <td><fmt:formatNumber value="${order.totalPrice}" type="currency" currencySymbol="₫" groupingUsed="true"/></td>
                                     <td>${order.note}</td>
                                     <td>${order.status == 0 ? "Chưa thanh toán" : "Đã thanh toán"}</td>
                                 </tr>
@@ -474,7 +474,7 @@
                                             <div class="order-actions">
                                                 <c:choose>
                                                     <c:when test="${order.status == 0}">
-                                                        <form class="pay-order-form" method="get" >
+                                                        <form class="pay-order-form" action="orderController" method="get" >
                                                             <input type="hidden" name="action" value="openPayModal"/>
                                                             <input type="hidden" name="idBooking" value="${order.idBooking}"/>
                                                             <input type="hidden" name="totalPrice" value="${order.totalPrice}"/>
@@ -526,9 +526,9 @@
                     <script>
                         // Nếu có showModal thì mở modal khi load trang
                         window.onload = function () {
-                        <% if ("true".equals(String.valueOf(request.getAttribute("showModal")))) { %>
+                        <c:if test="${showModal eq 'true'}">
                             document.getElementById('paymentModal').style.display = 'flex';
-                        <% } %>
+                        </c:if>
                         }
                         function closePaymentModal() {
                             document.getElementById('paymentModal').style.display = 'none';

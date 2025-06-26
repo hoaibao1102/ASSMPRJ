@@ -6,6 +6,7 @@ package Controller;
 
 import DAO.OrderDAO;
 import DAO.StartDateDAO;
+import DAO.TicketImgDAO;
 import DAO.TourTicketDAO;
 import DTO.OrderDTO;
 import DTO.StartDateDTO;
@@ -186,7 +187,16 @@ public class orderController extends HttpServlet {
         }
         request.setAttribute("list", list);
         request.setAttribute("startDateMap", startDateMap);
-
+        
+        // ===HuyCODE add===
+//        TicketImgDAO imgsDAO = new TicketImgDAO();
+//        Map<String, String> tourImgMap = new HashMap<>();
+//        for (OrderDTO order : list) {
+//            String imgUrl = imgsDAO.getAvatarByIdTour(order.getIdTour());
+//            tourImgMap.put(order.getIdTour(), imgUrl);
+//        }
+        request.setAttribute("tourImgMap", "");
+        //=====
         return "OrderOfUser.jsp";
 
     }
