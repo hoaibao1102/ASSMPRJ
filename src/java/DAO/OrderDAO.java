@@ -5,13 +5,16 @@
 package DAO;
 
 import DTO.OrderDTO;
+import DTO.StartDateDTO;
 import UTILS.DBUtils;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -33,7 +36,7 @@ public class OrderDAO implements IDAO<OrderDTO, String> {
             ps.setString(4, entity.getBookingDate());
             ps.setInt(5, entity.getNumberTicket());
             ps.setDouble(6, entity.getTotalPrice());
-            ps.setInt(7, entity.isStatus());
+            ps.setInt(7, entity.getStatus());
             ps.setString(8, entity.getNote());
             ps.setInt(9, entity.getStartNum());
 
@@ -124,7 +127,6 @@ public class OrderDAO implements IDAO<OrderDTO, String> {
         }
         return null;
 
-    
     }
 
     public String generateBookingId(String idTour) {
@@ -175,7 +177,38 @@ public class OrderDAO implements IDAO<OrderDTO, String> {
                     .getName()).log(Level.SEVERE, null, ex);
         }
         return false;
+    }
 
+   
+
+    public List<OrderDTO> getAllOrdersByUser(int userId) {
+        List<OrderDTO> list = new ArrayList<>();
+        String sql = "SELECT * FROM Orders Where idUser = ?  ";
+        try {
+            Connection conn = DBUtils.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, userId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                OrderDTO newT = new OrderDTO(rs.getInt("idUser"),
+                        rs.getString("idTourTicket"),
+                        rs.getString("BookingDate"),
+                        rs.getInt("NumberTicket"),
+                        rs.getDouble("TotalPrice"),
+                        rs.getInt("Status"),
+                        rs.getString("idBooking"),
+                        rs.getString("Note"),
+                        rs.getInt("startNum"));
+                list.add(newT);
+            }
+            return list;
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(TourTicketDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(TourTicketDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
 
 }

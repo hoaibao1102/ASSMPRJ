@@ -142,7 +142,7 @@
                         </div>
                         <div class="label">NHẬP THÔNG TIN</div>
                     </div>
-                    </a>
+                    
 
                     <div class="arrow">➜</div>
 
