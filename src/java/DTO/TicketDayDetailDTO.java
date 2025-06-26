@@ -12,15 +12,48 @@ public class TicketDayDetailDTO {
     private String idTourTicket;
     private int day;
     private String description;
-
+    private String morning;
+    private String afternoon;
+    private String evening ;
+    
+    
     public TicketDayDetailDTO() {
     }
 
-    public TicketDayDetailDTO(String idTourTicket, int day, String description) {
+    public TicketDayDetailDTO(String idTourTicket, int day, String description, String morning, String afternoon, String evening) {
         this.idTourTicket = idTourTicket;
         this.day = day;
         this.description = description;
+        this.morning = morning;
+        this.afternoon = afternoon;
+        this.evening = evening;
     }
+
+    public String getMorning() {
+        return morning;
+    }
+
+    public void setMorning(String morning) {
+        this.morning = morning;
+    }
+
+    public String getAfternoon() {
+        return afternoon;
+    }
+
+    public void setAfternoon(String afternoon) {
+        this.afternoon = afternoon;
+    }
+
+    public String getEvening() {
+        return evening;
+    }
+
+    public void setEvening(String evening) {
+        this.evening = evening;
+    }
+
+    
 
     public String getIdTourTicket() {
         return idTourTicket;
