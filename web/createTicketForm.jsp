@@ -1,4 +1,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page import="java.util.List"%>
+<%@page import="DTO.TourTicketDTO"%>
+<%@page import="DTO.TicketDayDetailDTO"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
@@ -78,258 +81,153 @@
         </style>
     </head>
     <body>
-        <div class="form-container">
-            <c:choose>
-                <c:when test="${requestScope.tourTicket.nametour != null}">
-                    <h2>Cập nhật Tour</h2>
-                </c:when>
-                <c:otherwise>
-                    <h2>Thêm Tour Mới</h2>
-                </c:otherwise>
-            </c:choose>
 
+        <div class="form-container">                                                                                                                                                                                                                      
+            <h2>Thêm Tour Mới</h2>
             <form action="placeController" method="post" enctype="multipart/form-data">
-                <input type="hidden" name="action" value="submitAddTour"/>
+                <input type="hidden" name="action" value="${requestScope.tourTicket != null ? 'submitUpdateTour':'submitAddTour'}"/>
 
-                <label for="nametour">Tên Tour</label>
-                <input type="text" name="nametour" id="nametour" required value="${requestScope.tourTicket.nametour != null ? requestScope.tourTicket.nametour :''}"/>
 
-                <label for="placestart">Điểm khởi hành</label>
-                <input type="text" name="placestart" id="placestart" placeholder="Nhập điểm khởi hành" required value="${requestScope.tourTicket.placestart != null ? requestScope.tourTicket.placestart :''}"/>
+                <fieldset>
+                    <legend>Thông Tin Tour</legend>
 
-                <label for="duration">Thời gian</label>
-                <select name="duration" id="duration" required onchange="generateDayDescriptions()">
-                    <option value="">-- Chọn thời gian --</option>
-                    <option value="2 ngày 1 đêm" ${requestScope.tourTicket.duration == '2 ngày 1 đêm' ? 'selected' : ''}>2 ngày 1 đêm</option>
-                    <option value="3 ngày 2 đêm" ${requestScope.tourTicket.duration == '3 ngày 2 đêm' ? 'selected' : ''}>3 ngày 2 đêm</option>
-                </select>
+                    <label for="nametour">Tên Tour</label>
+                    <input type="text" name="nametour" id="nametour" required value="${requestScope.tourTicket != null ? requestScope.tourTicket.nametour :""}"/>
 
-                <div id="descriptionWrapper"></div>
+                    <label for="placestart">Điểm khởi hành</label>
+                    <input type="text" name="placestart" id="placestart" placeholder="Nhập điểm khởi hành" required value="${requestScope.tourTicket != null ? requestScope.tourTicket.placestart :""}"/>
 
-                <label for="transport">Phương tiện</label>
-                <select name="transport_name" id="transport" required>
-                    <option value="">-- Chọn phương tiện --</option>
-                    <option value="Máy bay" ${requestScope.tourTicket.transport_name == 'Máy bay' ? 'selected' : ''}>Máy bay</option>
-                    <option value="Xe lửa" ${requestScope.tourTicket.transport_name == 'Xe lửa' ? 'selected' : ''}>Xe lửa</option>
-                    <option value="Xe khách" ${requestScope.tourTicket.transport_name == 'Xe khách' ? 'selected' : ''}>Xe khách</option>
-                </select>
+                    <label for="duration">Thời gian</label>
+                    <select name="duration" id="duration" onchange="updateDayDetails(this)" required>
+                        <option value="">-- Chọn số ngày --</option>
+                        <option value="2" ${requestScope.tourTicket != null && "2 ngày 1 đêm".equals(requestScope.tourTicket.getDuration()) ? 'selected' : ''}>2 ngày 1 đêm</option>
+                        <option value="3" ${requestScope.tourTicket != null && "3 ngày 2 đêm".equals(requestScope.tourTicket.getDuration()) ? 'selected' : ''}>3 ngày 2 đêm</option>
+                    </select>
 
-                <label for="price">Giá (VND)</label>
-                <input type="number" name="price" id="price" min="0" required value="${requestScope.tourTicket.price != null ? requestScope.tourTicket.price : ''}"/>
+                    <fieldset id="dayDetailsContainer">
+                        <legend>Chi Tiết Ngày</legend>
+                        <div id="dayDetails">
+                            <% 
+                                // Lấy tourTicket từ request và kiểm tra giá trị duration
+                                TourTicketDTO tourTicket = (TourTicketDTO) request.getAttribute("tourTicket");
+                                String duration = (tourTicket != null && tourTicket.getDuration() != null) ? tourTicket.getDuration() : "2 ngày 1 đêm"; 
+                                
+                                // Lấy danh sách chi tiết ngày tour
+                                List<TicketDayDetailDTO> listDayDetail = (List<TicketDayDetailDTO>) request.getAttribute("ticketDayDetail");
+                            %>
 
-                <c:if test="${requestScope.tourTicket.price == null}">
-                    <label for="maxTickets">Số lượng vé tối đa (tối đa 20)</label>
-                    <input type="number" name="maxTickets" id="maxTickets" min="1" max="20" required/>
-                </c:if>
 
-                <label>Ngày xuất phát (tối đa 3 ngày)</label>
-                <c:if test="${not empty requestScope.startDateTour}">
-                    <c:forEach var="date" items="${requestScope.startDateTour}" varStatus="loop">
-                        <div class="departure-wrapper" style="display:flex;align-items:center;gap:10px;margin-top:8px;">
-                            <input type="date"
-                                   name="departureDate${loop.index + 1}"
-                                   id="departureDate${loop.index + 1}"
-                                   required
-                                   min="<%= java.time.LocalDate.now() %>"
-                                   value="${date.startDate}"/>
+                            <% if (listDayDetail != null && !listDayDetail.isEmpty()) { %>
+                            <% for (TicketDayDetailDTO i : listDayDetail) { %>
+                            <div class="day-details">
+                                <label for="morningDescription_<%=i.getIdTourTicket() %>">Buổi sáng:</label>
+                                <textarea name="morningDescription_<%=i.getIdTourTicket() %>" id="morningDescription_<%=i.getIdTourTicket() %>">
+                                    <%=i.getMorning()%>
+                                </textarea>
+
+
+                                <label for="afternoonDescription_<%=i.getIdTourTicket() %>">Buổi chiều:</label>
+                                <textarea name="afternoonDescription_<%=i.getIdTourTicket() %>" id="afternoonDescription_<%=i.getIdTourTicket() %>">
+                                    <%=i.getAfternoon()%>
+                                </textarea>
+
+                                <label for="eveningDescription_<%=i.getIdTourTicket() %>">Buổi tối:</label>
+                                <textarea name="eveningDescription_<%=i.getIdTourTicket() %>" id="eveningDescription_<%=i.getIdTourTicket() %>">
+                                    <%=i.getEvening()%>
+                                </textarea>
+                            </div>
+                            <% } %>
+                            <% } else { %>
+                            <% for (int i = 0; i < Integer.parseInt(duration.split(" ")[0]); i++) { %> 
+                            <!-- duration.split(" ")[0] sẽ lấy số ngày -->
+                            <div class="day-details">
+                                <label for="morningDescription_<%=i%>">Buổi sáng:</label>
+                                <textarea name="morningDescription_<%=i%>" id="morningDescription_<%=i%>">Chưa có thông tin</textarea>
+
+
+                                <label for="afternoonDescription_<%=i%>">Buổi chiều:</label>
+                                <textarea name="afternoonDescription_<%=i%>" id="afternoonDescription_<%=i%>">Chưa có thông tin</textarea>
+
+                                <label for="eveningDescription_<%=i%>">Buổi tối:</label>
+                                <textarea name="eveningDescription_<%=i%>" id="eveningDescription_<%=i%>">Chưa có thông tin</textarea>
+                            </div>
+                            <% } %>
+                            <% } %>
                         </div>
-                    </c:forEach>
-                </c:if>
+                    </fieldset>
 
-                <button type="button" onclick="addDepartureDate()">+ Thêm ngày</button>
+                    <label for="transport">Phương tiện</label>
+                    <select name="transport_name" id="transport" required>
+                        <option value="">-- Chọn phương tiện --</option>
+                        <option value="Máy bay" ${requestScope.tourTicket != null && requestScope.tourTicket.transport_name == 'Máy bay' ? 'selected' : ''}>Máy bay</option>
+                        <option value="Xe lửa" ${requestScope.tourTicket != null && requestScope.tourTicket.transport_name == 'Xe lửa' ? 'selected' : ''}>Xe lửa</option>
+                        <option value="Xe khách" ${requestScope.tourTicket != null && requestScope.tourTicket.transport_name == 'Xe khách' ? 'selected' : ''}>Xe khách</option>
+                    </select>
 
-                <label for="imgCover">Ảnh đại diện tour</label>
-                <input type="file" name="imgCover" id="imgCover" accept="image/*" required/>
+                    <label for="price">Giá (VND)</label>
+                    <input type="number" name="price" id="price" min="0" required value="${requestScope.tourTicket != null ? requestScope.tourTicket.price : ''}"/>
 
-                <label for="imgGallery">Ảnh liên quan đến tour (nhiều ảnh)</label>
-                <input type="file" name="imgGallery[]" id="imgGallery" accept="image/*" multiple/>
+                    <c:if test="${requestScope.tourTicket == null || requestScope.tourTicket.price == null}">
+                        <label for="maxTickets">Số lượng vé tối đa (tối đa 20)</label>
+                        <input type="number" name="maxTickets" id="maxTickets" min="1" max="20" required/>
+                    </c:if>
 
-                <div class="form-buttons">
-                    <input type="submit" value="Thêm tour">
-                    <input type="reset" value="Reset">
-                </div>
-                <a href="javascript:history.back()" class="back-link">← Quay lại</a>
+                    <label>Ngày xuất phát (tối đa 3 ngày)</label>
+                    <div id="departureDatesContainer">
+                        <input type="date" name="departureDate1" id="departureDate1" required min="<%= java.time.LocalDate.now() %>"/>
+                    </div>
+                    <button type="button" onclick="addDepartureDate()">+ Thêm ngày</button>
+
+                    <label for="imgCover">Ảnh đại diện tour</label>
+                    <input type="file" name="imgCover" id="imgCover" accept="image/*" required/>
+
+                    <label for="imgGallery">Ảnh liên quan đến tour (nhiều ảnh)</label>
+                    <input type="file" name="imgGallery[]" id="imgGallery" accept="image/*" multiple/>
+
+                    <div class="form-buttons">
+                        <input type="submit" value="Thêm tour">
+                        <input type="reset" value="Reset">
+                    </div>
+                    <a href="javascript:history.back()" class="back-link">← Quay lại</a>
+                </fieldset>
             </form>
         </div>
         <script>
-            let departureCount = 1;
-            function addDepartureDate() {
-                if (departureCount >= 3)
-                    return;
-                departureCount++;
 
-                const container = document.getElementById("departureDatesContainer");
-                const wrapper = document.createElement("div");
-                wrapper.className = "departure-wrapper";
-                wrapper.style.display = "flex";
-                wrapper.style.alignItems = "center";
-                wrapper.style.gap = "10px";
-                wrapper.style.marginTop = "8px";
+            // JavaScript để cập nhật ngày
+            function updateDayDetails(select) {
+                const duration = select.value;
+                const dayDetailsContainer = document.getElementById('dayDetails');
 
-                const input = document.createElement("input");
-                input.type = "date";
-                input.name = `departureDate${departureCount}`;
-                input.id = `departureDate${departureCount}`;
-                input.min = new Date().toISOString().split("T")[0];
-                input.required = false;
 
-                const removeBtn = document.createElement("button");
-                removeBtn.type = "button";
-                removeBtn.textContent = "✖";
-                removeBtn.style.background = "#e74c3c";
-                removeBtn.style.color = "white";
-                removeBtn.style.border = "none";
-                removeBtn.style.padding = "6px 12px";
-                removeBtn.style.borderRadius = "4px";
-                removeBtn.style.cursor = "pointer";
+                // Reset container
+                dayDetailsContainer.innerHTML = '';
 
-                removeBtn.onclick = function () {
-                    container.removeChild(wrapper);
-                    departureCount--;
-                };
 
-                wrapper.appendChild(input);
-                wrapper.appendChild(removeBtn);
-                container.appendChild(wrapper);
-            }
+                // Thêm ngày tương ứng với lựa chọn
+                for (let i = 0; i < duration; i++) {
+                    const dayDetailHTML = `
+                        <div class="day-details">
+                            <label for="morningDescription_${i}">Buổi sáng:</label>
+                            <textarea name="morningDescription_${i}" id="morningDescription_${i}">Chưa có thông tin</textarea>
 
-            function generateDayDescriptions() {
-                const wrapper = document.getElementById("descriptionWrapper");
-                wrapper.innerHTML = "";
-                const duration = document.getElementById("duration").value;
-                let days = 0;
+                            <label for="afternoonDescription_${i}">Buổi chiều:</label>
+                            <textarea name="afternoonDescription_${i}" id="afternoonDescription_${i}">Chưa có thông tin</textarea>
 
-                if (duration === "2 ngày 1 đêm")
-                    days = 2;
-                else if (duration === "3 ngày 2 đêm")
-                    days = 3;
-
-                for (let i = 1; i <= days; i++) {
-                    const section = document.createElement("div");
-                    const toggle = document.createElement("div");
-                    toggle.className = "toggle-title";
-                    toggle.textContent = `▶ Ngày ` + i;
-                    toggle.onclick = function () {
-                        const content = this.nextElementSibling;
-                        content.style.display = content.style.display === "none" ? "block" : "none";
-                    };
-
-                    const content = document.createElement("div");
-                    content.className = "day-content";
-                    content.style.display = "none";
-
-                    const fields = [
-                        {label: "Mô tả chung", name: `summary${i}`},
-                        {label: "Hoạt động buổi sáng", name: `morning${i}`},
-                        {label: "Hoạt động buổi chiều", name: `afternoon${i}`},
-                        {label: "Hoạt động buổi tối", name: `evening${i}`}
-                    ];
-
-                    fields.forEach(field => {
-                        const label = document.createElement("label");
-                        label.textContent = field.label;
-                        label.setAttribute("for", field.name);
-
-                        const textarea = document.createElement("textarea");
-                        textarea.name = field.name;
-                        textarea.id = field.name;
-                        textarea.rows = 4;
-                        textarea.required = true;
-
-                        content.appendChild(label);
-                        content.appendChild(textarea);
-                    });
-
-                    section.appendChild(toggle);
-                    section.appendChild(content);
-                    wrapper.appendChild(section);
+                            <label for="eveningDescription_${i}">Buổi tối:</label>
+                            <textarea name="eveningDescription_${i}" id="eveningDescription_${i}">Chưa có thông tin</textarea>
+                        </div>
+                    `;
+                    dayDetailsContainer.insertAdjacentHTML('beforeend', dayDetailHTML);
                 }
             }
 
-            // Tự động sinh mô tả nếu đã có dữ liệu từ server
-            window.addEventListener("DOMContentLoaded", function () {
-                const durationValue = document.getElementById("duration").value;
-                if (durationValue === "2 ngày 1 đêm" || durationValue === "3 ngày 2 đêm") {
-                    generateDayDescriptions();
-                }
-            });
+            // Initial call to set the day details on page load
+            window.onload = function () {
+                const durationSelect = document.getElementById('duration');
+                updateDayDetails(durationSelect);
+            };
 
-            // Xem trước ảnh đại diện tour
-            document.getElementById('imgCover').addEventListener('change', function (e) {
-                const file = e.target.files[0];
-                let preview = document.querySelector('.preview-cover');
-                if (preview)
-                    preview.remove();
-
-                if (file && file.type.startsWith('image/')) {
-                    const reader = new FileReader();
-                    reader.onload = function (evt) {
-                        const img = document.createElement('img');
-                        img.src = evt.target.result;
-                        img.className = 'preview-cover';
-                        img.style.maxWidth = '120px';
-                        img.style.marginTop = '10px';
-                        img.style.borderRadius = '6px';
-                        img.style.border = '1px solid #ccc';
-                        e.target.insertAdjacentElement('afterend', img);
-                    };
-                    reader.readAsDataURL(file);
-                }
-            });
-
-            // Xem trước ảnh gallery
-            const selectedFileNames = new Set();
-            document.getElementById('imgGallery').addEventListener('change', function (e) {
-                const files = e.target.files;
-                let previewContainer = document.getElementById('galleryPreview');
-                if (!previewContainer) {
-                    previewContainer = document.createElement('div');
-                    previewContainer.id = 'galleryPreview';
-                    e.target.insertAdjacentElement('afterend', previewContainer);
-                }
-
-                Array.from(files).forEach(file => {
-                    if (file.type.startsWith('image/') && !selectedFileNames.has(file.name)) {
-                        selectedFileNames.add(file.name);
-                        const reader = new FileReader();
-                        reader.onload = function (evt) {
-                            const img = document.createElement('img');
-                            img.src = evt.target.result;
-                            img.style.maxWidth = '120px';
-                            img.style.margin = '8px';
-                            previewContainer.appendChild(img);
-                        };
-                        reader.readAsDataURL(file);
-                    }
-                });
-            });
-
-            // Reset toàn bộ phần tử động khi bấm Reset
-            document.querySelector("form").addEventListener("reset", function () {
-                const previewCover = document.querySelector(".preview-cover");
-                if (previewCover)
-                    previewCover.remove();
-
-                const previewGallery = document.getElementById("galleryPreview");
-                if (previewGallery) {
-                    previewGallery.innerHTML = '';
-                    selectedFileNames.clear();
-                }
-
-                const container = document.getElementById("departureDatesContainer");
-                container.innerHTML = '';
-                departureCount = 1;
-                const firstDate = document.createElement("input");
-                firstDate.type = "date";
-                firstDate.name = "departureDate1";
-                firstDate.id = "departureDate1";
-                firstDate.min = new Date().toISOString().split("T")[0];
-                firstDate.required = true;
-                container.appendChild(firstDate);
-
-                const descWrapper = document.getElementById("descriptionWrapper");
-                descWrapper.innerHTML = '';
-            });
         </script>
     </body>
 </html>
