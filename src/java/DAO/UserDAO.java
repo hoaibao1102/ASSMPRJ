@@ -60,10 +60,7 @@ public class UserDAO implements IDAO<UserDTO, String> {
                         rs.getString("role"),
                         rs.getInt("status") == 1
                 );
-                if (!user.getRole().equalsIgnoreCase("AD")) // Huy added
-                {
                     list.add(user);
-                }
             }
             return list;
         } catch (ClassNotFoundException | SQLException ex) {

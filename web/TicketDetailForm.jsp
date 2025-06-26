@@ -507,7 +507,15 @@
                             </div>
                             <div>
                                 <% for (TicketDayDetailDTO i : listDayDetail) {
-                                       renderDescription(i.getDescription(), out);
+                                       %>
+                                       <h3><%=i.getDescription()%></h3>
+                                       <h3>Buổi sáng</h3>
+                                       <p><%=i.getMorning()%></p>
+                                       <h3>Buổi chiều</h3>
+                                       <p><%=i.getAfternoon() %></p>
+                                       <h3>Buổi tối</h3>
+                                       <p><%=i.getEvening()%></p>
+                                       <%
                                    }
                                 %>
                             </div>
@@ -659,21 +667,3 @@
 
     </script>
 </html>
-<%! 
-    public void renderDescription(String descript, jakarta.servlet.jsp.JspWriter out) throws java.io.IOException {
-        String[] list = descript.split("#");
-        out.println("<div>");
-//        out.println("<div class='collapsible'><h2>" + list[0] + "</h2> <span class='toggle-text'>chi tiết</span></div>");
-        out.println("<div class='collapsible'><span><h2>" + list[0] + "</h2></span> <img class=\"muiten\" src=\"https://icons.iconarchive.com/icons/fa-team/fontawesome/128/FontAwesome-Angles-Down-icon.png\" width=\"128\" height=\"128\"></div>");
-        out.println("<div class='sub_content'>"); 
-            for (int i = 1; i < list.length; i++) {
-                if (i % 2 != 0) {
-                    out.println("<h3>" + list[i] + "</h3>");
-                } else {
-                    out.println("<p>" + list[i].replace("/", "<br>")  + "</p>");
-                }
-            }
-        out.println("</div>");
-        out.println("</div>");
-    }
-%>

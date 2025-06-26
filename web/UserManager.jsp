@@ -41,7 +41,7 @@
                     <%
                         if(list != null){
                             for(UserDTO u : list){
-                                if(u.isStatus()){
+                                if(u.isStatus() && u.getRole().equals("CUS")){
                                     %>
                                     <tr>
 
