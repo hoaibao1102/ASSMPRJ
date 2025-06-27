@@ -364,24 +364,51 @@
                                     <input type="date" name="departureDate1" 
                                            required min="${tomorrowDate}"/>
                                     <button type="button" class="remove-date-btn" 
-                                           onclick="removeDepartureDate(1)">✕</button>
+                                            onclick="removeDepartureDate(1)">✕</button>
                                 </div>
                             </c:otherwise>
                         </c:choose>
                     </div>
                     <button type="button" onclick="addDepartureDate()">+ Thêm ngày</button>
 
+
                     <!--      phần ảnh -->
                     <label for="imgCover">Ảnh đại diện tour</label>
                     <input type="file" name="imgCover" id="imgCover" accept="image/*" 
                            onchange="previewCoverImage(this)"
                            ${empty requestScope.tourTicket ? 'required' : ''}/>
-                    <div id="coverImagePreview" class="image-preview empty"></div>
+
+                    <div id="coverImagePreview" class="image-preview ${not empty requestScope.tourTicket.img_Tour ? '' : 'empty'}">
+                        <!-- Hiển thị ảnh đại diện nếu đã có -->
+                        <c:if test="${not empty requestScope.tourTicket.img_Tour}">
+                            <div class="image-item">
+                                <img src="${requestScope.tourTicket.img_Tour}" alt="Cover Image Preview" />
+                                <button type="button" class="image-remove-btn" onclick="removeCoverImage()" title="Xóa ảnh">✕</button>
+                                <div class="preview-label">${requestScope.tourTicket.img_Tour}</div>
+                            </div>
+                        </c:if>
+                    </div>
+
+
 
                     <label for="imgGallery">Ảnh liên quan đến tour (tối đa 10 ảnh)</label>
                     <input type="file" name="imgGallery" id="imgGallery" accept="image/*" 
                            multiple onchange="previewGalleryImages(this)"/>
-                    <div id="galleryImagePreview" class="image-preview empty"></div>
+
+                    <div id="galleryImagePreview" class="image-preview ${not empty requestScope.tourTicket.imgGalleryList ? '' : 'empty'}">
+                        <!-- Hiển thị ảnh đã có trong gallery -->
+                        <c:if test="${not empty requestScope.ticketImgDetail}">
+                            <c:forEach var="image" items="${requestScope.ticketImgDetail}">
+                                <div class="image-item">
+                                    <img src="${image}" alt="Gallery Image Preview"/>
+                                    <button type="button" class="image-remove-btn" onclick="removeGalleryImage('${image}')" title="Xóa ảnh">✕</button>
+                                    <div class="preview-label">${image}</div>
+                                </div>
+                            </c:forEach>
+                        </c:if>
+                    </div>
+
+
 
                     <div class="form-buttons">
                         <input type="submit" 
@@ -471,7 +498,7 @@
                     updateRemoveButtons();        // Cập nhật nút xóa
                 }
             }
-            
+
             // Sắp xếp lại thứ tự các input sau khi xóa
             function reorderDateInputs() {
                 const container = document.getElementById('departureDatesContainer');
