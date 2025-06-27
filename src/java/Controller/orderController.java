@@ -6,10 +6,12 @@ package Controller;
 
 import DAO.OrderDAO;
 import DAO.StartDateDAO;
+import DAO.TicketImgDAO;
 import DAO.TourTicketDAO;
 import DTO.OrderDTO;
 import DTO.StartDateDTO;
 import DTO.TourTicketDTO;
+import DTO.UserDTO;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -20,6 +22,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.jsp.PageContext;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -47,59 +52,63 @@ public class orderController extends HttpServlet {
         OrderDAO odao = new OrderDAO();
         TourTicketDAO tourTicketdao = new TourTicketDAO();
         StartDateDAO stDao = new StartDateDAO();
-        
+
         try {
 
             if ("call_oder_step2".equals(action)) {
-                
+
                 //lay thong tin de tao dtb booking
                 double total = Double.parseDouble(request.getParameter("totalBill"));
                 int numberTicket = Integer.parseInt(request.getParameter("numberTicket"));
                 String idTour = request.getParameter("idTour");
-                int idUser = Integer.parseInt(request.getParameter("idUser")) ;
+                int idUser = Integer.parseInt(request.getParameter("idUser"));
                 String bookingDate = String.valueOf(request.getParameter("bookingDate"));
                 int status = Integer.parseInt(request.getParameter("status"));
                 String note = request.getParameter("noteValueInput");
                 String idBooking = odao.generateBookingId(idTour);
                 int startNum = Integer.parseInt(request.getParameter("startNum"));
 
-                OrderDTO newBooking = new OrderDTO(idUser, idTour, bookingDate, numberTicket, total, status, idBooking, note,startNum);
+                OrderDTO newBooking = new OrderDTO(idUser, idTour, bookingDate, numberTicket, total, status, idBooking, note, startNum);
                 if (odao.create(newBooking)) {
                     url = "BookingStep2.jsp";
                     request.setAttribute("newBooking", newBooking);
-                   
-                }else {
+
+                } else {
                     System.out.println("tao loi roi ma");
-                    
+
                 }
 
             } else if ("call_oder_step3".equals(action)) {
                 String idBooking = request.getParameter("idBooking");
-                Double total =Double.parseDouble(request.getParameter("totalBill2")) ;
+                Double total = Double.parseDouble(request.getParameter("totalBill2"));
                 int numberTicket = Integer.parseInt(request.getParameter("numberTicket2"));
-                
+
                 // lấy ra quantities để trừ đặt vé
                 OrderDTO orderdto = odao.readbyID(idBooking);
                 String idTour = orderdto.getIdTour();
                 int startNum = orderdto.getStartNum();
                 StartDateDTO startDate = stDao.searchDetailDate(idTour, startNum);
-                int newQuan = startDate.getQuantity()- numberTicket;
+                int newQuan = startDate.getQuantity() - numberTicket;
                 startDate.setQuantity(newQuan);
-                
+
                 boolean isUpdate = stDao.update(startDate);
                 System.out.println(isUpdate);
                 //update trang thai
-                if(odao.updateStatus(idBooking) && isUpdate ){
+                if (odao.updateStatus(idBooking) && isUpdate) {
                     url = "BookingStep3.jsp";
-                    
+
                     request.setAttribute("startDate", startDate);
                     request.setAttribute("total", total);
                     request.setAttribute("idBooking", idBooking);
                     request.setAttribute("numberTicket", numberTicket);
-                }else{
+                } else {
                     System.out.println("khong update duoc tu tim lai");
                 }
-              
+                //HuyCODE
+            } else if ("openPayModal".equals(action)) {
+                url = handleUserOrder(request, response);
+            } else if ("updatePayOrder".equals(action)) {
+                url = handleUpdateOrder(request, response);
             }
             String paymentMethod = request.getParameter("paymentMethod");
             if ("momo".equals(paymentMethod)) {
@@ -116,10 +125,8 @@ public class orderController extends HttpServlet {
         }
 
     }
-    
-    
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+// <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
      *
@@ -157,5 +164,90 @@ public class orderController extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
+
+    private String handleUserOrder(HttpServletRequest request, HttpServletResponse response) {
+        String idBooking = request.getParameter("idBooking");
+        String totalPrice = request.getParameter("totalPrice");
+        String numberTicket = request.getParameter("numberTicket");
+        request.setAttribute("showModal", true);
+        request.setAttribute("idBooking", idBooking);
+        request.setAttribute("totalPrice", totalPrice);
+        request.setAttribute("numberTicket", numberTicket);
+
+        // LẤY LẠI DANH SÁCH ĐƠN HÀNG VÀ MAP NGÀY KHỞI HÀNH
+        UserDTO user = (UserDTO) request.getSession().getAttribute("nameUser");
+        int userId = user.getIdUser();
+        OrderDAO odao = new OrderDAO();
+        StartDateDAO stDao = new StartDateDAO();
+        List<OrderDTO> list = odao.getAllOrdersByUser(userId);
+        Map<String, String> startDateMap = new HashMap<>();
+        for (OrderDTO order : list) {
+            StartDateDTO startDate = stDao.searchDetailDate(order.getIdTour(), order.getStartNum());
+            startDateMap.put(order.getIdBooking(), startDate.getStartDate());
+        }
+        request.setAttribute("list", list);
+        request.setAttribute("startDateMap", startDateMap);
+        // ===HuyCODE add===
+        TourTicketDAO tourTicketdao = new TourTicketDAO();
+        Map<String, String> tourImgMap = new HashMap<>();
+        for (OrderDTO order : list) {
+            String imgUrl = tourTicketdao.getAvatarByIdTour(order.getIdTour());
+            tourImgMap.put(order.getIdTour(), imgUrl);
+        }
+        request.setAttribute("tourImgMap", tourImgMap);
+        //=====
+        return "OrderOfUser.jsp";
+
+    }
+
+    private String handleUpdateOrder(HttpServletRequest request, HttpServletResponse response) {
+        String idBooking = request.getParameter("idBooking");
+        int numberTicket = Integer.parseInt(request.getParameter("numberTicket2"));
+        String paymentMethod = request.getParameter("paymentMethod");
+        OrderDAO odao = new OrderDAO();
+        StartDateDAO stDao = new StartDateDAO();
+
+        // Cập nhật số lượng vé và trạng thái đơn
+        OrderDTO orderdto = odao.readbyID(idBooking);
+        String idTour = orderdto.getIdTour();
+        int startNum = orderdto.getStartNum();
+        StartDateDTO startDate = stDao.searchDetailDate(idTour, startNum);
+        int newQuan = startDate.getQuantity() - numberTicket;
+        startDate.setQuantity(newQuan);
+
+        boolean isUpdate = stDao.update(startDate);
+        boolean isOrderUpdated = odao.updateStatus(idBooking);
+
+        // LẤY LẠI DANH SÁCH ĐƠN HÀNG VÀ MAP NGÀY KHỞI HÀNH
+        UserDTO user = (UserDTO) request.getSession().getAttribute("nameUser");
+        int idUser = user.getIdUser();
+        List<OrderDTO> list = odao.getAllOrdersByUser(idUser);
+        Map<String, String> startDateMap = new HashMap<>();
+        for (OrderDTO order : list) {
+            StartDateDTO startDate1 = stDao.searchDetailDate(order.getIdTour(), order.getStartNum());
+            startDateMap.put(order.getIdBooking(), startDate1.getStartDate());
+        }
+        request.setAttribute("list", list);
+        request.setAttribute("startDateMap", startDateMap);
+        // ===HuyCODE add===
+        TourTicketDAO tourTicketdao = new TourTicketDAO();
+        Map<String, String> tourImgMap = new HashMap<>();
+        for (OrderDTO order : list) {
+            String imgUrl = tourTicketdao.getAvatarByIdTour(order.getIdTour());
+            tourImgMap.put(order.getIdTour(), imgUrl);
+        }
+        request.setAttribute("tourImgMap", tourImgMap);
+        //=====
+        if (isUpdate && isOrderUpdated) {
+            request.setAttribute("message", "Thanh toán thành công bằng "
+                    + ("momo".equals(paymentMethod) ? "Momo"
+                    : "vnpay".equals(paymentMethod) ? "VNPay" : "tại quầy") + "!");
+            url = "OrderOfUser.jsp";
+        } else {
+            request.setAttribute("message", "Có lỗi xảy ra khi cập nhật đơn hàng.");
+            url = "OrderOfUser.jsp";
+        }
+        return url;
+    }
 
 }

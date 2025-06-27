@@ -82,7 +82,7 @@ public class OrderDTO {
         this.totalPrice = totalPrice;
     }
 
-    public int isStatus() {
+    public int getStatus() {
         return status;
     }
 

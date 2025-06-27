@@ -8,7 +8,7 @@ CREATE TABLE Users (
     email VARCHAR(255) UNIQUE,
     password VARCHAR(255),
     phone VARCHAR(20),
-    role VARCHAR(50) DEFAULT 'CS'
+    role VARCHAR(50) DEFAULT 'CUS'
 );
 --18/06 update status cho user
 ALTER TABLE Users
@@ -55,6 +55,9 @@ CREATE TABLE TourTickets (
     img_Tour nvarchar(255),
     FOREIGN KEY (idplace) REFERENCES Places(idplace),
 );
+--add status to TourTickets table
+ALTER TABLE TourTickets
+ADD [status] BIT DEFAULT 1 NOT NULL;
 -- update thêm số lượng trong bảng TourList
 
 --xóa cột startDate đi và tạo thêm bảng mới cho nó

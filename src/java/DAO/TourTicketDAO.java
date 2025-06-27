@@ -23,16 +23,15 @@ import java.util.logging.Logger;
 public class TourTicketDAO implements IDAO<TourTicketDTO, String> {
 
     private final String SELECT_QUERY = "SELECT * FROM dbo.TourTickets";
-    private final String UPDATE_QUERY = "UPDATE TourTickets SET " 
-                           + "placestart = ?, "          
-                           + "price = ?, " 
-                           + "transport_name = ?, " 
-                           + "nametour = ?, " 
-                           + "img_Tour = ?, "
-                           + "status = ?  "  
-                           + "WHERE idTourTicket = ?;";
+    private final String UPDATE_QUERY = "UPDATE TourTickets SET "
+            + "placestart = ?, "
+            + "price = ?, "
+            + "transport_name = ?, "
+            + "nametour = ?, "
+            + "img_Tour = ?, "
+            + "status = ?  "
+            + "WHERE idTourTicket = ?;";
 
-    
     @Override
     public boolean update(TourTicketDTO entity) {
         String sql = UPDATE_QUERY;
@@ -44,7 +43,7 @@ public class TourTicketDAO implements IDAO<TourTicketDTO, String> {
             ps.setString(3, entity.getTransport_name());
             ps.setString(4, entity.getNametour());
             ps.setString(5, entity.getImg_Tour());
-            ps.setInt(6, entity.isStatus()?1:0);
+            ps.setInt(6, entity.isStatus() ? 1 : 0);
             ps.setString(7, entity.getIdTourTicket());
             int n = ps.executeUpdate();
             return n > 0;
@@ -55,7 +54,7 @@ public class TourTicketDAO implements IDAO<TourTicketDTO, String> {
         }
         return false;
     }
-    
+
     @Override
     public boolean create(TourTicketDTO entity) {
         return false;
@@ -89,7 +88,7 @@ public class TourTicketDAO implements IDAO<TourTicketDTO, String> {
                             rs.getString("transport_name"),
                             rs.getString("nametour"),
                             rs.getString("img_Tour"),
-                            rs.getInt("status")==1);
+                            rs.getInt("status") == 1);
 
                     list.add(newT);
                 }
@@ -122,23 +121,21 @@ public class TourTicketDAO implements IDAO<TourTicketDTO, String> {
         List<TourTicketDTO> list = this.searchWithCondition(id, "idTourTicket");
         for (TourTicketDTO rs : list) {
             TourTicketDTO newT = new TourTicketDTO(
-                            rs.getIdTourTicket(),
-                            rs.getIdplace(),
-                            rs.getDestination(),
-                            rs.getPlacestart(),
-                            rs.getDuration(),
-                            rs.getPrice(),
-                            rs.getTransport_name(),
-                            rs.getNametour(),
-                            rs.getImg_Tour(),
-                            rs.isStatus());
+                    rs.getIdTourTicket(),
+                    rs.getIdplace(),
+                    rs.getDestination(),
+                    rs.getPlacestart(),
+                    rs.getDuration(),
+                    rs.getPrice(),
+                    rs.getTransport_name(),
+                    rs.getNametour(),
+                    rs.getImg_Tour(),
+                    rs.isStatus());
             return newT;
         }
         return null;
 
     }
-
-    
 
     @Override
     public boolean delete(String id) {
@@ -160,7 +157,7 @@ public class TourTicketDAO implements IDAO<TourTicketDTO, String> {
                 + " nametour COLLATE Latin1_General_CI_AI like ? ";
         List<TourTicketDTO> list = new ArrayList<>();
         try {
-            String searchTerm2 = "%"+searchItem+"%";
+            String searchTerm2 = "%" + searchItem + "%";
             Connection conn = DBUtils.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, searchTerm2);
@@ -169,18 +166,18 @@ public class TourTicketDAO implements IDAO<TourTicketDTO, String> {
 
             while (rs.next()) {
                 TourTicketDTO newT = new TourTicketDTO(
-                            rs.getString("idTourTicket"),
-                            rs.getInt("idplace"),
-                            rs.getString("destination"),
-                            rs.getString("placestart"),
-                            rs.getString("duration"),
-                            rs.getDouble("price"),
-                            rs.getString("transport_name"),
-                            rs.getString("nametour"),
-                            rs.getString("img_Tour"),
-                            rs.getInt("status")==1);
+                        rs.getString("idTourTicket"),
+                        rs.getInt("idplace"),
+                        rs.getString("destination"),
+                        rs.getString("placestart"),
+                        rs.getString("duration"),
+                        rs.getDouble("price"),
+                        rs.getString("transport_name"),
+                        rs.getString("nametour"),
+                        rs.getString("img_Tour"),
+                        rs.getInt("status") == 1);
 
-                    list.add(newT);
+                list.add(newT);
             }
             return list;
 
@@ -190,9 +187,24 @@ public class TourTicketDAO implements IDAO<TourTicketDTO, String> {
             Logger.getLogger(TourTicketDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
-        
+
     }
 
-    
+    public String getAvatarByIdTour(String idTour) {
+        String sql = "SELECT TOP 1 img_Tour FROM TourTickets WHERE TRIM(idTourTicket) = ?";
+        try {
+            Connection conn = DBUtils.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, idTour);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                String imgUrl = rs.getString("img_Tour");
+                return imgUrl;
+            } 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "default.jpg"; // fallback nếu không có ảnh
+    }
 
 }
