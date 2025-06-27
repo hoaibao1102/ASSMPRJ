@@ -277,13 +277,7 @@
                         } 
                     }  
                     %>
-
-
-
-
-
-
-
+<!--nút thêm vé-->
                     <form action="placeController" method="get">
                         <input type="hidden" name="action" value="addTicket">
                         <button type="submit" class="btn-add-ticket">+ Thêm vé</button>

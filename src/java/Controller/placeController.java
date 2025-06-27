@@ -15,14 +15,13 @@ import DTO.StartDateDTO;
 import DTO.TicketDayDetailDTO;
 import DTO.TourTicketDTO;
 import DTO.TicketImgDTO;
-import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -52,6 +51,10 @@ public class placeController extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+    protected String getTomorrow() {
+        return LocalDate.now().plusDays(1).toString();
+}
+    
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -191,6 +194,7 @@ public class placeController extends HttpServlet {
                     List<TicketImgDTO> ticketImgDetail = tiDAO.readbyIdTourTicket(idTour);
                     List<TicketDayDetailDTO> ticketDayDetail = tddDao.readbyIdTourTicket(idTour);
                     TourTicketDTO tourTicket = tdao.readbyID(idTour);
+                    
 
                     // lấy ra các ngày đi 
                     List<StartDateDTO> startDateTour = stdDAO.search(tourTicket.getIdTourTicket());
@@ -199,6 +203,7 @@ public class placeController extends HttpServlet {
                     request.setAttribute("ticketImgDetail", ticketImgDetail);
                     request.setAttribute("ticketDayDetail", ticketDayDetail);
                     request.setAttribute("tourTicket", tourTicket);
+                    request.setAttribute("tomorrowDate", getTomorrow());
                     url = "createTicketForm.jsp";
                 }
                 
@@ -206,6 +211,7 @@ public class placeController extends HttpServlet {
             } 
             // Thêm VÉ
             else if (action.equals("addTicket")) {
+                request.setAttribute("tomorrowDate", getTomorrow());
                 url = "createTicketForm.jsp";
             }else if (action.equals("deleteTicket")) {
                 String nameOfDestination = request.getParameter("nameOfDestination");
