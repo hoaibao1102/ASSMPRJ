@@ -459,7 +459,7 @@
                                 <c:forEach var="order" items="${list}">
                                     <div class="order-card">
                                         <div class="card-image">
-                                            <img src="assets/images/places/<c:out value='${order.idTour}'/>.jpg" alt="Tour image">
+                                            <img src="assets/images/places/${tourImgMap[order.idTour]}" alt="Tour image">
                                         </div>
                                         <div class="card-content">
                                             <h3>Đơn hàng: ${order.idBooking}</h3>
@@ -529,7 +529,7 @@
                         <c:if test="${showModal eq 'true'}">
                             document.getElementById('paymentModal').style.display = 'flex';
                         </c:if>
-                        }
+                        };
                         function closePaymentModal() {
                             document.getElementById('paymentModal').style.display = 'none';
                         }

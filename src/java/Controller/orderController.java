@@ -187,15 +187,14 @@ public class orderController extends HttpServlet {
         }
         request.setAttribute("list", list);
         request.setAttribute("startDateMap", startDateMap);
-        
         // ===HuyCODE add===
-//        TicketImgDAO imgsDAO = new TicketImgDAO();
-//        Map<String, String> tourImgMap = new HashMap<>();
-//        for (OrderDTO order : list) {
-//            String imgUrl = imgsDAO.getAvatarByIdTour(order.getIdTour());
-//            tourImgMap.put(order.getIdTour(), imgUrl);
-//        }
-        request.setAttribute("tourImgMap", "");
+        TourTicketDAO tourTicketdao = new TourTicketDAO();
+        Map<String, String> tourImgMap = new HashMap<>();
+        for (OrderDTO order : list) {
+            String imgUrl = tourTicketdao.getAvatarByIdTour(order.getIdTour());
+            tourImgMap.put(order.getIdTour(), imgUrl);
+        }
+        request.setAttribute("tourImgMap", tourImgMap);
         //=====
         return "OrderOfUser.jsp";
 
@@ -230,7 +229,15 @@ public class orderController extends HttpServlet {
         }
         request.setAttribute("list", list);
         request.setAttribute("startDateMap", startDateMap);
-
+        // ===HuyCODE add===
+        TourTicketDAO tourTicketdao = new TourTicketDAO();
+        Map<String, String> tourImgMap = new HashMap<>();
+        for (OrderDTO order : list) {
+            String imgUrl = tourTicketdao.getAvatarByIdTour(order.getIdTour());
+            tourImgMap.put(order.getIdTour(), imgUrl);
+        }
+        request.setAttribute("tourImgMap", tourImgMap);
+        //=====
         if (isUpdate && isOrderUpdated) {
             request.setAttribute("message", "Thanh toán thành công bằng "
                     + ("momo".equals(paymentMethod) ? "Momo"

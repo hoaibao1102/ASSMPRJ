@@ -6,6 +6,7 @@ package Controller;
 
 import DAO.OrderDAO;
 import DAO.StartDateDAO;
+import DAO.TourTicketDAO;
 import DAO.UserDAO;
 import DTO.OrderDTO;
 import DTO.StartDateDTO;
@@ -107,6 +108,15 @@ public class userController extends HttpServlet {
             
             startDateMap.put(idBooking,date);
         }
+        // ===HuyCODE add===
+        TourTicketDAO tourTicketdao = new TourTicketDAO();
+        Map<String, String> tourImgMap = new HashMap<>();
+        for (OrderDTO order : list) {
+            String imgUrl = tourTicketdao.getAvatarByIdTour(order.getIdTour());
+            tourImgMap.put(order.getIdTour(), imgUrl);
+        }
+        request.setAttribute("tourImgMap", tourImgMap);
+        //=====
         request.setAttribute("startDateMap", startDateMap);
         request.setAttribute("list", list); 
         request.setAttribute("userName", userName);// Đưa list vào attribute để JSP lấy ra hiển thị
