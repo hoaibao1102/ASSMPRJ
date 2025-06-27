@@ -372,38 +372,31 @@
                     <button type="button" onclick="addDepartureDate()">+ Thêm ngày</button>
 
 
-                    <!--      phần ảnh -->
+                    <!-- (Chỉ trích đoạn liên quan đến ảnh, các phần khác giữ như cũ) -->
                     <label for="imgCover">Ảnh đại diện tour</label>
-                    <input type="file" name="imgCover" id="imgCover" accept="image/*" 
-                           onchange="previewCoverImage(this)"
-                           ${empty requestScope.tourTicket ? 'required' : ''}/>
+                    <input type="file" name="imgCover" id="imgCover" accept="image/*" onchange="previewCoverImage(this)" ${empty requestScope.tourTicket ? 'required' : ''}/>
 
-                    <div id="coverImagePreview" class="image-preview ${not empty requestScope.tourTicket.img_Tour ? '' : 'empty'}">
-                        <!-- Hiển thị ảnh đại diện nếu đã có -->
-                        <c:if test="${not empty requestScope.tourTicket.img_Tour}">
+                    <c:if test="${not empty requestScope.tourTicket.img_Tour}">
+                        <div id="coverImagePreview" class="image-preview">
                             <div class="image-item">
-                                <img src="${requestScope.tourTicket.img_Tour}" alt="Cover Image Preview" />
-                                <button type="button" class="image-remove-btn" onclick="removeCoverImage()" title="Xóa ảnh">✕</button>
+                                <img src="${requestScope.tourTicket.img_Tour}" alt="Ảnh đại diện">
                                 <div class="preview-label">${requestScope.tourTicket.img_Tour}</div>
                             </div>
-                        </c:if>
-                    </div>
-
-
+                        </div>
+                        <input type="hidden" name="oldImgCover" value="${requestScope.tourTicket.img_Tour}"/>
+                    </c:if>
 
                     <label for="imgGallery">Ảnh liên quan đến tour (tối đa 10 ảnh)</label>
-                    <input type="file" name="imgGallery" id="imgGallery" accept="image/*" 
-                           multiple onchange="previewGalleryImages(this)"/>
+                    <input type="file" name="imgGallery" id="imgGallery" accept="image/*" multiple onchange="previewGalleryImages(this)"/>
 
-                    <div id="galleryImagePreview" class="image-preview ${not empty requestScope.tourTicket.imgGalleryList ? '' : 'empty'}">
-                        <!-- Hiển thị ảnh đã có trong gallery -->
+                    <div id="galleryImagePreview" class="image-preview">
                         <c:if test="${not empty requestScope.ticketImgDetail}">
                             <c:forEach var="image" items="${requestScope.ticketImgDetail}">
                                 <div class="image-item">
-                                    <img src="${image}" alt="Gallery Image Preview"/>
-                                    <button type="button" class="image-remove-btn" onclick="removeGalleryImage('${image}')" title="Xóa ảnh">✕</button>
+                                    <img src="${image}" alt="Gallery Image"/>
                                     <div class="preview-label">${image}</div>
                                 </div>
+                                <input type="hidden" name="oldImgGallery" value="${image}" />
                             </c:forEach>
                         </c:if>
                     </div>
