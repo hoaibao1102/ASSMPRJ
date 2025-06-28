@@ -214,6 +214,97 @@
                     width: auto;
                 }
             }
+            /* HUYCODE added - User Dropdown Styles - CSS bổ sung */ 
+            .user-dropdown-container {
+                position: relative;
+                display: inline-block;
+            }
+
+            .user-circle {
+                cursor: pointer;
+                transition: all 0.3s ease;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            }
+
+            .user-circle:hover {
+                transform: scale(1.05);
+                box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            }
+
+            .user-dropdown-menu {
+                position: absolute;
+                top: 50px;
+                right: 0;
+                background: white;
+                border-radius: 12px;
+                box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+                min-width: 220px;
+                z-index: 1000;
+                opacity: 0;
+                visibility: hidden;
+                transform: translateY(-10px);
+                transition: all 0.3s ease;
+                border: 1px solid #e0e0e0;
+            }
+
+            .user-dropdown-menu.show {
+                opacity: 1;
+                visibility: visible;
+                transform: translateY(0);
+            }
+
+            .dropdown-header {
+                padding: 15px;
+                text-align: center;
+                color: #333;
+                font-size: 14px;
+            }
+
+            .dropdown-header strong {
+                color: #667eea;
+            }
+
+            .user-dropdown-menu hr {
+                margin: 0;
+                border: none;
+                border-top: 1px solid #f0f0f0;
+            }
+
+            .dropdown-item-form {
+                margin: 0;
+                padding: 0;
+            }
+
+            .dropdown-item {
+                width: 100%;
+                padding: 12px 15px;
+                border: none;
+                background: none;
+                text-align: left;
+                cursor: pointer;
+                transition: background-color 0.2s ease;
+                font-size: 14px;
+                color: #555;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+
+            .dropdown-item:hover {
+                background-color: #f8f9fa;
+            }
+
+            .user-dropdown-menu::before {
+                content: '';
+                position: absolute;
+                top: -8px;
+                right: 15px;
+                width: 0;
+                height: 0;
+                border-left: 8px solid transparent;
+                border-right: 8px solid transparent;
+                border-bottom: 8px solid white;
+            }
 
             /* ===== ADMIN SIDEBAR STYLES ===== */
             .admin-sidebar {
@@ -280,10 +371,10 @@
     </head>
     <body>
         <%
-            UserDTO user = (UserDTO) session.getAttribute("nameUser");
-            boolean isAdmin = AuthUtils.isAdmin(session);
-            String searchTour = (request.getAttribute("searchTourInfor") != null) ?
-                    request.getAttribute("searchTourInfor").toString() : "";
+    UserDTO user = (UserDTO) session.getAttribute("nameUser");
+    boolean isAdmin = AuthUtils.isAdmin(session);
+    String searchTour = (request.getAttribute("searchTourInfor") != null) ?
+            request.getAttribute("searchTourInfor").toString() : "";
         %>
 
         <% if (isAdmin) { %>
@@ -293,7 +384,6 @@
             <ul class="sidebar-menu">
                 <li><a href="placeController?action=destination&page=indexjsp">🏠Trang chủ</a></li>
                 <li><a href="placeController?action=destination&page=destinationjsp">📍 Quản lý điểm đến</a></li>
-
                 <li><a href="userController">👤 Quản lý người dùng</a></li>
                 <li>
                     <form action="loginController" method="post">
@@ -341,18 +431,43 @@
                             <a href="RegisForm.jsp">Đăng ký</a>
                             <a href="LoginForm.jsp">Đăng nhập</a>
                             <% } else { %>
-                            <div class="user-circle" title="<%= user.getFullName() %>">
-                                <%= user.getFullName().substring(0,1).toUpperCase() %>
+                            <!-- User Dropdown Container -->
+                            <div class="user-dropdown-container">
+                                <div class="user-circle" onclick="toggleUserDropdown()" title="<%= user.getFullName() %>">
+                                    <%= user.getFullName().trim().substring(0,1).toUpperCase() %>
+                                </div>
+
+                                <!-- Dropdown Menu -->
+                                <div class="user-dropdown-menu" id="userDropdownMenu">
+                                    <div class="dropdown-header">
+                                        <strong><%= user.getFullName() %></strong>
+                                    </div>
+                                    <hr>
+
+                                    <!-- Edit Profile -->
+                                    <form action="userController" method="post" class="dropdown-item-form">
+                                        <input type="hidden" name="action" value="editProfile" />
+                                        <input type="hidden" name="userId" value="<%= user.getIdUser() %>" />
+                                        <button type="submit" class="dropdown-item">
+                                            👤 Chỉnh sửa hồ sơ
+                                        </button>
+                                    </form>
+
+                                    <!-- Order History -->
+                                    <form action="userController" method="post" class="dropdown-item-form">
+                                        <input type="hidden" name="action" value="orderOfUser" />
+                                        <input type="hidden" name="userId" value="<%= user.getIdUser() %>" />
+                                        <button type="submit" class="dropdown-item">
+                                            📋 Lịch sử giao dịch
+                                        </button>
+                                    </form>
+                                </div>
                             </div>
+
+                            <!-- Logout button outside dropdown -->
                             <form action="loginController" method="post" style="display:inline;">
                                 <input type="hidden" name="action" value="logout" />
                                 <button type="submit" class="logout-btn">Đăng xuất</button>
-                            </form>
-                            
-                            <form action="userController" method="post" style="display:inline;">
-                                <input type="hidden" name="action" value="orderOfUser" />
-                                <input type="hidden" name="userId" value="<%= user.getIdUser() %>" />
-                                <button type="submit" class="logout-btn">Lịch sử giao dịch</button>
                             </form>
                             <% } %>
                         </div>
@@ -362,11 +477,26 @@
         </header>
         <% } %>
 
-        <script>
-            function toggleMenu() {
-                const menu = document.getElementById("menu");
-                menu.classList.toggle("show");
-            }
-        </script>
     </body>
+    <script>
+        function toggleMenu() {
+            const menu = document.getElementById("menu");
+            menu.classList.toggle("show");
+        }
+
+        function toggleUserDropdown() {
+            const dropdown = document.getElementById("userDropdownMenu");
+            dropdown.classList.toggle("show");
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function (event) {
+            const userContainer = document.querySelector('.user-dropdown-container');
+            const dropdown = document.getElementById("userDropdownMenu");
+
+            if (userContainer && !userContainer.contains(event.target)) {
+                dropdown.classList.remove("show");
+            }
+        });
+    </script>
 </html>
