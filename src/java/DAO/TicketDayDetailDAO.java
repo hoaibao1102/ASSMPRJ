@@ -20,9 +20,11 @@ import java.util.logging.Logger;
  *
  * @author Admin
  */
-public class TicketDayDetailDAO implements IDAO<TicketDayDetailDAO, String> {
+public class TicketDayDetailDAO implements IDAO<TicketDayDetailDTO, String> {
 
     private final String SELECT_QUERY = "SELECT * FROM dbo.TicketDayDetails";
+    private final String UPDATE_QUERY = "UPDATE dbo.TicketDayDetails SET Description = ?, Morning = ?, Afternoon = ?, Evening = ? "
+            + "WHERE idTourTicket = ? AND Day = ?";
 
     public boolean checkAttribute(String attribute) {
         List<String> validAttributes = Arrays.asList("idTourTicket");
@@ -69,45 +71,50 @@ public class TicketDayDetailDAO implements IDAO<TicketDayDetailDAO, String> {
     }
 
     @Override
-    public boolean create(TicketDayDetailDAO entity) {
-
-        return false;
-
+    public boolean create(TicketDayDetailDTO entity) {
+       return false; 
     }
 
     @Override
-    public List<TicketDayDetailDAO> readAll() {
+    public List<TicketDayDetailDTO> readAll() {
+       return null;
+    }
 
+    @Override
+    public TicketDayDetailDTO readbyID(String id) {
         return null;
-
     }
 
     @Override
-    public TicketDayDetailDAO readbyID(String id) {
-
-        return null;
-
-    }
-
-    @Override
-    public boolean update(TicketDayDetailDAO entity) {
-
+    public boolean update(TicketDayDetailDTO entity) {
+        String sql = UPDATE_QUERY;
+        try {
+            Connection cn = UTILS.DBUtils.getConnection();
+            PreparedStatement ps = cn.prepareStatement(sql);
+            ps.setString(1, entity.getDescription());
+            ps.setString(2, entity.getMorning());
+            ps.setString(3, entity.getAfternoon());
+            ps.setString(4, entity.getEvening());
+            ps.setString(5, entity.getIdTourTicket());
+            ps.setInt(6, entity.getDay());
+            int rs = ps.executeUpdate();
+            return rs > 0;
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(TicketImgDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(TicketImgDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return false;
-
     }
 
     @Override
     public boolean delete(String id) {
-
         return false;
-
     }
 
     @Override
-    public List<TicketDayDetailDAO> search(String searchTerm) {
-
+    public List<TicketDayDetailDTO> search(String searchTerm) {
         return null;
-
     }
 
 }

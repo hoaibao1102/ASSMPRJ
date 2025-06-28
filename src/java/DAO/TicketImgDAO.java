@@ -24,6 +24,9 @@ import java.util.logging.Logger;
 public class TicketImgDAO implements IDAO<TicketImgDTO, String>{
     
     private final String SELECT_QUERY = "SELECT * FROM dbo.TicketImgs";
+    private final String INSERT_QUERY = "INSERT INTO dbo.TicketImgs (idTourTicket , imgNum ,imgUrl)   VALUES (?, ?, ?)";
+    private final String UPDATE_QUERY = "UPDATE dbo.TicketImgs  SET imgUrl = ? WHERE idTourTicket = ? AND imgNum ?";
+    private final String DELETE_QUERY = "DELETE FROM dbo.TicketImgs  WHERE idTourTicket = ?";
     
     public boolean checkAttribute(String attribute) {
         List<String> validAttributes = Arrays.asList("idTourTicket");
@@ -59,9 +62,40 @@ public class TicketImgDAO implements IDAO<TicketImgDTO, String>{
 
         return null;
     }
+    
+    public boolean deleteByTourId(String tourId){
+        String sql = DELETE_QUERY;
+        try {
+            Connection cn = UTILS.DBUtils.getConnection();
+            PreparedStatement ps = cn.prepareStatement(sql);
+            ps.setString(1, tourId);
+            int rs = ps.executeUpdate();
+            return rs > 0;
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(TicketImgDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(TicketImgDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
 
     @Override
     public boolean create(TicketImgDTO entity) {
+        String sql = INSERT_QUERY;
+        try {
+            Connection cn = UTILS.DBUtils.getConnection();
+            PreparedStatement ps = cn.prepareStatement(sql);
+            ps.setString(1, entity.getIdTourTicket());
+            ps.setInt(2, entity.getImgNum());
+            ps.setString(3, entity.getImgUrl());
+            
+            int rs = ps.executeUpdate();
+            return rs > 0;
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(TicketImgDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(TicketImgDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return false;
     }
 
@@ -81,6 +115,20 @@ public class TicketImgDAO implements IDAO<TicketImgDTO, String>{
 
     @Override
     public boolean update(TicketImgDTO entity) {
+        String sql = UPDATE_QUERY;
+        try {
+            Connection cn = UTILS.DBUtils.getConnection();
+            PreparedStatement ps = cn.prepareStatement(sql);
+            ps.setString(1, entity.getIdTourTicket());
+            ps.setInt(2, entity.getImgNum());
+            ps.setString(3, entity.getImgUrl());
+            int rs = ps.executeUpdate();
+            return rs > 0;
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(TicketImgDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(TicketImgDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return false;
     }
 

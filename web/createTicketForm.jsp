@@ -248,7 +248,7 @@
                 </c:choose>
             </h2>
 
-            <form action="placeController" method="post" enctype="multipart/form-data">
+            <form action="placeController" method="get" method="post" enctype="multipart/form-data" onsubmit="prepareFormSubmission()">
                 <!-- Xác định action dựa trên việc có tourTicket hay không -->
                 <input type="hidden" name="action" 
                        value="${not empty requestScope.tourTicket ? 'submitUpdateTour' : 'submitAddTour'}"/>
@@ -262,7 +262,7 @@
                     <legend>Thông Tin Tour</legend>
 
                     <label for="nametour">Tên Tour</label>
-                    <input type="text" name="nametour" id="nametour" required 
+                    <input type="text" name="nametour" id="nametour" required ${not empty requestScope.tourTicket?'style="pointer-events: none;"' : '' } 
                            value="${not empty requestScope.tourTicket ? requestScope.tourTicket.nametour : ''}"/>
 
                     <label for="placestart">Điểm khởi hành</label>
@@ -351,7 +351,7 @@
                             <c:when test="${not empty startDateTour}">
                                 <c:forEach var="dateTour" items="${startDateTour}" varStatus="status">
                                     <div class="date-input-group" id="dateGroup${status.index + 1}">
-                                        <input type="date" name="departureDate${status.index + 1}" min="${tomorrowDate}" 
+                                        <input type="date" name="departureDate${status.index + 1}" min="${dateTour.startDate}" 
                                                value="${dateTour.startDate}"/>
                                         <button type="button" class="remove-date-btn" 
                                                 onclick="removeDepartureDate(${status.index + 1})" >✕</button>
@@ -372,14 +372,22 @@
                     <button type="button" onclick="addDepartureDate()">+ Thêm ngày</button>
 
 
-                    <!-- (Chỉ trích đoạn liên quan đến ảnh, các phần khác giữ như cũ) -->
+                    <!-- liên quan đến ảnh -->
                     <label for="imgCover">Ảnh đại diện tour</label>
                     <input type="file" name="imgCover" id="imgCover" accept="image/*" onchange="previewCoverImage(this)" ${empty requestScope.tourTicket ? 'required' : ''}/>
 
-                    <c:if test="${not empty requestScope.tourTicket.img_Tour}">
+                    <c:if test="${not empty requestScope.tourTicket}">
+                        <input type="hidden" name="keepOldCoverImage" id="keepOldCoverImage" value="true"/>
+                        <input type="hidden" name="oldImgCover" value="${requestScope.tourTicket.img_Tour}"/>
+
+                        <!-- Lưu danh sách ảnh gallery cũ -->
+                        <c:forEach var="image" items="${requestScope.ticketImgDetail}" varStatus="status">
+                            <input type="hidden" name="oldImgGallery" value="${image.imgUrl}" />
+                        </c:forEach>
+                        <input type="hidden" name="keepOldGalleryImages" id="keepOldGalleryImages" value="true"/>
                         <div id="coverImagePreview" class="image-preview">
                             <div class="image-item">
-                                <img src="${requestScope.tourTicket.img_Tour}" alt="Ảnh đại diện">
+                                <img src="assets/images/${requestScope.tourTicket.img_Tour}" alt="Ảnh đại diện">
                                 <div class="preview-label">${requestScope.tourTicket.img_Tour}</div>
                             </div>
                         </div>
@@ -393,7 +401,7 @@
                         <c:if test="${not empty requestScope.ticketImgDetail}">
                             <c:forEach var="image" items="${requestScope.ticketImgDetail}">
                                 <div class="image-item">
-                                    <img src="${image}" alt="Gallery Image"/>
+                                    <img src="assets/images/imgticket/${image.imgUrl}" alt="Gallery Image"/>
                                     <div class="preview-label">${image}</div>
                                 </div>
                                 <input type="hidden" name="oldImgGallery" value="${image}" />

@@ -20,7 +20,9 @@ import java.util.logging.Logger;
  * @author MSI PC
  */
 public class StartDateDAO implements IDAO<StartDateDTO, String>{
-
+    private final String DELETE_QUERY = "DELETE FROM dbo.TicketImgs  WHERE idTourTicket = ?";
+    private final String INSERT_QUERY = "DELETE FROM dbo.TicketImgs  WHERE idTourTicket = ?";
+    
     @Override
     public boolean create(StartDateDTO entity) {
         return false;
@@ -119,6 +121,15 @@ public class StartDateDAO implements IDAO<StartDateDTO, String>{
             Logger.getLogger(PlacesDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
+    }
+
+    public boolean deleteByTourId(String tourId) {
+        
+        return false;
+    }
+
+    public void deleteByTourId(String tourId, String startDate) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
     
     
