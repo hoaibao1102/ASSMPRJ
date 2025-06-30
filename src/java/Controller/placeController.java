@@ -71,6 +71,8 @@ public class placeController extends HttpServlet {
         String action = request.getParameter("action");
         String url = URL;
 
+        
+        System.out.println("==> action: " + action);
         try {
             if (action.equals("destination")) {
                 // Gọi hàm getFeaturedPlaces để lấy danh sách địa điểm và gán vào request
@@ -93,13 +95,13 @@ public class placeController extends HttpServlet {
 
                     //Lay ra mo ta cua tung noi 
                     String discriptionPlaces = pdao.readByName(location).getDescription();
-                    System.out.println("vào thành công");
+
                     for (int i = 0; i < tour.size(); i++) {
                         // lấy ra các ngày đi 
                         List<StartDateDTO> startDateTour = stdDAO.search(tour.get(i).getIdTourTicket());
                         request.setAttribute("startDateTour" + (i + 1), startDateTour);
                     }
-                    System.out.println("vào thành công");
+                    
                     request.setAttribute("discriptionPlaces", discriptionPlaces);
                     request.setAttribute("tourList", tour);
                     url = "TourTicketForm.jsp";
@@ -221,6 +223,7 @@ public class placeController extends HttpServlet {
                 url = "placeController?action=takeListTicket&location=" + nameOfDestination;
             } //            lấy dữ liệu từ form createTicketForm để sử lý và update dữ liệu xuống database
             else if (action.equals("submitUpdateTour")) {
+                System.out.println("vào roi ma oi");
                 TourTicketDAO ttdao = new TourTicketDAO();
                 TicketImgDAO tidao = new TicketImgDAO();
                 TicketDayDetailDAO tdddao = new TicketDayDetailDAO();
@@ -268,7 +271,11 @@ public class placeController extends HttpServlet {
 
                     // ===== LẤY DỮ LIỆU IMAGES =====
                     String imgCoverPart = request.getParameter("imgCover");
-
+                    if(imgCoverPart == null){
+                        System.out.println("khong có");
+                    }else {
+                        System.out.println("co");
+                    }
 
                     // Lấy gallery images 
 //                    String[] ImgGallery = request.getParameterValues("imgGallery");

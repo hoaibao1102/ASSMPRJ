@@ -248,14 +248,11 @@
                 </c:choose>
             </h2>
 
-<<<<<<< Updated upstream
-            <form action="placeController" method="post" enctype="multipart/form-data" onsubmit="prepareFormSubmission()">
-=======
-            <form action="placeController" method="get" enctype="multipart/form-data">
->>>>>>> Stashed changes
+
+            <form action="placeController" method="post" onsubmit="prepareFormSubmission()">
+
                 <!-- Xác định action dựa trên việc có tourTicket hay không -->
-                <input type="hidden" name="action" 
-                       value="${not empty requestScope.tourTicket ? 'submitUpdateTour' : 'submitAddTour'}"/>
+                <input type="hidden" name="action" value="${not empty requestScope.tourTicket ? 'submitUpdateTour' : 'submitAddTour'}"/>
 
                 <!-- Nếu là update, cần có ID -->
                 <c:if test="${not empty requestScope.tourTicket}">
@@ -373,7 +370,7 @@
                     </div>
                     <button type="button" onclick="addDepartureDate()">+ Thêm ngày</button>
 
-                    
+
                     <!-- liên quan đến ảnh -->
                     <label for="imgCover">Ảnh đại diện tour</label>
                     <input type="hidden" id="imgCover" name="imgCover" value="${not empty requestScope.tourTicket ? tourTicket.img_Tour : ''}"  >
@@ -390,55 +387,40 @@
 
                         <div class="image-preview" id="imagePreview">
                             <c:if test="${not empty requestScope.tourTicket}">
-                               <img src="${tourTicket.img_Tour}" alt="${tourTicket.nametour}"/> 
+                                <img src="${tourTicket.img_Tour}" alt="${tourTicket.nametour}"/> 
                             </c:if>
-                            
-                            
-                            
                         </div>
                     </div>
-                    
-                    
-<!--                    <label for="imgCover">Ảnh đại diện tour</label>
-                    
-                    
-                    <label for="imgCover">Ảnh đại diện tour</label>
-                    <input type="file" name="imgCover" id="imgCover" accept="image/*" onchange="previewCoverImage(this)" ${empty requestScope.tourTicket ? 'required' : ''}/>
-
-                    <c:if test="${not empty requestScope.tourTicket}">
-                        <input type="hidden" name="keepOldCoverImage" id="keepOldCoverImage" value="true"/>
-                        <input type="hidden" name="oldImgCover" value="${requestScope.tourTicket.img_Tour}"/>
-
-                         Lưu danh sách ảnh gallery cũ 
-                        <c:forEach var="image" items="${requestScope.ticketImgDetail}" varStatus="status">
-                            <input type="hidden" name="oldImgGallery" value="${image.imgUrl}" />
-                        </c:forEach>
-                        <input type="hidden" name="keepOldGalleryImages" id="keepOldGalleryImages" value="true"/>
-                        <div id="coverImagePreview" class="image-preview">
-                            <div class="image-item">
-                                <img src="assets/images/${requestScope.tourTicket.img_Tour}" alt="Ảnh đại diện">
-                                <div class="preview-label">${requestScope.tourTicket.img_Tour}</div>
-                            </div>
-                        </div>
-                        <input type="hidden" name="oldImgCover" value="${requestScope.tourTicket.img_Tour}"/>
-                    </c:if>
 
                     <label for="imgGallery">Ảnh liên quan đến tour (tối đa 10 ảnh)</label>
                     <input type="file" name="imgGallery" id="imgGallery" accept="image/*" multiple onchange="previewGalleryImages(this)"/>
 
                     <div id="galleryImagePreview" class="image-preview">
-                        <c:if test="${not empty requestScope.ticketImgDetail}">
-                            <c:forEach var="image" items="${requestScope.ticketImgDetail}">
-                                <div class="image-item">
-                                    <img src="assets/images/imgticket/${image.imgUrl}" alt="Gallery Image"/>
-                                    <div class="preview-label">${image}</div>
-                                </div>
-                                <input type="hidden" name="oldImgGallery" value="${image}" />
-                            </c:forEach>
-                        </c:if>
-                    </div>-->
+                        <div class="file-upload-wrapper">
+                            <button type="button" class="file-upload-button">Chọn ảnh</button>
+                            <input type="file" id="imageUpload" class="file-upload-input" accept="image/*"/ >
+                        </div>
 
+                        <div class="progress-bar-container" id="progressContainer" style="display:none;">
+                            <div class="progress-bar" id="progressBar"></div>
+                        </div>
 
+                        <div class="image-preview" id="imagePreview">
+                            <c:if test="${not empty requestScope.tourTicket}">
+                                <img src="${tourTicket.img_Tour}" alt="${tourTicket.nametour}"/> 
+                            </c:if>
+                            <c:if test="${not empty requestScope.ticketImgDetail}">
+                                <c:forEach var="image" items="${requestScope.ticketImgDetail}">
+                                    <div class="image-item">
+                                        <img src="assets/images/imgticket/${image.imgUrl}" alt="Gallery Image"/>
+                                        <div class="preview-label">${image}</div>
+                                    </div>
+                                    <input type="hidden" name="oldImgGallery" value="${image}" />
+                                </c:forEach>
+                            </c:if>
+                        </div>
+                    </div>
+                    
 
                     <div class="form-buttons">
                         <input type="submit" 
@@ -449,29 +431,29 @@
                 </fieldset>
             </form>
         </div>
-              
-                        
-                        
-                        
+
+
+
+
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
         <script>
-            //xử lý các ô cập nhật mô tả và buổi dựa vào select trên thời gian
-            // Cập nhật chi tiết ngày dựa trên số ngày được chọn
-            function updateDayDetails(duration) {
-                const dayCount = parseInt(duration);
-                const dayDetailsContainer = document.getElementById('dayDetails');
+                        //xử lý các ô cập nhật mô tả và buổi dựa vào select trên thời gian
+                        // Cập nhật chi tiết ngày dựa trên số ngày được chọn
+                        function updateDayDetails(duration) {
+                            const dayCount = parseInt(duration);
+                            const dayDetailsContainer = document.getElementById('dayDetails');
 
-                // Chỉ cập nhật khi tạo mới (không có tourTicket)
-                const isUpdate = ${not empty requestScope.tourTicket ? 'true' : 'false'};
-                if (isUpdate)
-                    return;
+                            // Chỉ cập nhật khi tạo mới (không có tourTicket)
+                            const isUpdate = ${not empty requestScope.tourTicket ? 'true' : 'false'};
+                            if (isUpdate)
+                                return;
 
-                dayDetailsContainer.innerHTML = '';
-                if (!dayCount || dayCount < 1)
-                    return;
+                            dayDetailsContainer.innerHTML = '';
+                            if (!dayCount || dayCount < 1)
+                                return;
 
-                for (let i = 1; i <= dayCount; i++) {
-                    const dayDetailHTML = `
+                            for (let i = 1; i <= dayCount; i++) {
+                                const dayDetailHTML = `
                         <div class="day-details">
                             <div><b>Ngày \${i}</b></div>
                             <label for="Description_\${i}">Mô tả chung:</label>
@@ -484,33 +466,33 @@
                             <textarea name="eveningDescription_\${i}" id="eveningDescription_\${i}">Chưa có thông tin</textarea>
                         </div>
                     `;
-                    dayDetailsContainer.insertAdjacentHTML('beforeend', dayDetailHTML);
-                }
-            }
+                                dayDetailsContainer.insertAdjacentHTML('beforeend', dayDetailHTML);
+                            }
+                        }
 
-            // Tạo ngày hiện tại cho JavaScript
-            const tomorrow = new Date();
-            tomorrow.setDate(tomorrow.getDate() + 1);
-            const tomorrowStr = tomorrow.toISOString().split('T')[0];
-            // Biến lưu trữ files đã chọn cho gallery
-            let selectedGalleryFiles = [];
-            // Thêm ngày xuất phát
+                        // Tạo ngày hiện tại cho JavaScript
+                        const tomorrow = new Date();
+                        tomorrow.setDate(tomorrow.getDate() + 1);
+                        const tomorrowStr = tomorrow.toISOString().split('T')[0];
+                        // Biến lưu trữ files đã chọn cho gallery
+                        let selectedGalleryFiles = [];
+                        // Thêm ngày xuất phát
 
-            function addDepartureDate() {
-                const container = document.getElementById('departureDatesContainer');
-                const dateGroups = container.querySelectorAll('.date-input-group');
+                        function addDepartureDate() {
+                            const container = document.getElementById('departureDatesContainer');
+                            const dateGroups = container.querySelectorAll('.date-input-group');
 
-                if (dateGroups.length < 3) {
-                    const tomorrow = new Date();
-                    tomorrow.setDate(tomorrow.getDate() + 1);
-                    const tomorrowStr = tomorrow.toISOString().split('T')[0];
+                            if (dateGroups.length < 3) {
+                                const tomorrow = new Date();
+                                tomorrow.setDate(tomorrow.getDate() + 1);
+                                const tomorrowStr = tomorrow.toISOString().split('T')[0];
 
-                    const groupIndex = dateGroups.length + 1;
-                    const newDateGroup = document.createElement('div');
-                    newDateGroup.className = 'date-input-group';
-                    newDateGroup.id = `dateGroup${groupIndex}`;
+                                const groupIndex = dateGroups.length + 1;
+                                const newDateGroup = document.createElement('div');
+                                newDateGroup.className = 'date-input-group';
+                                newDateGroup.id = `dateGroup${groupIndex}`;
 
-                    newDateGroup.innerHTML = `
+                                newDateGroup.innerHTML = `
                     <input type="date" name="departureDate\${groupIndex}" 
                     id="departureDate\${groupIndex}" 
                     required min="\${tomorrowStr}"/>
@@ -518,121 +500,121 @@
                     onclick="removeDepartureDate(\${groupIndex})">✕</button>
         `;
 
-                    container.appendChild(newDateGroup);
-                    updateRemoveButtons();
-                }
-            }
-
-            // Xóa ngày xuất phát
-            function removeDepartureDate(index) {
-                const dateGroup = document.getElementById(`dateGroup${index}`);
-                if (dateGroup) {
-                    dateGroup.remove();           // Xóa element
-                    reorderDateInputs();          // Sắp xếp lại thứ tự
-                    updateRemoveButtons();        // Cập nhật nút xóa
-                }
-            }
-
-            // Sắp xếp lại thứ tự các input sau khi xóa
-            function reorderDateInputs() {
-                const container = document.getElementById('departureDatesContainer');
-                const dateGroups = container.querySelectorAll('.date-input-group');
-
-                dateGroups.forEach((group, index) => {
-                    const newIndex = index + 1;
-                    group.id = `dateGroup${newIndex}`;
-
-                    const input = group.querySelector('input[type="date"]');
-                    input.name = `departureDate${newIndex}`;
-                    input.id = `departureDate${newIndex}`;
-
-                    const removeBtn = group.querySelector('.remove-date-btn');
-                    removeBtn.setAttribute('onclick', `removeDepartureDate(${newIndex})`);
-                });
-            }
-
-            function updateRemoveButtons() {
-                const container = document.getElementById('departureDatesContainer');
-                const dateGroups = container.querySelectorAll('.date-input-group');
-                const removeButtons = container.querySelectorAll('.remove-date-btn');
-
-                // Hiện/ẩn nút xóa dựa trên số lượng ngày
-                removeButtons.forEach(btn => {
-                    btn.style.display = dateGroups.length > 1 ? 'flex' : 'none';
-                });
-            }
-
-            // Tự động cập nhật chi tiết ngày khi trang được load (chỉ khi tạo mới)
-            window.onload = function () {
-                const durationSelect = document.getElementById('duration');
-                const isUpdate = ${not empty requestScope.tourTicket ? 'true' : 'false'};
-
-                if (!isUpdate && durationSelect.value) {
-                    updateDayDetails(durationSelect.value);
-                }
-
-                // Cập nhật trạng thái nút xóa dkhi trang load
-                updateRemoveButtons();
-            };
-
-
-
-            $(document).ready(function () {
-                $('#imageUpload').change(function () {
-                    const file = this.files[0];
-                    if (file) {
-                        if (!file.type.match('image.*')) {
-                            alert('Chỉ chấp nhận định dạng ảnh!');
-                            this.value = '';
-                            $('#fileInfo').text('Chưa chọn file');
-                            return;
+                                container.appendChild(newDateGroup);
+                                updateRemoveButtons();
+                            }
                         }
 
-                        const fileSize = (file.size / 1024).toFixed(2) + ' KB';
-                        $('#fileInfo').text(file.name + ' (' + fileSize + ')');
-                        $('#progressContainer').show();
-
-                        const reader = new FileReader();
-                        reader.onprogress = function (e) {
-                            if (e.lengthComputable) {
-                                const percent = Math.round((e.loaded / e.total) * 100);
-                                $('#progressBar').css('width', percent + '%');
+                        // Xóa ngày xuất phát
+                        function removeDepartureDate(index) {
+                            const dateGroup = document.getElementById(`dateGroup${index}`);
+                            if (dateGroup) {
+                                dateGroup.remove();           // Xóa element
+                                reorderDateInputs();          // Sắp xếp lại thứ tự
+                                updateRemoveButtons();        // Cập nhật nút xóa
                             }
+                        }
+
+                        // Sắp xếp lại thứ tự các input sau khi xóa
+                        function reorderDateInputs() {
+                            const container = document.getElementById('departureDatesContainer');
+                            const dateGroups = container.querySelectorAll('.date-input-group');
+
+                            dateGroups.forEach((group, index) => {
+                                const newIndex = index + 1;
+                                group.id = `dateGroup${newIndex}`;
+
+                                const input = group.querySelector('input[type="date"]');
+                                input.name = `departureDate${newIndex}`;
+                                input.id = `departureDate${newIndex}`;
+
+                                const removeBtn = group.querySelector('.remove-date-btn');
+                                removeBtn.setAttribute('onclick', `removeDepartureDate(${newIndex})`);
+                            });
+                        }
+
+                        function updateRemoveButtons() {
+                            const container = document.getElementById('departureDatesContainer');
+                            const dateGroups = container.querySelectorAll('.date-input-group');
+                            const removeButtons = container.querySelectorAll('.remove-date-btn');
+
+                            // Hiện/ẩn nút xóa dựa trên số lượng ngày
+                            removeButtons.forEach(btn => {
+                                btn.style.display = dateGroups.length > 1 ? 'flex' : 'none';
+                            });
+                        }
+
+                        // Tự động cập nhật chi tiết ngày khi trang được load (chỉ khi tạo mới)
+                        window.onload = function () {
+                            const durationSelect = document.getElementById('duration');
+                            const isUpdate = ${not empty requestScope.tourTicket ? 'true' : 'false'};
+
+                            if (!isUpdate && durationSelect.value) {
+                                updateDayDetails(durationSelect.value);
+                            }
+
+                            // Cập nhật trạng thái nút xóa dkhi trang load
+                            updateRemoveButtons();
                         };
 
-                        reader.onload = function (e) {
-                            $('#progressBar').css('width', '100%');
-                            $('#imgCover').val(e.target.result);
-                            $('#imagePreview').html('<img src="' + e.target.result + '" alt="Preview">');
-                            setTimeout(() => {
+
+
+                        $(document).ready(function () {
+                            $('#imageUpload').change(function () {
+                                const file = this.files[0];
+                                if (file) {
+                                    if (!file.type.match('image.*')) {
+                                        alert('Chỉ chấp nhận định dạng ảnh!');
+                                        this.value = '';
+                                        $('#fileInfo').text('Chưa chọn file');
+                                        return;
+                                    }
+
+                                    const fileSize = (file.size / 1024).toFixed(2) + ' KB';
+                                    $('#fileInfo').text(file.name + ' (' + fileSize + ')');
+                                    $('#progressContainer').show();
+
+                                    const reader = new FileReader();
+                                    reader.onprogress = function (e) {
+                                        if (e.lengthComputable) {
+                                            const percent = Math.round((e.loaded / e.total) * 100);
+                                            $('#progressBar').css('width', percent + '%');
+                                        }
+                                    };
+
+                                    reader.onload = function (e) {
+                                        $('#progressBar').css('width', '100%');
+                                        $('#imgCover').val(e.target.result);
+                                        $('#imagePreview').html('<img src="' + e.target.result + '" alt="Preview">');
+                                        setTimeout(() => {
+                                            $('#progressContainer').hide();
+                                            $('#progressBar').css('width', '0%');
+                                        }, 1000);
+                                    };
+
+                                    reader.onerror = function () {
+                                        alert('Lỗi khi đọc file.');
+                                        $('#progressContainer').hide();
+                                        $('#progressBar').css('width', '0%');
+                                        $('#fileInfo').text('Chưa chọn file');
+                                    };
+
+                                    reader.readAsDataURL(file);
+                                } else {
+                                    $('#fileInfo').text('Chưa chọn file');
+                                }
+                            });
+
+                            $('#resetBtn').click(function () {
+                                $('#imagePreview').empty();
+                                $('#fileInfo').text('Chưa chọn file');
+                                $('#imgCover').val('');
                                 $('#progressContainer').hide();
                                 $('#progressBar').css('width', '0%');
-                            }, 1000);
-                        };
+                            });
+                        });
 
-                        reader.onerror = function () {
-                            alert('Lỗi khi đọc file.');
-                            $('#progressContainer').hide();
-                            $('#progressBar').css('width', '0%');
-                            $('#fileInfo').text('Chưa chọn file');
-                        };
 
-                        reader.readAsDataURL(file);
-                    } else {
-                        $('#fileInfo').text('Chưa chọn file');
-                    }
-                });
-
-                $('#resetBtn').click(function () {
-                    $('#imagePreview').empty();
-                    $('#fileInfo').text('Chưa chọn file');
-                    $('#imgCover').val('');
-                    $('#progressContainer').hide();
-                    $('#progressBar').css('width', '0%');
-                });
-            });
-            
-            
 
 
 
