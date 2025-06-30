@@ -271,7 +271,7 @@ public class placeController extends HttpServlet {
 
 
                     // Lấy gallery images 
-                    String[] ImgGallery = request.getParameterValues("imgGallery");
+//                    String[] ImgGallery = request.getParameterValues("imgGallery");
 
                     // ===== CẬP NHẬT DATABASE =====
                     // 1. Cập nhật bảng TourTicket
@@ -286,10 +286,10 @@ public class placeController extends HttpServlet {
                     // Xóa ảnh cũ trước khi thêm mới
                     tidao.deleteByTourId(tourId); 
 
-                    for (int i = 0; i < ImgGallery.length; i++) {
-                        TicketImgDTO tidto = new TicketImgDTO(tourId, i + 1, ImgGallery[i]);
-                        boolean isCreateImg = tidao.create(tidto);
-                    }
+//                    for (int i = 0; i < ImgGallery.length; i++) {
+//                        TicketImgDTO tidto = new TicketImgDTO(tourId, i + 1, ImgGallery[i]);
+//                        boolean isCreateImg = tidao.create(tidto);
+//                    }
 
                     // 3. Cập nhật bảng TicketDayDetails
                     for (int i = 0; i < duration; i++) {
