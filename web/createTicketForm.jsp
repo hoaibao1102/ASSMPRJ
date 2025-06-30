@@ -353,8 +353,8 @@
                                     <div class="date-input-group" id="dateGroup${status.index + 1}">
                                         <input type="date" name="departureDate${status.index + 1}" min="${dateTour.startDate}" 
                                                value="${dateTour.startDate}"/>
-                                        <button type="button" class="remove-date-btn" 
-                                                onclick="removeDepartureDate(${status.index + 1})" >✕</button>
+<!--                                        <button type="button" class="remove-date-btn" 
+                                                onclick="removeDepartureDate(${status.index + 1})" >✕</button>-->
                                     </div>
                                 </c:forEach>
                             </c:when>
