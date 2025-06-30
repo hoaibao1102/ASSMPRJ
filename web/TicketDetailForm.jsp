@@ -445,6 +445,60 @@
                 color: #2c3e50; /* màu đậm hơn, font bold */
                 font-weight: 700;
             }
+
+            /*css phan mo ta*/
+            /* Style cho các button (tiêu đề mở rộng) */
+            .accordion {
+                background-color: #2980b9;
+                color: white;
+                padding: 10px 20px;
+                width: 100%;
+                text-align: left;
+                border: none;
+                outline: none;
+                cursor: pointer;
+                font-size: 16px;
+                margin-bottom: 5px;
+                border-radius: 6px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                transition: background-color 0.3s;
+            }
+
+            /* Hiệu ứng khi hover */
+            .accordion:hover {
+                background-color: #3498db;
+            }
+
+            /* Mũi tên */
+            .toggle-icon {
+                font-size: 18px;
+                transition: transform 0.3s ease;
+            }
+
+            /* Panel nội dung (ẩn theo mặc định và có hiệu ứng mở rộng/thu nhỏ) */
+            .panel {
+                padding: 0 18px;
+                display: block;
+                max-height: 0;
+                overflow: hidden;
+                background-color: #f1f1f1;
+                margin-bottom: 10px;
+                border-radius: 6px;
+                transition: max-height 0.3s ease-out;
+            }
+
+            /* Khi panel mở rộng, sử dụng max-height lớn */
+            .panel.open {
+                max-height: 500px; /* Điều chỉnh theo nội dung */
+            }
+
+            /* Chỉnh sửa mũi tên khi mở/đóng */
+            .accordion.active .toggle-icon {
+                transform: rotate(180deg);
+            }
+
         </style>
     </head>
     <body class="<%= AuthUtils.isAdmin(session)? "admin-layout" : "" %>">
@@ -506,25 +560,30 @@
                                 </div>
                             </div>
                             <div>
-                                <% for (TicketDayDetailDTO i : listDayDetail) {
-                                       %>
-                                       <h3><%=i.getDescription()%></h3>
-                                       <h3>Buổi sáng</h3>
-                                       <p><%=i.getMorning()%></p>
-                                       <h3>Buổi chiều</h3>
-                                       <p><%=i.getAfternoon() %></p>
-                                       <h3>Buổi tối</h3>
-                                       <p><%=i.getEvening()%></p>
-                                       <%
-                                   }
-                                %>
+                                <% for (TicketDayDetailDTO i : listDayDetail) { %>
+                                <button class="accordion">
+                                    <span class="accordion-title"><%= i.getDescription() %></span>
+                                    <span class="toggle-icon">&#x2193;</span>
+                                </button>
+                                <div class="panel">
+                                    <h3>Buổi sáng</h3>
+                                    <p><%= i.getMorning() %></p>
+                                    <h3>Buổi chiều</h3>
+                                    <p><%= i.getAfternoon() %></p>
+                                    <h3>Buổi tối</h3>
+                                    <p><%= i.getEvening() %></p>
+                                </div>
+                                <% } %>
                             </div>
+
                             <% } else { %>
                             <p>Không tìm thấy thông tin chi tiết cho tour này.</p>
                             <% } %>
                         </div>
 
                         <!--///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+                        <% if(!AuthUtils.isAdmin(session)){
+                        %>
                         <div class="right-content">
                             <div class="price">
                                 <span class="label">Giá:</span>
@@ -570,6 +629,10 @@
                                 <button class="btn-outline">💬 Liên hệ tư vấn</button>
                             </div>
                         </div>
+                        <%
+                    }
+                        %>
+
                     </div>
                 </div>
             </div>
@@ -664,6 +727,22 @@
             });
         }
 
+        document.addEventListener("DOMContentLoaded", function () {
+            var acc = document.getElementsByClassName("accordion");
+            for (var i = 0; i < acc.length; i++) {
+                acc[i].addEventListener("click", function () {
+                    // Toggle mũi tên
+                    this.classList.toggle("active");
+
+                    var panel = this.nextElementSibling;
+                    if (panel.style.maxHeight) {
+                        panel.style.maxHeight = null;
+                    } else {
+                        panel.style.maxHeight = panel.scrollHeight + "px"; // Để đảm bảo hiệu ứng mở rộng chính xác
+                    }
+                });
+            }
+        });
 
     </script>
 </html>

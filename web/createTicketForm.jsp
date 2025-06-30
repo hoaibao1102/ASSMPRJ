@@ -248,7 +248,11 @@
                 </c:choose>
             </h2>
 
+<<<<<<< Updated upstream
             <form action="placeController" method="post" enctype="multipart/form-data" onsubmit="prepareFormSubmission()">
+=======
+            <form action="placeController" method="get" enctype="multipart/form-data">
+>>>>>>> Stashed changes
                 <!-- Xác định action dựa trên việc có tourTicket hay không -->
                 <input type="hidden" name="action" 
                        value="${not empty requestScope.tourTicket ? 'submitUpdateTour' : 'submitAddTour'}"/>
