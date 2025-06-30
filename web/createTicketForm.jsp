@@ -248,7 +248,7 @@
                 </c:choose>
             </h2>
 
-            <form action="placeController" method="get" method="post" enctype="multipart/form-data" onsubmit="prepareFormSubmission()">
+            <form action="placeController" method="post" enctype="multipart/form-data" onsubmit="prepareFormSubmission()">
                 <!-- Xác định action dựa trên việc có tourTicket hay không -->
                 <input type="hidden" name="action" 
                        value="${not empty requestScope.tourTicket ? 'submitUpdateTour' : 'submitAddTour'}"/>
@@ -353,8 +353,6 @@
                                     <div class="date-input-group" id="dateGroup${status.index + 1}">
                                         <input type="date" name="departureDate${status.index + 1}" min="${dateTour.startDate}" 
                                                value="${dateTour.startDate}"/>
-<!--                                        <button type="button" class="remove-date-btn" 
-                                                onclick="removeDepartureDate(${status.index + 1})" >✕</button>-->
                                     </div>
                                 </c:forEach>
                             </c:when>
@@ -371,8 +369,35 @@
                     </div>
                     <button type="button" onclick="addDepartureDate()">+ Thêm ngày</button>
 
-
+                    
                     <!-- liên quan đến ảnh -->
+                    <label for="imgCover">Ảnh đại diện tour</label>
+                    <input type="hidden" id="imgCover" name="imgCover" value="${not empty requestScope.tourTicket ? tourTicket.img_Tour : ''}"  >
+
+                    <div class="upload-container">
+                        <div class="file-upload-wrapper">
+                            <button type="button" class="file-upload-button">Chọn ảnh</button>
+                            <input type="file" id="imageUpload" class="file-upload-input" accept="image/*"/ >
+                        </div>
+
+                        <div class="progress-bar-container" id="progressContainer" style="display:none;">
+                            <div class="progress-bar" id="progressBar"></div>
+                        </div>
+
+                        <div class="image-preview" id="imagePreview">
+                            <c:if test="${not empty requestScope.tourTicket}">
+                               <img src="${tourTicket.img_Tour}" alt="${tourTicket.nametour}"/> 
+                            </c:if>
+                            
+                            
+                            
+                        </div>
+                    </div>
+                    
+                    
+<!--                    <label for="imgCover">Ảnh đại diện tour</label>
+                    
+                    
                     <label for="imgCover">Ảnh đại diện tour</label>
                     <input type="file" name="imgCover" id="imgCover" accept="image/*" onchange="previewCoverImage(this)" ${empty requestScope.tourTicket ? 'required' : ''}/>
 
@@ -380,7 +405,7 @@
                         <input type="hidden" name="keepOldCoverImage" id="keepOldCoverImage" value="true"/>
                         <input type="hidden" name="oldImgCover" value="${requestScope.tourTicket.img_Tour}"/>
 
-                        <!-- Lưu danh sách ảnh gallery cũ -->
+                         Lưu danh sách ảnh gallery cũ 
                         <c:forEach var="image" items="${requestScope.ticketImgDetail}" varStatus="status">
                             <input type="hidden" name="oldImgGallery" value="${image.imgUrl}" />
                         </c:forEach>
@@ -407,7 +432,7 @@
                                 <input type="hidden" name="oldImgGallery" value="${image}" />
                             </c:forEach>
                         </c:if>
-                    </div>
+                    </div>-->
 
 
 
@@ -420,7 +445,11 @@
                 </fieldset>
             </form>
         </div>
-
+              
+                        
+                        
+                        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
         <script>
             //xử lý các ô cập nhật mô tả và buổi dựa vào select trên thời gian
             // Cập nhật chi tiết ngày dựa trên số ngày được chọn
@@ -544,162 +573,62 @@
 
 
 
-
-            // Preview ảnh đại diện (chỉ 1 ảnh)
-            function previewCoverImage(input) {
-                const preview = document.getElementById('coverImagePreview');
-                preview.innerHTML = '';
-
-                if (input.files && input.files[0]) {
-                    const file = input.files[0];
-
-                    // Kiểm tra kích thước file (tối đa 5MB)
-                    if (file.size > 5 * 1024 * 1024) {
-                        alert('Kích thước ảnh không được vượt quá 5MB!');
-                        input.value = '';
-                        preview.classList.add('empty');
-                        return;
-                    }
-
-                    // Kiểm tra định dạng file
-                    if (!file.type.startsWith('image/')) {
-                        alert('Vui lòng chọn file ảnh hợp lệ!');
-                        input.value = '';
-                        preview.classList.add('empty');
-                        return;
-                    }
-
-                    const reader = new FileReader();
-                    reader.onload = function (e) {
-                        const imageItem = document.createElement('div');
-                        imageItem.className = 'image-item';
-
-                        imageItem.innerHTML = `
-                            <img src="\${e.target.result}" alt="Cover Preview"/>
-                            <button type="button" class="image-remove-btn" onclick="removeCoverImage()" title="Xóa ảnh">✕</button>
-                            <div class="preview-label">\${file.name}</div>
-                        `;
-
-                        preview.appendChild(imageItem);
-                        preview.classList.remove('empty');
-                    };
-                    reader.readAsDataURL(file);
-                } else {
-                    preview.classList.add('empty');
-                }
-            }
-
-            // Xóa ảnh đại diện
-            function removeCoverImage() {
-                const input = document.getElementById('imgCover');
-                const preview = document.getElementById('coverImagePreview');
-
-                input.value = '';
-                preview.innerHTML = '';
-                preview.classList.add('empty');
-            }
-
-            // Preview ảnh gallery (nhiều ảnh)
-            function previewGalleryImages(input) {
-                const preview = document.getElementById('galleryImagePreview');
-
-                if (input.files && input.files.length > 0) {
-                    // Thêm files mới vào danh sách đã có
-                    const newFiles = Array.from(input.files);
-
-                    // Kiểm tra tổng số ảnh (tối đa 10 ảnh)
-                    if (selectedGalleryFiles.length + newFiles.length > 10) {
-                        alert('Chỉ được chọn tối đa 10 ảnh cho gallery!');
-                        input.value = '';
-                        return;
-                    }
-
-                    // Kiểm tra từng file
-                    for (let file of newFiles) {
-                        // Kiểm tra kích thước
-                        if (file.size > 5 * 1024 * 1024) {
-                            alert(`Ảnh "\${file.name}" có kích thước quá lớn (tối đa 5MB)!`);
-                            input.value = '';
+            $(document).ready(function () {
+                $('#imageUpload').change(function () {
+                    const file = this.files[0];
+                    if (file) {
+                        if (!file.type.match('image.*')) {
+                            alert('Chỉ chấp nhận định dạng ảnh!');
+                            this.value = '';
+                            $('#fileInfo').text('Chưa chọn file');
                             return;
                         }
 
-                        // Kiểm tra định dạng
-                        if (!file.type.startsWith('image/')) {
-                            alert(`File "\${file.name}" không phải là ảnh hợp lệ!`);
-                            input.value = '';
-                            return;
-                        }
+                        const fileSize = (file.size / 1024).toFixed(2) + ' KB';
+                        $('#fileInfo').text(file.name + ' (' + fileSize + ')');
+                        $('#progressContainer').show();
 
-                        // Kiểm tra trùng lặp
-                        const isDuplicate = selectedGalleryFiles.some(existingFile =>
-                            existingFile.name === file.name && existingFile.size === file.size
-                        );
+                        const reader = new FileReader();
+                        reader.onprogress = function (e) {
+                            if (e.lengthComputable) {
+                                const percent = Math.round((e.loaded / e.total) * 100);
+                                $('#progressBar').css('width', percent + '%');
+                            }
+                        };
 
-                        if (!isDuplicate) {
-                            selectedGalleryFiles.push(file);
-                        }
+                        reader.onload = function (e) {
+                            $('#progressBar').css('width', '100%');
+                            $('#imgCover').val(e.target.result);
+                            $('#imagePreview').html('<img src="' + e.target.result + '" alt="Preview">');
+                            setTimeout(() => {
+                                $('#progressContainer').hide();
+                                $('#progressBar').css('width', '0%');
+                            }, 1000);
+                        };
+
+                        reader.onerror = function () {
+                            alert('Lỗi khi đọc file.');
+                            $('#progressContainer').hide();
+                            $('#progressBar').css('width', '0%');
+                            $('#fileInfo').text('Chưa chọn file');
+                        };
+
+                        reader.readAsDataURL(file);
+                    } else {
+                        $('#fileInfo').text('Chưa chọn file');
                     }
-
-                    // Reset input và cập nhật preview
-                    input.value = '';
-                    updateGalleryPreview();
-                }
-            }
-
-            // Cập nhật hiển thị gallery preview
-            function updateGalleryPreview() {
-                const preview = document.getElementById('galleryImagePreview');
-                preview.innerHTML = '';
-
-                if (selectedGalleryFiles.length === 0) {
-                    preview.classList.add('empty');
-                    return;
-                }
-
-                preview.classList.remove('empty');
-
-                selectedGalleryFiles.forEach((file, index) => {
-                    const reader = new FileReader();
-                    reader.onload = function (e) {
-                        const imageItem = document.createElement('div');
-                        imageItem.className = 'image-item';
-
-                        imageItem.innerHTML = `
-                            <img src="\${e.target.result}" alt="Gallery Preview \${index + 1}"/>
-                            <button type="button" class="image-remove-btn" onclick="removeGalleryImage(\${index})" title="Xóa ảnh">✕</button>
-                            <div class="preview-label">\${file.name}</div>
-                        `;
-
-                        preview.appendChild(imageItem);
-                    };
-                    reader.readAsDataURL(file);
                 });
 
-                // Cập nhật input file với files đã chọn
-                updateGalleryInput();
-            }
-
-            // Xóa ảnh khỏi gallery
-            function removeGalleryImage(index) {
-                selectedGalleryFiles.splice(index, 1);
-                updateGalleryPreview();
-            }
-
-            // Cập nhật input file với danh sách files hiện tại
-            function updateGalleryInput() {
-                const input = document.getElementById('imgGallery');
-
-                if (selectedGalleryFiles.length > 0) {
-                    // Tạo DataTransfer object để set files cho input
-                    const dataTransfer = new DataTransfer();
-                    selectedGalleryFiles.forEach(file => {
-                        dataTransfer.items.add(file);
-                    });
-                    input.files = dataTransfer.files;
-                } else {
-                    input.value = '';
-                }
-            }
+                $('#resetBtn').click(function () {
+                    $('#imagePreview').empty();
+                    $('#fileInfo').text('Chưa chọn file');
+                    $('#imgCover').val('');
+                    $('#progressContainer').hide();
+                    $('#progressBar').css('width', '0%');
+                });
+            });
+            
+            
 
 
 
