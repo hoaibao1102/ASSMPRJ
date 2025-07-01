@@ -393,27 +393,31 @@
                     </div>
 
                     <label for="imgGallery">Ảnh liên quan đến tour (tối đa 10 ảnh)</label>
-                    <input type="file" name="imgGalleryInput" id="imgGallery" accept="image/*" multiple onchange="previewGalleryImages(this)"/>
+                    <input type="file" id="imgGalleryInput" accept="image/*" multiple onchange="previewGalleryImages(this)" />
 
-                    <div id="existingGalleryContainer" class="image-preview">
+                    <!-- Preview chung cho ảnh cũ (có thể đổi) và ảnh mới -->
+                    <div id="galleryPreviewContainer" class="image-preview">
                         <c:forEach var="image" items="${requestScope.ticketImgDetail}" varStatus="status">
                             <div class="image-item" data-index="${status.index}">
-                                <img src="assets/images/imgticket/${image.imgUrl}" id="oldImg-${status.index}" style="max-width: 100px;" />
+                                <c:choose>
+                                    <c:when test="${fn:startsWith(image,'data:image')}">
+                                        <img src="${image.imgUrl}" id="oldImg-${status.index}" />
+                                    </c:when>
+                                    <c:otherwise>
+                                        <img src="${image.imgUrl}" id="oldImg-${status.index}" />
+                                    </c:otherwise>
+                                </c:choose>
 
-                                <!-- Chọn ảnh mới để thay -->
+                                <!-- Đổi ảnh -->
                                 <input type="file" accept="image/*" style="display: none;" onchange="replaceOldImage(this, ${status.index})" />
                                 <button type="button" onclick="this.previousElementSibling.click()">Đổi ảnh</button>
 
-                                <!-- Gửi tên ảnh cũ (dùng để đối chiếu) -->
                                 <input type="hidden" name="oldImgUrl" value="${image.imgUrl}" />
-
-
-                                <!-- Sẽ chứa base64 nếu người dùng thay ảnh -->
                                 <input type="hidden" name="updatedImgGallery" id="updatedBase64-${status.index}" value="${image.imgUrl}" />
-                                
                             </div>
                         </c:forEach>
                     </div>
+
 
 
 
@@ -674,7 +678,46 @@
                                         reader.readAsDataURL(file);
                                     }
 
+                                    function previewGalleryImages(input) {
+                                        const previewContainer = document.getElementById("galleryPreviewContainer");
 
+                                        const files = input.files;
+                                        if (!files || files.length === 0)
+                                            return;
+
+                                        const currentIndex = previewContainer.children.length; // tiếp tục từ index hiện có
+
+                                        Array.from(files).forEach((file, i) => {
+                                            const reader = new FileReader();
+
+                                            reader.onload = function (e) {
+                                                const base64 = e.target.result;
+
+                                                // Tạo node ảnh
+                                                const img = document.createElement("img");
+                                                img.src = base64;
+                                                img.style.maxWidth = "100px";
+                                                img.style.margin = "5px";
+
+                                                // Tạo input hidden để gửi base64
+                                                const hiddenInput = document.createElement("input");
+                                                hiddenInput.type = "hidden";
+                                                hiddenInput.name = "newGalleryBase64";
+                                                hiddenInput.value = base64;
+
+                                                // Bọc trong div.image-item
+                                                const container = document.createElement("div");
+                                                container.className = "image-item";
+                                                container.dataset.index = currentIndex + i;
+                                                container.appendChild(img);
+                                                container.appendChild(hiddenInput);
+
+                                                previewContainer.appendChild(container);
+                                            };
+
+                                            reader.readAsDataURL(file);
+                                        });
+                                    }
 
         </script>
     </body>

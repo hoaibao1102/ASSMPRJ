@@ -267,15 +267,37 @@ public class placeController extends HttpServlet {
 
                     // ===== LẤY DỮ LIỆU IMAGES =====
                     String imgCoverPart = request.getParameter("imgCover");
-                    if (imgCoverPart == null) {
-                        System.out.println("khong có");
-                    } else {
-                        System.out.println("co");
+
+                    // Lấy các ảnh cũ và đã cập nhật (giữ nguyên hoặc base64 mới)
+                    String[] oldUrls = request.getParameterValues("oldImgUrl");
+                    String[] updatedImages = request.getParameterValues("updatedImgGallery");
+
+// Lấy các ảnh mới được thêm
+                    String[] newImages = request.getParameterValues("newGalleryBase64");
+
+// Tính kích thước tổng
+                    int lenUpdated = (updatedImages != null) ? updatedImages.length : 0;
+                    int lenNew = (newImages != null) ? newImages.length : 0;
+
+                    String[] finalImages = new String[lenUpdated + lenNew];
+
+// Gộp ảnh cũ đã xử lý
+                    if (updatedImages != null && oldUrls != null && oldUrls.length == updatedImages.length) {
+                        for (int i = 0; i < updatedImages.length; i++) {
+                            String updated = updatedImages[i];
+                            String old = oldUrls[i];
+
+                            // Nếu khác → ảnh đã đổi, nếu giống → giữ nguyên
+                            finalImages[i] = (updated != null && !updated.equals(old)) ? updated : old;
+                        }
                     }
 
-                    // Lấy gallery images 
-                    String[] oldUrls = request.getParameterValues("oldImgUrl");
-                    String[] updatedBase64s = request.getParameterValues("updatedImgGallery");
+                    // Gộp ảnh mới thêm vào sau ảnh cũ
+                    if (newImages != null) {
+                        for (int i = 0; i < newImages.length; i++) {
+                            finalImages[lenUpdated + i] = newImages[i];
+                        }
+                    }
 
                     // ===== CẬP NHẬT DATABASE =====
                     // 1. Cập nhật bảng TourTicket
@@ -290,18 +312,16 @@ public class placeController extends HttpServlet {
                     // Xóa ảnh cũ trước khi thêm mới
                     tidao.deleteByTourId(tourId);
 
-                    if (oldUrls != null && updatedBase64s != null) {
-                        for (int i = 0; i < oldUrls.length; i++) {
-                            String oldUrl = oldUrls[i];
-                            String base64 = updatedBase64s[i];
-
-                            if (base64 != null && !base64.isEmpty()) {
-                                // Người dùng đã thay ảnh cũ -> xử lý base64 mới
-                            } else {
-                                // Ảnh cũ giữ nguyên
-                            }
+                    // Lưu ảnh vào DB theo thứ tự
+                    for (int i = 0; i < finalImages.length; i++) {
+                        String imageUrl = finalImages[i];
+                        if (imageUrl != null && !imageUrl.trim().isEmpty()) {
+                            TicketImgDTO tidto = new TicketImgDTO(tourId, i + 1, imageUrl);
+                            boolean isCreateImg = tidao.create(tidto);
+                            System.out.println("Save img[" + (i + 1) + "]: " + isCreateImg);
                         }
                     }
+                    
 
                     // 3. Cập nhật bảng TicketDayDetails
                     for (int i = 0; i < duration; i++) {

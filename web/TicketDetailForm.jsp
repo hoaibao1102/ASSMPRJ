@@ -536,14 +536,14 @@
                             <div class="gallery">
                                 <div class="thumbnails">
                                     <% for (int i = 0; i < img.size(); i++) { %>
-                                    <img src="assets/images/imgticket/<%= img.get(i) %>"
+                                    <img src="<%= img.get(i) %>"
                                          onclick="showMainImage('<%= img.get(i) %>')"
                                          class="thumbnail-img">
                                     <% } %>
                                 </div>
                                 <div class="main-image">
                                     <img id="mainImg" 
-                                         src="assets/images/imgticket/<%= img.size() > 0 ? img.get(0) : "" %>"
+                                         src="<%= img.size() > 0 ? img.get(0) : "" %>"
                                          onclick="openModal()" 
                                          class="main-img">
                                 </div>
@@ -667,7 +667,7 @@
 
         // Hiển thị ảnh chính bên ngoài gallery
         function showMainImage(url) {
-            document.getElementById('mainImg').src = "assets/images/imgticket/" + url;
+            document.getElementById('mainImg').src = "" + url;
         }
 
         // Mở modal và khởi tạo ảnh chính + ảnh nhỏ
