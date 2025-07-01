@@ -71,8 +71,7 @@ public class placeController extends HttpServlet {
         String action = request.getParameter("action");
         String url = URL;
 
-        
-        System.out.println("==> action: " + action);
+        System.out.println(action);
         try {
             if (action.equals("destination")) {
                 // Gọi hàm getFeaturedPlaces để lấy danh sách địa điểm và gán vào request
@@ -101,7 +100,7 @@ public class placeController extends HttpServlet {
                         List<StartDateDTO> startDateTour = stdDAO.search(tour.get(i).getIdTourTicket());
                         request.setAttribute("startDateTour" + (i + 1), startDateTour);
                     }
-                    
+
                     request.setAttribute("discriptionPlaces", discriptionPlaces);
                     request.setAttribute("tourList", tour);
                     url = "TourTicketForm.jsp";
@@ -223,7 +222,7 @@ public class placeController extends HttpServlet {
                 url = "placeController?action=takeListTicket&location=" + nameOfDestination;
             } //            lấy dữ liệu từ form createTicketForm để sử lý và update dữ liệu xuống database
             else if (action.equals("submitUpdateTour")) {
-                System.out.println("vào roi ma oi");
+
                 TourTicketDAO ttdao = new TourTicketDAO();
                 TicketImgDAO tidao = new TicketImgDAO();
                 TicketDayDetailDAO tdddao = new TicketDayDetailDAO();
@@ -237,9 +236,6 @@ public class placeController extends HttpServlet {
                     String transport = request.getParameter("transport_name");
                     double price = Double.parseDouble(request.getParameter("price"));
                     List<StartDateDTO> startDateTour = stdDAO.search(tourId);
-                    
-
-                    
 
                     // ===== LẤY DỮ LIỆU DAY DETAILS =====
                     List<String> descriptions = new ArrayList<>();
@@ -271,14 +267,15 @@ public class placeController extends HttpServlet {
 
                     // ===== LẤY DỮ LIỆU IMAGES =====
                     String imgCoverPart = request.getParameter("imgCover");
-                    if(imgCoverPart == null){
+                    if (imgCoverPart == null) {
                         System.out.println("khong có");
-                    }else {
+                    } else {
                         System.out.println("co");
                     }
 
                     // Lấy gallery images 
-//                    String[] ImgGallery = request.getParameterValues("imgGallery");
+                    String[] oldUrls = request.getParameterValues("oldImgUrl");
+                    String[] updatedBase64s = request.getParameterValues("updatedImgGallery");
 
                     // ===== CẬP NHẬT DATABASE =====
                     // 1. Cập nhật bảng TourTicket
@@ -291,12 +288,20 @@ public class placeController extends HttpServlet {
 
                     // 2. Cập nhật bảng TicketImgs
                     // Xóa ảnh cũ trước khi thêm mới
-                    tidao.deleteByTourId(tourId); 
+                    tidao.deleteByTourId(tourId);
 
-//                    for (int i = 0; i < ImgGallery.length; i++) {
-//                        TicketImgDTO tidto = new TicketImgDTO(tourId, i + 1, ImgGallery[i]);
-//                        boolean isCreateImg = tidao.create(tidto);
-//                    }
+                    if (oldUrls != null && updatedBase64s != null) {
+                        for (int i = 0; i < oldUrls.length; i++) {
+                            String oldUrl = oldUrls[i];
+                            String base64 = updatedBase64s[i];
+
+                            if (base64 != null && !base64.isEmpty()) {
+                                // Người dùng đã thay ảnh cũ -> xử lý base64 mới
+                            } else {
+                                // Ảnh cũ giữ nguyên
+                            }
+                        }
+                    }
 
                     // 3. Cập nhật bảng TicketDayDetails
                     for (int i = 0; i < duration; i++) {
@@ -313,16 +318,14 @@ public class placeController extends HttpServlet {
 
                     // 4. Cập nhật bảng TourStartDates
                     // Xóa ngày cũ trước khi thêm mới (đang bị cấn và chưa thống nhất xử lý)
-                    for(int i=0; i<departureDates.size(); i++){
-                        if(!departureDates.get(i).equals(startDateTour.get(i).getStartDate())){
-                            sddao.deleteByTourId(tourId,startDateTour.get(i).getStartDate());
-                            StartDateDTO addto = new StartDateDTO(tourId,departureDates.get(i) , i);
+                    for (int i = 0; i < departureDates.size(); i++) {
+                        if (!departureDates.get(i).equals(startDateTour.get(i).getStartDate())) {
+                            sddao.deleteByTourId(tourId, startDateTour.get(i).getStartDate());
+                            StartDateDTO addto = new StartDateDTO(tourId, departureDates.get(i), i);
                             sddao.create(addto);
                         }
                     }
-                    
-                    
-                    
+
                     sddao.deleteByTourId(tourId); //đang chưa hoạt động
 
                     for (int i = 0; i < departureDates.size(); i++) {
