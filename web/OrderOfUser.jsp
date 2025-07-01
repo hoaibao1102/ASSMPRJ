@@ -14,7 +14,7 @@
         <title>Đơn hàng của bạn</title>
         <style>
             * {
-                margin: 0;
+                
                 padding: 0;
                 box-sizing: border-box;
             }
@@ -142,7 +142,7 @@
 
             .card-image img {
                 width: 100%;
-                height: 200px;
+                height: 100%;
                 object-fit: cover;
                 transition: transform 0.3s ease;
             }
@@ -153,7 +153,6 @@
 
             .card-content {
                 padding: 25px;
-                display: flex;
                 flex-direction: column;
                 justify-content: space-between;
             }
@@ -245,18 +244,24 @@
                 display: none;
                 position: fixed;
                 z-index: 9999;
-                top: 0;
+                top: -23%;
                 left: 0;
-                width: 100vw;
-                height: 100vh;
+                width: 100%;
+                height: 100%;
                 background: rgba(0, 0, 0, 0.5);
                 align-items: center;
                 justify-content: center;
-                backdrop-filter: blur(5px);
+                backdrop-filter: blur(8px);
+            }
+
+            body.modal-open {
+                overflow: hidden;
+                position: fixed;
+                width: 100%;
             }
 
             .modal-content {
-                background: white;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
                 padding: 40px 30px;
                 border-radius: 20px;
                 width: 400px;
@@ -264,6 +269,7 @@
                 position: relative;
                 box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
                 animation: modalSlideIn 0.3s ease;
+                overflow: hidden;
             }
 
             @keyframes modalSlideIn {
@@ -408,13 +414,30 @@
                     width: 100%;
                 }
             }
+
+            body.modal-open {
+                overflow: hidden;
+                position: fixed;
+                width: 100%;
+            }
+            /* Đã có trong file, nhưng nếu tách CSS ngoài thì giữ lại */
+            .payment-option.selected {
+                border-color: #667eea;
+                background: rgba(102, 126, 234, 0.1);
+                box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
+            }
+            .payment-option .payment-icon {
+                font-size: 1.2rem;
+                margin-right: 6px;
+            }
         </style>
     </head>
     <body>
         <div class="container">
-            <a href="placeController?action=destination&page=indexjsp" class="back-btn">← Quay lại</a>
+
             <c:choose>
                 <c:when test="${sessionScope.nameUser.role eq 'AD'}">
+                    <a href="javascript:history.back()" class="back-btn">← Quay lại</a>
                     <h2>Danh sách đơn hàng của ${requestScope.userName}</h2>
 
                     <table class="order-table">
@@ -447,6 +470,7 @@
                     </table>
                 </c:when>
                 <c:otherwise>
+                    <a href="placeController?action=destination&page=indexjsp" class="back-btn">← Quay lại</a>
                     <h2>Danh sách đơn hàng của bạn</h2>
                     <c:set var="startDateMap" value="${requestScope.startDateMap}"/>
                     <c:choose>
@@ -479,7 +503,8 @@
                                                             <input type="hidden" name="idBooking" value="${order.idBooking}"/>
                                                             <input type="hidden" name="totalPrice" value="${order.totalPrice}"/>
                                                             <input type="hidden" name="numberTicket" value="${order.numberTicket}"/>
-                                                            <button class="btn-pay" type="submit" >Thanh toán</button>
+                                                            <button class="btn-pay" type="button"
+                                                                    onclick="openPaymentModal('${order.idBooking}', '${order.totalPrice}', '${order.numberTicket}')">Thanh toán</button>
                                                         </form>
                                                     </c:when>
                                                     <c:otherwise>
@@ -497,42 +522,113 @@
                         </c:otherwise>
                     </c:choose>
                     <!-- Popup/modal chọn phương thức thanh toán -->
-                    <div id="paymentModal" style="display:none;position:fixed;z-index:9999;top:0;left:0;width:100vw;height:100vh;
-                         background:rgba(0,0,0,0.3);align-items:center;justify-content:center;">
-                        <div style="background:#fff;padding:32px 24px;border-radius:16px;width:350px;max-width:90vw;position:relative;">
-                            <h3 style="margin-bottom:22px;">Chọn phương thức thanh toán</h3>
+                    <div id="paymentModal">
+                        <div class="modal-content">
+                            <span class="close-btn" onclick="closePaymentModal()">&times;</span>
+                            <h3>Chọn phương thức thanh toán</h3>
                             <form id="paymentForm" method="get" action="orderController">
                                 <input type="hidden" name="action" value="updatePayOrder"/>
-                                <input type="hidden" name="idBooking" value="${idBooking}"/>
-                                <input type="hidden" name="totalBill2" value="${totalPrice}">
-                                <input type="hidden" name="numberTicket2" value="${numberTicket}">
-                                <label style="display:block;margin-bottom:10px;">
-                                    <input type="radio" name="paymentMethod" value="momo" checked> Momo
-                                </label>
-                                <label style="display:block;margin-bottom:10px;">
-                                    <input type="radio" name="paymentMethod" value="vnpay"> VNPay
-                                </label>
-                                <label style="display:block;margin-bottom:10px;">
-                                    <input type="radio" name="paymentMethod" value="cod"> Thanh toán tại quầy
-                                </label>
-                                <div style="margin-top:18px;text-align:right;">
-                                    <button type="button" onclick="closePaymentModal()" style="margin-right:10px;">Hủy</button>
-                                    <button type="submit" style="background:red;color:#fff;padding:8px 20px;border-radius:6px;border:none;">Xác nhận</button>
+                                <input type="hidden" id="idBooking" name="idBooking" value="">
+                                <input type="hidden" id="totalPrice" name="totalBill2" value="">
+                                <input type="hidden" id="numberTicket" name="numberTicket2" value="">
+
+                                <div class="payment-option" onclick="selectPayment(event, 'momo')">
+                                    <input type="radio" name="paymentMethod" value="momo" id="momo" checked>
+                                    <label for="momo">
+                                        <span class="payment-icon">📱</span>
+                                        Momo
+                                    </label>
+                                </div>
+                                <div class="payment-option" onclick="selectPayment(event, 'vnpay')">
+                                    <input type="radio" name="paymentMethod" value="vnpay" id="vnpay">
+                                    <label for="vnpay">
+                                        <span class="payment-icon">💳</span>
+                                        VNPay
+                                    </label>
+                                </div>
+                                <div class="payment-option" onclick="selectPayment(event, 'cod')">
+                                    <input type="radio" name="paymentMethod" value="cod" id="cod">
+                                    <label for="cod">
+                                        <span class="payment-icon">💰</span>
+                                        Thanh toán tại quầy
+                                    </label>
+                                </div>
+                                <div class="modal-buttons">
+                                    <button type="button" class="btn-cancel" onclick="closePaymentModal()">Hủy</button>
+                                    <button type="submit" class="btn-confirm">Xác nhận thanh toán</button>
                                 </div>
                             </form>
-                            <span style="position:absolute;top:8px;right:16px;cursor:pointer;font-size:20px;" onclick="closePaymentModal()">×</span>
                         </div>
                     </div>
                     <script>
-                        // Nếu có showModal thì mở modal khi load trang
-                        window.onload = function () {
-                        <c:if test="${showModal eq 'true'}">
+                        // Lưu vị trí scroll
+                        let scrollPosition = 0;
+
+                        // Gọi khi user click "Thanh toán" (bạn cần sửa lại form button thành button thường gọi openPaymentModal)
+                        function openPaymentModal(idBooking, totalPrice, numberTicket) {
+                            scrollPosition = window.pageYOffset;
+                            document.body.classList.add('modal-open');
+                            document.body.style.top = -scrollPosition + 'px';
+
+                            // Set giá trị cho form
+                            document.getElementById('idBooking').value = idBooking;
+                            document.getElementById('totalPrice').value = totalPrice;
+                            document.getElementById('numberTicket').value = numberTicket;
+
+                            // Reset các radio về mặc định, chọn momo
+                            document.getElementById('momo').checked = true;
+                            document.querySelectorAll('.payment-option').forEach((el, idx) => {
+                                if (idx === 0)
+                                    el.classList.add('selected');
+                                else
+                                    el.classList.remove('selected');
+                            });
+
                             document.getElementById('paymentModal').style.display = 'flex';
-                        </c:if>
-                        };
+                            document.getElementById('momo').focus();
+                        }
+
                         function closePaymentModal() {
                             document.getElementById('paymentModal').style.display = 'none';
+                            document.body.classList.remove('modal-open');
+                            document.body.style.top = '';
+                            window.scrollTo(0, scrollPosition);
                         }
+
+                        // Chọn phương thức thanh toán, visual feedback
+                        function selectPayment(event, method) {
+                            document.querySelectorAll('.payment-option').forEach(option => option.classList.remove('selected'));
+                            event.currentTarget.classList.add('selected');
+                            document.getElementById(method).checked = true;
+                        }
+
+                        // Đóng modal bằng ESC
+                        document.addEventListener('keydown', function (event) {
+                            if (event.key === "Escape")
+                                closePaymentModal();
+                        });
+
+                        // Đóng modal khi click ra ngoài
+                        document.getElementById('paymentModal').addEventListener('click', function (event) {
+                            if (event.target === this)
+                                closePaymentModal();
+                        });
+
+                        // Ngăn scroll trên modal content
+                        document.querySelector('.modal-content').addEventListener('wheel', function (event) {
+                            event.stopPropagation();
+                        });
+
+                        // Nếu dùng nút submit mặc định của form thì không cần handle JS dưới đây.
+                        // Nếu muốn xử lý AJAX, hãy dùng sự kiện submit của form:
+                        /*
+                         document.getElementById('paymentForm').addEventListener('submit', function(e){
+                         e.preventDefault();
+                         // Xử lý AJAX ở đây...
+                         closePaymentModal();
+                         // Optional: hiện success message
+                         });
+                         */
                     </script>
                 </c:otherwise>
             </c:choose>

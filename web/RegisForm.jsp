@@ -129,14 +129,7 @@
                 %>
 
                 <h2><%= isEditMode ? "Edit Your Profile" : "Create Your Account" %></h2>
-                <!-- DEBUG: Kiểm tra các error attributes -->
-                <div style="background: yellow; padding: 10px; margin: 10px 0;">
-                    <h4>DEBUG - Error Attributes:</h4>
-                    <p>txtCurrentPassword_error: <%= request.getAttribute("txtCurrentPassword_error") %></p>
-                    <p>txtNewPassword_error: <%= request.getAttribute("txtNewPassword_error") %></p>
-                    <p>txtConfirmNewPassword_error: <%= request.getAttribute("txtConfirmNewPassword_error") %></p>
-                    <p>Mode: <%= request.getAttribute("mode") %></p>
-                </div>
+                
                 <%
                     String successMsg = (String) request.getAttribute("successMsg");
                     String updateError = (String) request.getAttribute("updateError");
@@ -172,7 +165,7 @@
                            <%= isEditMode ? "readonly style='background-color: #f5f5f5; cursor: not-allowed;'" : "required" %> 
                            value="<%=userEmail%>">
                     <% if (isEditMode) { %>
-                    <small style="color: #666;">Email không thể thay đổi</small>
+                    <small style="color: green;">Email không thể thay đổi</small>
                     <% } else { %>
                     <%
                         String txtEmail_error = request.getAttribute("txtEmail_error")+"";

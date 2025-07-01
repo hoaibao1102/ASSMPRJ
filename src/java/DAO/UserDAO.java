@@ -188,4 +188,22 @@ public class UserDAO implements IDAO<UserDTO, String> {
         return false;
     }
 
+    public boolean phoneExists(String phone, int excludeId) throws SQLException {
+        String sql = "SELECT TOP 1 1 FROM Users WHERE phone = ? AND id <> ?";
+        Connection conn;
+        try {
+            conn = DBUtils.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, phone);
+            ps.setInt(2, excludeId);
+
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return true;  // Có user khác đang dùng số này
+            }
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;  // Không tồn tại hoặc có lỗi
+    }
 }
