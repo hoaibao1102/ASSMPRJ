@@ -269,35 +269,11 @@ public class placeController extends HttpServlet {
                     String imgCoverPart = request.getParameter("imgCover");
 
                     // Lấy các ảnh cũ và đã cập nhật (giữ nguyên hoặc base64 mới)
-                    String[] oldUrls = request.getParameterValues("oldImgUrl");
-                    String[] updatedImages = request.getParameterValues("updatedImgGallery");
+                    String[] updatedImages = request.getParameter("imgGalleryData").split("---");
+                    
+                    
 
-// Lấy các ảnh mới được thêm
-                    String[] newImages = request.getParameterValues("newGalleryBase64");
 
-// Tính kích thước tổng
-                    int lenUpdated = (updatedImages != null) ? updatedImages.length : 0;
-                    int lenNew = (newImages != null) ? newImages.length : 0;
-
-                    String[] finalImages = new String[lenUpdated + lenNew];
-
-// Gộp ảnh cũ đã xử lý
-                    if (updatedImages != null && oldUrls != null && oldUrls.length == updatedImages.length) {
-                        for (int i = 0; i < updatedImages.length; i++) {
-                            String updated = updatedImages[i];
-                            String old = oldUrls[i];
-
-                            // Nếu khác → ảnh đã đổi, nếu giống → giữ nguyên
-                            finalImages[i] = (updated != null && !updated.equals(old)) ? updated : old;
-                        }
-                    }
-
-                    // Gộp ảnh mới thêm vào sau ảnh cũ
-                    if (newImages != null) {
-                        for (int i = 0; i < newImages.length; i++) {
-                            finalImages[lenUpdated + i] = newImages[i];
-                        }
-                    }
 
                     // ===== CẬP NHẬT DATABASE =====
                     // 1. Cập nhật bảng TourTicket
@@ -313,12 +289,11 @@ public class placeController extends HttpServlet {
                     tidao.deleteByTourId(tourId);
 
                     // Lưu ảnh vào DB theo thứ tự
-                    for (int i = 0; i < finalImages.length; i++) {
-                        String imageUrl = finalImages[i];
+                    for (int i = 0; i < updatedImages.length; i++) {
+                        String imageUrl = updatedImages[i];
                         if (imageUrl != null && !imageUrl.trim().isEmpty()) {
                             TicketImgDTO tidto = new TicketImgDTO(tourId, i + 1, imageUrl);
                             boolean isCreateImg = tidao.create(tidto);
-                            System.out.println("Save img[" + (i + 1) + "]: " + isCreateImg);
                         }
                     }
                     
