@@ -617,20 +617,46 @@
 
                                     let galleryImages = []; // Mảng lưu trữ dữ liệu gallery images, bao gồm cả ảnh cũ và mới
                                     let galleryImagesSend = []; // Mảng gửi ảnh, sẽ chứa dữ liệu base64 của tất cả ảnh
-                                    let hasChanges = false;
 
                                     $(document).ready(function () {
-                                        // Đưa ảnh cũ vào mảng galleryImages
-                                        $("input[name='oldImgUrls']").each(function () {
-                                            galleryImages.push({
-                                                name: this.value,
-                                                data: this.value, // Dùng imgUrl như là base64 hoặc URL để gửi qua servlet
-                                                isNew: false  // Đánh dấu ảnh cũ
+                                        // Hàm nén ảnh từ URL (ảnh cũ)
+                                        async function resizeImageFromUrl(url, maxWidth, maxHeight) {
+                                            const response = await fetch(url);
+                                            const blob = await response.blob();
+
+                                            return new Promise((resolve) => {
+                                                const img = new Image();
+                                                img.onload = function () {
+                                                    const canvas = document.createElement('canvas');
+                                                    const ctx = canvas.getContext('2d');
+
+                                                    let width = img.width;
+                                                    let height = img.height;
+
+                                                    if (width > height) {
+                                                        if (width > maxWidth) {
+                                                            height *= maxWidth / width;
+                                                            width = maxWidth;
+                                                        }
+                                                    } else {
+                                                        if (height > maxHeight) {
+                                                            width *= maxHeight / height;
+                                                            height = maxHeight;
+                                                        }
+                                                    }
+
+                                                    canvas.width = width;
+                                                    canvas.height = height;
+
+                                                    ctx.drawImage(img, 0, 0, width, height);
+                                                    const resizedBase64 = canvas.toDataURL("image/jpeg", 0.7); // Chất lượng 70%
+                                                    resolve(resizedBase64);
+                                                };
+                                                img.src = URL.createObjectURL(blob);
                                             });
+                                        }
 
-                                            document.getElementById("imgGalleryData").value += "---" + this.value;
-                                        });
-
+                                        // Hàm nén ảnh mới từ File
                                         function resizeImage(file, maxWidth, maxHeight, callback) {
                                             const img = new Image();
                                             const reader = new FileReader();
@@ -643,7 +669,6 @@
                                                 const canvas = document.createElement('canvas');
                                                 const ctx = canvas.getContext('2d');
 
-                                                // Giữ tỷ lệ của ảnh ban đầu
                                                 let width = img.width;
                                                 let height = img.height;
 
@@ -663,66 +688,66 @@
                                                 canvas.height = height;
 
                                                 ctx.drawImage(img, 0, 0, width, height);
-
-                                                // Chuyển canvas thành base64
-                                                const resizedBase64 = canvas.toDataURL(file.type); // Hoặc bạn có thể chọn định dạng file khác như 'image/jpeg'
-
-                                                callback(resizedBase64);  // Trả về base64 sau khi nén
+                                                const resizedBase64 = canvas.toDataURL(file.type, 0.7);
+                                                callback(resizedBase64);
                                             };
 
-                                            reader.readAsDataURL(file); // Đọc file ảnh
+                                            reader.readAsDataURL(file);
                                         }
 
+                                        // Đưa ảnh cũ từ input vào mảng, sau đó nén lại
+                                        $("input[name='oldImgUrls']").each(function () {
+                                            const url = this.value;
+
+                                            resizeImageFromUrl(url, 800, 600).then((resizedBase64) => {
+                                                galleryImages.push({
+                                                    name: url,
+                                                    data: resizedBase64,
+                                                    isNew: false
+                                                });
+
+                                                document.getElementById("imgGalleryData").value += "---" + resizedBase64;
+                                                updateGalleryPreview();
+                                            });
+                                        });
+
+                                        // Khi người dùng chọn ảnh mới
                                         $('#galleryUpload').change(function () {
                                             const files = this.files;
 
                                             if (files.length > 10) {
                                                 alert("Bạn chỉ được chọn tối đa 10 ảnh.");
-                                                this.value = ''; // reset lại
+                                                this.value = '';
                                                 return;
                                             }
 
-                                            Array.from(files).forEach((file, index) => {
-                                                resizeImage(file, 800, 600, function (resizedBase64) { // Giới hạn kích thước là 800x600px
-                                                    // Kiểm tra xem ảnh đã có trong mảng chưa
+                                            Array.from(files).forEach((file) => {
+                                                resizeImage(file, 800, 600, function (resizedBase64) {
                                                     const isDuplicate = galleryImages.some(img => img.data === resizedBase64);
                                                     if (isDuplicate) {
                                                         alert("Ảnh đã được chọn rồi.");
-                                                        return; // Ngừng thêm ảnh nếu trùng
+                                                        return;
                                                     }
 
-                                                    // Thêm ảnh mới vào mảng galleryImages
                                                     galleryImages.push({name: file.name, data: resizedBase64, isNew: true});
                                                     updateGalleryPreview();
                                                 });
                                             });
                                         });
 
-
-
-                                        // Xóa ảnh khỏi danh sách khi nhấn nút xóa (cả ảnh cũ và mới)
+                                        // Hàm xóa ảnh
                                         window.removeImage = function (index, type) {
-                                            if (type === 'old') {
-                                                // Xóa ảnh cũ khỏi mảng galleryImages
-                                                galleryImages = galleryImages.filter((img, i) => i !== index && img.isNew === false);
-                                            } else {
-                                                // Xóa ảnh mới khỏi mảng galleryImages
-                                                galleryImages = galleryImages.filter((img, i) => i !== index && img.isNew === true);
-                                            }
-
-                                            updateGalleryPreview(); // Cập nhật lại phần preview
+                                            galleryImages.splice(index, 1);
+                                            updateGalleryPreview();
                                         };
                                     });
 
-// Cập nhật preview gallery
+// Hiển thị lại ảnh và cập nhật dữ liệu gửi đi
                                     function updateGalleryPreview() {
                                         const previewContainer = document.getElementById("galleryPreviewContainer");
-                                        previewContainer.innerHTML = ''; // Xoá preview cũ
+                                        previewContainer.innerHTML = '';
+                                        galleryImagesSend = [];
 
-                                        // Làm mới mảng galleryImagesSend trước khi thêm dữ liệu mới
-                                        galleryImagesSend = []; // Reset mảng gửi
-
-                                        // Hiển thị ảnh đã có trong galleryImages
                                         galleryImages.forEach((img, index) => {
                                             const container = document.createElement("div");
                                             container.className = "image-item";
@@ -732,38 +757,30 @@
                                             imgElement.src = img.data;
                                             container.appendChild(imgElement);
 
-                                            // Thêm nút xóa cho mỗi ảnh
                                             const removeBtn = document.createElement("button");
-                                            removeBtn.textContent = "×"; // Dấu chéo
+                                            removeBtn.textContent = "×";
                                             removeBtn.onclick = function () {
-                                                removeImage(index, img.isNew ? 'new' : 'old'); // Gọi hàm xóa ảnh
+                                                removeImage(index, img.isNew ? 'new' : 'old');
                                             };
-                                            container.appendChild(removeBtn); // Thêm dấu chéo vào ảnh
-
+                                            container.appendChild(removeBtn);
                                             previewContainer.appendChild(container);
 
-                                            // Thêm dữ liệu vào mảng galleryImagesSend
                                             galleryImagesSend.push(img.data);
                                         });
 
-                                        // Cập nhật dữ liệu vào input hidden (chuẩn bị gửi qua servlet)
                                         document.getElementById("imgGalleryData").value = galleryImagesSend.join("---");
                                     }
 
-// Hàm gửi dữ liệu form với các ảnh đã chọn
+// Gửi form
                                     function submitForm() {
                                         if (galleryImages.length === 0) {
                                             alert("Bạn phải chọn ít nhất một ảnh.");
                                             return;
                                         }
 
-                                        // Cập nhật lại dữ liệu nếu cần thiết (trước khi gửi đi)
                                         updateGalleryPreview();
-
-                                        // Gửi form
-                                        document.forms["yourForm"].submit(); // Thay "yourForm" bằng tên form của bạn
+                                        document.forms["yourForm"].submit(); // Thay "yourForm" bằng id hoặc name form thực tế
                                     }
-
 
         </script>
     </body>
