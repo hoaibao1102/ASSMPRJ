@@ -650,7 +650,7 @@
                                 }
 
                                 // Thêm ảnh mới vào mảng galleryImages
-                                galleryImages.push({data: base64});
+                                galleryImages.push(base64);
 
                                 // Cập nhật preview ảnh
                                 updateGalleryPreview();
@@ -700,7 +700,7 @@
                     });
 
                     // Cập nhật dữ liệu vào input hidden (chuẩn bị gửi qua servlet)
-                    document.getElementById("imgGalleryData").value = JSON.stringify(galleryImages);
+                     document.getElementById("imgGalleryData").value = galleryImages.join("---");
                 }
 
 // Hàm gửi dữ liệu form với các ảnh đã chọn

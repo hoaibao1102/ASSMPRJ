@@ -267,14 +267,11 @@ public class placeController extends HttpServlet {
 
                     // ===== LẤY DỮ LIỆU IMAGES =====
                     String imgCoverPart = request.getParameter("imgCover");
-                    System.out.println("=+===================");
-                    System.out.println(imgCoverPart);
-                    System.out.println("===================");
+
                     // Lấy các ảnh cũ và đã cập nhật (giữ nguyên hoặc base64 mới)
-                    String[] updatedImages = request.getParameterValues("imgGalleryData");
-                    System.out.println("===================");
-                    System.out.println(updatedImages[0]);
-                    System.out.println("===================");
+                    String[] updatedImages = request.getParameter("imgGalleryData").split("---");
+                    
+                    
 
 
 
@@ -297,7 +294,6 @@ public class placeController extends HttpServlet {
                         if (imageUrl != null && !imageUrl.trim().isEmpty()) {
                             TicketImgDTO tidto = new TicketImgDTO(tourId, i + 1, imageUrl);
                             boolean isCreateImg = tidao.create(tidto);
-                            System.out.println("Save img[" + (i + 1) + "]: " + isCreateImg);
                         }
                     }
                     
