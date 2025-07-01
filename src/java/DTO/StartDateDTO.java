@@ -20,6 +20,12 @@ public class StartDateDTO {
         this.startNum = startNum;
         this.quantity = quantity;
     }
+    
+    public StartDateDTO(String idTourTicket, String startDate, int startNum) {
+        this.idTourTicket = idTourTicket;
+        this.startDate = startDate;
+        this.startNum = startNum;
+    }
 
     public int getQuantity() {
         return quantity;
@@ -28,6 +34,8 @@ public class StartDateDTO {
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
+
+    
 
     public StartDateDTO() {
     }
