@@ -20,12 +20,28 @@ import java.util.logging.Logger;
  * @author MSI PC
  */
 public class StartDateDAO implements IDAO<StartDateDTO, String>{
-    private final String DELETE_QUERY = "DELETE FROM dbo.TicketImgs  WHERE idTourTicket = ?";
-    private final String INSERT_QUERY = "DELETE FROM dbo.TicketImgs  WHERE idTourTicket = ?";
+    
     
     @Override
     public boolean create(StartDateDTO entity) {
+        String sql = "INSERT INTO TourStartDates (idTourTicket,startdate,startNum) VALUES (?,?,?) ";
+        try {
+            Connection conn = DBUtils.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1,entity.getIdTourTicket());
+            ps.setString(2,entity.getStartDate());
+            ps.setInt(3,entity.getStartNum());
+            
+            int re = ps.executeUpdate();
+            return re >0;
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(StartDateDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(StartDateDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return false;
+        
+        
     }
 
     @Override
@@ -72,7 +88,7 @@ public class StartDateDAO implements IDAO<StartDateDTO, String>{
     @Override
     public List<StartDateDTO> search(String idTourTicket) {
         List<StartDateDTO> dateList = new ArrayList<>();
-        String sql = "SELECT * FROM TourStartDates WHERE idTourTicket = ? ";
+        String sql = "SELECT * FROM TourStartDates WHERE idTourTicket = ? AND startNum > 0";
        
         try {
             Connection conn = DBUtils.getConnection();
@@ -128,8 +144,23 @@ public class StartDateDAO implements IDAO<StartDateDTO, String>{
         return false;
     }
 
-    public void deleteByTourId(String tourId, String startDate) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public boolean deleteByTourId(String tourId, String startDate) {
+        String sql = "UPDATE TourStartDates SET startNum = 0 WHERE idTourTicket = ? AND startdate = ? ";
+        
+        try {
+            Connection conn= DBUtils.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, tourId);
+            ps.setString(2, startDate);
+            
+            int re =ps.executeUpdate();
+            return re > 0;
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(StartDateDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(StartDateDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
     }
     
     

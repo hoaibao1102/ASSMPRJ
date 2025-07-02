@@ -260,10 +260,7 @@
                 </c:if>
                 <!-- Nếu là create, cần có ID -->
                 <c:if test="${not empty requestScope.idTour and not empty requestScope.idPlace}">
-                    <p>${requestScope.idTour}</p>
-                    <p>${requestScope.idPlace}</p>
-                    <p>${requestScope.destination}</p>
-                    
+
                     <input type="hidden" name="tourId" value="${requestScope.idTour}"/>
                     <input type="hidden" name="idPlace" value="${requestScope.idPlace}"/>
                     <input type="hidden" name="destination" value="${requestScope.destination}"/>
@@ -465,13 +462,13 @@
                         <div class="day-details">
                             <div><b>Ngày \${i}</b></div>
                             <label for="Description_\${i}">Mô tả chung:</label>
-                            <textarea name="Description_\${i}" id="Description_\${i}">Chưa có thông tin</textarea>
+                            <textarea name="Description_\${i}" id="Description_\${i}" required  placeholder="Chưa có thông tin"></textarea>
                             <label for="morningDescription_\${i}">Buổi sáng:</label>
-                            <textarea name="morningDescription_\${i}" id="morningDescription_\${i}">Chưa có thông tin</textarea>
+                            <textarea name="morningDescription_\${i}" id="morningDescription_\${i}" required placeholder="Chưa có thông tin"></textarea>
                             <label for="afternoonDescription_\${i}">Buổi chiều:</label>
-                            <textarea name="afternoonDescription_\${i}" id="afternoonDescription_\${i}">Chưa có thông tin</textarea>
+                            <textarea name="afternoonDescription_\${i}" id="afternoonDescription_\${i}" required placeholder="Chưa có thông tin"></textarea>
                             <label for="eveningDescription_\${i}">Buổi tối:</label>
-                            <textarea name="eveningDescription_\${i}" id="eveningDescription_\${i}">Chưa có thông tin</textarea>
+                            <textarea name="eveningDescription_\${i}" id="eveningDescription_\${i}" required placeholder="Chưa có thông tin"></textarea>
                         </div>
                     `;
                                             dayDetailsContainer.insertAdjacentHTML('beforeend', dayDetailHTML);
@@ -501,11 +498,11 @@
                                             newDateGroup.id = `dateGroup${groupIndex}`;
 
                                             newDateGroup.innerHTML = `
-                    <input type="date" name="departureDate\${groupIndex}" 
-                    id="departureDate\${groupIndex}" 
-                    required min="\${tomorrowStr}"/>
-                    <button type="button" class="remove-date-btn" 
-                    onclick="removeDepartureDate(\${groupIndex})">✕</button>
+                                        <input type="date" name="departureDate\${groupIndex}" 
+                                        id="departureDate\${groupIndex}" 
+                                        required min="\${tomorrowStr}"/>
+                                        <button type="button" class="remove-date-btn" 
+                                        onclick="removeDepartureDate(\${groupIndex})">✕</button>
         `;
 
                                             container.appendChild(newDateGroup);
