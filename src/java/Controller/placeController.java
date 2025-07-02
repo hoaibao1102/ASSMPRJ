@@ -102,6 +102,7 @@ public class placeController extends HttpServlet {
                     }
 
                     request.setAttribute("discriptionPlaces", discriptionPlaces);
+                    request.setAttribute("location", location);
                     request.setAttribute("tourList", tour);
                     url = "TourTicketForm.jsp";
                 } else {
@@ -209,9 +210,20 @@ public class placeController extends HttpServlet {
 
             } // Thêm VÉ
             else if (action.equals("addTicket")) {
+                String destination = request.getParameter("destination");
                 request.setAttribute("tomorrowDate", getTomorrow());
+                String idTour = generateTourTicketIdByDestination(destination);
+                int idPlace = pdao.readByName(destination).getIdPlace();
+
+                request.setAttribute("idPlace", idPlace);
+                request.setAttribute("idTour", idTour);
+                request.setAttribute("destination", destination);
+                System.out.println(idPlace+" "+idTour+" "+destination);
+
                 url = "createTicketForm.jsp";
-            } else if (action.equals("deleteTicket")) {
+
+            } // XÓA VÉ
+            else if (action.equals("deleteTicket")) {
                 String nameOfDestination = request.getParameter("nameOfDestination");
                 String idTour = request.getParameter("idTourTicket");
                 TourTicketDTO tourTicket = tdao.readbyID(idTour);
@@ -220,8 +232,8 @@ public class placeController extends HttpServlet {
                     System.out.println("khong update ticket dc ne");
                 }
                 url = "placeController?action=takeListTicket&location=" + nameOfDestination;
-            } //            lấy dữ liệu từ form createTicketForm để sử lý và update dữ liệu xuống database
-            else if (action.equals("submitUpdateTour")) {
+            } //tao tour moi
+            else if (action.equals("submitAddTour")) {
 
                 TourTicketDAO ttdao = new TourTicketDAO();
                 TicketImgDAO tidao = new TicketImgDAO();
@@ -231,6 +243,121 @@ public class placeController extends HttpServlet {
                 try {
                     // Lấy thông tin cơ bản
                     String tourId = request.getParameter("tourId");
+                    int idPlace = Integer.parseInt(request.getParameter("idPlace"));
+                    String destination = request.getParameter("destination");
+                    String placeStart = request.getParameter("placestart");
+                    int duration = Integer.parseInt(request.getParameter("duration"));
+                    String transport = request.getParameter("transport_name");
+                    String nametour = request.getParameter("nametour");
+                    double price = Double.parseDouble(request.getParameter("price"));
+
+                    String durationStr = "";
+                    if (duration == 2) {
+                        durationStr = "2 ngày 1 đêm";
+                    } else if (duration == 3) {
+                        durationStr = "3 ngày 2 đêm";
+                    } else if(duration == 4){
+                        durationStr = "4 ngày 3 đêm";
+                    }
+
+                    // ===== LẤY DỮ LIỆU DAY DETAILS =====
+                    List<String> descriptions = new ArrayList<>();
+                    List<String> morningDescriptions = new ArrayList<>();
+                    List<String> afternoonDescriptions = new ArrayList<>();
+                    List<String> eveningDescriptions = new ArrayList<>();
+
+                    for (int i = 1; i <= duration; i++) {
+                        String desc = request.getParameter("Description_" + i);
+                        String morning = request.getParameter("morningDescription_" + i);
+                        String afternoon = request.getParameter("afternoonDescription_" + i);
+                        String evening = request.getParameter("eveningDescription_" + i);
+
+                        descriptions.add(desc != null ? desc : "");
+                        morningDescriptions.add(morning != null ? morning : "");
+                        afternoonDescriptions.add(afternoon != null ? afternoon : "");
+                        eveningDescriptions.add(evening != null ? evening : "");
+
+                    }
+
+                    // ===== LẤY DỮ LIỆU DEPARTURE DATES =====
+                    List<String> departureDates = new ArrayList<>();
+                    for (int i = 1; i <= 3; i++) { // Tối đa 3 ngày
+                        String date = request.getParameter("departureDate" + i);
+                        if (date != null && !date.trim().isEmpty()) {
+                            departureDates.add(date);
+                        }
+                    }
+
+                    // ===== LẤY DỮ LIỆU IMAGES =====
+                    String imgCoverPart = request.getParameter("imgCover");
+
+                    // Lấy các ảnh cũ và đã cập nhật (giữ nguyên hoặc base64 mới)
+                    String[] updatedImages = request.getParameter("imgGalleryData").split("---");
+
+                    // ===== INSERT DATABASE =====
+                    // 1. insert  bảng TourTicket
+                    TourTicketDTO tourTicket = new TourTicketDTO(tourId, idPlace, destination, placeStart, durationStr, price, transport, nametour, imgCoverPart, true);
+                    boolean isUpdateTicket = ttdao.create(tourTicket);
+
+                    // 2. INSERT bảng TicketImgs
+                    // Xóa ảnh cũ trước khi thêm mới
+                    tidao.deleteByTourId(tourId);
+
+                    // Lưu ảnh vào DB theo thứ tự
+                    for (int i = 0; i < updatedImages.length; i++) {
+                        String imageUrl = updatedImages[i];
+                        if (imageUrl != null && !imageUrl.trim().isEmpty()) {
+                            TicketImgDTO tidto = new TicketImgDTO(tourId, i + 1, imageUrl);
+                            boolean isCreateImg = tidao.create(tidto);
+                        }
+                    }
+
+                    // 3. INSERT bảng TicketDayDetails
+                    for (int i = 0; i < duration; i++) {
+                        TicketDayDetailDTO tdddto = new TicketDayDetailDTO(
+                                tourId,
+                                i + 1,
+                                descriptions.get(i),
+                                morningDescriptions.get(i),
+                                afternoonDescriptions.get(i),
+                                eveningDescriptions.get(i)
+                        );
+                        boolean isUpdateDay = tdddao.create(tdddto);
+                    }
+
+                    // 4. INSERT bảng TourStartDates
+                    for (int i = 0; i < departureDates.size(); i++) {
+                        StartDateDTO addto = new StartDateDTO(tourId, departureDates.get(i), i);
+                        sddao.create(addto);
+                    }
+
+                    sddao.deleteByTourId(tourId); //đang chưa hoạt động
+
+                    for (int i = 0; i < departureDates.size(); i++) {
+                        StartDateDTO sddto = new StartDateDTO(tourId, departureDates.get(i), i + 1);
+                        boolean isCreateDate = sddao.create(sddto);
+                    }
+
+                    // Chuyển hướng về trang danh sách
+                    String nameOfDestination = tourTicket.getDestination();
+                    url = "placeController?action=takeListTicket&location=" + nameOfDestination;
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    System.out.println("Error in submitUpdateTour: " + e.getMessage());
+                }
+            } else if (action.equals("submitUpdateTour")) {
+                TourTicketDAO ttdao = new TourTicketDAO();
+                TicketImgDAO tidao = new TicketImgDAO();
+                TicketDayDetailDAO tdddao = new TicketDayDetailDAO();
+                StartDateDAO sddao = new StartDateDAO();
+
+                try {
+                    // Lấy thông tin cơ bản
+                    String tourId = request.getParameter("tourId");
+                    System.out.println("====");
+                    System.out.println(tourId);
+                    System.out.println("====");
                     String placeStart = request.getParameter("placestart");
                     int duration = Integer.parseInt(request.getParameter("duration"));
                     String transport = request.getParameter("transport_name");
@@ -270,10 +397,6 @@ public class placeController extends HttpServlet {
 
                     // Lấy các ảnh cũ và đã cập nhật (giữ nguyên hoặc base64 mới)
                     String[] updatedImages = request.getParameter("imgGalleryData").split("---");
-                    
-                    
-
-
 
                     // ===== CẬP NHẬT DATABASE =====
                     // 1. Cập nhật bảng TourTicket
@@ -296,7 +419,6 @@ public class placeController extends HttpServlet {
                             boolean isCreateImg = tidao.create(tidto);
                         }
                     }
-                    
 
                     // 3. Cập nhật bảng TicketDayDetails
                     for (int i = 0; i < duration; i++) {
@@ -384,4 +506,21 @@ public class placeController extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
+    public String generateTourTicketIdByDestination(String destination) {
+        // Rút gọn tên tỉnh (VD: "Quảng Ngãi" => "QN")
+        String[] words = destination.trim().split("\\s+");
+        StringBuilder prefixBuilder = new StringBuilder();
+
+        for (String word : words) {
+            if (!word.isEmpty()) {
+                prefixBuilder.append(Character.toUpperCase(word.charAt(0)));
+            }
+        }
+
+        String prefix = prefixBuilder.toString();
+        TourTicketDAO tdao = new TourTicketDAO();
+        String idTourTicket = tdao.createIdTourTicket(prefix);
+
+        return idTourTicket;
+    }
 }

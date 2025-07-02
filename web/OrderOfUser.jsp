@@ -14,7 +14,6 @@
         <title>Đơn hàng của bạn</title>
         <style>
             * {
-                
                 padding: 0;
                 box-sizing: border-box;
             }
@@ -83,7 +82,6 @@
                 background: linear-gradient(135deg, #667eea, #764ba2);
                 color: white;
             }
-
             .order-table th,
             .order-table td {
                 padding: 15px 12px;
@@ -470,6 +468,7 @@
                     </table>
                 </c:when>
                 <c:otherwise>
+                  
                     <a href="placeController?action=destination&page=indexjsp" class="back-btn">← Quay lại</a>
                     <h2>Danh sách đơn hàng của bạn</h2>
                     <c:set var="startDateMap" value="${requestScope.startDateMap}"/>
