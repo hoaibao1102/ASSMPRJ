@@ -31,6 +31,9 @@ public class TourTicketDAO implements IDAO<TourTicketDTO, String> {
             + "img_Tour = ?, "
             + "status = ?  "
             + "WHERE idTourTicket = ?;";
+    private final String CREATE_QUERY = "INSERT INTO TourTickets (idplace, destination, placestart, duration, price, "
+            + "transport_name, nametour, img_Tour, status) "
+            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     @Override
     public boolean update(TourTicketDTO entity) {
@@ -56,7 +59,27 @@ public class TourTicketDAO implements IDAO<TourTicketDTO, String> {
     }
 
     @Override
-    public boolean create(TourTicketDTO entity) {
+    public boolean create(TourTicketDTO ticket) {
+        String sql = CREATE_QUERY;
+        try {
+            Connection conn = DBUtils.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, ticket.getIdplace());
+            ps.setString(2, ticket.getDestination());
+            ps.setString(3, ticket.getPlacestart());
+            ps.setString(4, ticket.getDuration());
+            ps.setDouble(5, ticket.getPrice());
+            ps.setString(6, ticket.getTransport_name());
+            ps.setString(7, ticket.getIdTourTicket());
+            ps.setString(8, ticket.getImg_Tour());
+            ps.setInt(9, ticket.isStatus() ? 1 : 0);
+            int n = ps.executeUpdate();
+            return n > 0;
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return false;
     }
 
@@ -200,11 +223,44 @@ public class TourTicketDAO implements IDAO<TourTicketDTO, String> {
             if (rs.next()) {
                 String imgUrl = rs.getString("img_Tour");
                 return imgUrl;
-            } 
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
         return "default.jpg"; // fallback nếu không có ảnh
+    }
+
+    public String createIdTourTicket(String prefix) {
+        // Truy vấn mã cao nhất theo prefix
+        String sql = "SELECT MAX(idTourTicket) as maxId FROM TourTickets WHERE idTourTicket LIKE ?";
+
+        Connection conn;
+        try {
+            conn = DBUtils.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, prefix + "%");
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                String maxId = rs.getString("maxId");
+
+                if (maxId == null) {
+                    return prefix + "001"; // ✅ Trường hợp chưa có mã nào
+                }
+
+                // Cắt phần số và tăng lên
+                String numberPart = maxId.substring(prefix.length());
+                int number = Integer.parseInt(numberPart);
+                number++;
+
+                return String.format("%s%03d", prefix, number);
+            }
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(TourTicketDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(TourTicketDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return null; // nếu có lỗi
     }
 
 }

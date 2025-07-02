@@ -26,6 +26,9 @@ public class TicketDayDetailDAO implements IDAO<TicketDayDetailDTO, String> {
     private final String UPDATE_QUERY = "UPDATE dbo.TicketDayDetails SET Description = ?, Morning = ?, Afternoon = ?, Evening = ? "
             + "WHERE idTourTicket = ? AND Day = ?";
 
+    private final String CREATE_QUERY = "INSERT INTO TicketDayDetails (idTourTicket, Day, Description, Morning, Afternoon, Evening) "
+            + "VALUES (?, ?, ?, ?, ?, ?)";
+
     public boolean checkAttribute(String attribute) {
         List<String> validAttributes = Arrays.asList("idTourTicket");
         return validAttributes.contains(attribute);
@@ -72,12 +75,29 @@ public class TicketDayDetailDAO implements IDAO<TicketDayDetailDTO, String> {
 
     @Override
     public boolean create(TicketDayDetailDTO entity) {
-       return false; 
+        String sql = CREATE_QUERY;
+        try {
+            Connection cn = UTILS.DBUtils.getConnection();
+            PreparedStatement ps = cn.prepareStatement(sql);
+            ps.setString(1, entity.getIdTourTicket());
+            ps.setInt(2, entity.getDay());
+            ps.setString(3, entity.getDescription());
+            ps.setString(4, entity.getMorning());
+            ps.setString(5, entity.getAfternoon());
+            ps.setString(6, entity.getEvening());
+            int rs = ps.executeUpdate();
+            return rs > 0;
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(TicketImgDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(TicketImgDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
     }
 
     @Override
     public List<TicketDayDetailDTO> readAll() {
-       return null;
+        return null;
     }
 
     @Override

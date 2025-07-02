@@ -258,7 +258,16 @@
                 <c:if test="${not empty requestScope.tourTicket}">
                     <input type="hidden" name="tourId" value="${requestScope.tourTicket.idTourTicket}"/>
                 </c:if>
-
+                <!-- Nếu là create, cần có ID -->
+                <c:if test="${not empty requestScope.idTour and not empty requestScope.idPlace}">
+                    <p>${requestScope.idTour}</p>
+                    <p>${requestScope.idPlace}</p>
+                    <p>${requestScope.destination}</p>
+                    
+                    <input type="hidden" name="tourId" value="${requestScope.idTour}"/>
+                    <input type="hidden" name="idPlace" value="${requestScope.idPlace}"/>
+                    <input type="hidden" name="destination" value="${requestScope.destination}"/>
+                </c:if>
                 <fieldset>
                     <legend>Thông Tin Tour</legend>
 

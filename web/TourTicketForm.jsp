@@ -201,16 +201,18 @@
         <%
             List<TourTicketDTO> tourList = (List<TourTicketDTO>) request.getAttribute("tourList");
             String discriptionPlaces = (String) request.getAttribute("discriptionPlaces");
+            String location = (String) request.getAttribute("location");
         %>
 
         <div class="content">
             <div class="breadcrumb">
                 <a href="placeController?action=destination&page=indexjsp">Trang chủ</a> /
                 <a href="placeController?action=destination&page=destinationjsp">Điểm đến</a> /
-                <span class="current">Du lịch <%=tourList != null && !tourList.isEmpty() ? tourList.get(0).getDestination() : "" %></span>
+                <span class="current">Du lịch <%=location%></span>
             </div>
 
             <div class="container">
+                
                 <%
                 if (tourList != null && !tourList.isEmpty()) {
                 %>
@@ -277,11 +279,6 @@
                         } 
                     }  
                     %>
-<!--nút thêm vé-->
-                    <form action="placeController" method="get">
-                        <input type="hidden" name="action" value="addTicket">
-                        <button type="submit" class="btn-add-ticket">+ Thêm vé</button>
-                    </form>
 
                     <h2>📍 Danh sách vé đang hoạt động</h2>
                 </c:if>
@@ -357,6 +354,15 @@
                 } // end if
                 %>
             </div>
+            <c:if test="${sessionScope.nameUser.role == 'AD'}">
+                    <!-- Nút thêm vé luôn hiện với Admin -->
+                    <form action="placeController" method="get">
+                        <input type="hidden" name="action" value="addTicket">
+                        <input type="hidden" name="destination" value="<%=location%>">
+                        
+                        <button type="submit" class="btn-add-ticket">+ Thêm vé</button>
+                    </form>
+                </c:if>
         </div>
 
         <%@include file="footer.jsp" %>
