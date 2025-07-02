@@ -297,7 +297,7 @@
                 %>    
 
                 <div class="tour-card">
-                    <img class="tour-img" src="assets/images/places/<%=t.getImg_Tour()%>" alt="<%= t.getNametour() %>">
+                    <img class="tour-img" src="<%=t.getImg_Tour()%>" alt="<%= t.getNametour() %>">
                     <div class="tour-content">
                         <div>
                             <div class="tour-title"><%= t.getNametour() %></div>
