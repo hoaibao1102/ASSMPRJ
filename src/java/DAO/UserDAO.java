@@ -6,6 +6,7 @@ package DAO;
 
 import DTO.UserDTO;
 import UTILS.DBUtils;
+import UTILS.PasswordUtils;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -60,7 +61,7 @@ public class UserDAO implements IDAO<UserDTO, String> {
                         rs.getString("role"),
                         rs.getInt("status") == 1
                 );
-                    list.add(user);
+                list.add(user);
             }
             return list;
         } catch (ClassNotFoundException | SQLException ex) {
@@ -162,4 +163,47 @@ public class UserDAO implements IDAO<UserDTO, String> {
         return null;
     }
 
+    // Xác thực login để kiểm tra password hiện tại
+    public boolean checkLogin(String strId, String rawPwd) throws SQLException {
+        String sql = "SELECT password FROM Users WHERE id = ?";
+        Connection conn;
+        try {
+            conn = DBUtils.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            int id;
+            try {
+                id = Integer.parseInt(strId);
+            } catch (Exception e) {
+                id = -1;
+            }
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                String hash = rs.getString("password");
+                return PasswordUtils.checkPassword(rawPwd, hash);  // BCrypt verify
+            }
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+
+    public boolean phoneExists(String phone, int excludeId) throws SQLException {
+        String sql = "SELECT TOP 1 1 FROM Users WHERE phone = ? AND id <> ?";
+        Connection conn;
+        try {
+            conn = DBUtils.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, phone);
+            ps.setInt(2, excludeId);
+
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return true;  // Có user khác đang dùng số này
+            }
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;  // Không tồn tại hoặc có lỗi
+    }
 }

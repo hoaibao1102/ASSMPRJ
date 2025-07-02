@@ -36,6 +36,10 @@ public class UserDTO {
         this.status = status;
     }
 
+    public UserDTO() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
     public boolean isStatus() {
         return status;
     }
