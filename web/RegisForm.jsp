@@ -145,7 +145,7 @@
                 </div>
                 <% } %>
 
-                <form action="<%= isEditMode ? "userController" : "regisController" %>" method="post">
+                <form action="<%= isEditMode ? "userController" : "regisController" %>" method="get">
                     <input type="hidden" value="<%= isEditMode ? "updateProfile" : "regis" %>" name="action"> 
                     <% if (isEditMode) { %>
                     <input type="hidden" name="userId" value="<%= currentUser.getIdUser() %>" />
