@@ -199,7 +199,7 @@ public class placeController extends HttpServlet {
 
                     // lấy ra các ngày đi 
                     List<StartDateDTO> startDateTour = stdDAO.search(tourTicket.getIdTourTicket());
-
+                    
                     request.setAttribute("startDateTour", startDateTour);
                     request.setAttribute("ticketImgDetail", ticketImgDetail);
                     request.setAttribute("ticketDayDetail", ticketDayDetail);
@@ -218,7 +218,7 @@ public class placeController extends HttpServlet {
                 request.setAttribute("idPlace", idPlace);
                 request.setAttribute("idTour", idTour);
                 request.setAttribute("destination", destination);
-                System.out.println(idPlace+" "+idTour+" "+destination);
+                System.out.println(idPlace + " " + idTour + " " + destination);
 
                 url = "createTicketForm.jsp";
 
@@ -256,7 +256,7 @@ public class placeController extends HttpServlet {
                         durationStr = "2 ngày 1 đêm";
                     } else if (duration == 3) {
                         durationStr = "3 ngày 2 đêm";
-                    } else if(duration == 4){
+                    } else if (duration == 4) {
                         durationStr = "4 ngày 3 đêm";
                     }
 
@@ -276,7 +276,6 @@ public class placeController extends HttpServlet {
                         morningDescriptions.add(morning != null ? morning : "");
                         afternoonDescriptions.add(afternoon != null ? afternoon : "");
                         eveningDescriptions.add(evening != null ? evening : "");
-
                     }
 
                     // ===== LẤY DỮ LIỆU DEPARTURE DATES =====
@@ -324,14 +323,6 @@ public class placeController extends HttpServlet {
                         );
                         boolean isUpdateDay = tdddao.create(tdddto);
                     }
-
-                    // 4. INSERT bảng TourStartDates
-                    for (int i = 0; i < departureDates.size(); i++) {
-                        StartDateDTO addto = new StartDateDTO(tourId, departureDates.get(i), i);
-                        sddao.create(addto);
-                    }
-
-                    sddao.deleteByTourId(tourId); //đang chưa hoạt động
 
                     for (int i = 0; i < departureDates.size(); i++) {
                         StartDateDTO sddto = new StartDateDTO(tourId, departureDates.get(i), i + 1);
@@ -387,6 +378,7 @@ public class placeController extends HttpServlet {
                     List<String> departureDates = new ArrayList<>();
                     for (int i = 1; i <= 3; i++) { // Tối đa 3 ngày
                         String date = request.getParameter("departureDate" + i);
+                        System.out.println(date);
                         if (date != null && !date.trim().isEmpty()) {
                             departureDates.add(date);
                         }
@@ -406,7 +398,9 @@ public class placeController extends HttpServlet {
                     ttdto.setTransport_name(transport);
                     ttdto.setImg_Tour(imgCoverPart);
                     boolean isUpdateTicket = ttdao.update(ttdto);
-
+                    if (isUpdateTicket) {
+                        System.out.println("tticket");
+                    }
                     // 2. Cập nhật bảng TicketImgs
                     // Xóa ảnh cũ trước khi thêm mới
                     tidao.deleteByTourId(tourId);
@@ -431,23 +425,24 @@ public class placeController extends HttpServlet {
                                 eveningDescriptions.get(i)
                         );
                         boolean isUpdateDay = tdddao.update(tdddto);
+                        if (isUpdateDay) {
+                            System.out.println("tkddetail thành công");
+                        }
                     }
-
+                    System.out.println("===================");
                     // 4. Cập nhật bảng TourStartDates
                     // Xóa ngày cũ trước khi thêm mới (đang bị cấn và chưa thống nhất xử lý)
                     for (int i = 0; i < departureDates.size(); i++) {
+                        System.out.println("ngày "+ i);
+                        System.out.println("departureDates "+ departureDates.get(i));
+                        System.out.println("startDateTour.get(i)"+ startDateTour.get(i).getStartDate());
                         if (!departureDates.get(i).equals(startDateTour.get(i).getStartDate())) {
                             sddao.deleteByTourId(tourId, startDateTour.get(i).getStartDate());
-                            StartDateDTO addto = new StartDateDTO(tourId, departureDates.get(i), i);
+                            StartDateDTO addto = new StartDateDTO(tourId, departureDates.get(i), i + 1);
                             sddao.create(addto);
                         }
-                    }
 
-                    sddao.deleteByTourId(tourId); //đang chưa hoạt động
-
-                    for (int i = 0; i < departureDates.size(); i++) {
-                        StartDateDTO sddto = new StartDateDTO(tourId, departureDates.get(i), i + 1);
-                        boolean isCreateDate = sddao.create(sddto);
+                        
                     }
 
                     // Chuyển hướng về trang danh sách

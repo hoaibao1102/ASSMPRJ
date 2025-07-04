@@ -31,9 +31,8 @@ public class TourTicketDAO implements IDAO<TourTicketDTO, String> {
             + "img_Tour = ?, "
             + "status = ?  "
             + "WHERE idTourTicket = ?;";
-    private final String CREATE_QUERY = "INSERT INTO TourTickets (idplace, destination, placestart, duration, price, "
-            + "transport_name, nametour, img_Tour, status) "
-            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    private final String CREATE_QUERY = "INSERT INTO TourTickets (idplace, destination, placestart, duration, price, transport_name, nametour, img_Tour, status,idTourTicket) "
+            + "VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     @Override
     public boolean update(TourTicketDTO entity) {
@@ -70,9 +69,10 @@ public class TourTicketDAO implements IDAO<TourTicketDTO, String> {
             ps.setString(4, ticket.getDuration());
             ps.setDouble(5, ticket.getPrice());
             ps.setString(6, ticket.getTransport_name());
-            ps.setString(7, ticket.getIdTourTicket());
+            ps.setString(7, ticket.getNametour());
             ps.setString(8, ticket.getImg_Tour());
             ps.setInt(9, ticket.isStatus() ? 1 : 0);
+            ps.setString(10, ticket.getIdTourTicket());
             int n = ps.executeUpdate();
             return n > 0;
         } catch (ClassNotFoundException ex) {
