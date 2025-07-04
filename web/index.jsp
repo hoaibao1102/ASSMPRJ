@@ -193,7 +193,7 @@
             </div>
 
             <!-- Auto-submit form -->
-            <form id="autoSubmitForm" action="placeController" method="post">
+            <form id="autoSubmitForm" action="MainController" method="post">
                 <input type="hidden" name="action" value="destination">
                 <input type="hidden" name="page" value="indexjsp">
 
@@ -204,7 +204,7 @@
                 <div class="grid">
                     <c:forEach var="place" items="${placeList }">
                         <c:if test="${place.featured and place.status }">
-                            <form class="card" action="placeController" method="post">
+                            <form class="card" action="MainController" method="post">
                                 <div class="image-wrapper">
                                     <img src="${place.img}" alt="${place.placeName}" />
                                     <button type="submit" class="btn-overlay">Xem thêm</button>

@@ -555,7 +555,7 @@
                         <p class="total-amount">0 đ</p>
                     </div>
 
-                    <form action="orderController" method="get" onsubmit="return prepareSubmit()">
+                    <form action="MainController" method="get" onsubmit="return prepareSubmit()">
                         <input type="hidden" name="action" value="call_oder_step2">
 
                         <!-- gửi thông tin để tạo dtb booking table -->

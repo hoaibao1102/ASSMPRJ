@@ -249,7 +249,7 @@
             </h2>
 
 
-            <form action="placeController" method="post" onsubmit="prepareFormSubmission()">
+            <form action="MainController" method="post" onsubmit="prepareFormSubmission()">
 
                 <!-- Xác định action dựa trên việc có tourTicket hay không -->
                 <input type="hidden" name="action" value="${not empty requestScope.tourTicket ? 'submitUpdateTour' : 'submitAddTour'}"/>
