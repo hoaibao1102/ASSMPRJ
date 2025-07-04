@@ -176,7 +176,11 @@
     <body class="<%= AuthUtils.isAdmin(session)? "admin-layout" : "" %>">
 
         <jsp:include page="header.jsp"/>
-
+        <c:if test="${not empty requestScope.errorMessage}">
+            <script>
+                window.alert("${errorMessage}");
+            </script>
+        </c:if>
         <div class="content">
             <!-- Slider -->
             <div class="slider-container">
