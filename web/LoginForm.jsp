@@ -121,7 +121,7 @@
                         String message = request.getAttribute("message")+"";
                 %>
                 <span style="color: red; font-size: 17px; position: relative; top: -17px; left: -23%"><i> <%=message.equals("null")?"":message%></i> </span>  
-                <a href="#" class="forgot-link">Quên mật khẩu?</a>
+                <a href="forgot_password.jsp" class="forgot-link">Quên mật khẩu?</a>
 
                 <input type="submit" value="Login" class="login-btn">
             </form>

@@ -4,6 +4,8 @@
     Author     : MSI PC
 --%>
 <%@ page import="DTO.UserDTO"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
@@ -114,150 +116,161 @@
         <%@include file="header.jsp" %>
         <div class="content content_sub">
             <div class="register-container">
-                <%
-                    String mode = request.getAttribute("mode") != null ? request.getAttribute("mode").toString() : "register";
-                    boolean isEditMode = "edit".equals(mode);
-                    
-                    UserDTO userRegis = (UserDTO)request.getAttribute("newUser");
-                    UserDTO currentUser = (UserDTO)session.getAttribute("nameUser");
-
-                    // Sử dụng newUser attribute cho cả 2 trường hợp
-                    UserDTO displayUser = userRegis != null ? userRegis : currentUser;
-                    String userName = displayUser != null && displayUser.getFullName() != null ? displayUser.getFullName() : "";
-                    String userPhone = displayUser != null && displayUser.getPhone() != null ? displayUser.getPhone() : "";
-                    String userEmail = displayUser != null && displayUser.getEmail() != null ? displayUser.getEmail() : "";
-                %>
-
-                <h2><%= isEditMode ? "Edit Your Profile" : "Create Your Account" %></h2>
+                <!-- Xác định mode: edit hoặc register -->
+                <c:set var="isEditMode" value="${param.mode eq 'edit' or requestScope.mode eq 'edit'}" />
                 
-                <%
-                    String successMsg = (String) request.getAttribute("successMsg");
-                    String updateError = (String) request.getAttribute("updateError");
-                %>
-                <% if (successMsg != null) { %>
-                <div style="background-color: #d4edda; color: #155724; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
-                    <%= successMsg %>
-                </div>
-                <% } %>
-                <% if (updateError != null) { %>
-                <div style="background-color: #f8d7da; color: #721c24; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
-                    <%= updateError %>
-                </div>
-                <% } %>
+                <!-- Xác định user data để hiển thị -->
+                <c:choose>
+                    <c:when test="${isEditMode}">
+                        <c:set var="displayUser" value="${sessionScope.nameUser}" />
+                    </c:when>
+                    <c:otherwise>
+                        <c:set var="displayUser" value="${requestScope.newUser}" />
+                    </c:otherwise>
+                </c:choose>
 
-                <form action="<%= isEditMode ? "userController" : "regisController" %>" method="get">
-                    <input type="hidden" value="<%= isEditMode ? "updateProfile" : "regis" %>" name="action"> 
-                    <% if (isEditMode) { %>
-                    <input type="hidden" name="userId" value="<%= currentUser.getIdUser() %>" />
-                    <% } %>
+                <h2>
+                    <c:choose>
+                        <c:when test="${isEditMode}">Edit Your Profile</c:when>
+                        <c:otherwise>Create Your Account</c:otherwise>
+                    </c:choose>
+                </h2>
+                
+                <!-- Hiển thị thông báo thành công -->
+                <c:if test="${not empty requestScope.successMsg}">
+                    <div style="background-color: #d4edda; color: #155724; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+                        ${requestScope.successMsg}
+                    </div>
+                </c:if>
+                
+                <!-- Hiển thị thông báo lỗi -->
+                <c:if test="${not empty requestScope.updateError}">
+                    <div style="background-color: #f8d7da; color: #721c24; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+                        ${requestScope.updateError}
+                    </div>
+                </c:if>
+
+                <form action="${isEditMode ? 'userController' : 'regisController'}" method="get">
+                    <input type="hidden" value="${isEditMode ? 'updateProfile' : 'regis'}" name="action"> 
+                    <c:if test="${isEditMode}">
+                        <input type="hidden" name="userId" value="${sessionScope.nameUser.idUser}" />
+                    </c:if>
 
                     <label for="name">Full Name</label>
-                    <input type="text" id="name" name="txtFullname" placeholder="John Doe" required value="<%=userName%>">
-                    <%
-                        String txtFullname_error = request.getAttribute("txtFullname_error")+"";
-                    %>
-                    <div class="error-mess">
-                        <i> <%=txtFullname_error.equals("null")?"":txtFullname_error%></i>  
-                    </div>
+                    <input type="text" id="name" name="txtFullname" placeholder="John Doe" required 
+                           value="${not empty param.txtFullname ? param.txtFullname : (displayUser.fullName != null ? displayUser.fullName : '')}">
+                    <c:if test="${not empty requestScope.txtFullname_error}">
+                        <div class="error-mess">
+                            <i>${requestScope.txtFullname_error}</i>  
+                        </div>
+                    </c:if>
 
                     <label for="email">Email Address</label>
                     <input type="email" id="email" name="txtEmail" placeholder="example@email.com" 
-                           <%= isEditMode ? "readonly style='background-color: #f5f5f5; cursor: not-allowed;'" : "required" %> 
-                           value="<%=userEmail%>">
-                    <% if (isEditMode) { %>
-                    <small style="color: green;">Email không thể thay đổi</small>
-                    <% } else { %>
-                    <%
-                        String txtEmail_error = request.getAttribute("txtEmail_error")+"";
-                    %>
-                    <div class="error-mess">
-                        <i> <%=txtEmail_error.equals("null")?"":txtEmail_error%></i> 
-                    </div>
-                    <% } %>
+                           value="${not empty param.txtEmail ? param.txtEmail : (displayUser.email != null ? displayUser.email : '')}"
+                           <c:choose>
+                               <c:when test="${isEditMode}">readonly style="background-color: #f5f5f5; cursor: not-allowed;"</c:when>
+                               <c:otherwise>required</c:otherwise>
+                           </c:choose>>
+                    <c:choose>
+                        <c:when test="${isEditMode}">
+                            <small style="color: green;">Email không thể thay đổi</small>
+                        </c:when>
+                        <c:otherwise>
+                            <c:if test="${not empty requestScope.txtEmail_error}">
+                                <div class="error-mess">
+                                    <i>${requestScope.txtEmail_error}</i> 
+                                </div>
+                            </c:if>
+                        </c:otherwise>
+                    </c:choose>
 
                     <label for="phone">Phone Number</label>
-                    <input type="tel" id="phone" name="txtPhone" placeholder="0123 456 789" required value="<%=userPhone%>">
-                    <%
-                        String txtPhone_error = request.getAttribute("txtPhone_error")+"";
-                    %>
-                    <div class="error-mess">
-                        <i> <%=txtPhone_error.equals("null")?"":txtPhone_error%></i> 
-                    </div>
-
-                    <% if (!isEditMode) { %>
-                    <!-- Chỉ hiển thị password khi đăng ký -->
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="txtPassword" placeholder="********" required>
-                    <%
-                        String txtPassword_error = request.getAttribute("txtPassword_error")+"";
-                    %>
-                    <div class="error-mess">
-                        <i> <%=txtPassword_error.equals("null")?"":txtPassword_error%></i> 
-                    </div>
-
-                    <label for="confirm">Confirm Password</label>
-                    <input type="password" id="confirm" name="txtConfirmPassword" placeholder="********" required>
-                    <%
-                        String txtConfirmPassword_error = request.getAttribute("txtConfirmPassword_error")+"";
-                    %>
-                    <div class="error-mess">
-                        <span><i> <%=txtConfirmPassword_error.equals("null")?"":txtConfirmPassword_error%></i></span>  
-                    </div>
-
-                    <div class="terms">
-                        <input type="checkbox" id="agree" required>
-                        <label for="agree">I agree to the <a href="#">Terms & Conditions</a></label>
-                    </div>
-                    <% } else { %>
-                    <!-- Phần đổi mật khẩu cho edit mode (tùy chọn) -->
-                    <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #ddd;">
-                        <h3 style="color: #666; font-size: 16px;">Đổi mật khẩu (tùy chọn)</h3>
-
-                        <label for="currentPassword">Current Password</label>
-                        <input type="password" id="currentPassword" name="txtCurrentPassword" placeholder="********">
-                        <%
-                            String txtCurrentPassword_error = request.getAttribute("txtCurrentPassword_error")+"";
-                        %>
+                    <input type="tel" id="phone" name="txtPhone" placeholder="0123 456 789" required 
+                           value="${not empty param.txtPhone ? param.txtPhone : (displayUser.phone != null ? displayUser.phone : '')}">
+                    <c:if test="${not empty requestScope.txtPhone_error}">
                         <div class="error-mess">
-                            <i> <%=txtCurrentPassword_error.equals("null")?"":txtCurrentPassword_error%></i>
+                            <i>${requestScope.txtPhone_error}</i> 
                         </div>
+                    </c:if>
 
-                        <label for="newPassword">New Password</label>
-                        <input type="password" id="newPassword" name="txtNewPassword" placeholder="********">
-                        <%
-                            String txtNewPassword_error = request.getAttribute("txtNewPassword_error")+"";
-                        %>
-                        <div class="error-mess">
-                            <i> <%=txtNewPassword_error.equals("null")?"":txtNewPassword_error%></i>
+                    <c:if test="${not isEditMode}">
+                        <!-- Chỉ hiển thị password khi đăng ký -->
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="txtPassword" placeholder="********" required>
+                        <c:if test="${not empty requestScope.txtPassword_error}">
+                            <div class="error-mess">
+                                <i>${requestScope.txtPassword_error}</i> 
+                            </div>
+                        </c:if>
+
+                        <label for="confirm">Confirm Password</label>
+                        <input type="password" id="confirm" name="txtConfirmPassword" placeholder="********" required>
+                        <c:if test="${not empty requestScope.txtConfirmPassword_error}">
+                            <div class="error-mess">
+                                <span><i>${requestScope.txtConfirmPassword_error}</i></span>  
+                            </div>
+                        </c:if>
+
+                        <div class="terms">
+                            <input type="checkbox" id="agree" required>
+                            <label for="agree">I agree to the <a href="#">Terms & Conditions</a></label>
                         </div>
+                    </c:if>
+                    
+                    <c:if test="${isEditMode}">
+                        <!-- Phần đổi mật khẩu cho edit mode (tùy chọn) -->
+                        <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #ddd;">
+                            <h3 style="color: #666; font-size: 16px;">Đổi mật khẩu (tùy chọn)</h3>
 
-                        <label for="confirmNewPassword">Confirm New Password</label>
-                        <input type="password" id="confirmNewPassword" name="txtConfirmNewPassword" placeholder="********">
-                        <%
-                            String txtConfirmNewPassword_error = request.getAttribute("txtConfirmNewPassword_error")+"";
-                        %>
-                        <div class="error-mess">
-                            <i> <%=txtConfirmNewPassword_error.equals("null")?"":txtConfirmNewPassword_error%></i>
+                            <label for="currentPassword">Current Password</label>
+                            <input type="password" id="currentPassword" name="txtCurrentPassword" placeholder="********">
+                            <c:if test="${not empty requestScope.txtCurrentPassword_error}">
+                                <div class="error-mess">
+                                    <i>${requestScope.txtCurrentPassword_error}</i>
+                                </div>
+                            </c:if>
+
+                            <label for="newPassword">New Password</label>
+                            <input type="password" id="newPassword" name="txtNewPassword" placeholder="********">
+                            <c:if test="${not empty requestScope.txtNewPassword_error}">
+                                <div class="error-mess">
+                                    <i>${requestScope.txtNewPassword_error}</i>
+                                </div>
+                            </c:if>
+
+                            <label for="confirmNewPassword">Confirm New Password</label>
+                            <input type="password" id="confirmNewPassword" name="txtConfirmNewPassword" placeholder="********">
+                            <c:if test="${not empty requestScope.txtConfirmNewPassword_error}">
+                                <div class="error-mess">
+                                    <i>${requestScope.txtConfirmNewPassword_error}</i>
+                                </div>
+                            </c:if>
+
+                            <small style="color: #666;">Để trống nếu không muốn đổi mật khẩu</small>
                         </div>
-
-                        <small style="color: #666;">Để trống nếu không muốn đổi mật khẩu</small>
-                    </div>
-                    <% } %>
+                    </c:if>
 
                     <button type="submit">
-                        <%= isEditMode ? "Update Profile" : "Sign Up" %>
+                        <c:choose>
+                            <c:when test="${isEditMode}">Update Profile</c:when>
+                            <c:otherwise>Sign Up</c:otherwise>
+                        </c:choose>
                     </button>
                 </form>
 
-                <% if (!isEditMode) { %>
-                <div class="login-link">
-                    Already have an account? <a href="LoginForm.jsp">Login here</a>
-                </div>
-                <% } else { %>
-                <div class="login-link">
-                    <a href="placeController?action=destination&page=indexjsp">Back to Home</a>
-                </div>
-                <% } %>
+                <c:choose>
+                    <c:when test="${not isEditMode}">
+                        <div class="login-link">
+                            Already have an account? <a href="LoginForm.jsp">Login here</a>
+                        </div>
+                    </c:when>
+                    <c:otherwise>
+                        <div class="login-link">
+                            <a href="placeController?action=destination&page=indexjsp">Back to Home</a>
+                        </div>
+                    </c:otherwise>
+                </c:choose>
             </div>
         </div>
         <%@include file="footer.jsp" %>

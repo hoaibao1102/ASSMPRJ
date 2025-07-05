@@ -182,7 +182,7 @@ public class userController extends HttpServlet {
                 err.put("txtPhone_error", "Số điện thoại đã tồn tại");
             }
 
-            if (isBlank(email) || !email.matches("^[\\w.-]+@[\\w.-]+\\.\\w{2,}$")) {
+            if (isBlank(email) || !isValidEmail(email)) {
                 err.put("txtEmail_error", "Email không hợp lệ");
             }
 
