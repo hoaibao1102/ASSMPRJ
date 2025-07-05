@@ -124,7 +124,6 @@ public class regisController extends HttpServlet {
                             request.setAttribute("email", email);
                             url = "verify.jsp"; // chuyển đến trang xác minh
 
-
 //                        uDAO.create(userSuccess);
 //                        url = LOGIN_PAGE;
                         } else {
@@ -168,6 +167,8 @@ public class regisController extends HttpServlet {
                     } else {
                         verDAO.incrementAttempt(email);
                         request.setAttribute("error", "Incorrect verification code.");
+                        request.setAttribute("mode", "register"); // hoặc "regis"
+                        request.setAttribute("email", email);     // để hiển thị email trong jsp
                         url = "verify.jsp";
                     }
                 }

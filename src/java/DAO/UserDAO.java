@@ -206,4 +206,46 @@ public class UserDAO implements IDAO<UserDTO, String> {
         }
         return false;  // Không tồn tại hoặc có lỗi
     }
+
+    public UserDTO readbyEmail(String email) {
+        String sql = "SELECT * FROM Users WHERE email = ?";
+        try {
+            Connection conn = DBUtils.getConnection();
+            PreparedStatement pst = conn.prepareStatement(sql);
+            
+            pst.setString(1, email);
+            ResultSet rs = pst.executeQuery();
+            if (rs.next()) {
+                return new UserDTO(
+                        rs.getInt("id"),
+                        rs.getString("full_name"),
+                        rs.getString("email"),
+                        rs.getString("phone"),
+                        rs.getString("password"),
+                        rs.getString("role"),
+                        rs.getInt("status") == 1
+                );
+            }
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
+    // Trong UserDAO.java
+    public boolean updatePasswordByEmail(String email, String newPassword) throws SQLException {
+        String sql = "UPDATE Users SET password = ? WHERE email = ?";
+
+        try {
+            Connection conn = DBUtils.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, PasswordUtils.hashPassword(newPassword)); // nếu bạn có hàm hash
+            ps.setString(2, email);
+
+            return ps.executeUpdate() > 0;
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
 }
