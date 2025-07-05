@@ -51,7 +51,7 @@
                                         <td><%=u.getPhone()%></td>
                                         <td><%=u.getRole()%></td>
                                         <td>
-                                            <form action="userController" method="get" >
+                                            <form action="MainController" method="get" >
                                                 <input type="hidden" name="action" value="orderOfUser" />
                                                 <input type="hidden" name="userId" value="<%= u.getIdUser() %>" />
                                                 <button type="submit" >Xem đơn hàng</button>

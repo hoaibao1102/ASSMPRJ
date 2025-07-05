@@ -497,7 +497,7 @@
                                             <div class="order-actions">
                                                 <c:choose>
                                                     <c:when test="${order.status == 0}">
-                                                        <form class="pay-order-form" action="orderController" method="get" >
+                                                        <form class="pay-order-form" action="MainController" method="get" >
                                                             <input type="hidden" name="action" value="openPayModal"/>
                                                             <input type="hidden" name="idBooking" value="${order.idBooking}"/>
                                                             <input type="hidden" name="totalPrice" value="${order.totalPrice}"/>
@@ -525,7 +525,7 @@
                         <div class="modal-content">
                             <span class="close-btn" onclick="closePaymentModal()">&times;</span>
                             <h3>Chọn phương thức thanh toán</h3>
-                            <form id="paymentForm" method="get" action="orderController">
+                            <form id="paymentForm" method="get" action="MainController">
                                 <input type="hidden" name="action" value="updatePayOrder"/>
                                 <input type="hidden" id="idBooking" name="idBooking" value="">
                                 <input type="hidden" id="totalPrice" name="totalBill2" value="">

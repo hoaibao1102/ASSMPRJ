@@ -265,7 +265,7 @@
                         </div>
 
                         <!-- Form sử dụng input submit cho nút Xem chi tiết -->
-                        <form action="placeController" method="get">
+                        <form action="MainController" method="get">
                             <input type="hidden" name="action" value="ticketDetail" />
                             <input type="hidden" name="idTourTicket" value="<%=t.getIdTourTicket()%>" />
                             <input class="btn-detail" type="submit" value="Xem chi tiết" />
@@ -289,7 +289,7 @@
                             for (PlacesDTO p : placeList) {
                                 if (p.getFeatured()) {
                             %>
-                            <form class="card" action="placeController" method="post">
+                            <form class="card" action="MainController" method="post">
                                 <div class="image-wrapper">
                                     <img src="assets/images/<%=p.getImg()%>" alt="<%=p.getPlaceName()%>" />
                                     <button type="submit" class="btn-overlay">Xem thêm</button>

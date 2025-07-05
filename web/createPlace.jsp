@@ -188,7 +188,7 @@
         <div class="form-container">
             <h2>Thêm Địa Điểm Mới</h2>
 
-            <form action="placeController" method="post">
+            <form action="MainController" method="post">
                 <input type="hidden" name="action" value="<%=action%>">
 
                 <label for="placename">Tên địa điểm</label>

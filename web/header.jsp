@@ -402,14 +402,14 @@
                     <div class="menu-toggle" onclick="toggleMenu()">☰</div>
                     <ul class="menu" id="menu">
                         <li class="menu-item">
-                            <form action="placeController" method="get">
+                            <form action="MainController" method="get">
                                 <input type="hidden" name="action" value="destination">
                                 <input type="hidden" name="page" value="indexjsp">
                                 <input type="submit" value="Trang chủ">
                             </form>
                         </li>
                         <li class="menu-item">
-                            <form action="placeController" method="get">
+                            <form action="MainController" method="get">
                                 <input type="hidden" name="action" value="destination">
                                 <input type="hidden" name="page" value="destinationjsp">
                                 <input type="submit" value="Điểm đến">
@@ -419,7 +419,7 @@
                         <li class="menu-item"><a href="contact.jsp">Liên hệ</a></li>
                     </ul>
                     <div class="right-section">
-                        <form action="placeController" method="get">
+                        <form action="MainController" method="get">
                             <div class="search-bar">
                                 <input type="hidden" name="action" value="search">
                                 <input type="text" class="search-input" name="searchItem" placeholder="Tìm Kiếm...." value="<%= searchTour %>">
@@ -445,7 +445,7 @@
                                     <hr>
 
                                     <!-- Edit Profile -->
-                                    <form action="userController" method="post" class="dropdown-item-form">
+                                    <form action="MainController" method="post" class="dropdown-item-form">
                                         <input type="hidden" name="action" value="editProfile" />
                                         <input type="hidden" name="userId" value="<%= user.getIdUser() %>" />
                                         <button type="submit" class="dropdown-item">
@@ -454,7 +454,7 @@
                                     </form>
 
                                     <!-- Order History -->
-                                    <form action="userController" method="post" class="dropdown-item-form">
+                                    <form action="MainController" method="post" class="dropdown-item-form">
                                         <input type="hidden" name="action" value="orderOfUser" />
                                         <input type="hidden" name="userId" value="<%= user.getIdUser() %>" />
                                         <button type="submit" class="dropdown-item">

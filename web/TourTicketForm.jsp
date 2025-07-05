@@ -260,7 +260,7 @@
                                 <div class="price">Giá từ: <%= String.format("%,.0f", t.getPrice()) %> đ</div>
                             </div>
 
-                            <form action="placeController" method="get">
+                            <form action="MainController" method="get">
                                 <input type="hidden" name="idTourTicket" value="<%=t.getIdTourTicket()%>"/>
                                 <input type="hidden" name="nameOfDestination" value="<%=tourList.get(0).getDestination()%>"/>
                                 <div class="btn-group">
@@ -318,7 +318,7 @@
                             <div class="price">Giá từ: <%= String.format("%,.0f", t.getPrice()) %> đ</div>
                         </div>
 
-                        <form action="placeController" method="get">
+                        <form action="MainController" method="get">
                             <input type="hidden" name="idTourTicket" value="<%=t.getIdTourTicket()%>"/>
                             <input type="hidden" name="nameOfDestination" value="<%=tourList.get(0).getDestination()%>"/>
                             <div class="btn-group">
@@ -356,7 +356,7 @@
             </div>
             <c:if test="${sessionScope.nameUser.role == 'AD'}">
                     <!-- Nút thêm vé luôn hiện với Admin -->
-                    <form action="placeController" method="get">
+                    <form action="MainController" method="get">
                         <input type="hidden" name="action" value="addTicket">
                         <input type="hidden" name="destination" value="<%=location%>">
                         

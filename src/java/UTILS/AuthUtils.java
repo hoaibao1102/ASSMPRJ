@@ -45,6 +45,14 @@ public class AuthUtils {
         UserDTO user = (UserDTO)session.getAttribute("nameUser");
         return user.getRole().equals(ADMIN_ROLE);
     }
+    public static boolean isCustomer(HttpSession session){
+        if(!isLoggedIn(session)){
+            return false;
+        }
+        UserDTO user = (UserDTO)session.getAttribute("nameUser");
+        return user.getRole().equals(USER_ROLE);
+    }
+    
     // Huy added
      public static String getAccessDeniedMessage(String action){
         return "You cannnot access to " + action + ". Please contact Adminstrator to know more detail information.";

@@ -176,7 +176,11 @@
     <body class="<%= AuthUtils.isAdmin(session)? "admin-layout" : "" %>">
 
         <jsp:include page="header.jsp"/>
-
+        <c:if test="${not empty requestScope.errorMessage}">
+            <script>
+                window.alert("${errorMessage}");
+            </script>
+        </c:if>
         <div class="content">
             <!-- Slider -->
             <div class="slider-container">
@@ -193,7 +197,7 @@
             </div>
 
             <!-- Auto-submit form -->
-            <form id="autoSubmitForm" action="placeController" method="post">
+            <form id="autoSubmitForm" action="MainController" method="post">
                 <input type="hidden" name="action" value="destination">
                 <input type="hidden" name="page" value="indexjsp">
 
@@ -204,7 +208,7 @@
                 <div class="grid">
                     <c:forEach var="place" items="${placeList }">
                         <c:if test="${place.featured and place.status }">
-                            <form class="card" action="placeController" method="post">
+                            <form class="card" action="MainController" method="post">
                                 <div class="image-wrapper">
                                     <img src="${place.img}" alt="${place.placeName}" />
                                     <button type="submit" class="btn-overlay">Xem thêm</button>

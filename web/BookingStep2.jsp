@@ -238,7 +238,7 @@
                         Ngày về: <%=endDateStr%>&nbsp;&nbsp; <br>
 
                     </p>
-                    <form action="orderController" method="get">
+                    <form action="MainController" method="get">
                         <input type="hidden" name="action" value="call_oder_step3">
 
                         <input type="hidden" name="totalBill2" value="<%=newBooking.getTotalPrice()%>">
@@ -258,7 +258,7 @@
              background:rgba(0,0,0,0.3);align-items:center;justify-content:center;">
             <div style="background:#fff;padding:32px 24px;border-radius:16px;width:350px;max-width:90vw;position:relative;">
                 <h3 style="margin-bottom:22px;">Chọn phương thức thanh toán</h3>
-                <form id="paymentForm" method="get" action="orderController">
+                <form id="paymentForm" method="get" action="MainController">
                     <input type="hidden" name="action" value="call_oder_step3"/>
                     <input type="hidden" name="totalBill2" value="<%=newBooking.getTotalPrice()%>">
                     <input type="hidden" name="numberTicket2" value="<%=newBooking.getNumberTicket()%>">

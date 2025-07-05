@@ -17,7 +17,7 @@
             .content_sub{
                 margin: 0 auto;
             }
-          
+
             .login-container {
                 flex-grow: 1;
                 background-color: #ffffff;
@@ -111,7 +111,12 @@
         <%@include file="header.jsp"%>
         <div class="content content_sub">
             <div class=" login-container">
-            <h2>Đăng nhập</h2>
+                <c:if test="${not empty requestScope.errorMessage}">
+                    <script>
+                window.alert("${errorMessage}");
+                    </script>
+                </c:if>
+                <h2>Đăng nhập</h2>
 
             <form action="loginController" method="post"> 
                 <input type="hidden" value="login" name="action"> 
@@ -123,17 +128,17 @@
                 <span style="color: red; font-size: 17px; position: relative; top: -17px; left: -23%"><i> <%=message.equals("null")?"":message%></i> </span>  
                 <a href="forgot_password.jsp" class="forgot-link">Quên mật khẩu?</a>
 
-                <input type="submit" value="Login" class="login-btn">
-            </form>
-                
-                
+                    <input type="submit" value="Login" class="login-btn">
+                </form>
 
-            <div class="register-link">
-                Bạn chưa có tài khoản? <a href="RegisForm.jsp">Đăng ký ngay</a>
+
+
+                <div class="register-link">
+                    Bạn chưa có tài khoản? <a href="RegisForm.jsp">Đăng ký ngay</a>
+                </div>
             </div>
         </div>
-        </div>
-        
+
         <%@include file="footer.jsp"%>
     </body>
 </html>

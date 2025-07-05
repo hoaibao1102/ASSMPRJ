@@ -174,7 +174,7 @@
                 📍 Danh sách điểm đến đang ngưng hoạt động
                 <c:forEach var="place" items="${placeList}">
                     <c:if test="${!place.status}">
-                            <form class="place-card" action="placeController" method="post">
+                            <form class="place-card" action="MainController" method="post">
                                
                                 <img class="place-image" src="${place.img}" alt="${place.placeName}" />
 
@@ -198,7 +198,7 @@
                         </c:if>
                 </c:forEach>
                 <br>
-                <form action="placeController" method="get">
+                <form action="MainController" method="get">
                     <input type="hidden" name="action" value="addPlace">
                     <button type="submit" class="btn-add-place">+ Thêm địa điểm</button>
                 </form>
@@ -212,7 +212,7 @@
                     
                     <c:forEach var="place" items="${placeList}">
                         <c:if test="${place.status}">
-                            <form class="place-card" action="placeController" method="post">
+                            <form class="place-card" action="MainController" method="post">
                                 <c:if test="${place.featured and sessionScope.nameUser.role eq 'AD'}">
                                     <div class="featured-label">Nổi bật</div>
                                 </c:if>
