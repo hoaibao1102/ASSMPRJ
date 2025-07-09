@@ -10,69 +10,245 @@
     <head>
         <meta charset="UTF-8">
         <title>Giới thiệu - VN Tours</title>
-        <link rel="stylesheet" href="assets/css/bodyCss.css"> <!-- nếu bạn muốn tách css -->
+        <link rel="stylesheet" href="assets/css/bodyCss.css">
+        <!-- Bootstrap 5 CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        <!-- Bootstrap Icons -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+        <!-- Google Fonts -->
+        <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+        
         <style>
+            :root {
+                --primary-orange: #ff6b35;
+                --primary-dark: #2c3e50;
+                --primary-yellow: #f39c12;
+                --bg-light: #f8f9fa;
+                --gradient-sunset: linear-gradient(135deg, #ff6b35 0%, #f39c12 100%);
+                --gradient-tropical: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+                --shadow-soft: 0 8px 25px rgba(0,0,0,0.1);
+                --shadow-hover: 0 15px 35px rgba(0,0,0,0.15);
+            }
             
-            section {
-                padding: 4rem 1.5rem;
-                max-width: 1200px;
-                margin: auto;
+            body {
+                font-family: 'Nunito', sans-serif;
+                background-color: var(--bg-light);
+                color: var(--primary-dark);
+                line-height: 1.6;
             }
-            h2 {
-                font-size: 2.5rem;
+            
+            .section-padding {
+                padding: 5rem 0;
+            }
+            
+            .section-title {
+                font-size: 2.8rem;
+                font-weight: 800;
                 text-align: center;
-                margin-bottom: 3rem;
+                margin-bottom: 3.5rem;
+                background: var(--gradient-sunset);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                position: relative;
             }
-            h3 {
-                font-size: 1.5rem;
-                margin-bottom: 1rem;
-                font-weight: bold;
+            
+            .section-title::after {
+                content: '';
+                position: absolute;
+                bottom: -15px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 80px;
+                height: 4px;
+                background: var(--gradient-sunset);
+                border-radius: 2px;
             }
-            .grid {
-                display: grid;
-                gap: 2rem;
+            
+            .tropical-card {
+                background: white;
+                border-radius: 20px;
+                box-shadow: var(--shadow-soft);
+                transition: all 0.3s ease;
+                overflow: hidden;
+                border: 1px solid rgba(255, 107, 53, 0.1);
             }
-            .md-grid-2 {
-                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            
+            .tropical-card:hover {
+                transform: translateY(-10px);
+                box-shadow: var(--shadow-hover);
+            }
+            
+            .tropical-card .card-body {
+                padding: 2rem;
+            }
+            
+            .feature-icon {
+                width: 80px;
+                height: 80px;
+                border-radius: 50%;
+                background: var(--gradient-sunset);
+                display: flex;
                 align-items: center;
+                justify-content: center;
+                font-size: 2.5rem;
+                color: white;
+                margin: 0 auto 1.5rem;
+                box-shadow: var(--shadow-soft);
             }
-            .md-grid-3 {
-                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            
+            .stats-badge {
+                background: var(--gradient-sunset);
+                color: white;
+                padding: 0.5rem 1rem;
+                border-radius: 25px;
+                font-weight: 600;
+                font-size: 0.9rem;
+                display: inline-block;
+                margin: 0.25rem;
+                box-shadow: var(--shadow-soft);
             }
-            .rounded {
-                border-radius: 0.75rem;
+            
+            .btn-tropical {
+                background: var(--gradient-sunset);
+                border: none;
+                padding: 1rem 2.5rem;
+                font-weight: 700;
+                border-radius: 50px;
+                color: white;
+                text-decoration: none;
+                transition: all 0.3s ease;
+                box-shadow: var(--shadow-soft);
+                font-size: 1.1rem;
+                text-transform: uppercase;
+                letter-spacing: 1px;
             }
-            .shadow {
-                box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            
+            .btn-tropical:hover {
+                transform: translateY(-3px);
+                box-shadow: var(--shadow-hover);
+                color: white;
             }
-            .text-center {
+            
+            .testimonial-card {
+                background: white;
+                border-radius: 20px;
+                padding: 2rem;
+                box-shadow: var(--shadow-soft);
+                border-left: 5px solid var(--primary-orange);
+                transition: all 0.3s ease;
+                height: 100%;
+            }
+            
+            .testimonial-card:hover {
+                transform: translateY(-5px);
+                box-shadow: var(--shadow-hover);
+            }
+            
+            .testimonial-quote {
+                font-style: italic;
+                font-size: 1.1rem;
+                color: #555;
+                margin-bottom: 1.5rem;
+                line-height: 1.7;
+            }
+            
+            .testimonial-author {
+                color: var(--primary-orange);
+                font-weight: 600;
+                font-size: 1rem;
+            }
+            
+            .tropical-bg {
+                background: linear-gradient(135deg, rgba(255, 107, 53, 0.05) 0%, rgba(243, 156, 18, 0.05) 100%);
+            }
+            
+            .section-intro {
+                font-size: 1.2rem;
+                color: #6c757d;
+                text-align: center;
+                max-width: 800px;
+                margin: 0 auto 4rem;
+                line-height: 1.8;
+            }
+            
+            .feature-list {
+                list-style: none;
+                padding: 0;
+            }
+            
+            .feature-list li {
+                padding: 0.75rem 0;
+                font-size: 1.1rem;
+                color: var(--primary-dark);
+                position: relative;
+                padding-left: 2rem;
+            }
+            
+            .feature-list li::before {
+                content: '✨';
+                position: absolute;
+                left: 0;
+                color: var(--primary-orange);
+                font-size: 1.2rem;
+            }
+            
+            .rounded-image {
+                border-radius: 20px;
+                box-shadow: var(--shadow-soft);
+                transition: all 0.3s ease;
+            }
+            
+            .rounded-image:hover {
+                transform: scale(1.02);
+                box-shadow: var(--shadow-hover);
+            }
+            
+            .cta-section {
+                background: var(--gradient-tropical);
+                color: white;
+                padding: 4rem 0;
                 text-align: center;
             }
-            .list-disc {
-                list-style-type: disc;
-                padding-left: 1.25rem;
-            }
-            .bg-light {
-                background-color: #f9fafb;
-            }
-            .bg-gray {
-                background-color: #f3f4f6;
-            }
-            .text-blue {
-                color: #2563eb;
-            }
-            .btn {
-                background-color: #2563eb;
+            
+            .cta-section h2 {
                 color: white;
-                padding: 0.75rem 1.5rem;
-                font-weight: bold;
-                border: none;
-                border-radius: 9999px;
-                cursor: pointer;
-                text-decoration: none;
+                margin-bottom: 2rem;
             }
-            .btn:hover {
-                background-color: #1d4ed8;
+            
+            .value-card {
+                text-align: center;
+                padding: 2rem;
+                height: 100%;
+            }
+            
+            .value-card h3 {
+                color: var(--primary-orange);
+                font-weight: 700;
+                margin-bottom: 1rem;
+                font-size: 1.4rem;
+            }
+            
+            .value-card p {
+                color: #666;
+                font-size: 1.1rem;
+                line-height: 1.7;
+            }
+            
+            @media (max-width: 768px) {
+                .section-title {
+                    font-size: 2.2rem;
+                }
+                
+                .section-padding {
+                    padding: 3rem 0;
+                }
+                
+                .feature-icon {
+                    width: 60px;
+                    height: 60px;
+                    font-size: 2rem;
+                }
             }
         </style>
     </head>
@@ -80,86 +256,189 @@
         <%@ include file="header.jsp" %>
 
         <!-- VỀ VN TOURS -->
-        <section>
-            <h2>Về VN Tours</h2>
-            <div class="grid md-grid-2">
-                <img src="assets/images/3ae.png" alt="Giới thiệu" class="rounded shadow" style="width:100%;">
-                <div>
-                    <h3>Khơi dậy cảm hứng du lịch Việt</h3>
-                    <p style="margin-bottom:1.5rem;">
-                        VN Tours là nền tảng du lịch kết nối hàng ngàn du khách đến những địa điểm tuyệt vời nhất tại Việt Nam. Chúng tôi mong muốn mọi chuyến đi không chỉ là hành trình, mà là trải nghiệm ghi dấu cảm xúc.
-                    </p>
-                    <ul class="list-disc">
-                        <li>✅ Hơn 1000 tour mỗi năm</li>
-                        <li>✅ Hợp tác với 100+ đối tác du lịch</li>
-                        <li>✅ Chăm sóc khách hàng 24/7</li>
-                    </ul>
+        <section class="section-padding">
+            <div class="container">
+                <h2 class="section-title">Về VN Tours</h2>
+                <p class="section-intro">
+                    Khám phá vẻ đẹp Việt Nam cùng đối tác tin cậy của bạn
+                </p>
+                
+                <div class="row align-items-center g-5">
+                    <div class="col-lg-6">
+                        <img src="assets/images/3ae.png" alt="Giới thiệu" class="img-fluid rounded-image">
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="tropical-card">
+                            <div class="card-body">
+                                <h3 class="h2 mb-4" style="color: var(--primary-orange); font-weight: 700;">
+                                    🌴 Khơi dậy cảm hứng du lịch Việt
+                                </h3>
+                                <p class="mb-4" style="font-size: 1.1rem; line-height: 1.7;">
+                                    VN Tours là nền tảng du lịch kết nối hàng ngàn du khách đến những địa điểm tuyệt vời nhất tại Việt Nam. Chúng tôi mong muốn mọi chuyến đi không chỉ là hành trình, mà là trải nghiệm ghi dấu cảm xúc.
+                                </p>
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <span class="stats-badge">🎯 Hơn 1000 tour/năm</span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <span class="stats-badge">🤝 100+ đối tác</span>
+                                    </div>
+                                    <div class="col-12">
+                                        <span class="stats-badge">🌟 Hỗ trợ 24/7</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
 
         <!-- SỨ MỆNH – TẦM NHÌN – GIÁ TRỊ -->
-        <section class="bg-light">
-            <h2>Sứ mệnh – Tầm nhìn – Giá trị</h2>
-            <div class="grid md-grid-3 text-center">
-                <div class="bg-white shadow rounded" style="padding: 1.5rem;">
-                    <h3 class="text-blue">🎯 Sứ mệnh</h3>
-                    <p>Giúp du khách khám phá Việt Nam an toàn, dễ dàng và trọn vẹn.</p>
-                </div>
-                <div class="bg-white shadow rounded" style="padding: 1.5rem;">
-                    <h3 class="text-blue">🌍 Tầm nhìn</h3>
-                    <p>Trở thành nền tảng du lịch hàng đầu Việt Nam và Đông Nam Á.</p>
-                </div>
-                <div class="bg-white shadow rounded" style="padding: 1.5rem;">
-                    <h3 class="text-blue">💡 Giá trị</h3>
-                    <p>Chất lượng – Minh bạch – Tận tâm – Bản sắc Việt.</p>
+        <section class="section-padding tropical-bg">
+            <div class="container">
+                <h2 class="section-title">Sứ mệnh – Tầm nhìn – Giá trị</h2>
+                <div class="row g-4">
+                    <div class="col-lg-4 col-md-6">
+                        <div class="tropical-card value-card">
+                            <div class="feature-icon">
+                                🎯
+                            </div>
+                            <h3>Sứ mệnh</h3>
+                            <p>Giúp du khách khám phá Việt Nam an toàn, dễ dàng và trọn vẹn với những trải nghiệm không thể quên.</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="tropical-card value-card">
+                            <div class="feature-icon">
+                                🌍
+                            </div>
+                            <h3>Tầm nhìn</h3>
+                            <p>Trở thành nền tảng du lịch hàng đầu Việt Nam và Đông Nam Á, kết nối thế giới với vẻ đẹp Việt.</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-12">
+                        <div class="tropical-card value-card">
+                            <div class="feature-icon">
+                                💎
+                            </div>
+                            <h3>Giá trị</h3>
+                            <p>Chất lượng – Minh bạch – Tận tâm – Bản sắc Việt là kim chỉ nam trong mọi hoạt động của chúng tôi.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
 
         <!-- VÌ SAO CHỌN CHÚNG TÔI -->
-        <section>
-            <h2>Vì sao chọn VN Tours?</h2>
-            <div class="grid md-grid-2">
-                <div>
-                    <p style="margin-bottom: 1rem;">Chúng tôi hiểu rằng du lịch không chỉ là điểm đến, mà là trải nghiệm. Đó là lý do bạn nên chọn chúng tôi:</p>
-                    <ul class="list-disc">
-                        <li>Giao diện dễ dùng, thân thiện</li>
-                        <li>Nhiều ưu đãi hấp dẫn</li>
-                        <li>Thông tin tour rõ ràng, minh bạch</li>
-                        <li>Hướng dẫn viên được đào tạo bài bản</li>
-                    </ul>
+        <section class="section-padding">
+            <div class="container">
+                <h2 class="section-title">Vì sao chọn VN Tours?</h2>
+                <div class="row align-items-center g-5">
+                    <div class="col-lg-6 order-lg-1 order-2">
+                        <div class="tropical-card">
+                            <div class="card-body">
+                                <h3 class="h3 mb-4" style="color: var(--primary-orange); font-weight: 700;">
+                                    🏆 Trải nghiệm đẳng cấp
+                                </h3>
+                                <p class="mb-4" style="font-size: 1.1rem;">
+                                    Chúng tôi hiểu rằng du lịch không chỉ là điểm đến, mà là trải nghiệm. Đó là lý do bạn nên chọn chúng tôi:
+                                </p>
+                                <ul class="feature-list">
+                                    <li>Giao diện dễ dùng, thân thiện với mọi lứa tuổi</li>
+                                    <li>Nhiều ưu đãi hấp dẫn quanh năm</li>
+                                    <li>Thông tin tour rõ ràng, minh bạch 100%</li>
+                                    <li>Hướng dẫn viên được đào tạo chuyên nghiệp</li>
+                                    <li>Dịch vụ chăm sóc khách hàng tận tình</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 order-lg-2 order-1">
+                        <img src="assets/images/visaochontour.png" alt="Vì sao chọn VN Tours" class="img-fluid rounded-image">
+                    </div>
                 </div>
-                <img src="assets/images/visaochontour.png" alt="Vì sao chọn" class="rounded shadow" style="width:100%;">
             </div>
         </section>
 
         <!-- ĐÁNH GIÁ KHÁCH HÀNG -->
-        <section class="bg-gray">
-            <h2>Khách hàng nói gì?</h2>
-            <div class="grid md-grid-3">
-                <div class="bg-white rounded shadow" style="padding: 1.5rem;">
-                    <p><em>“Tour Đà Nẵng rất tuyệt, HDV vui vẻ, tổ chức chuyên nghiệp.”</em></p>
-                    <p class="text-blue" style="margin-top:1rem;">– Minh Tú, Hà Nội</p>
-                </div>
-                <div class="bg-white rounded shadow" style="padding: 1.5rem;">
-                    <p><em>“Trang web dễ dùng, đặt tour nhanh chóng và hỗ trợ tốt.”</em></p>
-                    <p class="text-blue" style="margin-top:1rem;">– Phương Anh, TP.HCM</p>
-                </div>
-                <div class="bg-white rounded shadow" style="padding: 1.5rem;">
-                    <p><em>“Mình đã đi 3 tour qua VN Tours, rất hài lòng.”</em></p>
-                    <p class="text-blue" style="margin-top:1rem;">– Đức Huy, Đà Nẵng</p>
+        <section class="section-padding tropical-bg">
+            <div class="container">
+                <h2 class="section-title">Khách hàng nói gì về chúng tôi?</h2>
+                <div class="row g-4">
+                    <div class="col-lg-4 col-md-6">
+                        <div class="testimonial-card">
+                            <div class="testimonial-quote">
+                                "Tour Đà Nẵng rất tuyệt vời! Hướng dẫn viên vui vẻ, nhiệt tình và tổ chức cực kỳ chuyên nghiệp. Sẽ quay lại với VN Tours!"
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <div class="bg-warning rounded-circle me-3" style="width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;">
+                                    <i class="bi bi-person-fill text-white"></i>
+                                </div>
+                                <div>
+                                    <div class="testimonial-author">Minh Tú</div>
+                                    <small class="text-muted">Hà Nội</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="testimonial-card">
+                            <div class="testimonial-quote">
+                                "Trang web thiết kế đẹp, dễ sử dụng. Đặt tour nhanh chóng và đội ngũ hỗ trợ rất tận tình. Trải nghiệm tuyệt vời!"
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <div class="bg-info rounded-circle me-3" style="width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;">
+                                    <i class="bi bi-person-fill text-white"></i>
+                                </div>
+                                <div>
+                                    <div class="testimonial-author">Phương Anh</div>
+                                    <small class="text-muted">TP.HCM</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-12">
+                        <div class="testimonial-card">
+                            <div class="testimonial-quote">
+                                "Đã đi 3 tour qua VN Tours rồi và lần nào cũng hài lòng. Dịch vụ chất lượng, giá cả hợp lý. Highly recommended!"
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <div class="bg-success rounded-circle me-3" style="width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;">
+                                    <i class="bi bi-person-fill text-white"></i>
+                                </div>
+                                <div>
+                                    <div class="testimonial-author">Đức Huy</div>
+                                    <small class="text-muted">Đà Nẵng</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
 
         <!-- CTA -->
-        <section class="text-center">
-            <a href="placeController?action=destination&page=indexjsp" class="btn">Quay về Trang chủ</a>
+        <section class="cta-section">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-8 text-center">
+                        <h2 class="mb-4">Sẵn sàng khám phá Việt Nam?</h2>
+                        <p class="mb-4" style="font-size: 1.2rem; opacity: 0.9;">
+                            Hãy bắt đầu hành trình khám phá những điều kỳ diệu của đất nước chúng ta ngay hôm nay!
+                        </p>
+                        <a href="placeController?action=destination&page=indexjsp" class="btn-tropical">
+                            <i class="bi bi-house-door me-2"></i>
+                            Quay về Trang chủ
+                        </a>
+                    </div>
+                </div>
+            </div>
         </section>
 
         <%@ include file="footer.jsp" %>
+        
+        <!-- Bootstrap 5 JS -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     </body>
 </html>
-
-
