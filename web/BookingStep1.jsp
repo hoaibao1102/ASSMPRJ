@@ -13,576 +13,827 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Thanh toán</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
         <link rel="stylesheet" href="assets/css/bodyCss.css"/>
         <style>
-            .containerdetail {
-                display: grid;
-                grid-template-columns: 6fr 4fr;
-                max-width: 1200px;
-                margin: 30px auto;
-                gap: 30px;
+            :root {
+                --primary-orange: #ff6b35;
+                --primary-blue: #2c3e50;
+                --primary-yellow: #f39c12;
+                --light-bg: #f8f9fa;
+                --white: #ffffff;
+                --gradient-tropical: linear-gradient(135deg, #ff6b35 0%, #f39c12 100%);
+                --gradient-ocean: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+                --shadow-tropical: 0 10px 30px rgba(255, 107, 53, 0.2);
+                --shadow-soft: 0 5px 20px rgba(0, 0, 0, 0.1);
             }
 
-            .left-content, .right-content {
-                background-color: #f5f5f5;
-                padding: 30px;
-                border-radius: 12px;
-                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            body {
+                background: var(--light-bg);
+                font-family: 'Arial', sans-serif;
+                line-height: 1.6;
             }
 
-            .right-content {
-                background-color: #fff8f0;
-            }
-
-
-            /*            ============================CSS Thanh trang thai*/
+            /* Step Progress Bar */
             .step-container {
+                background: var(--white);
+                border-radius: 20px;
+                padding: 3rem 2rem;
+                margin: 2rem 0;
+                box-shadow: var(--shadow-soft);
                 position: relative;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                margin-top: 80px;
-                margin-bottom: 40px;
+                overflow: hidden;
+            }
+
+            .step-container::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 5px;
+                background: var(--gradient-tropical);
             }
 
             .step-title {
+                font-size: 2.5rem;
+                font-weight: 700;
+                color: var(--primary-blue);
+                text-align: center;
+                margin-bottom: 2rem;
+                position: relative;
+            }
+
+            .step-title::after {
+                content: '';
                 position: absolute;
-                top: -40px;
+                bottom: -10px;
                 left: 50%;
                 transform: translateX(-50%);
-                font-size: 24px;
-                color: #004080;
-                font-weight: bold;
+                width: 80px;
+                height: 4px;
+                background: var(--gradient-tropical);
+                border-radius: 2px;
             }
 
             .step-tracker {
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                gap: 100px;
+                gap: 3rem;
+                flex-wrap: wrap;
             }
 
             .step {
                 display: flex;
                 flex-direction: column;
                 align-items: center;
-                width: 120px; /* cố định chiều rộng */
                 text-align: center;
-                flex-shrink: 0; /* không co lại nếu thiếu không gian */
+                transition: all 0.3s ease;
+                text-decoration: none;
+                color: inherit;
+            }
+
+            .step:hover {
+                transform: translateY(-5px);
+                text-decoration: none;
             }
 
             .step .icon {
-                width: 50px;
-                height: 50px;
+                width: 70px;
+                height: 70px;
                 border-radius: 50%;
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                margin-bottom: 8px;
-                background-color: #ccc;
+                margin-bottom: 1rem;
+                background: #e9ecef;
+                transition: all 0.3s ease;
+                position: relative;
+                overflow: hidden;
             }
 
-            .step .icon img {
-                width: 24px;
-                height: 24px;
-            }
-
-            .step .label {
-                font-size: 14px;
-                color: #888;
-                font-weight: bold;
+            .step .icon::before {
+                content: '';
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                width: 0;
+                height: 0;
+                background: var(--gradient-tropical);
+                border-radius: 50%;
+                transition: all 0.3s ease;
+                transform: translate(-50%, -50%);
             }
 
             .step.active .icon {
-                background-color: #4cd964;
+                background: var(--gradient-tropical);
+                box-shadow: var(--shadow-tropical);
+                transform: scale(1.1);
             }
+
+            .step.active .icon::before {
+                width: 100%;
+                height: 100%;
+            }
+
+            .step .icon i {
+                font-size: 1.5rem;
+                z-index: 2;
+                position: relative;
+            }
+
+            .step .icon img {
+                width: 32px;
+                height: 32px;
+                z-index: 2;
+                position: relative;
+            }
+
+            .step .label {
+                font-size: 0.9rem;
+                font-weight: 600;
+                color: #6c757d;
+                transition: all 0.3s ease;
+            }
+
             .step.active .label {
-                color: #4cd964;
-            }
-
-
-            .step.current .label {
-                color: #007bff;
+                color: var(--primary-orange);
+                font-weight: 700;
             }
 
             .arrow {
-                font-size: 18px;
-                color: #ccc;
+                font-size: 1.5rem;
+                color: var(--primary-yellow);
+                animation: pulse 2s infinite;
             }
 
-            /*            ===================================css thông tin ben trái*/
-
-            .form-container {
-                max-width: 900px;
-                margin: 30px auto;
-                font-family: Arial, sans-serif;
-                font-size: 14px;
+            @keyframes pulse {
+                0%, 100% { transform: scale(1); }
+                50% { transform: scale(1.1); }
             }
 
-            h3 {
-                margin: 2vh 0vh;
-                font-size: 18px;
-                font-weight: bold;
-                color: #d32f2f;
+            /* Main Content */
+            .main-container {
+                max-width: 1400px;
+                margin: 0 auto;
+                padding: 0 1rem;
             }
 
-
-
-            .contact-grid {
+            .content-grid {
                 display: grid;
-                grid-template-columns: repeat(2, 1fr);
-                gap: 16px;
+                grid-template-columns: 1fr 400px;
+                gap: 2rem;
             }
 
-            .form-group {
+            @media (max-width: 992px) {
+                .content-grid {
+                    grid-template-columns: 1fr;
+                }
+            }
+
+            /* Left Content */
+            .left-content {
+                background: var(--white);
+                border-radius: 20px;
+                padding: 2rem;
+                box-shadow: var(--shadow-soft);
+                position: relative;
+                overflow: hidden;
+            }
+
+            .left-content::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 4px;
+                background: var(--gradient-tropical);
+            }
+
+            .section-title {
+                font-size: 1.4rem;
+                font-weight: 700;
+                color: var(--primary-blue);
+                margin-bottom: 1.5rem;
                 display: flex;
-                flex-direction: column;
+                align-items: center;
+                gap: 0.5rem;
             }
 
-            .form-group label {
-                font-weight: bold;
-                margin-bottom: 5px;
+            .section-title::before {
+                content: '';
+                width: 4px;
+                height: 24px;
+                background: var(--gradient-tropical);
+                border-radius: 2px;
+            }
+
+            .form-control {
+                border: 2px solid #e9ecef;
+                border-radius: 12px;
+                padding: 0.75rem 1rem;
+                font-size: 0.95rem;
+                transition: all 0.3s ease;
+            }
+
+            .form-control:focus {
+                border-color: var(--primary-orange);
+                box-shadow: 0 0 0 0.2rem rgba(255, 107, 53, 0.25);
+            }
+
+            .form-label {
+                font-weight: 600;
+                color: var(--primary-blue);
+                margin-bottom: 0.5rem;
             }
 
             .required {
-                color: red;
+                color: var(--primary-orange);
             }
 
-            .form-group input[type="text"], input[type="email"] {
-                padding: 10px;
-                border: 1px solid #ccc;
-                border-radius: 6px;
-            }
-
+            /* Passenger Section */
             .passenger-section {
-                display: flex;
-                gap: 16px;
-                flex-wrap: wrap;
-                margin-top: 20px;
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 1rem;
+                margin-top: 1.5rem;
             }
 
             .passenger-box {
-                flex: 1;
-                min-width: 250px;
-                border: 1px solid #ccc;
-                border-radius: 8px;
-                padding: 12px;
+                background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+                border: 2px solid #e9ecef;
+                border-radius: 16px;
+                padding: 1.5rem;
+                transition: all 0.3s ease;
+                position: relative;
+                overflow: hidden;
+            }
+
+            .passenger-box::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 3px;
+                background: var(--gradient-tropical);
+                transform: scaleX(0);
+                transition: transform 0.3s ease;
+            }
+
+            .passenger-box:hover {
+                transform: translateY(-5px);
+                box-shadow: var(--shadow-soft);
+                border-color: var(--primary-orange);
+            }
+
+            .passenger-box:hover::before {
+                transform: scaleX(1);
             }
 
             .box-header {
-                font-weight: bold;
-                margin-bottom: 5px;
+                font-weight: 700;
+                color: var(--primary-blue);
+                margin-bottom: 0.5rem;
             }
 
             .subtext {
-                display: block;
-                font-size: 12px;
-                color: #777;
-                margin-top: 2px;
+                font-size: 0.85rem;
+                color: #6c757d;
+                margin-bottom: 1rem;
             }
 
             .counter {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
-                margin-top: 8px;
+                background: var(--light-bg);
+                border-radius: 12px;
+                padding: 0.5rem;
             }
 
             .counter button {
-                width: 32px;
-                height: 32px;
-                font-size: 18px;
-                font-weight: bold;
-                background: none;
-                border: 1px solid #ccc;
+                width: 40px;
+                height: 40px;
+                border: none;
                 border-radius: 50%;
+                background: var(--gradient-tropical);
+                color: white;
+                font-size: 1.2rem;
+                font-weight: 700;
                 cursor: pointer;
+                transition: all 0.3s ease;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .counter button:hover {
+                transform: scale(1.1);
+                box-shadow: var(--shadow-tropical);
             }
 
             .counter span {
-                font-size: 16px;
-                min-width: 20px;
+                font-size: 1.2rem;
+                font-weight: 700;
+                color: var(--primary-blue);
+                min-width: 30px;
                 text-align: center;
             }
 
+            /* Note Section */
             .note-section {
-                margin-top: 20px;
-                font-family: Arial, sans-serif;
-            }
-
-            .note-label {
-                font-size: 16px;
-                display: block;
-                margin-bottom: 4px;
-            }
-
-            .note-subtext {
-                font-size: 14px;
-                color: #333;
-                margin-bottom: 10px;
+                margin-top: 2rem;
+                padding: 1.5rem;
+                background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+                border-radius: 16px;
+                border: 2px solid #dee2e6;
             }
 
             .note-textarea {
                 width: 100%;
-                padding: 15px;
-                border-radius: 8px;
-                border: 1px solid #ccc;
-                background-color: #f9f9f9;
+                border: 2px solid #e9ecef;
+                border-radius: 12px;
+                padding: 1rem;
                 resize: vertical;
-                font-size: 14px;
-                color: #333;
-                outline: none;
-                transition: border-color 0.2s;
+                min-height: 120px;
+                transition: all 0.3s ease;
+                font-family: inherit;
             }
 
             .note-textarea:focus {
-                border-color: #007bff;
-                background-color: #fff;
+                border-color: var(--primary-orange);
+                box-shadow: 0 0 0 0.2rem rgba(255, 107, 53, 0.25);
+                outline: none;
             }
 
-            /*=============================================================css bên phai*/
-
-            .summary-box {
-                max-width: 400px;
-                background: #fff;
-                border-radius: 12px;
-                padding: 20px;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-                font-family: Arial, sans-serif;
+            /* Right Content */
+            .right-content {
+                background: var(--white);
+                border-radius: 20px;
+                padding: 2rem;
+                box-shadow: var(--shadow-soft);
+                height: fit-content;
+                position: sticky;
+                top: 2rem;
+                border: 2px solid #f39c12;
             }
 
-            .summary-box h3 {
-                font-size: 18px;
-                margin-bottom: 15px;
+            .summary-title {
+                font-size: 1.3rem;
+                font-weight: 700;
+                color: var(--primary-blue);
+                margin-bottom: 1.5rem;
+                text-align: center;
+                position: relative;
+            }
+
+            .summary-title::after {
+                content: '';
+                position: absolute;
+                bottom: -8px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 60px;
+                height: 3px;
+                background: var(--gradient-tropical);
+                border-radius: 2px;
             }
 
             .tour-info {
                 display: flex;
-                gap: 12px;
-                margin-bottom: 15px;
+                gap: 1rem;
+                margin-bottom: 1.5rem;
+                padding: 1rem;
+                background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+                border-radius: 12px;
+                border-left: 4px solid var(--primary-orange);
             }
 
             .tour-info img {
-                width: 60px;
-                height: 40px;
+                width: 80px;
+                height: 60px;
                 object-fit: cover;
-                border-radius: 6px;
+                border-radius: 8px;
+                border: 2px solid var(--primary-yellow);
+            }
+
+            .tour-details {
+                flex: 1;
             }
 
             .tour-details p {
-                margin: 3px 0;
-                font-size: 14px;
+                margin: 0.2rem 0;
+                font-size: 0.9rem;
             }
 
             .tour-code {
-                font-size: 13px;
-                color: #555;
+                font-weight: 700;
+                color: var(--primary-orange);
             }
 
             .flight-info {
                 display: flex;
                 justify-content: space-between;
-                margin-bottom: 15px;
-                font-size: 13px;
+                margin-bottom: 1.5rem;
+                padding: 1rem;
+                background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+                border-radius: 12px;
+                font-size: 0.9rem;
             }
 
-            .flight-info img {
-                height: 20px;
-                margin-top: 5px;
+            .flight-info div {
+                text-align: center;
             }
 
-            .section-title {
-                font-weight: bold;
-                margin: 10px 0 5px;
+            .flight-info strong {
+                color: var(--primary-blue);
+            }
+
+            .price-breakdown {
+                margin-bottom: 1.5rem;
+            }
+
+            .price-section-title {
+                font-weight: 700;
+                color: var(--primary-blue);
+                margin-bottom: 1rem;
+                padding-bottom: 0.5rem;
+                border-bottom: 2px solid var(--primary-yellow);
                 display: flex;
-                justify-content: space-between;
+                align-items: center;
+                gap: 0.5rem;
             }
 
             .line-item {
                 display: flex;
                 justify-content: space-between;
-                font-size: 13px;
-                padding: 4px 0;
+                padding: 0.5rem 0;
+                font-size: 0.9rem;
+                border-bottom: 1px solid #f1f3f4;
+            }
+
+            .line-item:last-child {
+                border-bottom: none;
             }
 
             .discount-section {
-                margin-top: 15px;
+                margin-top: 1.5rem;
+                padding: 1rem;
+                background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+                border-radius: 12px;
+                border: 2px solid var(--primary-yellow);
             }
 
             .btn-add-discount {
                 background: none;
-                border: none;
-                color: red;
-                font-weight: bold;
-                font-size: 14px;
+                border: 2px dashed var(--primary-orange);
+                color: var(--primary-orange);
+                font-weight: 700;
+                padding: 0.5rem 1rem;
+                border-radius: 8px;
                 cursor: pointer;
-                padding: 4px 0;
+                transition: all 0.3s ease;
+                width: 100%;
+            }
+
+            .btn-add-discount:hover {
+                background: var(--primary-orange);
+                color: white;
+                transform: translateY(-2px);
             }
 
             .total {
-                border-top: 1px solid #ccc;
-                margin-top: 20px;
-                padding-top: 12px;
+                border-top: 3px solid var(--primary-yellow);
+                margin-top: 1.5rem;
+                padding-top: 1rem;
                 display: flex;
                 justify-content: space-between;
-                font-weight: bold;
-                font-size: 16px;
+                font-weight: 700;
+                font-size: 1.2rem;
+                color: var(--primary-blue);
             }
 
             .total-amount {
-                color: red;
+                color: var(--primary-orange);
+                font-size: 1.4rem;
             }
 
             .btn-submit {
-                background-color: red;
+                background: var(--gradient-tropical);
                 color: white;
                 width: 100%;
-                padding: 12px;
-                margin-top: 20px;
-                font-size: 15px;
-                font-weight: bold;
+                padding: 1rem;
+                margin-top: 1.5rem;
+                font-size: 1.1rem;
+                font-weight: 700;
                 border: none;
-                border-radius: 8px;
+                border-radius: 12px;
                 cursor: pointer;
+                transition: all 0.3s ease;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+            }
+
+            .btn-submit:hover {
+                transform: translateY(-3px);
+                box-shadow: var(--shadow-tropical);
+            }
+
+            /* Responsive Design */
+            @media (max-width: 768px) {
+                .step-tracker {
+                    gap: 1rem;
+                }
+                
+                .step .icon {
+                    width: 60px;
+                    height: 60px;
+                }
+                
+                .step .label {
+                    font-size: 0.8rem;
+                }
+                
+                .passenger-section {
+                    grid-template-columns: 1fr;
+                }
+                
+                .right-content {
+                    position: static;
+                    margin-top: 2rem;
+                }
+            }
+
+            /* Animation */
+            @keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(30px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            .left-content, .right-content {
+                animation: fadeInUp 0.6s ease-out;
+            }
+
+            .right-content {
+                animation-delay: 0.2s;
             }
         </style>
+    </head>
 
-
-</head>
-
-<body>
-
-    <%
+    <body>
+        <%
             UserDTO account = (UserDTO)session.getAttribute("nameUser");
             TourTicketDTO tour = (TourTicketDTO)session.getAttribute("tourTicket");
             StartDateDTO stDate = (StartDateDTO)session.getAttribute("stDate");
-    %>
+        %>
 
-
-    <%@include file="header.jsp" %>
-    <div class="content">
-        <div class="step-container">
-            <h2 class="step-title">ĐẶT TOUR</h2>
-            <div class="step-tracker">
-                <a href="BookingStep1.jsp">
-                    <div class="step active">
-                        <div class="icon green">
-                            <img src="assets/images/icon/icon_fillfile.jpg" alt="info" />
-                        </div>
-                        <div class="label">NHẬP THÔNG TIN</div>
-                    </div>
-                </a>
-
-                <div class="arrow">➜</div>
-
-
-                <div class="step">
-                    <div class="icon gray">
-                        <img src="assets/images/icon/icon_thanhtoan.jpg" alt="pay" />
-                    </div>
-                    <div class="label">THANH TOÁN</div>
-                </div>
-
-
-                <div class="arrow">➜</div>
-
-
-                <div class="step">
-                    <div class="icon gray">
-                        <img src="assets/images/icon/icon_done.jpg" alt="done" />
-                    </div>
-                    <div class="label">HOÀN TẤT</div>
-                </div>
-
-
-            </div>
-        </div>
-
+        <%@include file="header.jsp" %>
         
-
-        <!--    ===================================================thong tin ben trai        -->
-
-        <div class="containerdetail">
-            <div class="left-content">
-                <div class="form-container">
-                    <h3>THÔNG TIN LIÊN LẠC</h3>
-
-                    <div class="contact-grid">
-                        <div class="form-group">
-                            <label>Họ tên <span class="required">*</span></label>
-                            <input type="text" value="<%=account.getFullName()%>" >
-                        </div>
-                        <div class="form-group">
-                            <label>Điện thoại <span class="required">*</span></label>
-                            <input type="text" value="<%=account.getPhone()%>" />
-                        </div>
-                        <div class="form-group">
-                            <label>Email <span class="required">*</span></label>
-                            <input type="email" value="<%=account.getEmail()%>" />
-                        </div>
-
-                    </div>
-
-                    <h3>HÀNH KHÁCH</h3>
-                    <div class="passenger-section">
-                        <div class="passenger-box">
-                            <div class="box-header">Người lớn <span class="subtext">Từ 12 tuổi trở lên</span></div>
-                            <div class="counter">
-                                <button onclick="changeCount('adult', -1)">−</button>
-                                <span id="adult-count">1</span>
-                                <button onclick="changeCount('adult', 1)">+</button>
+        <div class="content">
+            <!-- Step Progress Bar -->
+            <div class="container">
+                <div class="step-container">
+                    <h2 class="step-title">
+                        <i class="fas fa-map-marked-alt me-2"></i>
+                        ĐẶT TOUR
+                    </h2>
+                    <div class="step-tracker">
+                        <a href="BookingStep1.jsp" class="step active">
+                            <div class="icon">
+                                <i class="fas fa-edit"></i>
                             </div>
+                            <div class="label">NHẬP THÔNG TIN</div>
+                        </a>
+
+                        <div class="arrow">
+                            <i class="fas fa-chevron-right"></i>
                         </div>
-                        <div class="passenger-box">
-                            <div class="box-header">Trẻ em <span class="subtext">Từ 2 – 11 tuổi (ưu đãi giảm giá 5%)</span></div>
-                            <div class="counter">
-                                <button onclick="changeCount('child', -1)">−</button>
-                                <span id="child-count">0</span>
-                                <button onclick="changeCount('child', 1)">+</button>
+
+                        <div class="step">
+                            <div class="icon">
+                                <i class="fas fa-credit-card"></i>
                             </div>
+                            <div class="label">THANH TOÁN</div>
                         </div>
-                        <div class="passenger-box">
-                            <div class="box-header">Em bé <span class="subtext">Dưới 2 tuổi (ưu đãi giảm giá 20%)</span></div>
-                            <div class="counter">
-                                <button onclick="changeCount('baby', -1)">−</button>
-                                <span id="baby-count">0</span>
-                                <button onclick="changeCount('baby', 1)">+</button>
+
+                        <div class="arrow">
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+
+                        <div class="step">
+                            <div class="icon">
+                                <i class="fas fa-check-circle"></i>
                             </div>
+                            <div class="label">HOÀN TẤT</div>
                         </div>
                     </div>
                 </div>
-
-                <div class="note-section" >
-
-                    <label class="note-label"><strong>GHI CHÚ</strong></label>
-                    <p class="note-subtext">Quý khách có ghi chú lưu ý gì, hãy nói với chúng tôi</p>
-                    <textarea
-                        name="note"
-                        rows="4"
-                        class="note-textarea"
-                        placeholder="Vui lòng nhập nội dung lời nhắn..."></textarea>
-
-                </div>
-
-
-
-
             </div>
 
-            <!--    =====================================================thong tin ben phai            -->
-            <div class="right-content">
-                <div class="summary-box">
-                    <h3>TÓM TẮT CHUYẾN ĐI</h3>
-
-                    <div class="tour-info">
-                        <img src="assets/images/places/<%=tour.getImg_Tour()%>" alt="<%=tour.getDestination()%>" />
-                        <div class="tour-details">
-                            <p class="tour-code">Mã tour <strong><%=tour.getIdTourTicket()%></strong></p>
-
-                            <p><strong><%=tour.getDestination()%>: </strong> <%=tour.getNametour()%></p>
-
-
+            <!-- Main Content -->
+            <div class="main-container">
+                <div class="content-grid">
+                    <!-- Left Content -->
+                    <div class="left-content">
+                        <div class="section-title">
+                            <i class="fas fa-address-book"></i>
+                            THÔNG TIN LIÊN LẠC
                         </div>
-                    </div>
-                    <!--============================================================================= CAN DUOC XU LY
-                    =============================================================================-->
-                    <%
-                        String startDateStr = stDate.getStartDate();
-                        LocalDate startDate = LocalDate.parse(startDateStr, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-                        LocalDate endDate;
-                        String duration = tour.getDuration();
+
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Họ tên <span class="required">*</span></label>
+                                <input type="text" class="form-control" value="<%=account.getFullName()%>">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Điện thoại <span class="required">*</span></label>
+                                <input type="text" class="form-control" value="<%=account.getPhone()%>">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Email <span class="required">*</span></label>
+                                <input type="email" class="form-control" value="<%=account.getEmail()%>">
+                            </div>
+                        </div>
+
+                        <div class="section-title mt-4">
+                            <i class="fas fa-users"></i>
+                            HÀNH KHÁCH
+                        </div>
                         
-                        if("2 ngày 1 đêm".equals(duration)){
-                            endDate = startDate.plusDays(2);
-                        } else {
-                            endDate = startDate.plusDays(3);
-                        }
-                        String endDateStr = endDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-                         //láy ra ngày dat
-                        LocalDate today = LocalDate.now();
-                        String todayStr = today.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-               
-                    %>
-
-
-                    <div class="flight-info">
-                        <div>
-                            <p><strong>Ngày đi: <%=stDate.getStartDate()%></strong></p>
+                        <div class="passenger-section">
+                            <div class="passenger-box">
+                                <div class="box-header">
+                                    <i class="fas fa-user me-2"></i>Người lớn
+                                </div>
+                                <div class="subtext">Từ 12 tuổi trở lên</div>
+                                <div class="counter">
+                                    <button type="button" onclick="changeCount('adult', -1)">−</button>
+                                    <span id="adult-count">1</span>
+                                    <button type="button" onclick="changeCount('adult', 1)">+</button>
+                                </div>
+                            </div>
+                            
+                            <div class="passenger-box">
+                                <div class="box-header">
+                                    <i class="fas fa-child me-2"></i>Trẻ em
+                                </div>
+                                <div class="subtext">Từ 2 – 11 tuổi (ưu đãi giảm giá 5%)</div>
+                                <div class="counter">
+                                    <button type="button" onclick="changeCount('child', -1)">−</button>
+                                    <span id="child-count">0</span>
+                                    <button type="button" onclick="changeCount('child', 1)">+</button>
+                                </div>
+                            </div>
+                            
+                            <div class="passenger-box">
+                                <div class="box-header">
+                                    <i class="fas fa-baby me-2"></i>Em bé
+                                </div>
+                                <div class="subtext">Dưới 2 tuổi (ưu đãi giảm giá 20%)</div>
+                                <div class="counter">
+                                    <button type="button" onclick="changeCount('baby', -1)">−</button>
+                                    <span id="baby-count">0</span>
+                                    <button type="button" onclick="changeCount('baby', 1)">+</button>
+                                </div>
+                            </div>
                         </div>
-                        <div>
-                            <p><strong>Ngày về: <%=endDateStr%></strong></p>
+
+                        <div class="note-section">
+                            <label class="form-label">
+                                <i class="fas fa-sticky-note me-2"></i>
+                                <strong>GHI CHÚ</strong>
+                            </label>
+                            <p class="subtext">Quý khách có ghi chú lưu ý gì, hãy nói với chúng tôi</p>
+                            <textarea
+                                name="note"
+                                class="note-textarea"
+                                placeholder="Vui lòng nhập nội dung lời nhắn..."></textarea>
                         </div>
                     </div>
 
-                    <div class="price-breakdown">
-                        <div class="section-title">👥 KHÁCH HÀNG + PHỤ THU <span class="price">...</span></div>
-
-                        <div class="line-item" id="adult-line">
-                            <span>Người lớn</span>
-                            <span id="adult-line-value">1 x ... đ</span>
+                    <!-- Right Content -->
+                    <div class="right-content">
+                        <div class="summary-title">
+                            <i class="fas fa-clipboard-list me-2"></i>
+                            TÓM TẮT CHUYẾN ĐI
                         </div>
 
-                        <div class="line-item" id="child-line" style="display: none;">
-                            <span>Trẻ em</span>
-                            <span id="child-line-value">...</span>
+                        <div class="tour-info">
+                            <img src="assets/images/places/<%=tour.getImg_Tour()%>" alt="<%=tour.getDestination()%>">
+                            <div class="tour-details">
+                                <p class="tour-code">Mã tour <strong><%=tour.getIdTourTicket()%></strong></p>
+                                <p><strong><%=tour.getDestination()%>:</strong> <%=tour.getNametour()%></p>
+                            </div>
                         </div>
 
-                        <div class="line-item" id="baby-line" style="display: none;">
-                            <span>Em bé</span>
-                            <span id="baby-line-value">...</span>
+                        <%
+                            String startDateStr = stDate.getStartDate();
+                            LocalDate startDate = LocalDate.parse(startDateStr, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                            LocalDate endDate;
+                            String duration = tour.getDuration();
+                            
+                            if("2 ngày 1 đêm".equals(duration)){
+                                endDate = startDate.plusDays(2);
+                            } else {
+                                endDate = startDate.plusDays(3);
+                            }
+                            String endDateStr = endDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                            LocalDate today = LocalDate.now();
+                            String todayStr = today.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                        %>
+
+                        <div class="flight-info">
+                            <div>
+                                <i class="fas fa-plane-departure mb-2 d-block text-primary"></i>
+                                <strong>Ngày đi: <%=stDate.getStartDate()%></strong>
+                            </div>
+                            <div>
+                                <i class="fas fa-plane-arrival mb-2 d-block text-success"></i>
+                                <strong>Ngày về: <%=endDateStr%></strong>
+                            </div>
                         </div>
 
-                        <div class="line-item">
-                            <span>Phụ thu phòng đơn</span>
-                            <span>0 đ</span>
+                        <div class="price-breakdown">
+                            <div class="price-section-title">
+                                <i class="fas fa-users"></i>
+                                KHÁCH HÀNG + PHỤ THU
+                            </div>
+
+                            <div class="line-item" id="adult-line">
+                                <span><i class="fas fa-user me-1"></i>Người lớn</span>
+                                <span id="adult-line-value">1 x ... đ</span>
+                            </div>
+
+                            <div class="line-item" id="child-line" style="display: none;">
+                                <span><i class="fas fa-child me-1"></i>Trẻ em</span>
+                                <span id="child-line-value">...</span>
+                            </div>
+
+                            <div class="line-item" id="baby-line" style="display: none;">
+                                <span><i class="fas fa-baby me-1"></i>Em bé</span>
+                                <span id="baby-line-value">...</span>
+                            </div>
+
+                            <div class="line-item">
+                                <span><i class="fas fa-bed me-1"></i>Phụ thu phòng đơn</span>
+                                <span>0 đ</span>
+                            </div>
+
+                            <div class="line-item">
+                                <span><i class="fas fa-percentage me-1"></i>Tổng giá trị ưu đãi</span>
+                                <span id="price_down">...</span>
+                            </div>
                         </div>
 
-                        <div class="line-item">
-                            <span>Tổng giá trị ưu đãi</span>
-                            <span id="price_down">...</span>
+                        <div class="discount-section">
+                            <div class="price-section-title">
+                                <i class="fas fa-tags"></i>
+                                MÃ GIẢM GIÁ
+                            </div>
+                            <button type="button" class="btn-add-discount">
+                                <i class="fas fa-plus me-2"></i>Thêm mã giảm giá
+                            </button>
                         </div>
+
+                        <div class="total">
+                            <p><i class="fas fa-calculator me-2"></i>Tổng tiền</p>
+                            <p class="total-amount">0 đ</p>
+                        </div>
+
+                        <form action="MainController" method="get" onsubmit="return prepareSubmit()">
+                            <input type="hidden" name="action" value="call_oder_step2">
+                            <input type="hidden" name="startNum" value="<%=stDate.getStartNum()%>">
+                            <input type="hidden" name="idUser" value="<%=account.getIdUser()%>">
+                            <input type="hidden" name="idTour" value="<%=tour.getIdTourTicket()%>">
+                            <input type="hidden" name="bookingDate" value="<%=today%>">
+                            <input type="hidden" id="totalBill" name="totalBill" value="">
+                            <input type="hidden" id="numberTicket" name="numberTicket" value="">
+                            <input type="hidden" id="noteValueInput" name="noteValueInput" value="">
+                            <input type="hidden" name="status" value="0">
+
+                            <button type="submit" class="btn-submit">
+                                <i class="fas fa-paper-plane me-2"></i>
+                                Đặt Tour
+                            </button>
+                        </form>
                     </div>
-
-
-                    <div class="discount-section">
-                        <div class="section-title">🏷️ MÃ GIẢM GIÁ</div>
-                        <button class="btn-add-discount">+ Thêm mã giảm giá</button>
-                    </div>
-
-                    <div class="total">
-                        <p>Tổng tiền</p>
-                        <p class="total-amount">0 đ</p>
-                    </div>
-
-                    <form action="MainController" method="get" onsubmit="return prepareSubmit()">
-                        <input type="hidden" name="action" value="call_oder_step2">
-
-                        <!-- gửi thông tin để tạo dtb booking table -->
-                        <input type="hidden" name="startNum" value="<%=stDate.getStartNum()%>">
-                        <input type="hidden" name="idUser" value="<%=account.getIdUser()%>">
-                        <input type="hidden" name="idTour" value="<%=tour.getIdTourTicket()%>">
-                        <input type="hidden" name="bookingDate" value="<%=today%>">
-                        <input type="hidden" id="totalBill" name="totalBill" value="">
-                        <input type="hidden" id="numberTicket" name="numberTicket" value="">
-                        <input type="hidden" id="noteValueInput" name="noteValueInput" value="">
-                        <input type="hidden" name="status" value="0">
-
-
-                        <button class="btn-submit" style="submit">Ðặt tour</button>
-                    </form>
-
-
-
-                    <!-- =============================================================================
-                    =============================================================================                   -->
-
                 </div>
-
             </div>
         </div>
-    </div>
-    <%@include file="footer.jsp" %>
+
+        <%@include file="footer.jsp" %>
 
 
     <script>

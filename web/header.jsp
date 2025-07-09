@@ -11,492 +11,593 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <title>VN Tours</title>
+        <!-- Bootstrap CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        <!-- Font Awesome -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+        <!-- Google Fonts -->
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
         <style>
+            :root {
+                --primary-color: #ff6b35;
+                --secondary-color: #2c3e50;
+                --accent-color: #f39c12;
+                --text-dark: #2c3e50;
+                --text-light: #7f8c8d;
+                --bg-light: #f8f9fa;
+            }
+
             * {
-                margin: 0;
-                padding: 0;
-                box-sizing: border-box;
+                font-family: 'Poppins', sans-serif;
             }
 
-            /* ===== COMMON STYLES ===== */
-            a {
-                text-decoration: none;
-            }
-
-            button {
-                font-family: inherit;
-            }
-
-            /* ===== HEADER STYLES (for regular users) ===== */
-            .header {
-                background-color: #2c3e50;
+            /* Header Styles */
+            .navbar {
+                background: rgba(255, 255, 255, 0.95);
+                backdrop-filter: blur(10px);
+                box-shadow: 0 2px 20px rgba(0,0,0,0.1);
                 padding: 1rem 0;
-                width: 100%;
+                transition: all 0.3s ease;
             }
 
-            .container {
-                max-width: 1200px;
-                margin: 0 auto;
-                padding: 0 1rem;
+            .navbar.scrolled {
+                background: rgba(255, 255, 255, 0.98);
+                backdrop-filter: blur(15px);
             }
 
-            .nav {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                flex-wrap: wrap;
-                position: relative;
-            }
-
-            .logo {
-                color: #fff;
-                font-size: 1.5rem;
-                font-weight: 700;
-            }
-
-            .menu-toggle {
-                display: none;
+            .navbar-brand {
                 font-size: 1.8rem;
-                color: #fff;
-                cursor: pointer;
-            }
-
-            .menu {
-                display: flex;
-                list-style: none;
-                gap: 1.5rem;
-            }
-
-            .menu-item {
-                display: flex;
-                align-items: center;
-            }
-
-            .menu-item a,
-            .menu-item input[type="submit"] {
-                color: #fff;
+                font-weight: 700;
+                color: var(--primary-color) !important;
                 text-decoration: none;
-                font-size: 1rem;
-                background: none;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .navbar-brand i {
+                font-size: 2rem;
+                color: var(--accent-color);
+            }
+
+            .navbar-nav .nav-link {
+                color: var(--text-dark) !important;
+                font-weight: 500;
+                margin: 0 10px;
+                padding: 10px 15px !important;
+                border-radius: 25px;
+                transition: all 0.3s ease;
+                position: relative;
                 border: none;
-                cursor: pointer;
-                padding: 0;
-                transition: color 0.3s ease;
+                background: none;
             }
 
-            .menu-item a:hover,
-            .menu-item input[type="submit"]:hover {
-                color: #f1c40f;
+            .navbar-nav .nav-link:hover {
+                color: var(--primary-color) !important;
+                background: rgba(255, 107, 53, 0.1);
+                transform: translateY(-2px);
             }
 
-            .right-section {
-                display: flex;
-                align-items: center;
-                gap: 1rem;
-                flex-wrap: wrap;
+            .navbar-nav .nav-link::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 50%;
+                width: 0;
+                height: 2px;
+                background: var(--primary-color);
+                transition: all 0.3s ease;
+                transform: translateX(-50%);
             }
 
-            .search-bar {
-                display: flex;
-                align-items: center;
-                background: #fff;
-                border-radius: 20px;
-                padding: 0.4rem 1rem;
+            .navbar-nav .nav-link:hover::after {
+                width: 80%;
+            }
+
+            /* Search Bar */
+            .search-container {
+                position: relative;
+                max-width: 300px;
             }
 
             .search-input {
-                border: none;
+                background: rgba(248, 249, 250, 0.9);
+                border: 2px solid transparent;
+                border-radius: 25px;
+                padding: 10px 45px 10px 20px;
+                font-size: 14px;
+                transition: all 0.3s ease;
+                width: 100%;
+                color: var(--text-dark);
+            }
+
+            .search-input:focus {
                 outline: none;
-                padding: 0.2rem 0.5rem;
-                width: 160px;
-                font-size: 1rem;
+                border-color: var(--primary-color);
+                background: #fff;
+                box-shadow: 0 0 10px rgba(255, 107, 53, 0.2);
             }
 
-            .search-button {
-                background: none;
+            .search-btn {
+                position: absolute;
+                right: 5px;
+                top: 50%;
+                transform: translateY(-50%);
+                background: var(--primary-color);
                 border: none;
-                cursor: pointer;
-                color: #2c3e50;
-                font-size: 1.2rem;
-            }
-
-            .auth-buttons {
+                border-radius: 50%;
+                width: 35px;
+                height: 35px;
                 display: flex;
-                gap: 0.8rem;
-            }
-
-            .auth-buttons a {
-                background-color: #3498db;
-                color: #fff;
-                padding: 0.4rem 0.8rem;
-                border-radius: 4px;
-                font-size: 0.9rem;
-                transition: background-color 0.3s ease;
-            }
-
-            .auth-buttons a:hover {
-                background-color: #2980b9;
-            }
-
-            .logout-btn {
-                background: #3498db;
-                border: none;
-                border-radius: 4px;
-                color: #fff;
-                padding: 0.4rem 0.8rem;
-                cursor: pointer;
-                transition: background-color 0.3s ease;
-            }
-
-            .logout-btn:hover {
-                background: #2980b9;
-            }
-
-            .user-circle {
-                display: inline-flex;
                 align-items: center;
                 justify-content: center;
-                background-color: #3498db;
                 color: #fff;
-                font-weight: 700;
+                transition: all 0.3s ease;
+            }
+
+            .search-btn:hover {
+                background: #e55a2b;
+                transform: translateY(-50%) scale(1.1);
+            }
+
+            /* User Profile */
+            .user-profile {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                cursor: pointer;
+                padding: 8px 15px;
+                border-radius: 25px;
+                transition: all 0.3s ease;
+                border: 2px solid transparent;
+            }
+
+            .user-profile:hover {
+                background: rgba(255, 107, 53, 0.1);
+                border-color: var(--primary-color);
+            }
+
+            .user-avatar {
                 width: 40px;
                 height: 40px;
                 border-radius: 50%;
-                font-size: 1.2rem;
-                margin-right: 0.5rem;
+                background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: 700;
+                color: #fff;
+                border: 2px solid rgba(255, 107, 53, 0.3);
             }
 
-            @media (max-width: 768px) {
-                .menu {
-                    display: none;
-                    flex-direction: column;
-                    background-color: #2c3e50;
-                    position: absolute;
-                    top: 100%;
-                    left: 0;
-                    width: 100%;
-                    padding: 1rem 0;
-                    z-index: 99;
-                    gap: 0;
-                }
-
-                .menu.show {
-                    display: flex;
-                }
-
-                .menu-toggle {
-                    display: block;
-                }
-
-                .menu-item {
-                    width: 100%;
-                    text-align: center;
-                    padding: 0.5rem 0;
-                }
-
-                .right-section {
-                    flex-direction: column;
-                    align-items: flex-start;
-                    width: 100%;
-                }
-
-                .search-bar {
-                    width: 100%;
-                }
-
-                .auth-buttons {
-                    width: 100%;
-                }
-
-                .auth-buttons a,
-                .logout-btn {
-                    width: auto;
-                }
+            .user-name {
+                color: var(--text-dark);
+                font-weight: 500;
+                margin-left: 8px;
             }
-            /* HUYCODE added - User Dropdown Styles - CSS bổ sung */ 
-            .user-dropdown-container {
+
+            /* Auth Buttons */
+            .auth-buttons .btn {
+                margin: 0 5px;
+                padding: 10px 20px;
+                border-radius: 25px;
+                font-weight: 500;
+                transition: all 0.3s ease;
+            }
+
+            .btn-register {
+                background: transparent;
+                color: var(--primary-color);
+                border: 2px solid var(--primary-color);
+            }
+
+            .btn-register:hover {
+                background: var(--primary-color);
+                color: #fff;
+                transform: translateY(-2px);
+            }
+
+            .btn-login {
+                background: var(--primary-color);
+                color: #fff;
+                border: 2px solid var(--primary-color);
+            }
+
+            .btn-login:hover {
+                background: #e55a2b;
+                transform: translateY(-2px);
+            }
+
+            .btn-logout {
+                background: #e74c3c;
+                color: #fff;
+                border: 2px solid #e74c3c;
+            }
+
+            .btn-logout:hover {
+                background: #c0392b;
+                transform: translateY(-2px);
+            }
+
+            /* Cart */
+            .cart-icon {
                 position: relative;
-                display: inline-block;
-            }
-
-            .user-circle {
-                cursor: pointer;
+                background: var(--accent-color);
+                color: #fff;
+                padding: 12px 16px;
+                border-radius: 25px;
+                text-decoration: none;
                 transition: all 0.3s ease;
-                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            }
-
-            .user-circle:hover {
-                transform: scale(1.05);
-                box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            }
-
-            .user-dropdown-menu {
-                position: absolute;
-                top: 50px;
-                right: 0;
-                background: white;
-                border-radius: 12px;
-                box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-                min-width: 220px;
-                z-index: 1000;
-                opacity: 0;
-                visibility: hidden;
-                transform: translateY(-10px);
-                transition: all 0.3s ease;
-                border: 1px solid #e0e0e0;
-            }
-
-            .user-dropdown-menu.show {
-                opacity: 1;
-                visibility: visible;
-                transform: translateY(0);
-            }
-
-            .dropdown-header {
-                padding: 15px;
-                text-align: center;
-                color: #333;
-                font-size: 14px;
-            }
-
-            .dropdown-header strong {
-                color: #667eea;
-            }
-
-            .user-dropdown-menu hr {
-                margin: 0;
-                border: none;
-                border-top: 1px solid #f0f0f0;
-            }
-
-            .dropdown-item-form {
-                margin: 0;
-                padding: 0;
-            }
-
-            .dropdown-item {
-                width: 100%;
-                padding: 12px 15px;
-                border: none;
-                background: none;
-                text-align: left;
-                cursor: pointer;
-                transition: background-color 0.2s ease;
-                font-size: 14px;
-                color: #555;
                 display: flex;
                 align-items: center;
                 gap: 8px;
             }
 
+            .cart-icon:hover {
+                background: #d68910;
+                transform: translateY(-2px);
+                color: #fff;
+                text-decoration: none;
+            }
+
+            .cart-count {
+                background: #fff;
+                color: var(--accent-color);
+                border-radius: 50%;
+                padding: 2px 8px;
+                font-size: 12px;
+                font-weight: 700;
+                min-width: 20px;
+                text-align: center;
+            }
+
+            /* Hotline */
+            .hotline {
+                background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+                color: #fff;
+                padding: 10px 20px;
+                border-radius: 25px;
+                text-decoration: none;
+                font-weight: 600;
+                transition: all 0.3s ease;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+
+            .hotline:hover {
+                background: linear-gradient(135deg, #e55a2b, #d68910);
+                transform: translateY(-2px);
+                color: #fff;
+                text-decoration: none;
+                box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+            }
+
+            .hotline i {
+                animation: pulse 2s infinite;
+            }
+
+            @keyframes pulse {
+                0%, 100% {
+                    transform: scale(1);
+                }
+                50% {
+                    transform: scale(1.1);
+                }
+            }
+
+            /* Dropdown Menu */
+            .dropdown-menu {
+                border: none;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+                border-radius: 15px;
+                padding: 15px 0;
+                margin-top: 10px;
+                background: #fff;
+            }
+
+            .dropdown-item {
+                padding: 12px 25px;
+                transition: all 0.3s ease;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                color: var(--text-dark);
+                border: none;
+                background: none;
+                width: 100%;
+                text-align: left;
+            }
+
             .dropdown-item:hover {
-                background-color: #f8f9fa;
+                background: rgba(255, 107, 53, 0.1);
+                color: var(--primary-color);
+                transform: translateX(5px);
             }
 
-            .user-dropdown-menu::before {
-                content: '';
-                position: absolute;
-                top: -8px;
-                right: 15px;
-                width: 0;
-                height: 0;
-                border-left: 8px solid transparent;
-                border-right: 8px solid transparent;
-                border-bottom: 8px solid white;
+            .dropdown-item i {
+                width: 20px;
+                text-align: center;
             }
 
-            /* ===== ADMIN SIDEBAR STYLES ===== */
+            /* Admin Sidebar */
             .admin-sidebar {
                 position: fixed;
                 top: 0;
                 left: 0;
                 height: 100vh;
-                width: 240px;
-                background-color: #2c3e50;
-                padding: 1.5rem 1rem;
+                width: 260px;
+                background: linear-gradient(135deg, var(--secondary-color), #34495e);
                 color: #fff;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
+                z-index: 1000;
+                overflow-y: auto;
+                box-shadow: 5px 0 15px rgba(0,0,0,0.1);
             }
 
             .sidebar-header {
-                font-size: 1.6rem;
-                font-weight: bold;
-                margin-bottom: 2rem;
+                padding: 30px 20px;
                 text-align: center;
-                width: 100%;
+                background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+                margin-bottom: 20px;
             }
 
-            .sidebar-menu {
-                list-style: none;
-                width: 100%;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                padding: 0;
-            }
-
-            .sidebar-menu li {
-                width: 100%;
-                margin: 0.5rem 0;
-                text-align: center;
-            }
-
-            .sidebar-menu a,
-            .sidebar-menu button {
-                color: #fff;
-                font-size: 1rem;
-                background: none;
-                border: none;
-                cursor: pointer;
-                transition: color 0.3s ease;
-                width: 100%;
-                padding: 0.6rem 0;
-                display: inline-block;
-            }
-
-            .sidebar-menu a:hover,
-            .sidebar-menu button:hover {
-                color: #f1c40f;
-            }
-
-            .sidebar-menu form {
+            .sidebar-header h3 {
                 margin: 0;
-                width: 100%;
+                font-size: 1.5rem;
+                font-weight: 700;
             }
 
+            .sidebar-nav {
+                padding: 0 10px;
+            }
+
+            .sidebar-nav .nav-item {
+                margin: 8px 0;
+            }
+
+            .sidebar-nav .nav-link {
+                color: #bdc3c7;
+                padding: 15px 20px;
+                border-radius: 10px;
+                transition: all 0.3s ease;
+                display: flex;
+                align-items: center;
+                gap: 15px;
+                border: none;
+                background: none;
+                width: 100%;
+                text-align: left;
+            }
+
+            .sidebar-nav .nav-link:hover {
+                background: rgba(255, 107, 53, 0.2);
+                color: #fff;
+                transform: translateX(5px);
+            }
+
+            .sidebar-nav .nav-link i {
+                width: 20px;
+                text-align: center;
+            }
+
+            /* Mobile Responsive */
+            @media (max-width: 768px) {
+                .navbar-brand {
+                    font-size: 1.5rem;
+                }
+
+                .search-container {
+                    max-width: 200px;
+                }
+
+                .user-name {
+                    display: none;
+                }
+
+                .hotline span {
+                    display: none;
+                }
+
+                .admin-sidebar {
+                    width: 100%;
+                    transform: translateX(-100%);
+                    transition: transform 0.3s ease;
+                }
+
+                .admin-sidebar.show {
+                    transform: translateX(0);
+                }
+            }
         </style>
     </head>
     <body>
         <%
-    UserDTO user = (UserDTO) session.getAttribute("nameUser");
-    boolean isAdmin = AuthUtils.isAdmin(session);
-    String searchTour = (request.getAttribute("searchTourInfor") != null) ?
-            request.getAttribute("searchTourInfor").toString() : "";
+            UserDTO user = (UserDTO) session.getAttribute("nameUser");
+            boolean isAdmin = AuthUtils.isAdmin(session);
+            String searchTour = (request.getAttribute("searchTourInfor") != null) ?
+                    request.getAttribute("searchTourInfor").toString() : "";
         %>
 
         <% if (isAdmin) { %>
-        <!-- Admin Sidebar Layout -->
+        <!-- Admin Sidebar -->
         <div class="admin-sidebar">
-            <div class="sidebar-header">Admin Panel</div>
-            <ul class="sidebar-menu">
-                <li><a href="placeController?action=destination&page=indexjsp">🏠Trang chủ</a></li>
-                <li><a href="placeController?action=destination&page=destinationjsp">📍 Quản lý điểm đến</a></li>
-                <li><a href="userController">👤 Quản lý người dùng</a></li>
-                <li>
-                    <form action="loginController" method="post">
+            <div class="sidebar-header">
+                <h3><i class="fas fa-cog"></i> Admin Panel</h3>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-item">
+                    <a href="placeController?action=destination&page=indexjsp" class="nav-link">
+                        <i class="fas fa-home"></i> Trang chủ
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a href="placeController?action=destination&page=destinationjsp" class="nav-link">
+                        <i class="fas fa-map-marker-alt"></i> Quản lý điểm đến
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a href="userController" class="nav-link">
+                        <i class="fas fa-users"></i> Quản lý người dùng
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <form action="loginController" method="post" class="m-0">
                         <input type="hidden" name="action" value="logout" />
-                        <button class="logout-btn">🚪 Đăng xuất</button>
+                        <button type="submit" class="nav-link btn btn-link text-start w-100 border-0">
+                            <i class="fas fa-sign-out-alt"></i> Đăng xuất
+                        </button>
                     </form>
-                </li>
-            </ul>
+                </div>
+            </nav>
         </div>
         <% } else { %>
-        <!-- Regular Header Layout -->
-        <header class="header">
+        <!-- Regular Header -->
+        <nav class="navbar navbar-expand-lg fixed-top" id="mainNavbar">
             <div class="container">
-                <nav class="nav">
-                    <a href="placeController?action=destination&page=indexjsp" class="logo">VN Tours</a>
-                    <div class="menu-toggle" onclick="toggleMenu()">☰</div>
-                    <ul class="menu" id="menu">
-                        <li class="menu-item">
-                            <form action="MainController" method="get">
+                <a class="navbar-brand" href="placeController?action=destination&page=indexjsp">
+                    <i class="fas fa-plane"></i> VN Tours
+                </a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <form action="MainController" method="get" class="d-inline">
                                 <input type="hidden" name="action" value="destination">
                                 <input type="hidden" name="page" value="indexjsp">
-                                <input type="submit" value="Trang chủ">
+                                <button type="submit" class="nav-link btn btn-link">
+                                    <i class="fas fa-home"></i> Trang chủ
+                                </button>
                             </form>
                         </li>
-                        <li class="menu-item">
-                            <form action="MainController" method="get">
+                        <li class="nav-item">
+                            <form action="MainController" method="get" class="d-inline">
                                 <input type="hidden" name="action" value="destination">
                                 <input type="hidden" name="page" value="destinationjsp">
-                                <input type="submit" value="Điểm đến">
+                                <button type="submit" class="nav-link btn btn-link">
+                                    <i class="fas fa-map-marker-alt"></i> Điểm đến
+                                </button>
                             </form>
                         </li>
-                        <li class="menu-item"><a href="about.jsp">Giới thiệu</a></li>
-                        <li class="menu-item"><a href="contact.jsp">Liên hệ</a></li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="about.jsp">
+                                <i class="fas fa-info-circle"></i> Giới thiệu
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="contact.jsp">
+                                <i class="fas fa-envelope"></i> Liên hệ
+                            </a>
+                        </li>
                     </ul>
-                    <div class="right-section">
-                        <form action="MainController" method="get">
-                            <div class="search-bar">
-                                <input type="hidden" name="action" value="search">
-                                <input type="text" class="search-input" name="searchItem" placeholder="Tìm Kiếm...." value="<%= searchTour %>">
-                                <button class="search-button">🔍</button>
-                            </div>
+
+                    <div class="d-flex align-items-center gap-3">
+                        <!-- Search Bar -->
+                        <form action="MainController" method="get" class="search-container">
+                            <input type="hidden" name="action" value="search">
+                            <input type="text" class="search-input" name="searchItem" 
+                                   placeholder="Tìm kiếm tour..." value="<%= searchTour %>">
+                            <button type="submit" class="search-btn">
+                                <i class="fas fa-search"></i>
+                            </button>
                         </form>
+
+                        <!-- Hotline -->
+                        <a href="tel:1900xxxx" class="hotline">
+                            <i class="fas fa-phone"></i>
+                            <span>1900-xxxx</span>
+                        </a>
+
+                        <!-- Auth Section -->
+                        <% if (user == null) { %>
                         <div class="auth-buttons">
-                            <% if (user == null) { %>
-                            <a href="RegisForm.jsp">Đăng ký</a>
-                            <a href="LoginForm.jsp">Đăng nhập</a>
-                            <% } else { %>
-                            <!-- User Dropdown Container -->
-                            <div class="user-dropdown-container">
-                                <div class="user-circle" onclick="toggleUserDropdown()" title="<%= user.getFullName() %>">
-                                    <%= user.getFullName().trim().substring(0,1).toUpperCase() %>
-                                </div>
+                            <a href="RegisForm.jsp" class="btn btn-register">Đăng ký</a>
+                            <a href="LoginForm.jsp" class="btn btn-login">Đăng nhập</a>
+                        </div>
+                        <% } else { %>
+                        <div class="d-flex align-items-center gap-2">
+                            <!-- Cart -->
+                            <a href="cart.jsp" class="cart-icon">
+                                <i class="fas fa-shopping-cart"></i>
+                                <span class="cart-count" id="cartCount">0</span>
+                            </a>
 
-                                <!-- Dropdown Menu -->
-                                <div class="user-dropdown-menu" id="userDropdownMenu">
-                                    <div class="dropdown-header">
-                                        <strong><%= user.getFullName() %></strong>
+                            <!-- User Dropdown -->
+                            <div class="dropdown">
+                                <div class="user-profile" data-bs-toggle="dropdown">
+                                    <div class="user-avatar">
+                                        <%= user.getFullName().trim().substring(0,1).toUpperCase() %>
                                     </div>
-                                    <hr>
-
-                                    <!-- Edit Profile -->
-                                    <form action="MainController" method="post" class="dropdown-item-form">
-                                        <input type="hidden" name="action" value="editProfile" />
-                                        <input type="hidden" name="userId" value="<%= user.getIdUser() %>" />
-                                        <button type="submit" class="dropdown-item">
-                                            👤 Chỉnh sửa hồ sơ
-                                        </button>
-                                    </form>
-
-                                    <!-- Order History -->
-                                    <form action="MainController" method="post" class="dropdown-item-form">
-                                        <input type="hidden" name="action" value="orderOfUser" />
-                                        <input type="hidden" name="userId" value="<%= user.getIdUser() %>" />
-                                        <button type="submit" class="dropdown-item">
-                                            📋 Lịch sử giao dịch
-                                        </button>
-                                    </form>
+                                    <span class="user-name"><%= user.getFullName() %></span>
+                                    <i class="fas fa-chevron-down"></i>
                                 </div>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <form action="MainController" method="post" class="d-inline">
+                                            <input type="hidden" name="action" value="editProfile" />
+                                            <input type="hidden" name="userId" value="<%= user.getIdUser() %>" />
+                                            <button type="submit" class="dropdown-item">
+                                                <i class="fas fa-user-edit"></i> Chỉnh sửa hồ sơ
+                                            </button>
+                                        </form>
+                                    </li>
+                                    <li>
+                                        <form action="MainController" method="post" class="d-inline">
+                                            <input type="hidden" name="action" value="orderOfUser" />
+                                            <input type="hidden" name="userId" value="<%= user.getIdUser() %>" />
+                                            <button type="submit" class="dropdown-item">
+                                                <i class="fas fa-history"></i> Lịch sử giao dịch
+                                            </button>
+                                        </form>
+                                    </li>
+                                </ul>
                             </div>
 
-                            <!-- Logout button outside dropdown -->
-                            <form action="loginController" method="post" style="display:inline;">
+                            <!-- Logout Button -->
+                            <form action="loginController" method="post" class="d-inline">
                                 <input type="hidden" name="action" value="logout" />
-                                <button type="submit" class="logout-btn">Đăng xuất</button>
+                                <button type="submit" class="btn btn-logout">
+                                    <i class="fas fa-sign-out-alt"></i> Đăng xuất
+                                </button>
                             </form>
-                            <% } %>
                         </div>
+                        <% } %>
                     </div>
-                </nav>
+                </div>
             </div>
-        </header>
+        </nav>
         <% } %>
 
-    </body>
-    <script>
-        function toggleMenu() {
-            const menu = document.getElementById("menu");
-            menu.classList.toggle("show");
-        }
+        <!-- Bootstrap JS -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-        function toggleUserDropdown() {
-            const dropdown = document.getElementById("userDropdownMenu");
-            dropdown.classList.toggle("show");
-        }
+        <script>
+            // Navbar scroll effect
+            window.addEventListener('scroll', function () {
+                const navbar = document.getElementById('mainNavbar');
+                if (window.scrollY > 50) {
+                    navbar.classList.add('scrolled');
+                } else {
+                    navbar.classList.remove('scrolled');
+                }
+            });
 
-        // Close dropdown when clicking outside
-        document.addEventListener('click', function (event) {
-            const userContainer = document.querySelector('.user-dropdown-container');
-            const dropdown = document.getElementById("userDropdownMenu");
-
-            if (userContainer && !userContainer.contains(event.target)) {
-                dropdown.classList.remove("show");
+            // Update cart count function
+            function updateCartCount(count) {
+                const cartCountElement = document.getElementById('cartCount');
+                if (cartCountElement) {
+                    cartCountElement.textContent = count;
+                }
             }
-        });
-    </script>
+
+            // Example usage
+            // updateCartCount(3);
+        </script>
+    </body>
 </html>

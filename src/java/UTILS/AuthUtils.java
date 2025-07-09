@@ -25,6 +25,13 @@ public class AuthUtils {
         UserDTO user = udao.readbyID(txtEmailOrPhone);
         return user;
     }
+    
+    public static UserDTO getCurrentUser(HttpSession session) {
+        if(isLoggedIn(session)){
+            return (UserDTO)session.getAttribute("nameUser");
+        }
+        return null;
+    }
 
     //hàm kiểm tra đăng nhập bằng 2 cái quỷ ở dưới
     public static boolean isValidLogin(String txtEmailOrPhone, String txtPassword) {
@@ -57,4 +64,6 @@ public class AuthUtils {
      public static String getAccessDeniedMessage(String action){
         return "You cannnot access to " + action + ". Please contact Adminstrator to know more detail information.";
     }
+     
+    
 }
