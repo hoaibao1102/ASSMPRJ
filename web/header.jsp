@@ -291,12 +291,15 @@
                 background: var(--gradient-main);
                 color: var(--pearl-white);
                 font-weight: 600;
+
             }
             .dropdown-item {
+
                 width: 100%;
                 padding: 0.75rem 1rem;
                 border: none;
                 background: none;
+                width: 100%;
                 text-align: left;
                 cursor: pointer;
                 transition: all 0.3s ease;
@@ -428,6 +431,7 @@
                     right: -50px;
                     min-width: 200px;
                 }
+
                 .admin-sidebar {
                     width: 100%;
                     transform: translateX(-100%);
@@ -495,8 +499,8 @@
                             Đăng xuất
                         </button>
                     </form>
-                </li>
-            </ul>
+                </div>
+            </nav>
         </div>
         <% } else { %>
         <!-- Regular Header Layout -->
@@ -615,11 +619,14 @@
                                 </form>
                                 <% } %>
                             </div>
+
                         </div>
+                        <% } %>
                     </div>
                 </div>
             </nav>
         </header>
+
         <% } %>
 
         <!-- Bootstrap JS -->

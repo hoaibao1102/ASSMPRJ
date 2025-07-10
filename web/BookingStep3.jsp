@@ -23,6 +23,7 @@
         <!-- Google Fonts -->
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
         
+
         <style>
             :root {
                 --primary-blue: #0EA5E9;      /* Xanh biển Việt Nam */
@@ -36,6 +37,7 @@
                 
                 --gradient-main: linear-gradient(135deg, var(--primary-blue), var(--primary-green));
                 --gradient-secondary: linear-gradient(135deg, var(--primary-orange), var(--secondary-yellow));
+
             }
             
             * {
@@ -43,6 +45,7 @@
             }
             
             body {
+
                 padding-top: 100px;
                 background: #f8f9fa;
                 color: #333;
@@ -55,6 +58,7 @@
                 border-radius: 20px;
                 box-shadow: 0 10px 30px rgba(0,0,0,0.1);
                 padding: 2rem;
+
                 margin: 0;
                 position: relative;
                 overflow: hidden;
@@ -69,6 +73,7 @@
                 bottom: 0;
                 background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" fill="white" opacity="0.1"><polygon points="0,0 1000,0 1000,100 0,80"/></svg>');
                 background-size: cover;
+
             }
             
             .step-title {
@@ -80,6 +85,7 @@
                 text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
             }
             
+
             .step-tracker {
                 display: flex;
                 justify-content: center;
@@ -95,6 +101,7 @@
                 align-items: center;
                 text-align: center;
                 transition: all 0.3s ease;
+
             }
             
             .step.active .icon {
@@ -113,9 +120,11 @@
             .step .icon {
                 width: 80px;
                 height: 80px;
+
                 border-radius: 50%;
                 display: flex;
                 align-items: center;
+
                 justify-content: center;
                 background: #6c757d;
                 transition: all 0.3s ease;
@@ -169,7 +178,7 @@
                 height: 5px;
                 background: var(--gradient-main);
             }
-            
+
             .success-header {
                 text-align: center;
                 margin-bottom: 40px;
@@ -217,6 +226,7 @@
             
             .info-item {
                 background: #f8f9fa;
+
                 padding: 20px;
                 border-radius: 12px;
                 border-left: 4px solid var(--primary-orange);
@@ -226,6 +236,7 @@
             .info-item:hover {
                 transform: translateY(-2px);
                 box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+
             }
             
             .info-label {
@@ -241,19 +252,20 @@
                 font-size: 1.1rem;
                 font-weight: 600;
                 color: var(--text-primary);
+
             }
             
             .info-value.highlight {
                 color: var(--primary-orange);
                 font-size: 1.3rem;
             }
-            
             .tour-card {
                 background: white;
                 border-radius: 20px;
                 padding: 30px;
                 box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
                 border: 1px solid rgba(255, 107, 53, 0.1);
+
                 position: relative;
                 overflow: hidden;
             }
@@ -270,6 +282,7 @@
             
             .tour-card h3 {
                 color: var(--text-primary);
+
                 font-weight: 700;
                 margin-bottom: 25px;
                 font-size: 1.4rem;
@@ -299,6 +312,7 @@
             
             .tour-info strong {
                 color: var(--text-primary);
+
                 font-weight: 600;
             }
             
@@ -348,6 +362,7 @@
             
             .btn-primary-custom {
                 background: var(--gradient-secondary);
+
                 border: none;
                 padding: 15px 30px;
                 border-radius: 50px;
@@ -388,10 +403,11 @@
             
             .btn-secondary-custom:hover {
                 transform: translateY(-2px);
+
                 box-shadow: 0 8px 25px rgba(14, 165, 233, 0.4);
                 color: white;
             }
-            
+
             /* Responsive Design */
             @media (max-width: 768px) {
                 .step-tracker {
@@ -484,7 +500,9 @@
                 <div class="step-tracker">
                     <div class="step active">
                         <div class="icon">
+
                             <img src="assets/images/icon/icon_fillfile.jpg" alt="info" />
+
                         </div>
                         <div class="label">NHẬP THÔNG TIN</div>
                     </div>
@@ -493,7 +511,9 @@
                     
                     <div class="step active">
                         <div class="icon">
+
                             <img src="assets/images/icon/icon_thanhtoan.jpg" alt="pay" />
+
                         </div>
                         <div class="label">THANH TOÁN</div>
                     </div>
@@ -502,13 +522,16 @@
                     
                     <div class="step current">
                         <div class="icon">
+
                             <img src="assets/images/icon/icon_done.jpg" alt="done" />
+
                         </div>
                         <div class="label">HOÀN TẤT</div>
                     </div>
                 </div>
             </div>
         </div>
+
         <!-- Main Content -->
         <div class="content">
             <div class="container">
@@ -524,6 +547,7 @@
                                 <div class="success-subtitle">
                                     <strong>Cảm ơn bạn đã đặt tour tại VN Tours.</strong><br>
                                     Thông tin booking của bạn đã được xác nhận.<br>
+
                                     Chúng tôi đã gửi email xác nhận đến: <span style="color: var(--primary-orange); font-weight: 600;"><%= account != null ? account.getEmail() : "email@example.com" %></span>
                                 </div>
                             </div>
@@ -610,12 +634,13 @@
                                 <i class="fas fa-file-invoice me-2"></i>
                                 PHIẾU XÁC NHẬN BOOKING
                             </h3>
-                            
+
                             <img src="assets/images/places/<%= tourImage %>" alt="Tour" class="tour-image">
                             
                             <div class="tour-info">
                                 <p><strong><i class="fas fa-map-marker-alt me-2"></i><%= tour != null ? tour.getDestination() : "" %>:</strong> <%= tour != null ? tour.getNametour() : "" %></p>
                                 <p><strong><i class="fas fa-code me-2"></i>Mã tour:</strong> <%= tour != null ? tour.getIdTourTicket() : "" %></p>
+
                             </div>
                             
                             <div class="tour-details">
@@ -630,6 +655,7 @@
                                 <p>
                                     <i class="fas fa-plane-arrival me-2"></i>
                                     <strong>Ngày về:</strong> <%= endDateStr %>
+
                                 </p>
                             </div>
                             
@@ -640,7 +666,9 @@
                                     <i class="fas fa-receipt me-2"></i>
                                     TỔNG TIỀN ĐÃ THANH TOÁN
                                 </div>
+
                                 <div class="total-amount"><%= new DecimalFormat("#,###").format(total) %> đ</div>
+
                             </div>
                             
                             <a href="placeController?action=destination&page=destinationjsp" class="btn-secondary-custom w-100">

@@ -276,6 +276,7 @@
                 .stats-badge {
                     font-size: 0.8rem;
                     padding: 0.3rem 0.8rem;
+
                 }
             }
         </style>
@@ -290,7 +291,7 @@
                 <p class="section-intro">
                     Khám phá vẻ đẹp Việt Nam cùng đối tác tin cậy của bạn
                 </p>
-                
+
                 <div class="row align-items-center g-4">
                     <div class="col-lg-6">
                         <img src="assets/images/3ae.png" alt="Giới thiệu VN Tours" class="img-fluid rounded-image">
@@ -305,6 +306,7 @@
                                     VN Tours là nền tảng du lịch kết nối hàng ngàn du khách đến những địa điểm tuyệt vời nhất tại Việt Nam. Chúng tôi mong muốn mọi chuyến đi không chỉ là hành trình, mà là trải nghiệm ghi dấu cảm xúc.
                                 </p>
                                 <div class="row g-2">
+
                                     <div class="col-md-6">
                                         <span class="stats-badge">🎯 Hơn 1000 tour/năm</span>
                                     </div>
@@ -323,12 +325,16 @@
         </section>
 
         <!-- SỨ MỆNH – TẦM NHÌN – GIÁ TRỊ -->
+
         <section class="section-padding bg-accent">
+
             <div class="container">
                 <h2 class="section-title">Sứ mệnh – Tầm nhìn – Giá trị</h2>
                 <div class="row g-4">
                     <div class="col-lg-4 col-md-6">
+
                         <div class="card-simple value-card">
+
                             <div class="feature-icon">
                                 🎯
                             </div>
@@ -337,7 +343,9 @@
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-6">
+
                         <div class="card-simple value-card">
+
                             <div class="feature-icon">
                                 🌍
                             </div>
@@ -346,7 +354,9 @@
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-12">
+
                         <div class="card-simple value-card">
+
                             <div class="feature-icon">
                                 💎
                             </div>
@@ -362,6 +372,7 @@
         <section class="section-padding">
             <div class="container">
                 <h2 class="section-title">Vì sao chọn VN Tours?</h2>
+
                 <div class="row align-items-center g-4">
                     <div class="col-lg-6 order-lg-1 order-2">
                         <div class="card-simple">
@@ -370,6 +381,7 @@
                                     🏆 Trải nghiệm đẳng cấp
                                 </h3>
                                 <p class="mb-3" style="font-size: 1rem; color: var(--text-medium);">
+
                                     Chúng tôi hiểu rằng du lịch không chỉ là điểm đến, mà là trải nghiệm. Đó là lý do bạn nên chọn chúng tôi:
                                 </p>
                                 <ul class="feature-list">
@@ -391,6 +403,7 @@
 
         <!-- ĐÁNH GIÁ KHÁCH HÀNG -->
         <section class="section-padding bg-accent">
+
             <div class="container">
                 <h2 class="section-title">Khách hàng nói gì về chúng tôi?</h2>
                 <div class="row g-4">
@@ -400,8 +413,10 @@
                                 "Tour Đà Nẵng rất tuyệt vời! Hướng dẫn viên vui vẻ, nhiệt tình và tổ chức cực kỳ chuyên nghiệp. Sẽ quay lại với VN Tours!"
                             </div>
                             <div class="d-flex align-items-center">
+
                                 <div class="avatar-placeholder bg-yellow me-3">
                                     <i class="bi bi-person-fill"></i>
+
                                 </div>
                                 <div>
                                     <div class="testimonial-author">Minh Tú</div>
@@ -416,8 +431,10 @@
                                 "Trang web thiết kế đẹp, dễ sử dụng. Đặt tour nhanh chóng và đội ngũ hỗ trợ rất tận tình. Trải nghiệm tuyệt vời!"
                             </div>
                             <div class="d-flex align-items-center">
+
                                 <div class="avatar-placeholder bg-blue me-3">
                                     <i class="bi bi-person-fill"></i>
+
                                 </div>
                                 <div>
                                     <div class="testimonial-author">Phương Anh</div>
@@ -456,6 +473,7 @@
                             Hãy bắt đầu hành trình khám phá những điều kỳ diệu của đất nước chúng ta ngay hôm nay!
                         </p>
                         <a href="placeController?action=destination&page=indexjsp" class="btn-primary-custom">
+
                             <i class="bi bi-house-door me-2"></i>
                             Quay về Trang chủ
                         </a>

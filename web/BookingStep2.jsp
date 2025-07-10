@@ -40,6 +40,7 @@
             line-height: 1.6;
         }
         
+
         .step-container {
             background: white;
             border-radius: 20px;
@@ -58,6 +59,7 @@
             text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
         }
         
+
         .step-tracker {
             display: flex;
             justify-content: center;
@@ -66,6 +68,7 @@
             gap: 1rem;
         }
         
+
         .step {
             display: flex;
             flex-direction: column;
@@ -82,11 +85,12 @@
         
         .step.current .icon {
             background: var(--gradient-secondary);
+
             transform: scale(1.15);
             box-shadow: 0 10px 30px rgba(255, 107, 53, 0.5);
             animation: pulse 2s infinite;
         }
-        
+
         .step .icon {
             width: 80px;
             height: 80px;
@@ -98,7 +102,7 @@
             transition: all 0.3s ease;
             margin-bottom: 0.5rem;
         }
-        
+
         .step .icon img {
             width: 40px;
             height: 40px;
@@ -112,6 +116,7 @@
             margin-top: 0.5rem;
         }
         
+
         .arrow {
             font-size: 2rem;
             color: var(--primary-orange);
@@ -124,12 +129,13 @@
             50% { transform: scale(1.25); }
         }
         
+
         @keyframes bounce {
             0%, 20%, 50%, 80%, 100% { transform: translateX(0); }
             40% { transform: translateX(-5px); }
             60% { transform: translateX(5px); }
         }
-        
+       
         .containerdetail {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -137,13 +143,14 @@
             margin-top: 2rem;
         }
         
+
         @media (max-width: 768px) {
             .containerdetail {
                 grid-template-columns: 1fr;
                 gap: 1rem;
             }
         }
-        
+
         .left-content {
             background: white;
             border-radius: 20px;
@@ -153,6 +160,7 @@
             transition: all 0.3s ease;
         }
         
+
         .left-content:hover {
             transform: translateY(-5px);
             box-shadow: 0 20px 40px rgba(0,0,0,0.15);
@@ -160,6 +168,7 @@
         
         .left-content h3 {
             color: var(--text-main);
+
             font-weight: bold;
             margin-bottom: 1.5rem;
             font-size: 1.5rem;
@@ -168,11 +177,13 @@
             display: inline-block;
         }
         
+
         .info-table {
             width: 100%;
             margin-bottom: 2rem;
         }
         
+
         .info-table td {
             padding: 0.75rem 0;
             border-bottom: 1px solid #eee;
@@ -188,6 +199,7 @@
             color: var(--text-secondary);
         }
         
+
         .booking-id {
             color: var(--primary-orange) !important;
             font-weight: bold;
@@ -199,11 +211,13 @@
             font-weight: bold;
         }
         
+
         .payment-deadline {
             color: #e74c3c !important;
             font-weight: bold;
         }
         
+
         .right-content {
             background: white;
             border-radius: 20px;
@@ -213,6 +227,7 @@
             transition: all 0.3s ease;
         }
         
+
         .right-content:hover {
             transform: translateY(-5px);
             box-shadow: 0 20px 40px rgba(0,0,0,0.15);
@@ -220,6 +235,7 @@
         
         .right-content h3 {
             color: var(--text-main);
+
             font-weight: bold;
             margin-bottom: 1.5rem;
             font-size: 1.5rem;
@@ -227,7 +243,7 @@
             border-bottom: 3px solid var(--primary-orange);
             display: inline-block;
         }
-        
+
         .tour-image {
             width: 100%;
             border-radius: 15px;
@@ -249,15 +265,17 @@
             color: var(--text-main);
         }
         
+
         .tour-info h4 {
             color: var(--primary-orange);
             font-weight: bold;
             margin: 1.5rem 0 1rem 0;
             font-size: 1.2rem;
         }
-        
+      
         .payment-btn {
             background: var(--gradient-secondary);
+
             color: white;
             border: none;
             padding: 1rem 2rem;
@@ -270,12 +288,14 @@
             box-shadow: 0 5px 15px rgba(255, 107, 53, 0.4);
         }
         
+
         .payment-btn:hover {
             transform: translateY(-3px);
             box-shadow: 0 10px 25px rgba(255, 107, 53, 0.6);
             background: linear-gradient(135deg, #e55a2b 0%, #d68910 100%);
         }
         
+
         .payment-modal {
             display: none;
             position: fixed;
@@ -289,7 +309,7 @@
             justify-content: center;
             backdrop-filter: blur(5px);
         }
-        
+
         .modal-content {
             background: white;
             padding: 2rem;
@@ -300,7 +320,7 @@
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
             animation: modalSlideIn 0.3s ease;
         }
-        
+
         @keyframes modalSlideIn {
             from {
                 transform: translateY(-50px);
@@ -314,11 +334,12 @@
         
         .modal-content h3 {
             color: var(--text-main);
+
             margin-bottom: 1.5rem;
             font-weight: bold;
             text-align: center;
         }
-        
+
         .payment-option {
             display: flex;
             align-items: center;
@@ -330,11 +351,13 @@
             cursor: pointer;
         }
         
+
         .payment-option:hover {
             border-color: var(--primary-orange);
             background: rgba(255, 107, 53, 0.1);
         }
         
+
         .payment-option input[type="radio"] {
             margin-right: 0.75rem;
             transform: scale(1.2);
@@ -344,23 +367,27 @@
             cursor: pointer;
             font-weight: 500;
             color: var(--text-main);
+
             display: flex;
             align-items: center;
             width: 100%;
         }
         
+
         .payment-option i {
             margin-left: auto;
             color: var(--primary-orange);
             font-size: 1.2rem;
         }
         
+
         .modal-buttons {
             display: flex;
             justify-content: space-between;
             margin-top: 2rem;
         }
         
+
         .btn-cancel {
             background: #6c757d;
             color: white;
@@ -371,6 +398,7 @@
             transition: all 0.3s ease;
         }
         
+
         .btn-cancel:hover {
             background: #5a6268;
             transform: translateY(-2px);
@@ -378,6 +406,7 @@
         
         .btn-confirm {
             background: var(--gradient-secondary);
+
             color: white;
             border: none;
             padding: 0.75rem 2rem;
@@ -385,12 +414,13 @@
             font-weight: bold;
             transition: all 0.3s ease;
         }
-        
+
         .btn-confirm:hover {
             background: linear-gradient(135deg, #e55a2b 0%, #d68910 100%);
             transform: translateY(-2px);
         }
         
+
         .close-btn {
             position: absolute;
             top: 1rem;
@@ -400,11 +430,11 @@
             color: #6c757d;
             transition: color 0.3s ease;
         }
-        
         .close-btn:hover {
             color: var(--primary-orange);
         }
         
+
         @media (max-width: 768px) {
             .step-tracker {
                 flex-direction: column;
@@ -430,7 +460,7 @@
                 height: 30px;
             }
         }
-        
+
         .tropical-decoration {
             position: absolute;
             top: -10px;
@@ -438,11 +468,11 @@
             width: 50px;
             height: 50px;
             background: var(--gradient-secondary);
+
             border-radius: 50%;
             opacity: 0.1;
             animation: float 6s ease-in-out infinite;
         }
-        
         @keyframes float {
             0%, 100% { transform: translateY(0px); }
             50% { transform: translateY(-10px); }
@@ -469,6 +499,7 @@
                 <div class="arrow">
                     <i class="fas fa-arrow-right"></i>
                 </div>
+
                 <div class="step current">
                     <div class="icon">
                         <img src="assets/images/icon/icon_thanhtoan.jpg" alt="pay" />
@@ -478,6 +509,7 @@
                 <div class="arrow">
                     <i class="fas fa-arrow-right"></i>
                 </div>
+
                 <div class="step">
                     <div class="icon">
                         <img src="assets/images/icon/icon_done.jpg" alt="done" />
@@ -486,16 +518,19 @@
                 </div>
             </div>
         </div>
+
         <%
             UserDTO account = (UserDTO)session.getAttribute("nameUser");
             OrderDTO newBooking = (OrderDTO)request.getAttribute("newBooking");
             DecimalFormat vnd = new DecimalFormat("#,###");
             
             // Lấy ra ngày đặt
+
             LocalDate today = LocalDate.parse(newBooking.getBookingDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd")); ;
             LocalDate tomorrow = today.plusDays(1);
             String tomorrowStr = tomorrow.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         %>
+
         <div class="containerdetail">
             <div class="left-content">
                 <div class="tropical-decoration"></div>
@@ -565,6 +600,7 @@
                 LocalDate endDate;
                 String duration = tour.getDuration();
                 
+
                 if("2 ngày 1 đêm".equals(duration)){
                     endDate = startDate.plusDays(2);
                 } else {
@@ -572,6 +608,7 @@
                 }
                 String endDateStr = endDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
             %>
+
             <div class="right-content">
                 <div class="tropical-decoration"></div>
                 <h3>
@@ -624,6 +661,7 @@
         </div>
     </div>
     <%@include file="footer.jsp" %>
+
     <!-- Payment Modal -->
     <div id="paymentModal" class="payment-modal">
         <div class="modal-content">
@@ -675,6 +713,7 @@
             </form>
         </div>
     </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         function openPaymentModal() {
@@ -685,13 +724,16 @@
             document.getElementById('paymentModal').style.display = 'none';
         }
         
+
         // Add hover effects to payment options
         document.querySelectorAll('.payment-option').forEach(option => {
             option.addEventListener('click', function() {
                 this.querySelector('input[type="radio"]').checked = true;
             });
         });
+
         
+
         // Close modal when clicking outside
         document.getElementById('paymentModal').addEventListener('click', function(e) {
             if (e.target === this) {

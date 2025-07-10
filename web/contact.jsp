@@ -8,7 +8,9 @@
 <html lang="vi">
     <head>
         <meta charset="UTF-8">
+
         <title>Liên hệ - VN Tours</title> 
+
         <!-- Bootstrap 5 CSS -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
         <!-- Font Awesome -->
@@ -18,6 +20,7 @@
         
         <style>
             :root {
+
                 --primary-color: #0EA5E9; /* Xanh biển Việt Nam */
                 --secondary-color: #10B981; /* Xanh lá nhiệt đới */
                 --accent-color: #FF6B35; /* Cam nhiệt đới */
@@ -26,10 +29,12 @@
                 --text-secondary: #6B7280; /* Text phụ */
                 --white: #FEFEFE; /* Trắng ngọc trai */
                 --border-radius: 8px;
+
             }
             
             * {
                 font-family: 'Poppins', sans-serif;
+
             }
             
             body {
@@ -165,12 +170,14 @@
                 border-radius: var(--border-radius);
                 overflow: hidden;
                 height: 400px;
+
             }
             
             .map-container iframe {
                 width: 100%;
                 height: 100%;
                 border: none;
+
             }
             
             .section-title {
@@ -179,11 +186,13 @@
                 font-weight: 700;
                 color: var(--text-color);
                 margin-bottom: 2rem;
+
             }
             
             @media (max-width: 768px) {
                 .hero-title {
                     font-size: 1.8rem;
+
                 }
                 
                 .hero-subtitle {
@@ -205,7 +214,9 @@
             <section class="hero-section">
                 <div class="container">
                     <div class="row justify-content-center">
+
                         <div class="col-lg-8 text-center">
+
                             <h1 class="hero-title">Chúng tôi luôn sẵn sàng đồng hành cùng bạn</h1>
                             <p class="hero-subtitle">
                                 Bạn có câu hỏi về tour? Muốn được tư vấn hành trình phù hợp? Hoặc cần hỗ trợ nhanh?<br>
@@ -215,6 +226,7 @@
                     </div>
                 </div>
             </section>
+
             <!-- Contact Section -->
             <section class="contact-section">
                 <div class="container">
@@ -224,6 +236,7 @@
                             <div class="contact-card">
                                 <div class="contact-info">
                                     <h3><i class="fas fa-headset me-2"></i>Liên hệ trực tiếp</h3>
+
                                     <div class="info-item">
                                         <div class="info-icon">
                                             <i class="fas fa-phone-alt"></i>
@@ -233,6 +246,7 @@
                                             <p><strong>Zalo / Messenger:</strong> @vntours</p>
                                         </div>
                                     </div>
+
                                     <div class="info-item">
                                         <div class="info-icon">
                                             <i class="fas fa-map-marker-alt"></i>
@@ -242,6 +256,7 @@
                                             <p><strong>Giờ làm việc:</strong> Thứ 2 – Thứ 6: 8h – 17h30 | Thứ 7: 8h – 12h</p>
                                         </div>
                                     </div>
+
                                     <div class="info-item">
                                         <div class="info-icon">
                                             <i class="fas fa-envelope"></i>
@@ -254,6 +269,7 @@
                                 </div>
                             </div>
                         </div>
+
                         <!-- Contact Form -->
                         <div class="col-lg-6">
                             <div class="form-card">
@@ -263,6 +279,7 @@
                                         <label for="name" class="form-label">Họ tên của bạn</label>
                                         <input type="text" class="form-control" id="name" name="name" required>
                                     </div>
+
                                     <div class="form-group">
                                         <label for="type" class="form-label">Loại hỗ trợ</label>
                                         <select class="form-select" id="type" name="type" required>
@@ -274,10 +291,12 @@
                                             <option value="review">Đánh Giá Khách Hàng</option>
                                         </select>
                                     </div>
+
                                     <div class="form-group">
                                         <label for="email" class="form-label">Email liên hệ</label>
                                         <input type="email" class="form-control" id="email" name="email" required>
                                     </div>
+
                                     <div class="form-group">
                                         <label for="message" class="form-label">Nội dung</label>
                                         <textarea class="form-control" id="message" name="message" rows="4" required></textarea>
@@ -288,6 +307,7 @@
                                 </form>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </section>
@@ -304,6 +324,7 @@
                     </div>
                 </div>
             </section>
+
         </div>
         
         <%@ include file="footer.jsp" %>

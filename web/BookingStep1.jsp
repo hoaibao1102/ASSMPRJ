@@ -186,6 +186,7 @@
         @media (max-width: 992px) {
             .content-grid {
                 grid-template-columns: 1fr;
+
             }
         }
         
@@ -674,6 +675,7 @@
                                 <span id="adult-count">1</span>
                                 <button type="button" onclick="changeCount('adult', 1)">+</button>
                             </div>
+                            <div class="label">THANH TOÁN</div>
                         </div>
                         
                         <div class="passenger-box">
@@ -697,7 +699,9 @@
                                 <button type="button" onclick="changeCount('baby', -1)">−</button>
                                 <span id="baby-count">0</span>
                                 <button type="button" onclick="changeCount('baby', 1)">+</button>
+
                             </div>
+                            <div class="label">HOÀN TẤT</div>
                         </div>
                     </div>
                     <div class="note-section">
@@ -712,6 +716,7 @@
                             placeholder="Vui lòng nhập nội dung lời nhắn..."></textarea>
                     </div>
                 </div>
+
                 <!-- Right Content -->
                 <div class="right-content">
                     <div class="summary-title">
@@ -804,11 +809,12 @@
                             Đặt Tour
                         </button>
                     </form>
+
                 </div>
             </div>
         </div>
-    </div>
-    <%@include file="footer.jsp" %>
+
+        <%@include file="footer.jsp" %>
 
     <script>
         // Lấy giá tour từ server (giá một vé người lớn)
