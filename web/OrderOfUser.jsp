@@ -8,629 +8,794 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="java.util.*, DTO.OrderDTO , UTILS.AuthUtils"%>
 <!DOCTYPE html>
-<html>
+<html lang="vi">
     <head>
         <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Đơn hàng của bạn</title>
+
+        <!-- Bootstrap 5 CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        <!-- Bootstrap Icons -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+        <!-- Google Fonts -->
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
         <style>
+            :root {
+                /* Tông màu chính Việt Nam */
+                --sky-blue: #0EA5E9;
+                --coral-orange: #FF6B35;
+                --emerald-green: #10B981;
+                
+                /* Tông màu phụ */
+                --golden-yellow: #F59E0B;
+                --purple-lavender: #8B5CF6;
+                --pearl-white: #FEFEFE;
+                
+                /* Màu nền và text */
+                --dark-gray: #1F2937;
+                --medium-gray: #6B7280;
+                --light-bg: #F8FAFC;
+                
+                /* Gradient */
+                --gradient-primary: linear-gradient(135deg, #0EA5E9, #10B981);
+                --gradient-secondary: linear-gradient(135deg, #FF6B35, #F59E0B);
+            }
+
             * {
+                margin: 0;
                 padding: 0;
                 box-sizing: border-box;
             }
 
             body {
-                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                font-family: 'Poppins', sans-serif;
+                background: var(--gradient-primary);
                 min-height: 100vh;
-                padding: 20px;
-                color: #333;
+                color: var(--dark-gray);
+                padding: 20px 0;
             }
 
-            .container {
+            .main-container {
+                background: var(--pearl-white);
+                border-radius: 15px;
+                overflow: hidden;
                 max-width: 1200px;
                 margin: 0 auto;
-                background: rgba(255, 255, 255, 0.95);
-                border-radius: 20px;
-                padding: 30px;
-                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-                backdrop-filter: blur(10px);
+                border: 1px solid #e9ecef;
+            }
+
+            /* Header Section */
+            .header-section {
+                background: var(--gradient-secondary);
+                padding: 2rem 0;
+                color: var(--pearl-white);
             }
 
             .back-btn {
+                color: var(--pearl-white);
+                text-decoration: none;
+                font-weight: 500;
+                padding: 10px 20px;
+                border-radius: 25px;
+                background: rgba(255, 255, 255, 0.2);
                 display: inline-flex;
                 align-items: center;
                 gap: 8px;
-                color: #667eea;
-                text-decoration: none;
-                font-weight: 500;
-                margin-bottom: 25px;
-                padding: 10px 16px;
-                border-radius: 10px;
-                transition: all 0.3s ease;
-                background: rgba(102, 126, 234, 0.1);
+                transition: background-color 0.2s ease;
             }
 
             .back-btn:hover {
-                background: rgba(102, 126, 234, 0.2);
-                transform: translateX(-5px);
+                color: var(--pearl-white);
+                background: rgba(255, 255, 255, 0.3);
+                text-decoration: none;
             }
 
-            h2 {
-                color: #2d3748;
-                margin-bottom: 30px;
-                font-size: 2rem;
+            .page-title {
+                color: var(--pearl-white);
+                font-size: 2.5rem;
                 font-weight: 700;
+                margin: 0;
                 text-align: center;
-                background: linear-gradient(135deg, #667eea, #764ba2);
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                background-clip: text;
             }
 
             /* Admin Table Styles */
-            .order-table {
-                width: 100%;
-                border-collapse: collapse;
-                margin-top: 20px;
-                background: white;
-                border-radius: 15px;
+            .admin-table-container {
+                padding: 2rem;
+            }
+
+            .table-responsive {
+                border-radius: 10px;
                 overflow: hidden;
-                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+                border: 1px solid #dee2e6;
             }
 
-            .order-table thead {
-                background: linear-gradient(135deg, #667eea, #764ba2);
-                color: white;
-            }
-            .order-table th,
-            .order-table td {
-                padding: 15px 12px;
-                text-align: left;
-                border-bottom: 1px solid #e2e8f0;
+            .table {
+                margin-bottom: 0;
             }
 
-            .order-table th {
+            .table thead {
+                background: var(--gradient-primary);
+            }
+
+            .table thead th {
+                color: var(--pearl-white);
                 font-weight: 600;
-                font-size: 0.9rem;
                 text-transform: uppercase;
                 letter-spacing: 0.5px;
+                border: none;
+                padding: 1rem;
+                font-size: 0.9rem;
             }
 
-            .order-table tbody tr {
-                transition: all 0.3s ease;
+            .table tbody td {
+                padding: 1rem;
+                vertical-align: middle;
+                border-color: #e9ecef;
             }
 
-            .order-table tbody tr:hover {
-                background: rgba(102, 126, 234, 0.05);
-                transform: scale(1.01);
-            }
-
-            .order-table tbody tr:last-child td {
-                border-bottom: none;
+            .table tbody tr:hover {
+                background: rgba(14, 165, 233, 0.05);
             }
 
             /* User Order Cards */
-            .order-list {
-                display: grid;
-                gap: 25px;
-                margin-top: 20px;
+            .orders-container {
+                padding: 2rem;
             }
 
             .order-card {
-                display: grid;
-                grid-template-columns: 200px 1fr;
-                gap: 20px;
-                background: white;
-                border-radius: 20px;
+                background: var(--pearl-white);
+                border-radius: 15px;
                 overflow: hidden;
-                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-                transition: all 0.3s ease;
-                border: 1px solid rgba(102, 126, 234, 0.1);
+                border: 1px solid #e9ecef;
+                margin-bottom: 2rem;
+                transition: transform 0.2s ease;
             }
 
             .order-card:hover {
-                transform: translateY(-5px);
-                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+                transform: translateY(-2px);
             }
 
-            .card-image {
-                position: relative;
+            .order-card-header {
+                background: var(--gradient-primary);
+                color: var(--pearl-white);
+                padding: 1.5rem;
+            }
+
+            .order-card-header h5 {
+                font-weight: 700;
+                margin: 0;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .order-image {
+                height: 200px;
                 overflow: hidden;
             }
 
-            .card-image img {
+            .order-image img {
                 width: 100%;
                 height: 100%;
                 object-fit: cover;
-                transition: transform 0.3s ease;
             }
 
-            .order-card:hover .card-image img {
-                transform: scale(1.1);
+            .order-details {
+                padding: 1.5rem;
             }
 
-            .card-content {
-                padding: 25px;
-                flex-direction: column;
+            .detail-item {
+                display: flex;
                 justify-content: space-between;
+                align-items: center;
+                padding: 0.75rem 0;
+                border-bottom: 1px solid #f0f0f0;
             }
 
-            .card-content h3 {
-                color: #2d3748;
-                margin-bottom: 15px;
-                font-size: 1.3rem;
-                font-weight: 700;
+            .detail-item:last-child {
+                border-bottom: none;
             }
 
-            .card-content p {
-                margin-bottom: 8px;
-                color: #4a5568;
-                line-height: 1.5;
-            }
-
-            .card-content p strong {
-                color: #2d3748;
+            .detail-label {
                 font-weight: 600;
-            }
-
-            .order-actions {
-                margin-top: 20px;
+                color: var(--dark-gray);
                 display: flex;
                 align-items: center;
-                gap: 15px;
+                gap: 8px;
+            }
+
+            .detail-value {
+                font-weight: 500;
+                color: var(--medium-gray);
+            }
+
+            .price-value {
+                color: var(--coral-orange);
+                font-weight: 700;
+                font-size: 1.1rem;
+            }
+
+            /* Payment Actions */
+            .payment-actions {
+                padding: 1.5rem;
+                background: var(--light-bg);
+                border-top: 1px solid #e9ecef;
             }
 
             .btn-pay {
-                background: linear-gradient(135deg, #ff6b6b, #ee5a24);
-                color: white;
+                background: var(--gradient-secondary);
+                color: var(--pearl-white);
                 border: none;
-                padding: 12px 24px;
-                border-radius: 10px;
+                padding: 12px 30px;
+                border-radius: 25px;
                 font-weight: 600;
-                cursor: pointer;
-                transition: all 0.3s ease;
                 text-transform: uppercase;
                 letter-spacing: 0.5px;
-                font-size: 0.9rem;
+                transition: opacity 0.2s ease;
             }
 
             .btn-pay:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 8px 20px rgba(255, 107, 107, 0.4);
-                background: linear-gradient(135deg, #ee5a24, #ff6b6b);
+                opacity: 0.9;
+                color: var(--pearl-white);
             }
 
             .status-paid {
-                background: linear-gradient(135deg, #00b894, #00cec9);
-                color: white;
-                padding: 8px 16px;
-                border-radius: 20px;
+                background: var(--emerald-green);
+                color: var(--pearl-white);
+                padding: 8px 20px;
+                border-radius: 25px;
                 font-weight: 600;
-                font-size: 0.85rem;
+                font-size: 0.9rem;
                 text-transform: uppercase;
                 letter-spacing: 0.5px;
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
             }
 
             /* Success Message */
             .success-message {
-                background: linear-gradient(135deg, #00b894, #00cec9);
-                color: white;
-                padding: 15px 20px;
+                background: var(--emerald-green);
+                color: var(--pearl-white);
+                padding: 1rem 1.5rem;
                 border-radius: 10px;
-                margin-bottom: 20px;
-                text-align: center;
+                margin-bottom: 2rem;
                 font-weight: 600;
+                display: flex;
+                align-items: center;
+                gap: 10px;
             }
 
             /* No Orders Message */
             .no-orders {
                 text-align: center;
-                padding: 60px 20px;
-                color: #718096;
-                font-size: 1.1rem;
+                padding: 4rem 2rem;
+                color: var(--medium-gray);
             }
 
-            .no-orders::before {
-                content: "📋";
-                display: block;
+            .no-orders-icon {
                 font-size: 4rem;
-                margin-bottom: 20px;
+                color: var(--coral-orange);
+                margin-bottom: 1rem;
+            }
+
+            /* Badge Styles */
+            .badge.bg-primary {
+                background-color: var(--sky-blue) !important;
+            }
+
+            .badge.bg-secondary {
+                background-color: var(--medium-gray) !important;
+            }
+
+            .badge.bg-warning {
+                background-color: var(--golden-yellow) !important;
+                color: var(--dark-gray) !important;
+            }
+
+            .badge.bg-success {
+                background-color: var(--emerald-green) !important;
             }
 
             /* Payment Modal */
-            #paymentModal {
-                display: none;
-                position: fixed;
-                z-index: 9999;
-                top: -23%;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0, 0, 0, 0.5);
-                align-items: center;
-                justify-content: center;
-                backdrop-filter: blur(8px);
-            }
-
-            body.modal-open {
-                overflow: hidden;
-                position: fixed;
-                width: 100%;
-            }
-
             .modal-content {
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                padding: 40px 30px;
-                border-radius: 20px;
-                width: 400px;
-                max-width: 90vw;
-                position: relative;
-                box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
-                animation: modalSlideIn 0.3s ease;
+                border: none;
+                border-radius: 15px;
                 overflow: hidden;
             }
 
-            @keyframes modalSlideIn {
-                from {
-                    transform: translateY(-50px);
-                    opacity: 0;
-                }
-                to {
-                    transform: translateY(0);
-                    opacity: 1;
-                }
+            .modal-header {
+                background: var(--gradient-primary);
+                color: var(--pearl-white);
+                padding: 1.5rem;
+                border: none;
             }
 
-            .modal-content h3 {
-                margin-bottom: 25px;
-                color: #2d3748;
-                font-size: 1.5rem;
+            .modal-header .modal-title {
                 font-weight: 700;
-                text-align: center;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .modal-header .btn-close {
+                background: rgba(255, 255, 255, 0.2);
+                border-radius: 50%;
+                opacity: 1;
+                filter: invert(1);
+            }
+
+            .modal-body {
+                padding: 2rem;
             }
 
             .payment-option {
+                border: 2px solid #e9ecef;
+                border-radius: 10px;
+                padding: 1rem;
+                margin-bottom: 1rem;
+                cursor: pointer;
+                transition: all 0.2s ease;
                 display: flex;
                 align-items: center;
-                padding: 15px;
-                margin-bottom: 10px;
-                border: 2px solid #e2e8f0;
-                border-radius: 10px;
-                cursor: pointer;
-                transition: all 0.3s ease;
+                gap: 15px;
             }
 
             .payment-option:hover {
-                border-color: #667eea;
-                background: rgba(102, 126, 234, 0.05);
+                border-color: var(--sky-blue);
+                background: rgba(14, 165, 233, 0.05);
             }
 
-            .payment-option input[type="radio"] {
-                margin-right: 12px;
-                transform: scale(1.2);
+            .payment-option.selected {
+                border-color: var(--sky-blue);
+                background: rgba(14, 165, 233, 0.1);
             }
 
-            .payment-option label {
-                cursor: pointer;
-                font-weight: 500;
-                color: #2d3748;
-            }
-
-            .modal-buttons {
+            .payment-icon {
+                font-size: 1.5rem;
+                width: 40px;
+                height: 40px;
+                background: var(--light-bg);
+                border-radius: 50%;
                 display: flex;
-                gap: 15px;
-                justify-content: flex-end;
-                margin-top: 25px;
+                align-items: center;
+                justify-content: center;
+                color: var(--medium-gray);
+            }
+
+            .payment-option.selected .payment-icon {
+                background: var(--sky-blue);
+                color: var(--pearl-white);
+            }
+
+            .payment-label {
+                font-weight: 600;
+                color: var(--dark-gray);
+                flex-grow: 1;
+            }
+
+            .payment-label small {
+                color: var(--medium-gray);
+            }
+
+            .modal-footer {
+                border: none;
+                padding: 1.5rem 2rem;
+                background: var(--light-bg);
             }
 
             .btn-cancel {
-                padding: 10px 20px;
-                border: 2px solid #e2e8f0;
-                background: white;
-                color: #4a5568;
-                border-radius: 8px;
-                cursor: pointer;
-                font-weight: 500;
-                transition: all 0.3s ease;
+                background: var(--pearl-white);
+                color: var(--dark-gray);
+                border: 2px solid #e9ecef;
+                padding: 10px 25px;
+                border-radius: 25px;
+                font-weight: 600;
+                transition: all 0.2s ease;
             }
 
             .btn-cancel:hover {
-                border-color: #cbd5e0;
-                background: #f7fafc;
+                border-color: var(--dark-gray);
+                background: var(--dark-gray);
+                color: var(--pearl-white);
             }
 
             .btn-confirm {
-                background: linear-gradient(135deg, #ff6b6b, #ee5a24);
-                color: white;
+                background: var(--gradient-primary);
+                color: var(--pearl-white);
                 border: none;
-                padding: 10px 20px;
-                border-radius: 8px;
-                cursor: pointer;
+                padding: 10px 25px;
+                border-radius: 25px;
                 font-weight: 600;
-                transition: all 0.3s ease;
+                transition: opacity 0.2s ease;
             }
 
             .btn-confirm:hover {
-                transform: translateY(-1px);
-                box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
-            }
-
-            .close-btn {
-                position: absolute;
-                top: 15px;
-                right: 20px;
-                cursor: pointer;
-                font-size: 24px;
-                color: #718096;
-                transition: color 0.3s ease;
-            }
-
-            .close-btn:hover {
-                color: #2d3748;
+                opacity: 0.9;
             }
 
             /* Responsive Design */
             @media (max-width: 768px) {
-                .container {
-                    padding: 20px;
-                    margin: 10px;
+                .page-title {
+                    font-size: 2rem;
                 }
 
                 .order-card {
-                    grid-template-columns: 1fr;
+                    margin-bottom: 1.5rem;
                 }
 
-                .card-image img {
-                    height: 150px;
-                }
-
-                .order-table {
-                    font-size: 0.85rem;
-                }
-
-                .order-table th,
-                .order-table td {
-                    padding: 10px 8px;
-                }
-
-                h2 {
-                    font-size: 1.5rem;
-                }
-            }
-
-            @media (max-width: 480px) {
-                .modal-content {
-                    padding: 25px 20px;
-                }
-
-                .modal-buttons {
+                .detail-item {
                     flex-direction: column;
+                    align-items: flex-start;
+                    gap: 0.5rem;
                 }
 
-                .btn-cancel,
-                .btn-confirm {
-                    width: 100%;
+                .payment-actions {
+                    text-align: center;
+                }
+
+                .orders-container {
+                    padding: 1rem;
+                }
+
+                .admin-table-container {
+                    padding: 1rem;
                 }
             }
 
-            body.modal-open {
-                overflow: hidden;
-                position: fixed;
-                width: 100%;
+            /* Accessibility improvements */
+            .payment-option:focus-within {
+                outline: 2px solid var(--sky-blue);
+                outline-offset: 2px;
             }
-            /* Đã có trong file, nhưng nếu tách CSS ngoài thì giữ lại */
-            .payment-option.selected {
-                border-color: #667eea;
-                background: rgba(102, 126, 234, 0.1);
-                box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
+
+            .btn:focus {
+                outline: 2px solid var(--sky-blue);
+                outline-offset: 2px;
             }
-            .payment-option .payment-icon {
-                font-size: 1.2rem;
-                margin-right: 6px;
+
+            /* Print styles */
+            @media print {
+                .header-section,
+                .payment-actions,
+                .back-btn {
+                    display: none;
+                }
+                
+                .main-container {
+                    border: 1px solid #000;
+                }
             }
         </style>
     </head>
     <body>
         <div class="container">
-
-            <c:choose>
-                <c:when test="${sessionScope.nameUser.role eq 'AD'}">
-                    <a href="javascript:history.back()" class="back-btn">← Quay lại</a>
-                    <h2>Danh sách đơn hàng của ${requestScope.userName}</h2>
-
-                    <table class="order-table">
-                        <thead>
-                            <tr>
-                                <th>Mã đơn</th>
-                                <th>Mã tour</th>
-                                <th>Ngày đặt</th>
-                                <th>Ngày khởi hành</th>
-                                <th>Số vé</th>
-                                <th>Tổng tiền</th>
-                                <th>Ghi chú</th>
-                                <th>Trạng thái</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <c:forEach var="order" items="${list}">
-                                <tr>
-                                    <td>${order.idTour}</td>
-                                    <td>${order.idBooking}</td>
-                                    <td>${order.bookingDate}</td>
-                                    <td>${order.startNum}</td>
-                                    <td>${order.numberTicket}</td>
-                                    <td><fmt:formatNumber value="${order.totalPrice}" type="currency" currencySymbol="₫" groupingUsed="true"/></td>
-                                    <td>${order.note}</td>
-                                    <td>${order.status == 0 ? "Chưa thanh toán" : "Đã thanh toán"}</td>
-                                </tr>
-                            </c:forEach>
-                        </tbody>
-                    </table>
-                </c:when>
-                <c:otherwise>
-                  
-                    <a href="placeController?action=destination&page=indexjsp" class="back-btn">← Quay lại</a>
-                    <h2>Danh sách đơn hàng của bạn</h2>
-                    <c:set var="startDateMap" value="${requestScope.startDateMap}"/>
-                    <c:choose>
-                        <c:when test="${not empty startDateMap}">
-
-                            <c:if test="${not empty message}">
-                                <p style="color: green;"><b>${message}</b></p>
-                                    </c:if>
-                            <div class="order-list">
-                                <c:forEach var="order" items="${list}">
-                                    <div class="order-card">
-                                        <div class="card-image">
-                                            <img src="assets/images/places/${tourImgMap[order.idTour]}" alt="Tour image">
-                                        </div>
-                                        <div class="card-content">
-                                            <h3>Đơn hàng: ${order.idBooking}</h3>
-                                            <p><strong>Mã tour:</strong> ${order.idTour}</p>
-                                            <p><strong>Ngày đặt:</strong> ${order.bookingDate}</p>
-                                            <p><strong>Ngày khởi hành:</strong> ${startDateMap[order.idBooking]}</p>
-                                            <p><strong>Số vé:</strong> ${order.numberTicket}</p>
-                                            <p><strong>Tổng tiền:</strong> 
-                                                <fmt:formatNumber value="${order.totalPrice}" type="currency" currencySymbol="₫" groupingUsed="true"/>
-                                            </p>
-                                            <p><strong>Ghi chú:</strong> ${order.note}</p>
-                                            <div class="order-actions">
-                                                <c:choose>
-                                                    <c:when test="${order.status == 0}">
-                                                        <form class="pay-order-form" action="MainController" method="get" >
-                                                            <input type="hidden" name="action" value="openPayModal"/>
-                                                            <input type="hidden" name="idBooking" value="${order.idBooking}"/>
-                                                            <input type="hidden" name="totalPrice" value="${order.totalPrice}"/>
-                                                            <input type="hidden" name="numberTicket" value="${order.numberTicket}"/>
-                                                            <button class="btn-pay" type="button"
-                                                                    onclick="openPaymentModal('${order.idBooking}', '${order.totalPrice}', '${order.numberTicket}')">Thanh toán</button>
-                                                        </form>
-                                                    </c:when>
-                                                    <c:otherwise>
-                                                        <span class="status-paid">Đã thanh toán</span>
-                                                    </c:otherwise>
-                                                </c:choose>
-                                            </div>
-                                        </div>
+            <div class="main-container">
+                <c:choose>
+                    <c:when test="${sessionScope.nameUser.role eq 'AD'}">
+                        <!-- Admin View -->
+                        <div class="header-section">
+                            <div class="container">
+                                <div class="row align-items-center">
+                                    <div class="col-auto">
+                                        <a href="javascript:history.back()" class="back-btn">
+                                            <i class="bi bi-arrow-left"></i> Quay lại
+                                        </a>
                                     </div>
-                                </c:forEach>
+                                    <div class="col">
+                                        <h1 class="page-title">
+                                            <i class="bi bi-person-gear me-3"></i>
+                                            Danh sách đơn hàng của ${requestScope.userName}
+                                        </h1>
+                                    </div>
+                                </div>
                             </div>
-                        </c:when>
-                        <c:otherwise>
-                            <p>Không có đơn hàng nào được tìm thấy.</p>
-                        </c:otherwise>
-                    </c:choose>
-                    <!-- Popup/modal chọn phương thức thanh toán -->
-                    <div id="paymentModal">
-                        <div class="modal-content">
-                            <span class="close-btn" onclick="closePaymentModal()">&times;</span>
-                            <h3>Chọn phương thức thanh toán</h3>
-                            <form id="paymentForm" method="get" action="MainController">
-                                <input type="hidden" name="action" value="updatePayOrder"/>
-                                <input type="hidden" id="idBooking" name="idBooking" value="">
-                                <input type="hidden" id="totalPrice" name="totalBill2" value="">
-                                <input type="hidden" id="numberTicket" name="numberTicket2" value="">
-
-                                <div class="payment-option" onclick="selectPayment(event, 'momo')">
-                                    <input type="radio" name="paymentMethod" value="momo" id="momo" checked>
-                                    <label for="momo">
-                                        <span class="payment-icon">📱</span>
-                                        Momo
-                                    </label>
-                                </div>
-                                <div class="payment-option" onclick="selectPayment(event, 'vnpay')">
-                                    <input type="radio" name="paymentMethod" value="vnpay" id="vnpay">
-                                    <label for="vnpay">
-                                        <span class="payment-icon">💳</span>
-                                        VNPay
-                                    </label>
-                                </div>
-                                <div class="payment-option" onclick="selectPayment(event, 'cod')">
-                                    <input type="radio" name="paymentMethod" value="cod" id="cod">
-                                    <label for="cod">
-                                        <span class="payment-icon">💰</span>
-                                        Thanh toán tại quầy
-                                    </label>
-                                </div>
-                                <div class="modal-buttons">
-                                    <button type="button" class="btn-cancel" onclick="closePaymentModal()">Hủy</button>
-                                    <button type="submit" class="btn-confirm">Xác nhận thanh toán</button>
-                                </div>
-                            </form>
                         </div>
-                    </div>
-                    <script>
-                        // Lưu vị trí scroll
-                        let scrollPosition = 0;
 
-                        // Gọi khi user click "Thanh toán" (bạn cần sửa lại form button thành button thường gọi openPaymentModal)
-                        function openPaymentModal(idBooking, totalPrice, numberTicket) {
-                            scrollPosition = window.pageYOffset;
-                            document.body.classList.add('modal-open');
-                            document.body.style.top = -scrollPosition + 'px';
+                        <div class="admin-table-container">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th><i class="bi bi-hash me-2"></i>Mã đơn</th>
+                                            <th><i class="bi bi-geo-alt me-2"></i>Mã tour</th>
+                                            <th><i class="bi bi-calendar-event me-2"></i>Ngày đặt</th>
+                                            <th><i class="bi bi-calendar-check me-2"></i>Ngày khởi hành</th>
+                                            <th><i class="bi bi-ticket-perforated me-2"></i>Số vé</th>
+                                            <th><i class="bi bi-currency-dollar me-2"></i>Tổng tiền</th>
+                                            <th><i class="bi bi-chat-dots me-2"></i>Ghi chú</th>
+                                            <th><i class="bi bi-check-circle me-2"></i>Trạng thái</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <c:forEach var="order" items="${list}">
+                                            <tr>
+                                                <td><strong>${order.idTour}</strong></td>
+                                                <td><span class="badge bg-primary">${order.idBooking}</span></td>
+                                                <td>${order.bookingDate}</td>
+                                                <td>${order.startNum}</td>
+                                                <td><span class="badge bg-secondary">${order.numberTicket}</span></td>
+                                                <td class="price-value">
+                                                    <fmt:formatNumber value="${order.totalPrice}" type="currency" currencySymbol="₫" groupingUsed="true"/>
+                                                </td>
+                                                <td>${order.note}</td>
+                                                <td>
+                                                    <c:choose>
+                                                        <c:when test="${order.status == 0}">
+                                                            <span class="badge bg-warning">
+                                                                <i class="bi bi-clock me-1"></i>Chưa thanh toán
+                                                            </span>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <span class="badge bg-success">
+                                                                <i class="bi bi-check-circle me-1"></i>Đã thanh toán
+                                                            </span>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </td>
+                                            </tr>
+                                        </c:forEach>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </c:when>
+                    <c:otherwise>
+                        <!-- User View -->
+                        <div class="header-section">
+                            <div class="container">
+                                <div class="row align-items-center">
+                                    <div class="col-auto">
+                                        <a href="placeController?action=destination&page=indexjsp" class="back-btn">
+                                            <i class="bi bi-arrow-left"></i> Quay lại
+                                        </a>
+                                    </div>
+                                    <div class="col">
+                                        <h1 class="page-title">
+                                            <i class="bi bi-bag-check me-3"></i>
+                                            Danh sách đơn hàng của bạn
+                                        </h1>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-                            // Set giá trị cho form
-                            document.getElementById('idBooking').value = idBooking;
-                            document.getElementById('totalPrice').value = totalPrice;
-                            document.getElementById('numberTicket').value = numberTicket;
+                        <div class="orders-container">
+                            <c:set var="startDateMap" value="${requestScope.startDateMap}"/>
+                            <c:choose>
+                                <c:when test="${not empty startDateMap}">
+                                    <c:if test="${not empty message}">
+                                        <div class="success-message">
+                                            <i class="bi bi-check-circle-fill"></i>
+                                            <strong>${message}</strong>
+                                        </div>
+                                    </c:if>
 
-                            // Reset các radio về mặc định, chọn momo
-                            document.getElementById('momo').checked = true;
-                            document.querySelectorAll('.payment-option').forEach((el, idx) => {
-                                if (idx === 0)
-                                    el.classList.add('selected');
-                                else
-                                    el.classList.remove('selected');
-                            });
+                                    <div class="row">
+                                        <c:forEach var="order" items="${list}">
+                                            <div class="col-12 col-lg-6 col-xl-4">
+                                                <div class="order-card">
+                                                    <div class="order-card-header">
+                                                        <h5>
+                                                            <i class="bi bi-receipt"></i>
+                                                            Đơn hàng: ${order.idBooking}
+                                                        </h5>
+                                                    </div>
 
-                            document.getElementById('paymentModal').style.display = 'flex';
-                            document.getElementById('momo').focus();
-                        }
+                                                    <div class="order-image">
+                                                        <img src="assets/images/places/${tourImgMap[order.idTour]}" alt="Tour image" class="img-fluid">
+                                                    </div>
 
-                        function closePaymentModal() {
-                            document.getElementById('paymentModal').style.display = 'none';
-                            document.body.classList.remove('modal-open');
-                            document.body.style.top = '';
-                            window.scrollTo(0, scrollPosition);
-                        }
+                                                    <div class="order-details">
+                                                        <div class="detail-item">
+                                                            <div class="detail-label">
+                                                                <i class="bi bi-geo-alt"></i>
+                                                                Mã tour:
+                                                            </div>
+                                                            <div class="detail-value">
+                                                                <span class="badge bg-primary">${order.idTour}</span>
+                                                            </div>
+                                                        </div>
 
-                        // Chọn phương thức thanh toán, visual feedback
-                        function selectPayment(event, method) {
-                            document.querySelectorAll('.payment-option').forEach(option => option.classList.remove('selected'));
-                            event.currentTarget.classList.add('selected');
-                            document.getElementById(method).checked = true;
-                        }
+                                                        <div class="detail-item">
+                                                            <div class="detail-label">
+                                                                <i class="bi bi-calendar-event"></i>
+                                                                Ngày đặt:
+                                                            </div>
+                                                            <div class="detail-value">${order.bookingDate}</div>
+                                                        </div>
 
-                        // Đóng modal bằng ESC
-                        document.addEventListener('keydown', function (event) {
-                            if (event.key === "Escape")
-                                closePaymentModal();
-                        });
+                                                        <div class="detail-item">
+                                                            <div class="detail-label">
+                                                                <i class="bi bi-calendar-check"></i>
+                                                                Ngày khởi hành:
+                                                            </div>
+                                                            <div class="detail-value">${startDateMap[order.idBooking]}</div>
+                                                        </div>
 
-                        // Đóng modal khi click ra ngoài
-                        document.getElementById('paymentModal').addEventListener('click', function (event) {
-                            if (event.target === this)
-                                closePaymentModal();
-                        });
+                                                        <div class="detail-item">
+                                                            <div class="detail-label">
+                                                                <i class="bi bi-ticket-perforated"></i>
+                                                                Số vé:
+                                                            </div>
+                                                            <div class="detail-value">
+                                                                <span class="badge bg-secondary">${order.numberTicket}</span>
+                                                            </div>
+                                                        </div>
 
-                        // Ngăn scroll trên modal content
-                        document.querySelector('.modal-content').addEventListener('wheel', function (event) {
-                            event.stopPropagation();
-                        });
+                                                        <div class="detail-item">
+                                                            <div class="detail-label">
+                                                                <i class="bi bi-currency-dollar"></i>
+                                                                Tổng tiền:
+                                                            </div>
+                                                            <div class="detail-value price-value">
+                                                                <fmt:formatNumber value="${order.totalPrice}" type="currency" currencySymbol="₫" groupingUsed="true"/>
+                                                            </div>
+                                                        </div>
 
-                        // Nếu dùng nút submit mặc định của form thì không cần handle JS dưới đây.
-                        // Nếu muốn xử lý AJAX, hãy dùng sự kiện submit của form:
-                        /*
-                         document.getElementById('paymentForm').addEventListener('submit', function(e){
-                         e.preventDefault();
-                         // Xử lý AJAX ở đây...
-                         closePaymentModal();
-                         // Optional: hiện success message
-                         });
-                         */
-                    </script>
-                </c:otherwise>
-            </c:choose>
+                                                        <div class="detail-item">
+                                                            <div class="detail-label">
+                                                                <i class="bi bi-chat-dots"></i>
+                                                                Ghi chú:
+                                                            </div>
+                                                            <div class="detail-value">${order.note}</div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="payment-actions">
+                                                        <c:choose>
+                                                            <c:when test="${order.status == 0}">
+                                                                <form class="pay-order-form" action="MainController" method="get">
+                                                                    <input type="hidden" name="action" value="openPayModal"/>
+                                                                    <input type="hidden" name="idBooking" value="${order.idBooking}"/>
+                                                                    <input type="hidden" name="totalPrice" value="${order.totalPrice}"/>
+                                                                    <input type="hidden" name="numberTicket" value="${order.numberTicket}"/>
+                                                                    <button class="btn btn-pay w-100" type="button"
+                                                                            onclick="openPaymentModal('${order.idBooking}', '${order.totalPrice}', '${order.numberTicket}')"
+                                                                            aria-label="Thanh toán đơn hàng ${order.idBooking}">
+                                                                        <i class="bi bi-credit-card me-2"></i>
+                                                                        Thanh toán ngay
+                                                                    </button>
+                                                                </form>
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                <div class="status-paid">
+                                                                    <i class="bi bi-check-circle"></i>
+                                                                    Đã thanh toán
+                                                                </div>
+                                                            </c:otherwise>
+                                                        </c:choose>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </c:forEach>
+                                    </div>
+                                </c:when>
+                                <c:otherwise>
+                                    <div class="no-orders">
+                                        <div class="no-orders-icon">
+                                            <i class="bi bi-bag-x"></i>
+                                        </div>
+                                        <h3>Chưa có đơn hàng nào</h3>
+                                        <p class="text-muted">Bạn chưa có đơn hàng nào được tìm thấy.</p>
+                                    </div>
+                                </c:otherwise>
+                            </c:choose>
+                        </div>
+
+                        <!-- Payment Modal -->
+                        <div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="paymentModalLabel">
+                                            <i class="bi bi-credit-card"></i>
+                                            Chọn phương thức thanh toán
+                                        </h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form id="paymentForm" method="get" action="MainController">
+                                            <input type="hidden" name="action" value="updatePayOrder"/>
+                                            <input type="hidden" id="idBooking" name="idBooking" value="">
+                                            <input type="hidden" id="totalPrice" name="totalBill2" value="">
+                                            <input type="hidden" id="numberTicket" name="numberTicket2" value="">
+
+                                            <div class="payment-option" onclick="selectPayment(event, 'momo')">
+                                                <div class="payment-icon">
+                                                    <i class="bi bi-phone"></i>
+                                                </div>
+                                                <div class="payment-label">
+                                                    <strong>Momo</strong>
+                                                    <br><small>Thanh toán qua ví điện tử Momo</small>
+                                                </div>
+                                                <input type="radio" name="paymentMethod" value="momo" class="form-check-input">
+                                            </div>
+
+                                            <div class="payment-option" onclick="selectPayment(event, 'bank')">
+                                                <div class="payment-icon">
+                                                    <i class="bi bi-bank"></i>
+                                                </div>
+                                                <div class="payment-label">
+                                                    <strong>Chuyển khoản ngân hàng</strong>
+                                                    <br><small>Thanh toán qua tài khoản ngân hàng</small>
+                                                </div>
+                                                <input type="radio" name="paymentMethod" value="bank" class="form-check-input">
+                                            </div>
+
+                                            <div class="payment-option" onclick="selectPayment(event, 'cash')">
+                                                <div class="payment-icon">
+                                                    <i class="bi bi-cash"></i>
+                                                </div>
+                                                <div class="payment-label">
+                                                    <strong>Tiền mặt</strong>
+                                                    <br><small>Thanh toán bằng tiền mặt khi nhận dịch vụ</small>
+                                                </div>
+                                                <input type="radio" name="paymentMethod" value="cash" class="form-check-input">
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">Hủy</button>
+                                        <button type="button" class="btn btn-confirm" onclick="confirmPayment()">Xác nhận thanh toán</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </c:otherwise>
+                </c:choose>
+            </div>
         </div>
+
+        <!-- Bootstrap 5 JS -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        
+        <script>
+            function openPaymentModal(idBooking, totalPrice, numberTicket) {
+                document.getElementById('idBooking').value = idBooking;
+                document.getElementById('totalPrice').value = totalPrice;
+                document.getElementById('numberTicket').value = numberTicket;
+                
+                // Clear previous selections
+                document.querySelectorAll('.payment-option').forEach(option => {
+                    option.classList.remove('selected');
+                });
+                document.querySelectorAll('input[name="paymentMethod"]').forEach(radio => {
+                    radio.checked = false;
+                });
+                
+                const modal = new bootstrap.Modal(document.getElementById('paymentModal'));
+                modal.show();
+            }
+
+            function selectPayment(event, method) {
+                // Remove selected class from all options
+                document.querySelectorAll('.payment-option').forEach(option => {
+                    option.classList.remove('selected');
+                });
+                
+                // Add selected class to clicked option
+                event.currentTarget.classList.add('selected');
+                
+                // Check the corresponding radio button
+                const radio = event.currentTarget.querySelector('input[type="radio"]');
+                if (radio) {
+                    radio.checked = true;
+                }
+            }
+
+            function confirmPayment() {
+                const selectedPayment = document.querySelector('input[name="paymentMethod"]:checked');
+                if (!selectedPayment) {
+                    alert('Vui lòng chọn phương thức thanh toán!');
+                    return;
+                }
+                
+                // Submit the form
+                document.getElementById('paymentForm').submit();
+            }
+        </script>
     </body>
 </html>

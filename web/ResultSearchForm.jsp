@@ -13,292 +13,561 @@
 <html lang="vi">
     <head>
         <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Danh sách Tour</title>
+        <!-- Bootstrap 5 CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        <!-- Font Awesome Icons -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <!-- Google Fonts -->
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="assets/css/bodyCss.css"/>
+        
         <style>
+            :root {
+                /* Bảng màu chính */
+                --sky-blue: #0EA5E9;
+                --coral-orange: #FF6B35;
+                --emerald-green: #10B981;
+                --golden-yellow: #F59E0B;
+                --purple: #8B5CF6;
+                --pearl-white: #FEFEFE;
+                
+                /* Màu nền và text */
+                --text-dark: #1F2937;
+                --text-medium: #6B7280;
+                --light-bg: #F8FAFC;
+                --card-bg: #FFFFFF;
+                --border-color: #E5E7EB;
+                
+                /* Gradients */
+                --gradient-primary: linear-gradient(135deg, #0EA5E9, #10B981);
+                --gradient-secondary: linear-gradient(135deg, #FF6B35, #F59E0B);
+                --gradient-soft: linear-gradient(135deg, #F8FAFC, #E5E7EB);
+            }
 
+            * {
+                font-family: 'Poppins', sans-serif;
+            }
 
-            h1 {
-                font-weight: 900;
+            body {
+                padding-top: 100px;
+                background: var(--gradient-soft);
+                min-height: 100vh;
+                color: var(--text-dark);
+            }
+
+            /* Header Styles */
+            .page-header {
+                background: var(--gradient-primary);
+                color: white;
+                padding: 60px 0;
+                position: relative;
+            }
+
+            .page-header h1 {
+                font-weight: 700;
                 font-size: 3rem;
-                margin-bottom: 12px;
-                letter-spacing: 2px;
-                color: #2c3e50;
-                text-transform: uppercase;
-                font-family: 'Segoe UI Black', 'Arial Black', Arial, sans-serif;
-                text-shadow: 1px 1px 2px rgba(0,0,0,0.15);
+                margin-bottom: 20px;
+                text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
             }
 
-            p.description {
+            .page-header .description {
                 font-size: 1.2rem;
-                color: #6c7a89;
-                max-width: 800px;
-                margin: 0 auto 30px auto;
-                line-height: 1.6;
-                font-style: italic;
-                border-left: 5px solid #2980b9;
-                padding-left: 15px;
-                font-family: 'Georgia', serif;
-                letter-spacing: 0.5px;
+                opacity: 0.95;
+                max-width: 600px;
+                margin: 0 auto;
             }
 
-            .container1      {
-                max-width: 1100px;
-                margin: 50px auto 0 auto;
-
+            /* Search Results Section */
+            .search-results-section {
+                padding: 40px 0;
+                background: var(--light-bg);
             }
 
+            .search-title {
+                color: var(--text-dark);
+                font-weight: 600;
+                font-size: 1.8rem;
+                margin-bottom: 30px;
+                padding-left: 20px;
+                position: relative;
+            }
+
+            .search-title::before {
+                content: '';
+                position: absolute;
+                left: 0;
+                top: 50%;
+                transform: translateY(-50%);
+                width: 4px;
+                height: 30px;
+                background: var(--coral-orange);
+                border-radius: 2px;
+            }
+
+            .no-results {
+                text-align: center;
+                padding: 60px 0;
+                color: var(--text-dark);
+            }
+
+            .no-results i {
+                font-size: 3rem;
+                color: var(--coral-orange);
+                margin-bottom: 20px;
+            }
+
+            /* Tour Cards */
             .tour-card {
-                display: flex;
-                background: #fff;
+                background: var(--card-bg);
                 border-radius: 12px;
+                border: 1px solid var(--border-color);
+                margin-bottom: 25px;
+                transition: transform 0.2s ease;
                 overflow: hidden;
-                box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-                margin-bottom: 24px;
+            }
+
+            .tour-card:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             }
 
             .tour-img {
-                width:  435px;
-                height: 100%;
+                width: 100%;
+                height: 280px;
                 object-fit: cover;
-                flex-shrink: 0;
             }
 
             .tour-content {
-                flex: 1;
-                padding: 16px 20px;
-                display: flex;
-                flex-direction: column;
-                justify-content: space-between;
+                padding: 25px;
             }
 
             .tour-title {
                 font-size: 1.4rem;
-                font-weight: bold;
-                color: #2c3e50;
-                margin-bottom: 8px;
+                font-weight: 600;
+                color: var(--text-dark);
+                margin-bottom: 15px;
+                line-height: 1.4;
             }
 
             .tour-meta {
+                display: flex;
+                align-items: center;
+                margin-bottom: 10px;
+                color: var(--text-medium);
                 font-size: 0.95rem;
-                margin: 4px 0;
-                color: #555;
+            }
+
+            .tour-meta i {
+                color: var(--sky-blue);
+                margin-right: 8px;
+                width: 16px;
+                text-align: center;
             }
 
             .tour-meta strong {
-                color: #222;
+                color: var(--text-dark);
+                font-weight: 500;
             }
 
-            .tour-dates span {
-                background: #fff3f3;
-                color: #d32f2f;
-                padding: 6px 10px;
-                border: 1px solid #ffcdd2;
-                border-radius: 6px;
-                margin-right: 6px;
-                font-size: 0.9rem;
+            .tour-dates {
+                margin: 15px 0;
+            }
+
+            .date-badge {
+                display: inline-block;
+                background: var(--emerald-green);
+                color: white;
+                padding: 6px 12px;
+                border-radius: 20px;
+                font-size: 0.85rem;
+                font-weight: 500;
+                margin: 2px 4px 2px 0;
             }
 
             .price {
-                font-size: 1.3rem;
-                font-weight: bold;
-                color: #e53935;
-                margin: 8px 0;
+                font-size: 1.6rem;
+                font-weight: 700;
+                color: var(--coral-orange);
+                margin: 20px 0;
             }
 
-            /* CSS cho nút Xem chi tiết */
             .btn-detail {
-                align-self: flex-end;
-                padding: 12px 25px;
-                background: #0d6efd;
+                background: var(--gradient-secondary);
                 color: white;
                 border: none;
-                border-radius: 6px;
-                font-weight: 600;
+                padding: 12px 24px;
+                border-radius: 8px;
+                font-weight: 500;
+                font-size: 0.95rem;
                 cursor: pointer;
-                text-decoration: none;
-                font-size: 1rem;
-                margin-top: 10px;
-                margin-left: 77%;
+                transition: opacity 0.2s ease;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
             }
 
             .btn-detail:hover {
-                background: #084298;
+                opacity: 0.9;
             }
 
-            .btn-detail:focus {
-                outline: none;
+            /* Featured Destinations Section */
+            .featured-section {
+                padding: 60px 0;
+                background: var(--card-bg);
             }
 
-            /*            CSS PHAN THONG TIN NOI BAT*/
-
-            .section {
-                padding: 20px;
-                max-width: 1200px;
-                margin: 0 auto;
-            }
-
-            .title {
-                font-size: 28px;
-                font-weight: 700;
-                margin-bottom: 30px;
+            .section-title {
                 text-align: center;
-                color: #222;
-            }
-
-            .grid {
-                display: grid;
-                grid-template-columns: repeat(3, 1fr); /* 3 cột đều nhau */
-                gap: 24px;
-            }
-
-            form.card {
-                display: flex;
-                flex-direction: column;
-                background: white;
-                border-radius: 14px;
-                box-shadow: 0 4px 14px rgba(0,0,0,0.1);
-                overflow: hidden;
-                cursor: pointer;
-                transition: transform 0.3s ease, box-shadow 0.3s ease;
-                height: 350px; /* chiều cao card cố định */
-            }
-
-            form.card:hover {
-                transform: scale(1.05);
-                box-shadow: 0 12px 30px rgba(0,0,0,0.2);
-            }
-
-            form.card .image-wrapper {
-                flex: 1;
-                overflow: hidden;
-                border-radius: 14px 14px 0 0;
+                font-size: 2.2rem;
+                font-weight: 700;
+                color: var(--text-dark);
+                margin-bottom: 40px;
                 position: relative;
             }
 
-            form.card img {
+            .section-title::after {
+                content: '';
+                position: absolute;
+                bottom: -10px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 60px;
+                height: 3px;
+                background: var(--coral-orange);
+                border-radius: 2px;
+            }
+
+            .destination-card {
+                background: var(--card-bg);
+                border-radius: 12px;
+                border: 1px solid var(--border-color);
+                transition: transform 0.2s ease;
+                cursor: pointer;
+                height: 320px;
+                overflow: hidden;
+                text-decoration: none;
+                color: inherit;
+            }
+
+            .destination-card:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+                text-decoration: none;
+                color: inherit;
+            }
+
+            .destination-card .image-wrapper {
+                position: relative;
+                height: 220px;
+                overflow: hidden;
+            }
+
+            .destination-card img {
                 width: 100%;
                 height: 100%;
                 object-fit: cover;
-                display: block;
                 transition: transform 0.3s ease;
             }
 
-            form.card:hover img {
-                transform: scale(1.1);
+            .destination-card:hover img {
+                transform: scale(1.05);
             }
 
-            form.card h4 {
-                padding: 12px 0;
-                margin: 0;
-                font-weight: 700;
-                font-size: 18px;
-                color: #222;
-                text-align: center;
-                user-select: none;
-            }
-
-            /* Nút overlay (nếu dùng) */
-            .btn-overlay {
+            .destination-card .card-overlay {
                 position: absolute;
-                bottom: 16px;
-                left: 50%;
-                transform: translateX(-50%);
-                background-color: rgba(52, 152, 219, 0.8);
-                color: white;
-                border-radius: 24px;
-                padding: 10px 28px;
-                font-weight: 600;
-                font-size: 14px;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: linear-gradient(180deg, transparent 0%, rgba(31, 41, 55, 0.6) 100%);
                 opacity: 0;
-                pointer-events: none;
                 transition: opacity 0.3s ease;
             }
 
-            form.card:hover .btn-overlay {
+            .destination-card:hover .card-overlay {
                 opacity: 1;
-                pointer-events: auto;
             }
 
+            .destination-card h4 {
+                padding: 20px;
+                margin: 0;
+                font-weight: 600;
+                font-size: 1.1rem;
+                color: var(--text-dark);
+                text-align: center;
+                background: var(--card-bg);
+                border-top: 1px solid var(--border-color);
+            }
+
+            .btn-overlay {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: var(--gradient-secondary);
+                color: white;
+                border: none;
+                padding: 10px 20px;
+                border-radius: 6px;
+                font-weight: 500;
+                font-size: 0.9rem;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+
+            .destination-card:hover .btn-overlay {
+                opacity: 1;
+            }
+
+            /* Responsive Design */
+            @media (max-width: 768px) {
+                body {
+                    padding-top: 80px;
+                }
+                
+                .page-header {
+                    padding: 40px 0;
+                }
+                
+                .page-header h1 {
+                    font-size: 2.2rem;
+                }
+                
+                .page-header .description {
+                    font-size: 1rem;
+                }
+                
+                .search-results-section {
+                    padding: 30px 0;
+                }
+                
+                .tour-card {
+                    margin-bottom: 20px;
+                }
+                
+                .tour-img {
+                    height: 200px;
+                }
+                
+                .tour-content {
+                    padding: 20px;
+                }
+                
+                .section-title {
+                    font-size: 1.8rem;
+                }
+                
+                .destination-card {
+                    height: 280px;
+                }
+                
+                .destination-card .image-wrapper {
+                    height: 180px;
+                }
+                
+                .featured-section {
+                    padding: 40px 0;
+                }
+            }
+
+            @media (max-width: 576px) {
+                .page-header h1 {
+                    font-size: 1.8rem;
+                }
+                
+                .tour-title {
+                    font-size: 1.2rem;
+                }
+                
+                .price {
+                    font-size: 1.4rem;
+                }
+                
+                .btn-detail {
+                    padding: 10px 20px;
+                    font-size: 0.9rem;
+                }
+            }
+
+            /* Utility Classes */
+            .text-gradient {
+                background: var(--gradient-primary);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+            }
+
+            .btn-gradient {
+                background: var(--gradient-secondary);
+                border: none;
+                color: white;
+            }
+
+            .btn-gradient:hover {
+                opacity: 0.9;
+                color: white;
+            }
         </style>
     </head>
     <body>
         <%@include file="header.jsp" %>
+        
         <%
             List<TourTicketDTO> tourList = (List<TourTicketDTO>) request.getAttribute("tourList2");
-            String searchTourInfor = request.getAttribute("searchTourInfor")+"";
+            String searchTourInfor = (String) request.getAttribute("searchTourInfor");
+            if (searchTourInfor == null) searchTourInfor = "";
         %>
 
-        <div class="content">
-            <div class="container1">
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <h1><i class="fas fa-map-marked-alt me-3"></i>Khám Phá Tour Du Lịch</h1>
+                        <p class="description">Trải nghiệm những chuyến đi tuyệt vời với các tour du lịch chất lượng cao, dịch vụ tận tâm và giá cả hợp lý</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search Results Section -->
+        <div class="search-results-section">
+            <div class="container">
                 <%
                     if (tourList != null && !tourList.isEmpty()) {
                 %>
-                <h2 style="margin-bottom: 15px">Dưới đây là các tour liên quan tới "<%=searchTourInfor%>"</h2>
-                <%
-                for (TourTicketDTO t : tourList) {
-                    int index = tourList.indexOf(t) + 1;
-                    List<StartDateDTO> startDates = (List<StartDateDTO>) request.getAttribute("startDateTour" + index);
-                %>
-
-                <div class="tour-card">
-                    <img class="tour-img" src="assets/images/places/<%=t.getImg_Tour()%>" alt="<%= t.getNametour() %>">
-                    <div class="tour-content">
-                        <div>
-                            <div class="tour-title"><%= t.getNametour() %></div>
-                            <div class="tour-meta">🆔 Mã tour: <strong><%= t.getIdTourTicket() %></strong></div>
-                            <div class="tour-meta">📍 Khởi hành: <strong><%= t.getPlacestart() %></strong></div>
-                            <div class="tour-meta">🕒 Thời gian: <strong><%= t.getDuration() %></strong></div>
-                            <div class="tour-meta">✈️ Phương tiện: <strong><%= t.getTransport_name() %></strong></div>
-                            <div class="tour-meta tour-dates">
-                                📅 Ngày khởi hành:
-                                <% if (startDates != null && !startDates.isEmpty()) {
-                                    for (StartDateDTO sd : startDates) {
-                                %>
-                                <span><%= sd.getStartDate() %></span>
-                                <%  }
-                                }   else { %>
-                                <span>Chưa có lịch</span>
-                                <% } %>
+                <h2 class="search-title">
+                    <i class="fas fa-search me-2"></i>
+                    Kết quả tìm kiếm cho "<%=searchTourInfor%>"
+                </h2>
+                
+                <div class="row">
+                    <%
+                    for (int i = 0; i < tourList.size(); i++) {
+                        TourTicketDTO t = tourList.get(i);
+                        int index = i + 1;
+                        List<StartDateDTO> startDates = (List<StartDateDTO>) request.getAttribute("startDateTour" + index);
+                    %>
+                    <div class="col-12 mb-4">
+                        <div class="tour-card">
+                            <div class="row g-0">
+                                <div class="col-md-5">
+                                    <div style="height: 100%; overflow: hidden;">
+                                        <img class="tour-img" src="assets/images/places/<%=t.getImg_Tour()%>" alt="<%=t.getNametour()%>">
+                                    </div>
+                                </div>
+                                <div class="col-md-7">
+                                    <div class="tour-content">
+                                        <h3 class="tour-title"><%=t.getNametour()%></h3>
+                                        
+                                        <div class="tour-meta">
+                                            <i class="fas fa-tag"></i>
+                                            <span>Mã tour: <strong><%=t.getIdTourTicket()%></strong></span>
+                                        </div>
+                                        
+                                        <div class="tour-meta">
+                                            <i class="fas fa-map-marker-alt"></i>
+                                            <span>Khởi hành: <strong><%=t.getPlacestart()%></strong></span>
+                                        </div>
+                                        
+                                        <div class="tour-meta">
+                                            <i class="fas fa-clock"></i>
+                                            <span>Thời gian: <strong><%=t.getDuration()%></strong></span>
+                                        </div>
+                                        
+                                        <div class="tour-meta">
+                                            <i class="fas fa-plane"></i>
+                                            <span>Phương tiện: <strong><%=t.getTransport_name()%></strong></span>
+                                        </div>
+                                        
+                                        <div class="tour-dates">
+                                            <div class="tour-meta mb-2">
+                                                <i class="fas fa-calendar-alt"></i>
+                                                <span>Ngày khởi hành:</span>
+                                            </div>
+                                            <div>
+                                                <% if (startDates != null && !startDates.isEmpty()) {
+                                                    for (StartDateDTO sd : startDates) {
+                                                %>
+                                                <span class="date-badge"><%=sd.getStartDate()%></span>
+                                                <%  }
+                                                } else { %>
+                                                <span class="date-badge">Chưa có lịch</span>
+                                                <% } %>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div class="price">
+                                                <i class="fas fa-money-bill-wave me-2"></i>
+                                                <%=String.format("%,.0f", t.getPrice())%> đ
+                                            </div>
+                                            
+                                            <form action="MainController" method="get">
+                                                <input type="hidden" name="action" value="ticketDetail" />
+                                                <input type="hidden" name="idTourTicket" value="<%=t.getIdTourTicket()%>" />
+                                                <button class="btn-detail" type="submit">
+                                                    <i class="fas fa-eye me-2"></i>Xem chi tiết
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="price">Giá từ: <%= String.format("%,.0f", t.getPrice()) %> đ</div>
                         </div>
-
-                        <!-- Form sử dụng input submit cho nút Xem chi tiết -->
-                        <form action="MainController" method="get">
-                            <input type="hidden" name="action" value="ticketDetail" />
-                            <input type="hidden" name="idTourTicket" value="<%=t.getIdTourTicket()%>" />
-                            <input class="btn-detail" type="submit" value="Xem chi tiết" />
-                        </form>
                     </div>
-                </div>
-                <%
+                    <%
                         }
                     } else { %>
-                <h2>Không tìm thấy thông tin liên quan đến: "<%=searchTourInfor%>"</h2>
-
-                <% } %>
+                    <div class="col-12">
+                        <div class="no-results">
+                            <i class="fas fa-search-minus"></i>
+                            <h2>Không tìm thấy kết quả</h2>
+                            <p class="lead">Không có tour nào phù hợp với từ khóa: "<strong><%=searchTourInfor%></strong>"</p>
+                            <p class="text-muted">Hãy thử tìm kiếm với từ khóa khác hoặc khám phá các điểm đến nổi bật bên dưới</p>
+                        </div>
+                    </div>
+                    <% } %>
+                </div>
             </div>
+        </div>
 
-            <div class="section">
-                <div class="title">Điểm đến nổi bật</div>
-                <div class="grid">
+        <!-- Featured Destinations Section -->
+        <div class="featured-section">
+            <div class="container">
+                <h2 class="section-title">
+                    <i class="fas fa-star me-3"></i>
+                    Điểm Đến Nổi Bật
+                </h2>
+                
+                <div class="row">
                     <%
-                        List<PlacesDTO> placeList = (List<PlacesDTO>)request.getAttribute("placeList");
+                        List<PlacesDTO> placeList = (List<PlacesDTO>) request.getAttribute("placeList");
                         if (placeList != null && !placeList.isEmpty()) {
                             for (PlacesDTO p : placeList) {
                                 if (p.getFeatured()) {
-                            %>
-                            <form class="card" action="MainController" method="post">
-                                <div class="image-wrapper">
-                                    <img src="assets/images/<%=p.getImg()%>" alt="<%=p.getPlaceName()%>" />
-                                    <button type="submit" class="btn-overlay">Xem thêm</button>
-                                </div>
-                                <h4><%=p.getPlaceName()%></h4>
-                                <input type="hidden" name="action" value="takeListTicket" />
-                                <input type="hidden" name="location" value="<%=p.getPlaceName()%>" />
-                            </form>
-                            <%
+                    %>
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <form class="destination-card" action="MainController" method="post">
+                            <div class="image-wrapper">
+                                <img src="assets/images/<%=p.getImg()%>" alt="<%=p.getPlaceName()%>" />
+                                <div class="card-overlay"></div>
+                                <button type="submit" class="btn-overlay">
+                                    <i class="fas fa-arrow-right me-2"></i>Khám phá
+                                </button>
+                            </div>
+                            <h4>
+                                <i class="fas fa-map-pin me-2" style="color: var(--coral-orange);"></i>
+                                <%=p.getPlaceName()%>
+                            </h4>
+                            <input type="hidden" name="action" value="takeListTicket" />
+                            <input type="hidden" name="location" value="<%=p.getPlaceName()%>" />
+                        </form>
+                    </div>
+                    <%
                                 }
                             }
                         }
@@ -306,9 +575,10 @@
                 </div>
             </div>
         </div>
-    </div>
 
-    <%@include file="footer.jsp" %>
-</body>
+        <!-- Bootstrap 5 JS -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        
+        <%@include file="footer.jsp" %>
+    </body>
 </html>
-

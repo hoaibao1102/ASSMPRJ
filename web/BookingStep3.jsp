@@ -5,9 +5,9 @@
 --%>
 <%@ page import="java.time.LocalDate, java.time.format.DateTimeFormatter" %>
 <%@ page import="java.text.DecimalFormat" %>
-<%@ page import="DTO.TourTicketDTO"%>
-<%@ page import="DTO.StartDateDTO"%>
-<%@ page import="DTO.UserDTO"%>
+<%@ page import="DTO.TourTicketDTO" %>
+<%@ page import="DTO.StartDateDTO" %>
+<%@ page import="DTO.UserDTO" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -23,19 +23,21 @@
         <!-- Google Fonts -->
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
         
-        <link rel="stylesheet" href="assets/css/bodyCss.css"/>
-        
+
         <style>
             :root {
-                --primary-orange: #ff6b35;
-                --primary-blue: #2c3e50;
-                --accent-yellow: #f39c12;
-                --bg-light: #f8f9fa;
-                --success-green: #27ae60;
-                --gradient-tropical: linear-gradient(135deg, #ff6b35 0%, #f39c12 100%);
-                --gradient-ocean: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
-                --shadow-soft: 0 8px 25px rgba(0, 0, 0, 0.1);
-                --shadow-hover: 0 12px 35px rgba(0, 0, 0, 0.15);
+                --primary-blue: #0EA5E9;      /* Xanh biển Việt Nam */
+                --primary-orange: #FF6B35;    /* Cam nhiệt đới */
+                --primary-green: #10B981;     /* Xanh lá nhiệt đới */
+                --secondary-yellow: #F59E0B; /* Vàng ánh dương */
+                --secondary-purple: #8B5CF6; /* Tím lavender */
+                --pearl-white: #FEFEFE;       /* Trắng ngọc trai */
+                --text-main: #1F2937;        /* Text chính */
+                --text-secondary: #6B7280;   /* Text phụ */
+                
+                --gradient-main: linear-gradient(135deg, var(--primary-blue), var(--primary-green));
+                --gradient-secondary: linear-gradient(135deg, var(--primary-orange), var(--secondary-yellow));
+
             }
             
             * {
@@ -43,15 +45,20 @@
             }
             
             body {
-                background: var(--bg-light);
+
+                padding-top: 100px;
+                background: #f8f9fa;
                 color: #333;
                 line-height: 1.6;
             }
-
-            /* Step Progress Tracker */
+            
+            /* Step Progress Section */
             .step-container {
-                background: linear-gradient(135deg, #ff6b35 0%, #f39c12 50%, #2c3e50 100%);
-                padding: 60px 0;
+                background: white;
+                border-radius: 20px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+                padding: 2rem;
+
                 margin: 0;
                 position: relative;
                 overflow: hidden;
@@ -66,24 +73,24 @@
                 bottom: 0;
                 background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" fill="white" opacity="0.1"><polygon points="0,0 1000,0 1000,100 0,80"/></svg>');
                 background-size: cover;
+
             }
             
             .step-title {
-                color: white;
-                font-size: 2.5rem;
-                font-weight: 700;
+                color: var(--text-main);
+                font-weight: bold;
                 text-align: center;
                 margin-bottom: 40px;
-                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
                 position: relative;
-                z-index: 2;
+                text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
             }
             
+
             .step-tracker {
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                gap: 80px;
+                gap: 40px;
                 position: relative;
                 z-index: 2;
             }
@@ -94,85 +101,59 @@
                 align-items: center;
                 text-align: center;
                 transition: all 0.3s ease;
-            }
-            
-            .step .icon {
-                width: 70px;
-                height: 70px;
-                border-radius: 50%;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                margin-bottom: 15px;
-                background: rgba(255, 255, 255, 0.2);
-                border: 3px solid rgba(255, 255, 255, 0.3);
-                backdrop-filter: blur(10px);
-                transition: all 0.3s ease;
-            }
-            
-            .step .icon i {
-                font-size: 28px;
-                color: rgba(255, 255, 255, 0.7);
-            }
-            
-            .step .label {
-                font-size: 14px;
-                color: rgba(255, 255, 255, 0.8);
-                font-weight: 600;
-                letter-spacing: 0.5px;
+
             }
             
             .step.active .icon {
-                background: var(--success-green);
-                border-color: var(--success-green);
+                background: linear-gradient(45deg, #10B981, #34D399);
                 transform: scale(1.1);
-                box-shadow: 0 5px 20px rgba(39, 174, 96, 0.4);
-            }
-            
-            .step.active .icon i {
-                color: white;
-            }
-            
-            .step.active .label {
-                color: white;
-                font-weight: 700;
+                box-shadow: 0 8px 25px rgba(46, 204, 113, 0.4);
             }
             
             .step.current .icon {
-                background: var(--accent-yellow);
-                border-color: var(--accent-yellow);
-                transform: scale(1.2);
-                box-shadow: 0 8px 25px rgba(243, 156, 18, 0.5);
+                background: var(--gradient-secondary);
+                transform: scale(1.15);
+                box-shadow: 0 10px 30px rgba(255, 107, 53, 0.5);
                 animation: pulse 2s infinite;
             }
             
-            .step.current .icon i {
-                color: white;
+            .step .icon {
+                width: 80px;
+                height: 80px;
+
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+
+                justify-content: center;
+                background: #6c757d;
+                transition: all 0.3s ease;
+                margin-bottom: 15px;
             }
             
-            .step.current .label {
-                color: white;
-                font-weight: 700;
+            .step .icon img {
+                width: 40px;
+                height: 40px;
+                filter: brightness(0) invert(1);
             }
             
             @keyframes pulse {
-                0% { box-shadow: 0 8px 25px rgba(243, 156, 18, 0.5); }
-                50% { box-shadow: 0 8px 35px rgba(243, 156, 18, 0.8); }
-                100% { box-shadow: 0 8px 25px rgba(243, 156, 18, 0.5); }
+                0%, 100% { transform: scale(1.15); }
+                50% { transform: scale(1.25); }
             }
             
             .arrow {
                 font-size: 24px;
-                color: rgba(255, 255, 255, 0.6);
+                color: var(--primary-orange);
                 font-weight: bold;
             }
-
+            
             /* Main Content */
             .content {
                 padding: 60px 0;
             }
             
-            .containerdetail {
+            .container {
                 max-width: 1200px;
                 margin: 0 auto;
                 padding: 0 20px;
@@ -182,8 +163,8 @@
                 background: white;
                 border-radius: 20px;
                 padding: 40px;
-                box-shadow: var(--shadow-soft);
-                border: 1px solid rgba(255, 107, 53, 0.1);
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+                border: 1px solid rgba(14, 165, 233, 0.1);
                 position: relative;
                 overflow: hidden;
             }
@@ -195,9 +176,9 @@
                 left: 0;
                 right: 0;
                 height: 5px;
-                background: var(--gradient-tropical);
+                background: var(--gradient-main);
             }
-            
+
             .success-header {
                 text-align: center;
                 margin-bottom: 40px;
@@ -207,7 +188,7 @@
                 width: 80px;
                 height: 80px;
                 border-radius: 50%;
-                background: var(--success-green);
+                background: var(--primary-green);
                 display: flex;
                 align-items: center;
                 justify-content: center;
@@ -226,7 +207,7 @@
             .success-title {
                 font-size: 2rem;
                 font-weight: 700;
-                color: var(--success-green);
+                color: var(--primary-green);
                 margin-bottom: 15px;
             }
             
@@ -238,13 +219,14 @@
             
             .info-grid {
                 display: grid;
-                grid-template-columns: 1fr 1fr;
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
                 gap: 25px;
                 margin-top: 40px;
             }
             
             .info-item {
-                background: var(--bg-light);
+                background: #f8f9fa;
+
                 padding: 20px;
                 border-radius: 12px;
                 border-left: 4px solid var(--primary-orange);
@@ -253,7 +235,8 @@
             
             .info-item:hover {
                 transform: translateY(-2px);
-                box-shadow: var(--shadow-hover);
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+
             }
             
             .info-label {
@@ -268,25 +251,21 @@
             .info-value {
                 font-size: 1.1rem;
                 font-weight: 600;
-                color: var(--primary-blue);
+                color: var(--text-primary);
+
             }
             
             .info-value.highlight {
                 color: var(--primary-orange);
                 font-size: 1.3rem;
             }
-            
-            .info-value.status {
-                color: var(--success-green);
-                font-weight: 700;
-            }
-            
             .tour-card {
                 background: white;
                 border-radius: 20px;
                 padding: 30px;
-                box-shadow: var(--shadow-soft);
-                border: 1px solid rgba(243, 156, 18, 0.1);
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+                border: 1px solid rgba(255, 107, 53, 0.1);
+
                 position: relative;
                 overflow: hidden;
             }
@@ -298,11 +277,12 @@
                 left: 0;
                 right: 0;
                 height: 5px;
-                background: var(--gradient-ocean);
+                background: var(--gradient-secondary);
             }
             
             .tour-card h3 {
-                color: var(--primary-blue);
+                color: var(--text-primary);
+
                 font-weight: 700;
                 margin-bottom: 25px;
                 font-size: 1.4rem;
@@ -331,7 +311,8 @@
             }
             
             .tour-info strong {
-                color: var(--primary-blue);
+                color: var(--text-primary);
+
                 font-weight: 600;
             }
             
@@ -358,7 +339,7 @@
             .total-price {
                 text-align: center;
                 padding: 20px;
-                background: linear-gradient(135deg, #ff6b35, #f39c12);
+                background: var(--gradient-secondary);
                 border-radius: 15px;
                 margin-bottom: 25px;
             }
@@ -380,7 +361,8 @@
             }
             
             .btn-primary-custom {
-                background: var(--gradient-tropical);
+                background: var(--gradient-secondary);
+
                 border: none;
                 padding: 15px 30px;
                 border-radius: 50px;
@@ -403,7 +385,7 @@
             }
             
             .btn-secondary-custom {
-                background: var(--gradient-ocean);
+                background: var(--gradient-main);
                 border: none;
                 padding: 15px 30px;
                 border-radius: 50px;
@@ -414,14 +396,15 @@
                 display: inline-block;
                 text-align: center;
                 transition: all 0.3s ease;
-                box-shadow: 0 5px 20px rgba(44, 62, 80, 0.3);
+                box-shadow: 0 5px 20px rgba(14, 165, 233, 0.3);
                 letter-spacing: 0.5px;
                 text-transform: uppercase;
             }
             
             .btn-secondary-custom:hover {
                 transform: translateY(-2px);
-                box-shadow: 0 8px 25px rgba(44, 62, 80, 0.4);
+
+                box-shadow: 0 8px 25px rgba(14, 165, 233, 0.4);
                 color: white;
             }
 
@@ -461,17 +444,49 @@
         </style>
     </head>
     <body>
-         <%
-                UserDTO account = (UserDTO)session.getAttribute("nameUser");
-                TourTicketDTO tour = (TourTicketDTO)session.getAttribute("tourTicket");
-                double total = Double.parseDouble(request.getAttribute("total")+"");
-                int numberTicket = Integer.parseInt(request.getAttribute("numberTicket")+"");
-                DecimalFormat vnd = new DecimalFormat("#,###");
-                String idBooking = request.getAttribute("idBooking")+"";
-                LocalDate today = LocalDate.now();
-                String todayStr = today.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        <%
+            UserDTO account = (UserDTO) session.getAttribute("nameUser");
+            TourTicketDTO tour = (TourTicketDTO) session.getAttribute("tourTicket");
+            
+            // Xử lý dữ liệu null
+            double total = 0;
+            if (request.getAttribute("total") != null) {
+                total = Double.parseDouble(request.getAttribute("total").toString());
+            }
+            
+            int numberTicket = 0;
+            if (request.getAttribute("numberTicket") != null) {
+                numberTicket = Integer.parseInt(request.getAttribute("numberTicket").toString());
+            }
+            
+            String idBooking = "BK" + System.currentTimeMillis(); // Tạo mã booking nếu không có
+            if (request.getAttribute("idBooking") != null) {
+                idBooking = request.getAttribute("idBooking").toString();
+            }
+            
+            LocalDate today = LocalDate.now();
+            String todayStr = today.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            
+            // Xử lý ngày bắt đầu
+            StartDateDTO stDate = (StartDateDTO) session.getAttribute("stDate");
+            LocalDate startDate = null;
+            LocalDate endDate = null;
+            String startDateStr = "";
+            String endDateStr = "";
+            
+            if (stDate != null && stDate.getStartDate() != null) {
+                startDateStr = stDate.getStartDate();
+                startDate = LocalDate.parse(startDateStr, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
                 
-             %>
+                // Tính ngày kết thúc dựa trên duration
+                if ("2 ngày 1 đêm".equals(tour.getDuration())) {
+                    endDate = startDate.plusDays(2);
+                } else {
+                    endDate = startDate.plusDays(3);
+                }
+                endDateStr = endDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            }
+        %>
         
         <%@include file="header.jsp" %>
         
@@ -485,7 +500,9 @@
                 <div class="step-tracker">
                     <div class="step active">
                         <div class="icon">
-                            <i class="fas fa-edit"></i>
+
+                            <img src="assets/images/icon/icon_fillfile.jpg" alt="info" />
+
                         </div>
                         <div class="label">NHẬP THÔNG TIN</div>
                     </div>
@@ -494,7 +511,9 @@
                     
                     <div class="step active">
                         <div class="icon">
-                            <i class="fas fa-credit-card"></i>
+
+                            <img src="assets/images/icon/icon_thanhtoan.jpg" alt="pay" />
+
                         </div>
                         <div class="label">THANH TOÁN</div>
                     </div>
@@ -503,7 +522,9 @@
                     
                     <div class="step current">
                         <div class="icon">
-                            <i class="fas fa-check-circle"></i>
+
+                            <img src="assets/images/icon/icon_done.jpg" alt="done" />
+
                         </div>
                         <div class="label">HOÀN TẤT</div>
                     </div>
@@ -513,7 +534,7 @@
 
         <!-- Main Content -->
         <div class="content">
-            <div class="containerdetail">
+            <div class="container">
                 <div class="row g-4">
                     <!-- Left Column - Success Information -->
                     <div class="col-lg-7">
@@ -526,57 +547,70 @@
                                 <div class="success-subtitle">
                                     <strong>Cảm ơn bạn đã đặt tour tại VN Tours.</strong><br>
                                     Thông tin booking của bạn đã được xác nhận.<br>
-                                    Chúng tôi đã gửi email xác nhận đến: <span style="color: var(--primary-orange); font-weight: 600;"><%=account.getEmail()%></span>
+
+                                    Chúng tôi đã gửi email xác nhận đến: <span style="color: var(--primary-orange); font-weight: 600;"><%= account != null ? account.getEmail() : "email@example.com" %></span>
                                 </div>
                             </div>
                             
-                            <div class="info-grid">
-                                <div class="info-item">
-                                    <div class="info-label">
-                                        <i class="fas fa-ticket-alt me-2"></i>
-                                        Mã đặt chỗ
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="info-item">
+                                        <div class="info-label">
+                                            <i class="fas fa-ticket-alt me-2"></i>
+                                            Mã đặt chỗ
+                                        </div>
+                                        <div class="info-value highlight"><%= idBooking %></div>
                                     </div>
-                                    <div class="info-value highlight"><%=idBooking%></div>
                                 </div>
                                 
-                                <div class="info-item">
-                                    <div class="info-label">
-                                        <i class="fas fa-calendar-alt me-2"></i>
-                                        Ngày tạo
+                                <div class="col-md-6">
+                                    <div class="info-item">
+                                        <div class="info-label">
+                                            <i class="fas fa-calendar-alt me-2"></i>
+                                            Ngày tạo
+                                        </div>
+                                        <div class="info-value"><%= todayStr %></div>
                                     </div>
-                                    <div class="info-value"><%=todayStr%></div>
                                 </div>
                                 
-                                <div class="info-item">
-                                    <div class="info-label">
-                                        <i class="fas fa-user me-2"></i>
-                                        Khách hàng
+                                <div class="col-md-6">
+                                    <div class="info-item">
+                                        <div class="info-label">
+                                            <i class="fas fa-user me-2"></i>
+                                            Khách hàng
+                                        </div>
+                                        <div class="info-value"><%= account != null ? account.getFullName() : "Khách hàng" %></div>
                                     </div>
-                                    <div class="info-value"><%=account.getFullName()%></div>
                                 </div>
                                 
-                                <div class="info-item">
-                                    <div class="info-label">
-                                        <i class="fas fa-phone me-2"></i>
-                                        Điện thoại
+                                <div class="col-md-6">
+                                    <div class="info-item">
+                                        <div class="info-label">
+                                            <i class="fas fa-phone me-2"></i>
+                                            Điện thoại
+                                        </div>
+                                        <div class="info-value"><%= account != null ? account.getPhone() : "Số điện thoại" %></div>
                                     </div>
-                                    <div class="info-value"><%=account.getPhone()%></div>
                                 </div>
                                 
-                                <div class="info-item">
-                                    <div class="info-label">
-                                        <i class="fas fa-money-bill-wave me-2"></i>
-                                        Trị giá booking
+                                <div class="col-md-6">
+                                    <div class="info-item">
+                                        <div class="info-label">
+                                            <i class="fas fa-money-bill-wave me-2"></i>
+                                            Trị giá booking
+                                        </div>
+                                        <div class="info-value highlight"><%= new DecimalFormat("#,###").format(total) %> đ</div>
                                     </div>
-                                    <div class="info-value highlight"><%= vnd.format(total)%> đ</div>
                                 </div>
                                 
-                                <div class="info-item">
-                                    <div class="info-label">
-                                        <i class="fas fa-check-circle me-2"></i>
-                                        Tình trạng
+                                <div class="col-md-6">
+                                    <div class="info-item">
+                                        <div class="info-label">
+                                            <i class="fas fa-check-circle me-2"></i>
+                                            Tình trạng
+                                        </div>
+                                        <div class="info-value status">ĐÃ THANH TOÁN ĐẦY ĐỦ</div>
                                     </div>
-                                    <div class="info-value status">ĐÃ THANH TOÁN ĐẦY ĐỦ</div>
                                 </div>
                             </div>
                             
@@ -592,18 +626,7 @@
                     <!-- Right Column - Tour Confirmation -->
                     <div class="col-lg-5">
                         <%
-                            StartDateDTO stDate = (StartDateDTO)session.getAttribute("stDate");
-                            String startDateStr = stDate.getStartDate();
-                            LocalDate startDate = LocalDate.parse(startDateStr, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-                            LocalDate endDate;
-                            String duration = tour.getDuration();
-                            
-                            if("2 ngày 1 đêm".equals(duration)){
-                                endDate = startDate.plusDays(2);
-                            } else {
-                                endDate = startDate.plusDays(3);
-                            }
-                            String endDateStr = endDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                            String tourImage = tour != null ? tour.getImg_Tour() : "default.jpg";
                         %>
                         
                         <div class="tour-card">
@@ -611,12 +634,13 @@
                                 <i class="fas fa-file-invoice me-2"></i>
                                 PHIẾU XÁC NHẬN BOOKING
                             </h3>
-                            
-                            <img src="assets/images/places/<%=tour.getImg_Tour()%>" alt="Tour" class="tour-image">
+
+                            <img src="assets/images/places/<%= tourImage %>" alt="Tour" class="tour-image">
                             
                             <div class="tour-info">
-                                <p><strong><i class="fas fa-map-marker-alt me-2"></i><%=tour.getDestination()%>:</strong> <%=tour.getNametour()%></p>
-                                <p><strong><i class="fas fa-code me-2"></i>Mã tour:</strong> <%=tour.getIdTourTicket()%></p>
+                                <p><strong><i class="fas fa-map-marker-alt me-2"></i><%= tour != null ? tour.getDestination() : "" %>:</strong> <%= tour != null ? tour.getNametour() : "" %></p>
+                                <p><strong><i class="fas fa-code me-2"></i>Mã tour:</strong> <%= tour != null ? tour.getIdTourTicket() : "" %></p>
+
                             </div>
                             
                             <div class="tour-details">
@@ -626,11 +650,12 @@
                                 </h4>
                                 <p>
                                     <i class="fas fa-plane-departure me-2"></i>
-                                    <strong>Ngày đi:</strong> <%=startDateStr%>
+                                    <strong>Ngày đi:</strong> <%= startDateStr %>
                                 </p>
                                 <p>
                                     <i class="fas fa-plane-arrival me-2"></i>
-                                    <strong>Ngày về:</strong> <%=endDateStr%>
+                                    <strong>Ngày về:</strong> <%= endDateStr %>
+
                                 </p>
                             </div>
                             
@@ -641,7 +666,9 @@
                                     <i class="fas fa-receipt me-2"></i>
                                     TỔNG TIỀN ĐÃ THANH TOÁN
                                 </div>
-                                <div class="total-amount"><%= vnd.format(total)%> đ</div>
+
+                                <div class="total-amount"><%= new DecimalFormat("#,###").format(total) %> đ</div>
+
                             </div>
                             
                             <a href="placeController?action=destination&page=destinationjsp" class="btn-secondary-custom w-100">

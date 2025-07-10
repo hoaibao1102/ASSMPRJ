@@ -3,14 +3,14 @@
     Created on : May 28, 2025, 10:32:05 PM
     Author     : MSI PC
 --%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="vi">
     <head>
         <meta charset="UTF-8">
-        <title>Liên hệ - VN Tours</title>
-        <link rel="stylesheet" href="assets/css/bodyCss.css">
+
+        <title>Liên hệ - VN Tours</title> 
+
         <!-- Bootstrap 5 CSS -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
         <!-- Font Awesome -->
@@ -20,158 +20,101 @@
         
         <style>
             :root {
-                --primary-color: #ff6b35;
-                --secondary-color: #2c3e50;
-                --accent-color: #f39c12;
-                --light-bg: #f8f9fa;
-                --white: #ffffff;
-                --shadow: 0 8px 25px rgba(0,0,0,0.1);
-                --border-radius: 15px;
+
+                --primary-color: #0EA5E9; /* Xanh biển Việt Nam */
+                --secondary-color: #10B981; /* Xanh lá nhiệt đới */
+                --accent-color: #FF6B35; /* Cam nhiệt đới */
+                --secondary-accent: #F59E0B; /* Vàng ánh dương */
+                --text-color: #1F2937; /* Text chính */
+                --text-secondary: #6B7280; /* Text phụ */
+                --white: #FEFEFE; /* Trắng ngọc trai */
+                --border-radius: 8px;
+
             }
             
             * {
                 font-family: 'Poppins', sans-serif;
+
             }
             
             body {
-                background: linear-gradient(135deg, var(--light-bg) 0%, #e8f4f8 100%);
-                color: var(--secondary-color);
+                padding-top: 100px;
+                background: linear-gradient(135deg, #f8f9fa 0%, #e8f4f8 100%);
+                color: var(--text-color);
                 line-height: 1.6;
             }
             
             .hero-section {
-                background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+                background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
                 color: white;
-                padding: 80px 0 60px;
-                position: relative;
-                overflow: hidden;
-            }
-            
-            .hero-section::before {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="palm" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse"><text x="10" y="15" font-size="12" text-anchor="middle" fill="rgba(255,255,255,0.1)">🌴</text></pattern></defs><rect width="100" height="100" fill="url(%23palm)"/></svg>');
-                opacity: 0.3;
-            }
-            
-            .hero-content {
-                position: relative;
-                z-index: 2;
+                padding: 60px 0 40px;
             }
             
             .hero-title {
-                font-size: 3rem;
+                font-size: 2.5rem;
                 font-weight: 700;
                 margin-bottom: 1rem;
-                text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
             }
             
             .hero-subtitle {
-                font-size: 1.2rem;
+                font-size: 1.1rem;
                 opacity: 0.9;
-                margin-bottom: 2rem;
+                margin-bottom: 1.5rem;
             }
             
             .contact-section {
-                padding: 80px 0;
+                padding: 60px 0;
             }
             
             .contact-card {
                 background: var(--white);
                 border-radius: var(--border-radius);
-                box-shadow: var(--shadow);
-                padding: 2.5rem;
-                height: 100%;
-                border: none;
-                transition: all 0.3s ease;
-                position: relative;
-                overflow: hidden;
-            }
-            
-            .contact-card::before {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: 0;
-                right: 0;
-                height: 4px;
-                background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
-            }
-            
-            .contact-card:hover {
-                transform: translateY(-5px);
-                box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+                padding: 2rem;
+                border: 1px solid #e9ecef;
             }
             
             .contact-info h3 {
-                color: var(--secondary-color);
+                color: var(--text-color);
                 font-weight: 600;
-                margin-bottom: 2rem;
-                font-size: 1.8rem;
+                margin-bottom: 1.5rem;
+                font-size: 1.6rem;
             }
             
             .info-item {
                 display: flex;
                 align-items: flex-start;
-                margin-bottom: 2rem;
-                padding: 1.5rem;
-                background: var(--light-bg);
-                border-radius: 12px;
-                border-left: 4px solid var(--primary-color);
-                transition: all 0.3s ease;
-            }
-            
-            .info-item:hover {
-                background: #fff;
-                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-                transform: translateX(5px);
+                margin-bottom: 1.5rem;
+                padding: 1rem;
+                background: #f8f9fa;
+                border-radius: var(--border-radius);
+                border-left: 4px solid var(--accent-color);
             }
             
             .info-icon {
-                font-size: 2rem;
-                color: var(--primary-color);
+                font-size: 1.5rem;
+                color: var(--accent-color);
                 margin-right: 1rem;
-                min-width: 60px;
+                min-width: 40px;
                 text-align: center;
-                background: rgba(255, 107, 53, 0.1);
-                padding: 0.5rem;
-                border-radius: 50%;
             }
             
             .info-content strong {
-                color: var(--secondary-color);
+                color: var(--text-color);
                 font-weight: 600;
             }
             
             .form-card {
                 background: var(--white);
                 border-radius: var(--border-radius);
-                box-shadow: var(--shadow);
-                padding: 2.5rem;
-                border: none;
-                position: relative;
-                overflow: hidden;
-            }
-            
-            .form-card::before {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: 0;
-                right: 0;
-                height: 4px;
-                background: linear-gradient(90deg, var(--accent-color), var(--primary-color));
+                padding: 2rem;
+                border: 1px solid #e9ecef;
             }
             
             .form-card h3 {
-                color: var(--secondary-color);
+                color: var(--text-color);
                 font-weight: 600;
-                margin-bottom: 2rem;
-                font-size: 1.8rem;
+                margin-bottom: 1.5rem;
+                font-size: 1.6rem;
             }
             
             .form-group {
@@ -180,112 +123,76 @@
             
             .form-label {
                 font-weight: 500;
-                color: var(--secondary-color);
+                color: var(--text-color);
                 margin-bottom: 0.5rem;
             }
             
             .form-control {
-                border: 2px solid #e9ecef;
-                border-radius: 10px;
+                border: 1px solid #e9ecef;
+                border-radius: var(--border-radius);
                 padding: 0.75rem 1rem;
                 font-size: 1rem;
-                transition: all 0.3s ease;
             }
             
             .form-control:focus {
-                border-color: var(--primary-color);
-                box-shadow: 0 0 0 0.2rem rgba(255, 107, 53, 0.25);
+                border-color: var(--accent-color);
+                box-shadow: none;
             }
             
             .form-select {
-                border: 2px solid #e9ecef;
-                border-radius: 10px;
+                border: 1px solid #e9ecef;
+                border-radius: var(--border-radius);
                 padding: 0.75rem 1rem;
                 font-size: 1rem;
-                transition: all 0.3s ease;
             }
             
             .form-select:focus {
-                border-color: var(--primary-color);
-                box-shadow: 0 0 0 0.2rem rgba(255, 107, 53, 0.25);
+                border-color: var(--accent-color);
+                box-shadow: none;
             }
             
             .btn-primary {
-                background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+                background: linear-gradient(135deg, var(--accent-color), var(--secondary-accent));
                 border: none;
-                border-radius: 25px;
+                border-radius: var(--border-radius);
                 padding: 0.75rem 2rem;
                 font-weight: 600;
                 font-size: 1.1rem;
-                transition: all 0.3s ease;
-                box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
-            }
-            
-            .btn-primary:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
-                background: linear-gradient(135deg, #e55a2b, #d68910);
             }
             
             .map-section {
                 background: var(--white);
-                padding: 60px 0;
-                margin-top: 60px;
+                padding: 40px 0;
+                margin-top: 40px;
             }
             
             .map-container {
                 border-radius: var(--border-radius);
                 overflow: hidden;
-                box-shadow: var(--shadow);
                 height: 400px;
-                position: relative;
-            }
-            
-            .map-container::before {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
-                opacity: 0.1;
-                z-index: 1;
-                pointer-events: none;
+
             }
             
             .map-container iframe {
                 width: 100%;
                 height: 100%;
                 border: none;
-                position: relative;
-                z-index: 2;
+
             }
             
             .section-title {
                 text-align: center;
-                font-size: 2.5rem;
+                font-size: 2.2rem;
                 font-weight: 700;
-                color: var(--secondary-color);
-                margin-bottom: 3rem;
-                position: relative;
-            }
-            
-            .section-title::after {
-                content: '';
-                position: absolute;
-                bottom: -10px;
-                left: 50%;
-                transform: translateX(-50%);
-                width: 60px;
-                height: 4px;
-                background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
-                border-radius: 2px;
+                color: var(--text-color);
+                margin-bottom: 2rem;
+
             }
             
             @media (max-width: 768px) {
                 .hero-title {
-                    font-size: 2rem;
+                    font-size: 1.8rem;
+
                 }
                 
                 .hero-subtitle {
@@ -295,10 +202,6 @@
                 .contact-card,
                 .form-card {
                     padding: 1.5rem;
-                }
-                
-                .info-item {
-                    padding: 1rem;
                 }
             }
         </style>
@@ -311,7 +214,9 @@
             <section class="hero-section">
                 <div class="container">
                     <div class="row justify-content-center">
-                        <div class="col-lg-8 text-center hero-content">
+
+                        <div class="col-lg-8 text-center">
+
                             <h1 class="hero-title">Chúng tôi luôn sẵn sàng đồng hành cùng bạn</h1>
                             <p class="hero-subtitle">
                                 Bạn có câu hỏi về tour? Muốn được tư vấn hành trình phù hợp? Hoặc cần hỗ trợ nhanh?<br>
@@ -396,17 +301,16 @@
                                         <label for="message" class="form-label">Nội dung</label>
                                         <textarea class="form-control" id="message" name="message" rows="4" required></textarea>
                                     </div>
-
                                     <button type="submit" class="btn btn-primary">
                                         <i class="fas fa-paper-plane me-2"></i>Gửi yêu cầu
                                     </button>
                                 </form>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </section>
-
             <!-- Map Section -->
             <section class="map-section">
                 <div class="container">
@@ -420,6 +324,7 @@
                     </div>
                 </div>
             </section>
+
         </div>
         
         <%@ include file="footer.jsp" %>
