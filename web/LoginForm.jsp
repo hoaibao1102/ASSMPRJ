@@ -1,146 +1,328 @@
-<%-- 
-    Document   : LoginForm
-    Created on : May 13, 2025, 4:32:35 PM
-    Author     : MSI PC
+<%--
+Document : LoginForm
+Created on : May 13, 2025, 4:32:35 PM
+Author : MSI PC
 --%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="vi">
     <head>
         <meta charset="UTF-8">
-        <title>Đăng nhập</title>
-        <link rel="stylesheet" href="assets/css/bodyCss.css"/>
-        <!-- Đưa CSS vào trực tiếp -->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Đăng nhập - Travel Explorer</title>
+        
+        <!-- Bootstrap 5 CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        <!-- Font Awesome -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+        <!-- Google Fonts -->
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+        
         <style>
-            .content_sub{
+            :root {
+                /* Vietnamese Color Palette */
+                --sky-blue: #0EA5E9;
+                --coral-orange: #FF6B35;
+                --emerald-green: #10B981;
+                --golden-yellow: #F59E0B;
+                --purple: #8B5CF6;
+                --pearl-white: #FEFEFE;
+                
+                /* Gradients */
+                --gradient-primary: linear-gradient(135deg, #0EA5E9, #10B981);
+                --gradient-secondary: linear-gradient(135deg, #FF6B35, #F59E0B);
+                
+                /* Text Colors */
+                --text-primary: #1F2937;
+                --text-secondary: #6B7280;
+                --text-light: #9CA3AF;
+                
+                /* Background */
+                --bg-light: #F8FAFC;
+                --bg-white: #FFFFFF;
+            }
+            body {
+                padding-top: 100px;
+                font-family: 'Poppins', sans-serif;
+                background: var(--bg-light);
+                color: var(--text-primary);
+                min-height: 100vh;
+            }
+            .content_sub {
                 margin: 0 auto;
+                padding: 2rem 0;
             }
-
+            /* Header Pattern */
+            .header-pattern {
+                background: var(--gradient-primary);
+                height: 180px;
+                position: relative;
+            }
             .login-container {
-                flex-grow: 1;
-                background-color: #ffffff;
-                padding: 3rem;
-                border-radius: 12px;
-                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-                width: 100%;
-                max-width: 400px;
-                box-sizing: border-box;
+                background: var(--bg-white);
+                border-radius: 16px;
+                border: 1px solid #E5E7EB;
+                position: relative;
+                transform: translateY(-40px);
+                margin-bottom: 2rem;
+                max-width: 450px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            .login-container::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 4px;
+                background: var(--gradient-secondary);
+                border-radius: 16px 16px 0 0;
+            }
+            .login-header {
                 text-align: center;
-                margin-top: 9rem; /* Đảm bảo form không bị che khuất bởi header */
-                margin-bottom: 3rem; /* Để form không bị đè lên footer */
+                padding: 2rem 2rem 1rem;
             }
-
-            h2 {
-                color: #333;
-                font-size: 1.8rem;
+            .login-header .icon-wrapper {
+                width: 70px;
+                height: 70px;
+                background: var(--gradient-secondary);
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin: 0 auto 1rem;
+            }
+            .login-header h2 {
+                color: var(--text-primary);
+                font-weight: 600;
+                font-size: 1.75rem;
+                margin-bottom: 0.5rem;
+            }
+            .login-header p {
+                color: var(--text-secondary);
+                font-size: 0.95rem;
+                margin-bottom: 0;
+            }
+            .login-form {
+                padding: 0 2rem 2rem;
+            }
+            .form-floating {
                 margin-bottom: 1.5rem;
             }
-
-            input[type="emailOrPhone"],
-            input[type="password"] {
-                width: 100%;
-                padding: 0.9rem;
-                margin-bottom: 1.5rem;
-                border: 1px solid #ccc;
+            .form-floating > .form-control {
+                border: 2px solid #E5E7EB;
                 border-radius: 8px;
-                font-size: 1rem;
-                box-sizing: border-box;
+                font-size: 0.95rem;
+                padding: 1rem 0.75rem;
+                transition: border-color 0.2s ease;
+                background: var(--bg-white);
             }
-
-            input[type="email"]:focus,
-            input[type="password"]:focus {
-                border-color: #3498db;
+            .form-floating > .form-control:focus {
+                border-color: var(--sky-blue);
+                box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
+                background: var(--bg-white);
             }
-
+            .form-floating > label {
+                color: var(--text-secondary);
+                font-weight: 500;
+                font-size: 0.9rem;
+            }
+            .form-floating > .form-control:focus ~ label,
+            .form-floating > .form-control:not(:placeholder-shown) ~ label {
+                color: var(--sky-blue);
+                font-weight: 600;
+            }
+            .input-icon {
+                position: absolute;
+                right: 15px;
+                top: 50%;
+                transform: translateY(-50%);
+                color: var(--text-secondary);
+                z-index: 10;
+            }
             .forgot-link {
                 text-align: right;
                 font-size: 0.9rem;
-                color: #777;
+                color: var(--vietnam-blue);
+                text-decoration: none;
+                font-weight: 500;
                 margin-bottom: 1.5rem;
                 display: block;
+                transition: color 0.2s ease;
             }
-
             .forgot-link:hover {
-                color: #3498db;
+                color: var(--text-primary);
                 text-decoration: underline;
             }
-
-            .error-message {
-                color: red;
-                font-size: 1rem;
-                margin-bottom: 1rem;
-            }
-
-            .login-btn {
-                background-color: #3498db;
-                color: white;
-                width: 100%;
-                padding: 0.9rem;
+            .alert {
                 border: none;
                 border-radius: 8px;
-                font-size: 1.1rem;
-                font-weight: bold;
-                cursor: pointer;
-                transition: background-color 0.3s ease;
+                font-weight: 500;
+                margin-bottom: 1.5rem;
             }
-
-            .login-btn:hover {
-                background-color: #2980b9;
+            .alert-success {
+                background: #ECFDF5;
+                color: #065F46;
+                border-left: 4px solid var(--emerald-green);
             }
-
-            .register-link {
-                margin-top: 1.5rem;
+            .alert-danger {
+                background: #FEF2F2;
+                color: #991B1B;
+                border-left: 4px solid #EF4444;
+            }
+            .error-mess {
+                color: #EF4444;
+                font-size: 0.85rem;
+                margin-top: 0.5rem;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+            .error-mess::before {
+                content: '⚠️';
+                font-size: 0.9rem;
+            }
+            .btn-primary {
+                background: var(--gradient-secondary);
+                border: none;
+                border-radius: 8px;
+                color: white;
+                font-weight: 600;
+                padding: 0.75rem 2rem;
                 font-size: 1rem;
+                transition: opacity 0.2s ease;
+                width: 100%;
             }
-
-            .register-link a {
-                color: #3498db;
+            .btn-primary:hover {
+                background: var(--gradient-secondary);
+                opacity: 0.9;
+            }
+            .btn-primary:focus {
+                background: var(--gradient-secondary);
+                box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.2);
+            }
+            .login-link {
+                text-align: center;
+                margin-top: 1.5rem;
+                padding-top: 1.5rem;
+                border-top: 1px solid #E5E7EB;
+            }
+            .login-link a {
+                color: var(--coral-orange);
                 text-decoration: none;
+                font-weight: 600;
+                transition: color 0.2s ease;
             }
-
-            .register-link a:hover {
-                text-decoration: underline;
+            .login-link a:hover {
+                color: var(--sky-blue);
             }
-
+            /* Responsive */
+            @media (max-width: 768px) {
+                .login-container {
+                    margin: 1rem;
+                    transform: translateY(-30px);
+                }
+                
+                .login-header, .login-form {
+                    padding: 1.5rem;
+                }
+                
+                .header-pattern {
+                    height: 140px;
+                }
+            }
+            @media (max-width: 576px) {
+                .login-container {
+                    margin: 0.5rem;
+                    transform: translateY(-20px);
+                }
+                
+                .login-header h2 {
+                    font-size: 1.5rem;
+                }
+                
+                .login-header .icon-wrapper {
+                    width: 60px;
+                    height: 60px;
+                }
+                
+                .login-header .icon-wrapper i {
+                    font-size: 1.2rem;
+                }
+            }
         </style>
-
     </head>
     <body>
         <%@include file="header.jsp"%>
+        
+        <div class="header-pattern"></div>
+        
         <div class="content content_sub">
-            <div class=" login-container">
+            <div class="login-container">
                 <c:if test="${not empty requestScope.errorMessage}">
                     <script>
-                window.alert("${errorMessage}");
+                        window.alert("${errorMessage}");
                     </script>
                 </c:if>
-                <h2>Đăng nhập</h2>
-
-            <form action="loginController" method="post"> 
-                <input type="hidden" value="login" name="action"> 
-                <input type="emailOrPhone" name="txtEmailOrPhone" placeholder="Email hoặc Số điện thoại" required>
-                <input type="password" name="txtPassword" placeholder="Mật khẩu" required>
-                <%
-                        String message = request.getAttribute("message")+"";
-                %>
-                <span style="color: red; font-size: 17px; position: relative; top: -17px; left: -23%"><i> <%=message.equals("null")?"":message%></i> </span>  
-                <a href="forgot_password.jsp" class="forgot-link">Quên mật khẩu?</a>
-
-                    <input type="submit" value="Login" class="login-btn">
+                
+                <div class="login-header">
+                    <div class="icon-wrapper">
+                        <i class="fas fa-plane"></i>
+                    </div>
+                    <h2>Đăng nhập</h2>
+                    <p class="subtitle">Khám phá thế giới cùng chúng tôi</p>
+                </div>
+                <form action="loginController" method="post" novalidate> 
+                    <input type="hidden" value="login" name="action"> 
+                    
+                    <div class="form-floating position-relative">
+                        <input type="text" class="form-control" id="txtEmailOrPhone" 
+                               name="txtEmailOrPhone" placeholder="Email hoặc Số điện thoại" 
+                               required autocomplete="username">
+                        <label for="txtEmailOrPhone">Email hoặc Số điện thoại</label>
+                        <i class="bi bi-person-circle input-icon"></i>
+                    </div>
+                    
+                    <div class="form-floating position-relative">
+                        <input type="password" class="form-control" id="txtPassword" 
+                               name="txtPassword" placeholder="Mật khẩu" 
+                               required autocomplete="current-password">
+                        <label for="txtPassword">Mật khẩu</label>
+                        <i class="bi bi-lock input-icon"></i>
+                    </div>
+                    
+                    <!-- Hiển thị thông báo lỗi từ server -->
+                    <c:if test="${not empty requestScope.message}">
+                        <div class="alert alert-danger">
+                            <i class="fas fa-exclamation-circle me-2"></i>
+                            <c:out value="${requestScope.message}"/>
+                        </div>
+                    </c:if>
+                    
+                    <a href="forgot_password.jsp" class="forgot-link">
+                        <i class="bi bi-question-circle me-1"></i>
+                        Quên mật khẩu?
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-box-arrow-in-right me-2"></i>
+                        Đăng nhập
+                    </button>
                 </form>
-
-
-
-                <div class="register-link">
-                    Bạn chưa có tài khoản? <a href="RegisForm.jsp">Đăng ký ngay</a>
+                <div class="login-link">
+                    <p>Bạn chưa có tài khoản?</p>
+                    <a href="RegisForm.jsp">
+                        <i class="bi bi-person-plus me-1"></i>
+                        Đăng ký ngay
+                    </a>
                 </div>
             </div>
         </div>
-
+        
         <%@include file="footer.jsp"%>
+        
+        <!-- Bootstrap 5 JS -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     </body>
 </html>
-
-

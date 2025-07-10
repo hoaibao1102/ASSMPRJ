@@ -11,738 +11,718 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ page import="java.text.DecimalFormat" %>
 <%@ page import="java.util.ArrayList" %>
-
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Chi tiết Tour</title>
-        <link rel="stylesheet" href="assets/css/bodyCss.css"/>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
         <style>
-
-
-            .containerdetail {
-                display: flex;
-                max-width: 1200px;
-                margin: 30px auto;
-                gap: 30px;
+            :root {
+                --primary-blue: #0EA5E9;
+                --primary-orange: #FF6B35;
+                --primary-green: #10B981;
+                --secondary-yellow: #F59E0B;
+                --secondary-purple: #8B5CF6;
+                --text-dark: #1F2937;
+                --text-medium: #6B7280;
+                --gradient-primary: linear-gradient(135deg, #0EA5E9, #10B981);
+                --gradient-secondary: linear-gradient(135deg, #FF6B35, #F59E0B);
             }
-
-            .left-content {
-                flex: 7;
-                background-color: #f5f5f5;
-                padding: 30px;
-                border-radius: 12px;
-                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-            }
-
-            .right-content {
-                flex: 3;
-                background-color: #fff8f0;
-                padding: 30px;
-                border-radius: 12px;
-                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-            }
-
-            .left-content h1 {
-                font-size: 2rem;
-                color: #2c3e50;
-                text-align: center;
-                margin-bottom: 30px;
-                text-transform: uppercase;
-                letter-spacing: 1px;
-            }
-
-            .left-content h2 {
-                font-size: 1.3rem;
-                color: #2980b9;
-                margin-top: 25px;
-                margin-bottom: 10px;
-            }
-
-            .left-content p {
-                font-size: 1rem;
-                color: #444;
+            
+            body {
+                padding-top: 100px;
+                background: #FEFEFE;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
                 line-height: 1.6;
-                margin-bottom: 15px;
             }
-
-            .left-content img {
-                width: 100%;
-                max-width: 700px;
-                height: auto;
-                display: block;
-                margin-top: 10px;
-                margin-bottom: 25px;
+            
+            .content {
+                min-height: 100vh;
+                padding: 2rem 0;
+            }
+            
+            /* Breadcrumb */
+            .breadcrumb-modern {
+                background: var(--gradient-primary);
+                padding: 1rem 0;
+                margin-bottom: 2rem;
                 border-radius: 10px;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             }
-
-            /*            BÊN PHAIR */
-            .right-content {
-                background: #fff;
-                border-radius: 12px;
-                padding: 24px;
-                box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
-                font-family: Arial, sans-serif;
-                width: 100%;
-                max-width: 360px;
-                height: 40%;
-            }
-
-            .startdate-box {
-                margin-top: 10px; /* giảm khoảng cách phía trên */
-                margin-bottom: 15px;
-                font-size: 15px;
-                font-weight: 600;
-                color: #444;
-            }
-
-            .startdate-box label {
-                display: block;
-                margin-bottom: 6px;
-                font-weight: bold;
-                color: #333;
-            }
-
-            .startdate-select-wrap {
-                display: flex;
-                gap: 10px;
-                align-items: center;
-            }
-
-            .startdate-select-wrap select {
-                flex: 1;
-                padding: 10px 40px 10px 14px; /* thêm padding phải để tránh mũi tên đè */
-                font-size: 15px;
-                border-radius: 8px;
-                border: 1px solid #ccc;
-                background-color: #fff;
-                color: #2c3e50;
-                box-shadow: 0 2px 6px rgba(0,0,0,0.04);
-                transition: border 0.3s ease;
-                appearance: none;
-                background-image: url('https://cdn-icons-png.flaticon.com/512/271/271210.png');
-                background-repeat: no-repeat;
-                background-position: right 14px center; /* dịch mũi tên ra xa chữ */
-                background-size: 12px;
-                min-width: 220px; /* tăng chiều rộng tối thiểu */
-            }
-
-            .startdate-select-wrap select:focus {
-                outline: none;
-                border-color: #2980b9;
-                box-shadow: 0 0 0 3px rgba(41, 128, 185, 0.15);
-            }
-
-
-            .btn-go {
-                padding: 10px 18px;
-                background-color: #e74c3c;
-                color: white;
-                font-weight: bold;
-                border: none;
-                border-radius: 8px;
-                cursor: pointer;
-                transition: background-color 0.25s;
-            }
-
-            .label {
-                font-weight: bold;
-                margin-bottom: 8px;
-            }
-
-            .price {
-                font-size: 24px;
-                color: red;
-                margin-bottom: 16px;
-            }
-
-            .original-price {
-                font-size: 18px;
-                text-decoration: line-through;
-                color: #999;
-                margin-right: 8px;
-            }
-
-            .current-price {
-                font-weight: bold;
-                font-size: 28px;
-                color: #e74c3c;
-            }
-
-            .discount-note {
-                background-color: #ffe6e6;
-                color: #d63031;
-                padding: 10px;
-                border-radius: 8px;
-                font-size: 14px;
-                margin-bottom: 20px;
-            }
-
-            .tour-details {
-                list-style: none;
+            
+            .breadcrumb-modern .breadcrumb {
+                background: none;
                 padding: 0;
-                margin: 0 0 20px 0;
-                font-size: 14px;
+                margin: 0;
+                font-size: 1.1rem;
             }
-
-            .tour-details li {
-                margin-bottom: 10px;
-                display: flex;
-                align-items: center;
-            }
-
-            .icon {
-                margin-right: 6px;
-                font-size: 16px;
-            }
-
-            .blue {
-                color: #007bff;
-                font-weight: bold;
-            }
-
-            .tour-actions {
-                display: flex;
-                gap: 10px;
-                margin-bottom: 20px;
-            }
-
-            .btn-outline,
-            .btn-primary,
-            .btn-call {
-                padding: 10px 14px;
-                font-size: 14px;
-                border-radius: 6px;
-                cursor: pointer;
-                border: 1px solid #e0e0e0;
-                flex: 1;
-            }
-
-            .btn-outline {
-                background-color: white;
-                color: #d63031;
-                border: 1px solid #d63031;
-            }
-
-            .btn-outline:hover {
-                background-color: #fceeee;
-            }
-
-            .btn-primary {
-                background-color: #e74c3c;
-                color: white;
-                border: none;
-            }
-
-            .btn-call {
-                background-color: #0052cc;
-                color: white;
-                border: none;
-                margin-bottom: 8px;
-            }
-
-            .tour-support {
-                display: flex;
-                flex-direction: column;
-                gap: 8px;
-            }
-
-
-            <!--LÀM DETAIL O DUOI-->
-            .collapsible {
-                cursor: pointer;
-                user-select: none;
-                color: #2980b9;
-                font-weight: bold;
-                margin-top: 20px;
-                margin-bottom: 5px;
-                font-size: 1.3rem;
-                border-bottom: 1px solid #2980b9;
-                padding-bottom: 4px;
-            }
-
-            .sub_content {
-                max-height: 0;
-                overflow: hidden;
-                transition: max-height 0.3s ease-out;
-                font-size: 1rem;
-                color: #444;
-                line-height: 1.6;
-                margin-bottom: 15px;
-                padding-left: 8px;
-                border-left: 3px solid #2980b9;
-            }
-
-
-            .collapsible .toggle-text {
-                font-style: italic;
-                font-weight: normal;
-                color: #555;
-                margin-left: 10px;
-                cursor: pointer;
-            }
-
-
-            .muiten {
-                width: 2% !important;
-                transition: transform 0.3s ease;
-                vertical-align: middle;
-                cursor: pointer;
-            }
-
-            .collapsible.active .muiten {
-                transform: rotate(180deg);
-            }
-
-
-            .gallery {
-                display: flex;
-                gap: 15px;
-                margin-top: 20px;
-            }
-
-            .thumbnails {
-                display: flex;
-                flex-direction: column;
-                max-height: 450px;
-                overflow-y: auto;
-                width: 100px;
-            }
-
-            .thumbnail-img {
-                width: 100%;
-                margin-bottom: 12px;
-                cursor: pointer;
-                border-radius: 8px;
-                transition: transform 0.2s ease;
-            }
-
-            .thumbnail-img:hover {
-                transform: scale(1.05);
-                box-shadow: 0 0 8px rgba(0,0,0,0.3);
-            }
-
-            .main-image {
-                flex-grow: 1;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-            }
-
-            .main-img {
-                width: 600px;
-                border-radius: 12px;
-                cursor: pointer;
-                box-shadow: 0 0 15px rgba(0,0,0,0.2);
-            }
-
-            /* Modal styles */
-            .modal {
-                display: none;
-                position: fixed;
-                z-index: 9999;
-                padding-top: 60px;
-                left: 0;
-                top: 0;
-                width: 100%;
-                height: 100%;
-                overflow: auto;
-                background-color: rgba(0,0,0,0.8);
-            }
-
-            .modal-content {
-                margin: auto;
-                display: block;
-                width: 80%;
-                max-width: 900px;
-                border-radius: 12px;
-            }
-
-            .close {
-                position: absolute;
-                top: 20px;
-                right: 35px;
-                color: white;
-                font-size: 40px;
-                font-weight: bold;
-                cursor: pointer;
-            }
-
-            .prev, .next {
-                cursor: pointer;
-                position: fixed;
-                top: 50%;
-                width: auto;
-                padding: 16px;
-                color: white;
-                font-weight: bold;
-                font-size: 40px;
-                user-select: none;
-                -webkit-user-select: none;
-                transition: 0.3s ease;
-            }
-
-            .prev:hover, .next:hover {
-                color: #ddd;
-            }
-
-            .prev {
-                left: 15px;
-            }
-
-            .next {
-                right: 15px;
-            }
-
-            .modal-thumbnails-wrapper {
-                width: 80%;
-                max-width: 900px;
-                margin: 15px auto 0 auto;
-                overflow-x: auto;
-            }
-
-            .modal-thumbnails {
-                display: flex;
-                gap: 10px;
-                padding-bottom: 10px;
-            }
-
-            .modal-thumbnails img {
-                width: 100px;
-                height: 60px;
-                object-fit: cover;
-                cursor: pointer;
-                border: 2px solid transparent;
-                border-radius: 6px;
-                transition: border-color 0.3s ease;
-            }
-
-            .modal-thumbnails img.selected {
-                border-color: #ff4b2b; /* viền đỏ highlight ảnh nhỏ đang chọn */
-            }
-
-            /*====================================================================  css back form*/
-            .breadcrumb {
-                margin: 1rem 2rem; /* cách đều trái phải giống header padding */
-                font-size: 1rem;
-                color: #555;
-                font-family: Arial, sans-serif;
-            }
-
-            .breadcrumb a {
-                color: #2980b9; /* màu xanh link */
+            
+            .breadcrumb-modern .breadcrumb-item a {
+                color: var(--primary-orange);
                 text-decoration: none;
                 font-weight: 600;
             }
-
-            .breadcrumb a:hover {
-                text-decoration: underline;
-            }
-
-            .breadcrumb .current {
-                color: #2c3e50; /* màu đậm hơn, font bold */
+            
+            .breadcrumb-modern .breadcrumb-item.active {
+                color: var(--text-dark);
                 font-weight: 700;
             }
-
-            /*css phan mo ta*/
-            /* Style cho các button (tiêu đề mở rộng) */
-            .accordion {
-                background-color: #2980b9;
-                color: white;
-                padding: 10px 20px;
-                width: 100%;
-                text-align: left;
-                border: none;
-                outline: none;
-                cursor: pointer;
-                font-size: 16px;
-                margin-bottom: 5px;
-                border-radius: 6px;
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                transition: background-color 0.3s;
-            }
-
-            /* Hiệu ứng khi hover */
-            .accordion:hover {
-                background-color: #3498db;
-            }
-
-            /* Mũi tên */
-            .toggle-icon {
-                font-size: 18px;
-                transition: transform 0.3s ease;
-            }
-
-            /* Panel nội dung (ẩn theo mặc định và có hiệu ứng mở rộng/thu nhỏ) */
-            .panel {
-                padding: 0 18px;
-                display: block;
-                max-height: 0;
+            
+            /* Main Container */
+            .tour-container {
+                background: white;
+                border-radius: 10px;
                 overflow: hidden;
-                background-color: #f1f1f1;
+                margin-bottom: 2rem;
+                border: 1px solid #e5e7eb;
+            }
+            
+            /* Left Content */
+            .tour-content {
+                padding: 2rem;
+            }
+            
+            .tour-title {
+                font-size: 2.5rem;
+                font-weight: 700;
+                background: var(--gradient-secondary);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                text-align: center;
+                margin-bottom: 2rem;
+                text-transform: uppercase;
+                letter-spacing: 2px;
+            }
+            
+            /* Gallery */
+            .gallery-container {
+                background: #f8f9fa;
+                border-radius: 10px;
+                padding: 1.5rem;
+                margin-bottom: 2rem;
+            }
+            
+            .thumbnail-wrapper {
+                max-height: 450px;
+                overflow-y: auto;
+                padding-right: 10px;
+            }
+            
+            .thumbnail-wrapper::-webkit-scrollbar {
+                width: 6px;
+            }
+            
+            .thumbnail-wrapper::-webkit-scrollbar-track {
+                background: #f1f1f1;
+            }
+            
+            .thumbnail-wrapper::-webkit-scrollbar-thumb {
+                background: var(--primary-orange);
+                border-radius: 10px;
+            }
+            
+            .thumbnail-img {
+                width: 100%;
+                height: 80px;
+                object-fit: cover;
+                border-radius: 10px;
+                cursor: pointer;
                 margin-bottom: 10px;
-                border-radius: 6px;
-                transition: max-height 0.3s ease-out;
+                border: 2px solid transparent;
+                transition: border-color 0.3s;
             }
-
-            /* Khi panel mở rộng, sử dụng max-height lớn */
-            .panel.open {
-                max-height: 500px; /* Điều chỉnh theo nội dung */
+            
+            .thumbnail-img:hover {
+                border-color: var(--primary-orange);
             }
-
-            /* Chỉnh sửa mũi tên khi mở/đóng */
-            .accordion.active .toggle-icon {
+            
+            .main-image-container {
+                position: relative;
+                border-radius: 10px;
+                overflow: hidden;
+            }
+            
+            .main-img {
+                width: 100%;
+                height: 400px;
+                object-fit: cover;
+                cursor: pointer;
+            }
+            
+            .image-overlay {
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: linear-gradient(transparent, rgba(0,0,0,0.7));
+                color: white;
+                padding: 1rem;
+            }
+            
+            /* Accordion */
+            .tour-accordion {
+                margin-top: 2rem;
+            }
+            
+            .accordion-button {
+                background: var(--gradient-secondary);
+                color: white;
+                border: none;
+                font-weight: 600;
+                font-size: 1.1rem;
+                padding: 1rem 1.5rem;
+                border-radius: 10px !important;
+            }
+            
+            .accordion-button:not(.collapsed) {
+                background: var(--gradient-primary);
+                color: white;
+            }
+            
+            .accordion-button::after {
+                background-image: none;
+                content: "\f107";
+                font-family: "Font Awesome 6 Free";
+                font-weight: 900;
+                font-size: 1.2rem;
+            }
+            
+            .accordion-button:not(.collapsed)::after {
                 transform: rotate(180deg);
             }
-
+            
+            .accordion-body {
+                background: white;
+                border-radius: 0 0 10px 10px;
+                padding: 1.5rem;
+                border: none;
+            }
+            
+            .day-section {
+                background: white;
+                border-radius: 8px;
+                padding: 1rem;
+                margin-bottom: 1rem;
+                border-left: 4px solid var(--primary-orange);
+            }
+            
+            .day-section h5 {
+                color: var(--text-dark);
+                font-weight: 700;
+                margin-bottom: 0.5rem;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+            
+            /* Right Sidebar */
+            .booking-sidebar {
+                background: white;
+                border-radius: 10px;
+                padding: 2rem;
+                margin-top: 2rem;
+                border: 1px solid #e5e7eb;
+            }
+            
+            .price-section {
+                text-align: center;
+                margin-bottom: 2rem;
+                padding: 1.5rem;
+                background: var(--gradient-secondary);
+                border-radius: 10px;
+                color: white;
+            }
+            
+            .original-price {
+                font-size: 1.1rem;
+                text-decoration: line-through;
+                opacity: 0.8;
+                margin-bottom: 0.5rem;
+            }
+            
+            .current-price {
+                font-size: 2.5rem;
+                font-weight: 700;
+            }
+            
+            .discount-badge {
+                background: var(--secondary-yellow);
+                color: var(--text-dark);
+                padding: 0.75rem 1rem;
+                border-radius: 10px;
+                font-weight: 600;
+                margin: 1rem 0;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+            
+            .tour-details {
+                background: #f8f9fa;
+                border-radius: 10px;
+                padding: 1.5rem;
+                margin-bottom: 2rem;
+            }
+            
+            .detail-item {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+                padding: 0.75rem 0;
+                border-bottom: 1px solid #e5e7eb;
+            }
+            
+            .detail-item:last-child {
+                border-bottom: none;
+            }
+            
+            .detail-icon {
+                width: 35px;
+                height: 35px;
+                background: var(--gradient-secondary);
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                font-size: 1.1rem;
+            }
+            
+            .detail-label {
+                font-weight: 600;
+                color: var(--text-dark);
+            }
+            
+            .detail-value {
+                color: var(--primary-orange);
+                font-weight: 600;
+            }
+            
+            .booking-form {
+                background: #f8f9fa;
+                border-radius: 10px;
+                padding: 1.5rem;
+                margin-bottom: 2rem;
+                border: 1px solid #e5e7eb;
+            }
+            
+            .form-label {
+                font-weight: 600;
+                color: var(--text-dark);
+                margin-bottom: 0.5rem;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+            
+            .form-select {
+                border: 1px solid #d1d5db;
+                border-radius: 10px;
+                padding: 0.75rem;
+                font-weight: 500;
+            }
+            
+            .btn-booking {
+                background: var(--gradient-secondary);
+                border: none;
+                border-radius: 10px;
+                padding: 0.75rem 1.5rem;
+                font-weight: 600;
+                color: white;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+            }
+            
+            .btn-booking:hover {
+                background: linear-gradient(135deg, #e55a2b 0%, #d88906 100%);
+            }
+            
+            .support-buttons .btn {
+                border-radius: 10px;
+                padding: 0.75rem 1rem;
+                font-weight: 600;
+                margin-bottom: 0.5rem;
+                border: 1px solid;
+            }
+            
+            .btn-call {
+                background: var(--gradient-primary);
+                border-color: var(--primary-blue);
+                color: white;
+            }
+            
+            .btn-contact {
+                background: transparent;
+                border-color: var(--primary-orange);
+                color: var(--primary-orange);
+            }
+            
+            .btn-contact:hover {
+                background: var(--primary-orange);
+                color: white;
+            }
+            
+            /* Modal */
+            .modal-content {
+                border-radius: 10px;
+                border: none;
+            }
+            
+            .modal-header {
+                background: var(--gradient-secondary);
+                color: white;
+                border: none;
+                padding: 1.5rem;
+            }
+            
+            .modal-body {
+                padding: 0;
+            }
+            
+            .modal-thumbnails {
+                display: flex;
+                gap: 0.5rem;
+                overflow-x: auto;
+                padding: 1rem;
+                background: #f8f9fa;
+            }
+            
+            .modal-thumbnails img {
+                width: 80px;
+                height: 60px;
+                object-fit: cover;
+                border-radius: 8px;
+                cursor: pointer;
+                border: 2px solid transparent;
+                flex-shrink: 0;
+                transition: border-color 0.3s;
+            }
+            
+            .modal-thumbnails img:hover,
+            .modal-thumbnails img.selected {
+                border-color: var(--primary-orange);
+            }
+            
+            /* Responsive */
+            @media (max-width: 768px) {
+                .tour-title {
+                    font-size: 2rem;
+                }
+                
+                .tour-content {
+                    padding: 1.5rem;
+                }
+                
+                .booking-sidebar {
+                    margin-top: 2rem;
+                }
+                
+                .main-img {
+                    height: 250px;
+                }
+                
+                .thumbnail-wrapper {
+                    max-height: 200px;
+                }
+            }
         </style>
     </head>
     <body class="<%= AuthUtils.isAdmin(session)? "admin-layout" : "" %>">
         <%@include file="header.jsp" %>
         <%  
-                    List<TicketImgDTO> listImg = (List<TicketImgDTO>)request.getAttribute("ticketImgDetail");
-                    List<TicketDayDetailDTO> listDayDetail = (List<TicketDayDetailDTO>)request.getAttribute("ticketDayDetail");
-                    TourTicketDTO tourTicket = (TourTicketDTO)request.getAttribute("tourTicket");
-                    List<StartDateDTO> startDates = (List<StartDateDTO>) request.getAttribute("startDateTour");
-                    DecimalFormat vnd = new DecimalFormat("#,###");
+            List<TicketImgDTO> listImg = (List<TicketImgDTO>)request.getAttribute("ticketImgDetail");
+            List<TicketDayDetailDTO> listDayDetail = (List<TicketDayDetailDTO>)request.getAttribute("ticketDayDetail");
+            TourTicketDTO tourTicket = (TourTicketDTO)request.getAttribute("tourTicket");
+            List<StartDateDTO> startDates = (List<StartDateDTO>) request.getAttribute("startDateTour");
+            DecimalFormat vnd = new DecimalFormat("#,###");
         %>
-
         <div class="content">
-            <!<!-- dieu huong  -->
-            <div class="breadcrumb">
-                <div class="breadcrumb">
-                    <a href="placeController?action=destination&page=indexjsp">Trang chủ</a> /
-                    <a href="placeController?action=destination&page=destinationjsp">Điểm đến</a> /
-                    <a href="placeController?action=takeListTicket&location=<%=tourTicket.getDestination()%>"> Du lịch <%= tourTicket.getDestination() %></a>/
-                    <span class="current">chi tiết tour</span>
-
-                    <!--                ============================================================-->
-                    <div class="containerdetail">
-                        <div class="left-content">
-                            <%
-                                List<String> img = new ArrayList<>();
-                                if (listImg != null) {
-                                    for (TicketImgDTO i : listImg) {
-                                        img.add(i.getImgUrl());
-                                    }
-                                }
-                            %>
-                            <% if (listImg != null && listDayDetail != null && tourTicket != null) { %>
-                            <h1><%= tourTicket.getDestination() %>: <%= tourTicket.getNametour() %></h1>
-                            <div class="gallery">
-                                <div class="thumbnails">
-                                    <% for (int i = 0; i < img.size(); i++) { %>
-                                    <img src="<%= img.get(i) %>"
-                                         onclick="showMainImage('<%= img.get(i) %>')"
-                                         class="thumbnail-img">
-                                    <% } %>
-                                </div>
-                                <div class="main-image">
-                                    <img id="mainImg" 
-                                         src="<%= img.size() > 0 ? img.get(0) : "" %>"
-                                         onclick="openModal()" 
-                                         class="main-img">
-                                </div>
-                            </div>
-                            <div id="modal" class="modal" onclick="closeModal(event)">
-                                <span class="close" onclick="closeModal(event)">&times;</span>
-                                <div class="modal-content-wrapper">
-                                    <a class="prev" onclick="changeImage(-1)">&#10094;</a>
-                                    <img class="modal-content" id="modalImg">
-                                    <a class="next" onclick="changeImage(1)">&#10095;</a>
-                                </div>
-                                <div class="modal-thumbnails-wrapper">
-                                    <div id="modalThumbnails" class="modal-thumbnails"></div>
-                                </div>
-                            </div>
-                            <div>
-                                <% for (TicketDayDetailDTO i : listDayDetail) { %>
-                                <button class="accordion">
-                                    <span class="accordion-title"><%= i.getDescription() %></span>
-                                    <span class="toggle-icon">&#x2193;</span>
-                                </button>
-                                <div class="panel">
-                                    <h3>Buổi sáng</h3>
-                                    <p><%= i.getMorning() %></p>
-                                    <h3>Buổi chiều</h3>
-                                    <p><%= i.getAfternoon() %></p>
-                                    <h3>Buổi tối</h3>
-                                    <p><%= i.getEvening() %></p>
-                                </div>
-                                <% } %>
-                            </div>
-
-                            <% } else { %>
-                            <p>Không tìm thấy thông tin chi tiết cho tour này.</p>
-                            <% } %>
-                        </div>
-
-                        <!--///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
-                        <% if(!AuthUtils.isAdmin(session)){
-                        %>
-                        <div class="right-content">
-                            <div class="price">
-                                <span class="label">Giá:</span>
-                                <span class="original-price"><%= vnd.format(tourTicket.getPrice() + 1000000) %> ₫</span> 
-                            </div>
-                            <span class="current-price"><%= vnd.format(tourTicket.getPrice())%> <span class="currency">₫</span></span> / Khách
-                            <div class="discount-note">
-                                🎁 Đặt ngay để nhận được Ưu đãi online tiết kiệm thêm <strong>1,000K</strong>
-                            </div>
-                            <ul class="tour-details">
-                                <li><span class="icon">🧾</span> Mã tour: <a href="#" class="blue"><%=tourTicket.getIdTourTicket() %></a></li>
-                                <li><span class="icon">📍</span> Khởi hành: <span class="blue"><%=tourTicket.getPlacestart() %></span></li>
-
-                                <li><span class="icon">⏳</span> Thời gian: <span class="blue"><%=tourTicket.getDuration()%></span></li>
-                            </ul>
-                            <form action="loginController" method="get" class="tour-actions">
-                                <input type="hidden" name="idTour" value="<%=tourTicket.getIdTourTicket()%>">
-                                <input type="hidden" name="action" value="order">
-                                <div class="startdate-box">
-                                    <label for="startNum">🗓️ Ngày khởi hành:</label>
-                                    <div class="startdate-select-wrap">
-                                        <select name="startNum" id="startNum">
-                                            <!--/xử lí vé nếu hết thì không hiện-->
-                                            <% if (startDates != null) {
-                                                    for (StartDateDTO sd : startDates) { 
-                                                            if(sd.getQuantity() != 0){
-                                            %>
-                                            <option value="<%= sd.getStartNum() %>">
-                                                <%= sd.getStartDate() %> (còn <%= sd.getQuantity()%> vé)
-                                            </option>
-                                            <%
-                                                    }
-                                            } 
-                                    } %>
-                                        </select>
-                                        <button type="submit" class="btn-go">Đặt ngay</button>
+            <div class="container">
+                <!-- Breadcrumb -->
+                <div class="breadcrumb-modern">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a href="placeController?action=destination&page=indexjsp">
+                                    <i class="fas fa-home me-1"></i>Trang chủ
+                                </a>
+                            </li>
+                            <li class="breadcrumb-item">
+                                <a href="placeController?action=destination&page=destinationjsp">
+                                    <i class="fas fa-map-marker-alt me-1"></i>Điểm đến
+                                </a>
+                            </li>
+                            <li class="breadcrumb-item">
+                                <a href="placeController?action=takeListTicket&location=<%=tourTicket.getDestination()%>">
+                                    <i class="fas fa-plane me-1"></i>Du lịch <%= tourTicket.getDestination() %>
+                                </a>
+                            </li>
+                            <li class="breadcrumb-item active">
+                                <i class="fas fa-info-circle me-1"></i>Chi tiết tour
+                            </li>
+                        </ol>
+                    </nav>
+                </div>
+                
+                <% if (listImg != null && listDayDetail != null && tourTicket != null) { %>
+                <div class="row">
+                    <!-- Left Content -->
+                    <div class="col-lg-8">
+                        <div class="tour-container">
+                            <div class="tour-content">
+                                <h1 class="tour-title">
+                                    <%= tourTicket.getDestination() %>: <%= tourTicket.getNametour() %>
+                                </h1>
+                                
+                                <!-- Gallery -->
+                                <div class="gallery-container">
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <div class="thumbnail-wrapper">
+                                                <% for (int i = 0; i < listImg.size(); i++) { %>
+                                                <img src="<%= listImg.get(i).getImgUrl() %>"
+                                                     onclick="showMainImage('<%= listImg.get(i).getImgUrl() %>')"
+                                                     class="thumbnail-img">
+                                                <% } %>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-10">
+                                            <div class="main-image-container">
+                                                <img id="mainImg" 
+                                                     src="<%= listImg.size() > 0 ? listImg.get(0).getImgUrl() : "" %>"
+                                                     onclick="openModal()" 
+                                                     class="main-img">
+                                                <div class="image-overlay">
+                                                    <i class="fas fa-search-plus fa-2x"></i>
+                                                    <p class="mb-0 mt-2">Nhấp để xem ảnh lớn</p>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-
-                            </form>
-                            <div class="tour-support">
-                                <button class="btn-call">📞 Gọi miễn phí qua internet</button>
-                                <button class="btn-outline">💬 Liên hệ tư vấn</button>
+                                
+                                <!-- Tour Details Accordion -->
+                                <div class="tour-accordion">
+                                    <div class="accordion" id="tourAccordion">
+                                        <% for (int i = 0; i < listDayDetail.size(); i++) { 
+                                            TicketDayDetailDTO dayDetail = listDayDetail.get(i);
+                                        %>
+                                        <div class="accordion-item">
+                                            <h2 class="accordion-header" id="heading<%= i %>">
+                                                <button class="accordion-button <%= i == 0 ? "" : "collapsed" %>" 
+                                                        type="button" 
+                                                        data-bs-toggle="collapse" 
+                                                        data-bs-target="#collapse<%= i %>" 
+                                                        aria-expanded="<%= i == 0 ? "true" : "false" %>" 
+                                                        aria-controls="collapse<%= i %>">
+                                                    <i class="fas fa-calendar-day me-2"></i>
+                                                    <%= dayDetail.getDescription() %>
+                                                </button>
+                                            </h2>
+                                            <div id="collapse<%= i %>" 
+                                                 class="accordion-collapse collapse <%= i == 0 ? "show" : "" %>" 
+                                                 aria-labelledby="heading<%= i %>" 
+                                                 data-bs-parent="#tourAccordion">
+                                                <div class="accordion-body">
+                                                    <div class="day-section">
+                                                        <h5><i class="fas fa-sun text-warning me-2"></i>Buổi sáng</h5>
+                                                        <p><%= dayDetail.getMorning() %></p>
+                                                    </div>
+                                                    <div class="day-section">
+                                                        <h5><i class="fas fa-cloud-sun text-info me-2"></i>Buổi chiều</h5>
+                                                        <p><%= dayDetail.getAfternoon() %></p>
+                                                    </div>
+                                                    <div class="day-section">
+                                                        <h5><i class="fas fa-moon text-primary me-2"></i>Buổi tối</h5>
+                                                        <p><%= dayDetail.getEvening() %></p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <% } %>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <%
-                    }
-                        %>
-
+                    </div>
+                    
+                    <!-- Right Sidebar -->
+                    <% if(!AuthUtils.isAdmin(session)){ %>
+                    <div class="col-lg-4">
+                        <div class="booking-sidebar">
+                            <!-- Price Section -->
+                            <div class="price-section">
+                                <div class="original-price">
+                                    <i class="fas fa-tag me-1"></i>
+                                    <%= vnd.format(tourTicket.getPrice() + 1000000) %> ₫
+                                </div>
+                                <div class="current-price">
+                                    <%= vnd.format(tourTicket.getPrice())%> ₫
+                                </div>
+                                <small>/ Khách</small>
+                            </div>
+                            
+                            <!-- Discount Badge -->
+                            <div class="discount-badge">
+                                <i class="fas fa-gift fa-lg"></i>
+                                <div>
+                                    <strong>Ưu đãi đặc biệt!</strong><br>
+                                    <small>Tiết kiệm ngay 1,000,000 ₫</small>
+                                </div>
+                            </div>
+                            
+                            <!-- Tour Details -->
+                            <div class="tour-details">
+                                <div class="detail-item">
+                                    <div class="detail-icon">
+                                        <i class="fas fa-barcode"></i>
+                                    </div>
+                                    <div>
+                                        <div class="detail-label">Mã tour:</div>
+                                        <div class="detail-value"><%=tourTicket.getIdTourTicket() %></div>
+                                    </div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-icon">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                    </div>
+                                    <div>
+                                        <div class="detail-label">Khởi hành:</div>
+                                        <div class="detail-value"><%=tourTicket.getPlacestart() %></div>
+                                    </div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-icon">
+                                        <i class="fas fa-clock"></i>
+                                    </div>
+                                    <div>
+                                        <div class="detail-label">Thời gian:</div>
+                                        <div class="detail-value"><%=tourTicket.getDuration()%></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Booking Form -->
+                            <form action="loginController" method="get" class="booking-form">
+                                <input type="hidden" name="idTour" value="<%=tourTicket.getIdTourTicket()%>">
+                                <input type="hidden" name="action" value="order">
+                                <div class="mb-3">
+                                    <label for="startNum" class="form-label">
+                                        <i class="fas fa-calendar-alt"></i>
+                                        Chọn ngày khởi hành
+                                    </label>
+                                    <div class="row">
+                                        <div class="col-12 mb-2">
+                                            <select name="startNum" id="startNum" class="form-select">
+                                                <% if (startDates != null) {
+                                                    for (StartDateDTO sd : startDates) { 
+                                                        if(sd.getQuantity() != 0){
+                                                %>
+                                                <option value="<%= sd.getStartNum() %>">
+                                                    <%= sd.getStartDate() %> (còn <%= sd.getQuantity()%> vé)
+                                                </option>
+                                                <%
+                                                        }
+                                                    } 
+                                                } %>
+                                            </select>
+                                        </div>
+                                        <div class="col-12">
+                                            <button type="submit" class="btn btn-booking w-100">
+                                                <i class="fas fa-shopping-cart me-2"></i>
+                                                Đặt Tour Ngay
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                            
+                            <!-- Support Buttons -->
+                            <div class="support-buttons">
+                                <button class="btn btn-call w-100">
+                                    <i class="fas fa-phone me-2"></i>
+                                    Gọi miễn phí qua internet
+                                </button>
+                                <button class="btn btn-contact w-100">
+                                    <i class="fas fa-comments me-2"></i>
+                                    Liên hệ tư vấn
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <% } %>
+                </div>
+                <% } else { %>
+                <div class="alert alert-warning" role="alert">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    Không tìm thấy thông tin chi tiết cho tour này.
+                </div>
+                <% } %>
+            </div>
+        </div>
+        
+        <!-- Image Modal -->
+        <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="imageModalLabel">
+                            <i class="fas fa-images me-2"></i>
+                            Thư viện ảnh tour
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <img id="modalImg" src="" class="modal-img" alt="Tour Image">
+                        <div class="modal-thumbnails" id="modalThumbnails"></div>
                     </div>
                 </div>
             </div>
         </div>
-        <%@include file="footer.jsp" %>
+        
+        <jsp:include page="footer.jsp"/>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+        <script>
+            function showMainImage(url) {
+                document.getElementById('mainImg').src = url;
+            }
+            
+            function openModal() {
+                const modal = new bootstrap.Modal(document.getElementById('imageModal'));
+                modal.show();
+                
+                // Reset modal content
+                document.getElementById('modalImg').src = document.getElementById('mainImg').src;
+                initModalThumbnails();
+            }
+            
+            function initModalThumbnails() {
+                const container = document.getElementById('modalThumbnails');
+                container.innerHTML = '';
+                
+                const images = document.querySelectorAll('.thumbnail-img');
+                images.forEach((img, index) => {
+                    const thumbnail = document.createElement('img');
+                    thumbnail.src = img.src;
+                    thumbnail.onclick = () => {
+                        document.getElementById('modalImg').src = img.src;
+                        highlightThumbnail(index);
+                    };
+                    container.appendChild(thumbnail);
+                });
+                
+                highlightThumbnail(Array.from(images).findIndex(img => img.src === document.getElementById('modalImg').src));
+            }
+            
+            function highlightThumbnail(index) {
+                const thumbnails = document.querySelectorAll('#modalThumbnails img');
+                thumbnails.forEach((thumb, i) => {
+                    thumb.classList.toggle('selected', i === index);
+                });
+            }
+        </script>
     </body>
-
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            var coll = document.getElementsByClassName("collapsible");
-            for (var i = 0; i < coll.length; i++) {
-                coll[i].addEventListener("click", function () {
-                    this.classList.toggle("active");
-                    var content = this.nextElementSibling;
-                    if (content.style.maxHeight) {
-                        content.style.maxHeight = null;
-                    } else {
-                        content.style.maxHeight = content.scrollHeight + "px";
-                    }
-                });
-            }
-        });
-        //====================================================================== moi sua doan duoi
-        let currentIndex = 0;
-        const images = [];
-
-        // Lấy ảnh từ thumbnails ngoài gallery để tạo mảng images
-        document.querySelectorAll('.thumbnails img').forEach((img, index) => {
-            images.push(img.src);
-        });
-
-        // Hiển thị ảnh chính bên ngoài gallery
-        function showMainImage(url) {
-            document.getElementById('mainImg').src = "" + url;
-        }
-
-        // Mở modal và khởi tạo ảnh chính + ảnh nhỏ
-        function openModal() {
-            const modal = document.getElementById('modal');
-            modal.style.display = "block";
-            showModalImage(currentIndex);
-            initModalThumbnails();
-        }
-
-        // Đóng modal
-        function closeModal(event) {
-            if (event.target.id === 'modal' || event.target.className === 'close') {
-                document.getElementById('modal').style.display = "none";
-            }
-        }
-
-        // Chuyển ảnh trong modal (prev/next)
-        function changeImage(direction) {
-            currentIndex += direction;
-            if (currentIndex < 0)
-                currentIndex = images.length - 1;
-            if (currentIndex >= images.length)
-                currentIndex = 0;
-            showModalImage(currentIndex);
-        }
-
-        // Hiển thị ảnh trong modal
-        function showModalImage(index) {
-            currentIndex = index;
-            document.getElementById('modalImg').src = images[currentIndex];
-            highlightThumbnail(currentIndex);
-            // Đồng bộ main image bên ngoài gallery
-            document.getElementById('mainImg').src = images[currentIndex];
-        }
-
-        // Khởi tạo ảnh nhỏ trong modal
-        function initModalThumbnails() {
-            const container = document.getElementById('modalThumbnails');
-            container.innerHTML = '';
-            images.forEach((src, index) => {
-                const img = document.createElement('img');
-                img.src = src;
-                img.onclick = () => {
-                    showModalImage(index);
-                };
-                container.appendChild(img);
-            });
-            highlightThumbnail(currentIndex);
-        }
-
-        // Tô viền đỏ ảnh thumbnail đang chọn trong modal
-        function highlightThumbnail(index) {
-            const thumbnails = document.querySelectorAll('#modalThumbnails img');
-            thumbnails.forEach((thumb, i) => {
-                thumb.classList.toggle('selected', i === index);
-            });
-        }
-
-        document.addEventListener("DOMContentLoaded", function () {
-            var acc = document.getElementsByClassName("accordion");
-            for (var i = 0; i < acc.length; i++) {
-                acc[i].addEventListener("click", function () {
-                    // Toggle mũi tên
-                    this.classList.toggle("active");
-
-                    var panel = this.nextElementSibling;
-                    if (panel.style.maxHeight) {
-                        panel.style.maxHeight = null;
-                    } else {
-                        panel.style.maxHeight = panel.scrollHeight + "px"; // Để đảm bảo hiệu ứng mở rộng chính xác
-                    }
-                });
-            }
-        });
-
-    </script>
 </html>
