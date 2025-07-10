@@ -724,7 +724,7 @@
                         TÓM TẮT CHUYẾN ĐI
                     </div>
                     <div class="tour-info">
-                        <img src="assets/images/places/<%=tour.getImg_Tour()%>" alt="<%=tour.getDestination()%>">
+                        <img src="<%=tour.getImg_Tour()%>" alt="<%=tour.getDestination()%>">
                         <div class="tour-details">
                             <p class="tour-code">Mã tour <strong><%=tour.getIdTourTicket()%></strong></p>
                             <p><strong><%=tour.getDestination()%>:</strong> <%=tour.getNametour()%></p>

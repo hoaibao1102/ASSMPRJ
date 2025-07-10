@@ -135,7 +135,7 @@
 
             .tour-img {
                 width: 100%;
-                height: 280px;
+                height: 100%;
                 object-fit: cover;
             }
 
@@ -456,7 +456,7 @@
                             <div class="row g-0">
                                 <div class="col-md-5">
                                     <div style="height: 100%; overflow: hidden;">
-                                        <img class="tour-img" src="assets/images/places/<%=t.getImg_Tour()%>" alt="<%=t.getNametour()%>">
+                                        <img class="tour-img" src="<%=t.getImg_Tour()%>" alt="<%=t.getNametour()%>">
                                     </div>
                                 </div>
                                 <div class="col-md-7">

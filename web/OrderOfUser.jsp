@@ -585,7 +585,7 @@
                                                     </div>
 
                                                     <div class="order-image">
-                                                        <img src="assets/images/places/${tourImgMap[order.idTour]}" alt="Tour image" class="img-fluid">
+                                                        <img src="${tourImgMap[order.idTour]}" alt="Tour image" class="img-fluid">
                                                     </div>
 
                                                     <div class="order-details">

@@ -48,6 +48,11 @@
                 color: var(--text-primary);
             }
 
+            .admin-layout .content {
+                margin-left: 250px; /* hoặc 200px, tùy chiều rộng sidebar admin */
+                padding-top: 1rem;
+            }
+
             /* Header Styles */
             .vietnam-header {
                 background: var(--gradient-primary);
@@ -187,6 +192,7 @@
             }
 
             .tour-title {
+                height: 90px;
                 font-size: 1.5rem;
                 font-weight: 700;
                 color: var(--text-primary);
@@ -738,8 +744,10 @@
                 </form>
             </c:if>
         </div>
-
-        <%@include file="footer.jsp" %>
+        <c:if test="${sessionScope.nameUser.role != 'AD'}">
+            <%@include file="footer.jsp" %>
+        </c:if>
+        
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
         <script>

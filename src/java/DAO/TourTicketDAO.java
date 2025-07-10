@@ -130,8 +130,37 @@ public class TourTicketDAO implements IDAO<TourTicketDTO, String> {
     @Override
     public List<TourTicketDTO> readAll() {
 
-        return null;
+        String sql = SELECT_QUERY;
+                
+        List<TourTicketDTO> list = new ArrayList<>();
+        try {
+            Connection conn = DBUtils.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
 
+            while (rs.next()) {
+                TourTicketDTO newT = new TourTicketDTO(
+                        rs.getString("idTourTicket"),
+                        rs.getInt("idplace"),
+                        rs.getString("destination"),
+                        rs.getString("placestart"),
+                        rs.getString("duration"),
+                        rs.getDouble("price"),
+                        rs.getString("transport_name"),
+                        rs.getString("nametour"),
+                        rs.getString("img_Tour"),
+                        rs.getInt("status") == 1);
+
+                list.add(newT);
+            }
+            return list;
+
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(TourTicketDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(TourTicketDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
 
     @Override

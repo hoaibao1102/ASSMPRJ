@@ -615,7 +615,7 @@
                     <i class="fas fa-ticket-alt me-2"></i>
                     PHIẾU XÁC NHẬN BOOKING
                 </h3>
-                <img src="assets/images/places/<%=tour.getImg_Tour()%>" alt="Tour" class="tour-image">
+                <img src="<%=tour.getImg_Tour()%>" alt="Tour" class="tour-image">
                 
                 <div class="tour-info">
                     <p>

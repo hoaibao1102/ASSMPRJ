@@ -5,7 +5,6 @@
  */
 package Controller;
 
-
 import DAO.PlacesDAO;
 import DAO.StartDateDAO;
 import DAO.TourTicketDAO;
@@ -28,14 +27,13 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
-
 /**
  *
  * @author MSI PC
  */
 @WebServlet(name = "loginController", urlPatterns = {"/loginController"})
 public class loginController extends HttpServlet {
-
+    private static final String INDEX_PAGE = "index.jsp";
     private static final String LOGIN_PAGE = "LoginForm.jsp";
 
     /**
@@ -57,7 +55,6 @@ public class loginController extends HttpServlet {
         TourTicketDAO tdao = new TourTicketDAO();
         placeController pcl = new placeController();
         StartDateDAO stDao = new StartDateDAO();
-        
 
         try {
             if (action == null) {
@@ -67,33 +64,35 @@ public class loginController extends HttpServlet {
                 String txtEmailOrPhone = request.getParameter("txtEmailOrPhone");
                 String txtPassword = request.getParameter("txtPassword");
 
-                if (AuthUtils.isValidLogin(txtEmailOrPhone, txtPassword) ) {
+                if (AuthUtils.isValidLogin(txtEmailOrPhone, txtPassword)) {
                     // Lấy user và lưu vào session
                     UserDTO user = AuthUtils.getUser(txtEmailOrPhone);
                     session = request.getSession(true);
                     session.setAttribute("nameUser", user);
-                    
-                    
+
                     // Kiểm tra session có lưu URL redirect không
                     String redirectUrl = (String) session.getAttribute("redirectAfterLogin");
                     if (redirectUrl != null) {
-                        //di vao chi tiet tour    
-                        String idTour = (String) session.getAttribute("idTour");
-                        int startNum = (int) session.getAttribute("startNum");
-                        
-                        if (idTour != null && !idTour.trim().isEmpty()) {
-                            TourTicketDTO tourTicket = tdao.readbyID(idTour);
-                            StartDateDTO stDate = stDao.searchDetailDate(idTour, startNum);
-                            
-                            session.setAttribute("stDate", stDate);
-                            request.getSession().setAttribute("tourTicket", tourTicket);
-                            session.removeAttribute("idTour"); // Xóa sau khi dùng
-                        }
-                        url = redirectUrl;
+                        if (UTILS.AuthUtils.isCustomer(session)) {
+                            //di vao chi tiet tour    
+                            String idTour = (String) session.getAttribute("idTour");
+                            int startNum = (int) session.getAttribute("startNum");
+
+                            if (idTour != null && !idTour.trim().isEmpty()) {
+                                TourTicketDTO tourTicket = tdao.readbyID(idTour);
+                                StartDateDTO stDate = stDao.searchDetailDate(idTour, startNum);
+
+                                session.setAttribute("stDate", stDate);
+                                request.getSession().setAttribute("tourTicket", tourTicket);
+                                session.removeAttribute("idTour"); // Xóa sau khi dùng
+                            }
+                            url = redirectUrl;
+                        }else url = INDEX_PAGE;
+
                         session.removeAttribute("redirectAfterLogin");
 
                     } else {
-                       // Gọi hàm getFeaturedPlaces để lấy danh sách địa điểm và gán vào request
+                        // Gọi hàm getFeaturedPlaces để lấy danh sách địa điểm và gán vào request
                         pcl.getAllDestination(request, response);
                         url = "index.jsp";
                     }
@@ -120,16 +119,16 @@ public class loginController extends HttpServlet {
                     if (idTour != null && !idTour.trim().isEmpty()) {
                         TourTicketDTO tour = tdao.readbyID(idTour);
                         StartDateDTO stDate = stDao.searchDetailDate(idTour, startNum);
-                        
+
                         session.setAttribute("stDate", stDate);
                         session.setAttribute("tourTicket", tour);
-                        
+
                         url = "BookingStep1.jsp";
                     }
-                    
+
                 } else {
                     // Chưa login => lưu trang cần redirect sau login, rồi chuyển tới login page
-                    session = request.getSession(true);
+                    session = request.getSession(false);
                     if (idTour != null) {
                         session.setAttribute("idTour", idTour);
                         session.setAttribute("startNum", startNum);
@@ -190,6 +189,7 @@ public class loginController extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
-    
-   
 }
+
+
+

@@ -31,7 +31,7 @@
             
             .user-manager-center {
                 max-width: 1200px;
-                margin: 0 auto;
+                margin: 0 0 0 20% ;
             }
             
             .user-manager-title {

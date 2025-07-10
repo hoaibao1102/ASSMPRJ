@@ -30,20 +30,22 @@
                 --text-medium: #6B7280;
                 --gradient-primary: linear-gradient(135deg, #0EA5E9, #10B981);
                 --gradient-secondary: linear-gradient(135deg, #FF6B35, #F59E0B);
+
+                --vietnam-blue: #0EA5E9;
             }
-            
+
             body {
                 padding-top: 100px;
                 background: #FEFEFE;
                 font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
                 line-height: 1.6;
             }
-            
+
             .content {
                 min-height: 100vh;
                 padding: 2rem 0;
             }
-            
+
             /* Breadcrumb */
             .breadcrumb-modern {
                 background: var(--gradient-primary);
@@ -51,25 +53,37 @@
                 margin-bottom: 2rem;
                 border-radius: 10px;
             }
-            
-            .breadcrumb-modern .breadcrumb {
-                background: none;
-                padding: 0;
-                margin: 0;
-                font-size: 1.1rem;
+
+            .custom-breadcrumb {
+                background: linear-gradient(90deg, rgba(14,165,233,0.1) 0%, rgba(16,185,129,0.1) 100%);
+                border-radius: 50px;
+                padding: 1rem 2rem;
+                margin: 2rem 0;
+                border: 1px solid rgba(14,165,233,0.2);
+                box-shadow: 0 2px 10px rgba(14,165,233,0.1);
             }
-            
-            .breadcrumb-modern .breadcrumb-item a {
-                color: var(--primary-orange);
+
+            .custom-breadcrumb a {
+                color: var(--vietnam-blue);
                 text-decoration: none;
                 font-weight: 600;
+                transition: all 0.3s ease;
             }
-            
-            .breadcrumb-modern .breadcrumb-item.active {
-                color: var(--text-dark);
+
+            .custom-breadcrumb a:hover {
+                color: var(--vietnam-emerald);
+                text-decoration: underline;
+            }
+
+            .custom-breadcrumb .current {
+                color: var(--text-primary);
                 font-weight: 700;
             }
-            
+
+            .custom-breadcrumb i {
+                color: var(--vietnam-coral);
+            }
+
             /* Main Container */
             .tour-container {
                 background: white;
@@ -78,12 +92,12 @@
                 margin-bottom: 2rem;
                 border: 1px solid #e5e7eb;
             }
-            
+
             /* Left Content */
             .tour-content {
                 padding: 2rem;
             }
-            
+
             .tour-title {
                 font-size: 2.5rem;
                 font-weight: 700;
@@ -96,7 +110,7 @@
                 text-transform: uppercase;
                 letter-spacing: 2px;
             }
-            
+
             /* Gallery */
             .gallery-container {
                 background: #f8f9fa;
@@ -104,26 +118,26 @@
                 padding: 1.5rem;
                 margin-bottom: 2rem;
             }
-            
+
             .thumbnail-wrapper {
                 max-height: 450px;
                 overflow-y: auto;
                 padding-right: 10px;
             }
-            
+
             .thumbnail-wrapper::-webkit-scrollbar {
                 width: 6px;
             }
-            
+
             .thumbnail-wrapper::-webkit-scrollbar-track {
                 background: #f1f1f1;
             }
-            
+
             .thumbnail-wrapper::-webkit-scrollbar-thumb {
                 background: var(--primary-orange);
                 border-radius: 10px;
             }
-            
+
             .thumbnail-img {
                 width: 100%;
                 height: 80px;
@@ -134,24 +148,24 @@
                 border: 2px solid transparent;
                 transition: border-color 0.3s;
             }
-            
+
             .thumbnail-img:hover {
                 border-color: var(--primary-orange);
             }
-            
+
             .main-image-container {
                 position: relative;
                 border-radius: 10px;
                 overflow: hidden;
             }
-            
+
             .main-img {
                 width: 100%;
                 height: 400px;
                 object-fit: cover;
                 cursor: pointer;
             }
-            
+
             .image-overlay {
                 position: absolute;
                 bottom: 0;
@@ -161,12 +175,12 @@
                 color: white;
                 padding: 1rem;
             }
-            
+
             /* Accordion */
             .tour-accordion {
                 margin-top: 2rem;
             }
-            
+
             .accordion-button {
                 background: var(--gradient-secondary);
                 color: white;
@@ -176,12 +190,12 @@
                 padding: 1rem 1.5rem;
                 border-radius: 10px !important;
             }
-            
+
             .accordion-button:not(.collapsed) {
                 background: var(--gradient-primary);
                 color: white;
             }
-            
+
             .accordion-button::after {
                 background-image: none;
                 content: "\f107";
@@ -189,18 +203,18 @@
                 font-weight: 900;
                 font-size: 1.2rem;
             }
-            
+
             .accordion-button:not(.collapsed)::after {
                 transform: rotate(180deg);
             }
-            
+
             .accordion-body {
                 background: white;
                 border-radius: 0 0 10px 10px;
                 padding: 1.5rem;
                 border: none;
             }
-            
+
             .day-section {
                 background: white;
                 border-radius: 8px;
@@ -208,7 +222,7 @@
                 margin-bottom: 1rem;
                 border-left: 4px solid var(--primary-orange);
             }
-            
+
             .day-section h5 {
                 color: var(--text-dark);
                 font-weight: 700;
@@ -217,7 +231,7 @@
                 align-items: center;
                 gap: 0.5rem;
             }
-            
+
             /* Right Sidebar */
             .booking-sidebar {
                 background: white;
@@ -226,7 +240,7 @@
                 margin-top: 2rem;
                 border: 1px solid #e5e7eb;
             }
-            
+
             .price-section {
                 text-align: center;
                 margin-bottom: 2rem;
@@ -235,19 +249,19 @@
                 border-radius: 10px;
                 color: white;
             }
-            
+
             .original-price {
                 font-size: 1.1rem;
                 text-decoration: line-through;
                 opacity: 0.8;
                 margin-bottom: 0.5rem;
             }
-            
+
             .current-price {
                 font-size: 2.5rem;
                 font-weight: 700;
             }
-            
+
             .discount-badge {
                 background: var(--secondary-yellow);
                 color: var(--text-dark);
@@ -259,14 +273,14 @@
                 align-items: center;
                 gap: 0.5rem;
             }
-            
+
             .tour-details {
                 background: #f8f9fa;
                 border-radius: 10px;
                 padding: 1.5rem;
                 margin-bottom: 2rem;
             }
-            
+
             .detail-item {
                 display: flex;
                 align-items: center;
@@ -274,11 +288,11 @@
                 padding: 0.75rem 0;
                 border-bottom: 1px solid #e5e7eb;
             }
-            
+
             .detail-item:last-child {
                 border-bottom: none;
             }
-            
+
             .detail-icon {
                 width: 35px;
                 height: 35px;
@@ -290,17 +304,17 @@
                 color: white;
                 font-size: 1.1rem;
             }
-            
+
             .detail-label {
                 font-weight: 600;
                 color: var(--text-dark);
             }
-            
+
             .detail-value {
                 color: var(--primary-orange);
                 font-weight: 600;
             }
-            
+
             .booking-form {
                 background: #f8f9fa;
                 border-radius: 10px;
@@ -308,7 +322,7 @@
                 margin-bottom: 2rem;
                 border: 1px solid #e5e7eb;
             }
-            
+
             .form-label {
                 font-weight: 600;
                 color: var(--text-dark);
@@ -317,14 +331,14 @@
                 align-items: center;
                 gap: 0.5rem;
             }
-            
+
             .form-select {
                 border: 1px solid #d1d5db;
                 border-radius: 10px;
                 padding: 0.75rem;
                 font-weight: 500;
             }
-            
+
             .btn-booking {
                 background: var(--gradient-secondary);
                 border: none;
@@ -335,11 +349,11 @@
                 text-transform: uppercase;
                 letter-spacing: 1px;
             }
-            
+
             .btn-booking:hover {
                 background: linear-gradient(135deg, #e55a2b 0%, #d88906 100%);
             }
-            
+
             .support-buttons .btn {
                 border-radius: 10px;
                 padding: 0.75rem 1rem;
@@ -347,41 +361,41 @@
                 margin-bottom: 0.5rem;
                 border: 1px solid;
             }
-            
+
             .btn-call {
                 background: var(--gradient-primary);
                 border-color: var(--primary-blue);
                 color: white;
             }
-            
+
             .btn-contact {
                 background: transparent;
                 border-color: var(--primary-orange);
                 color: var(--primary-orange);
             }
-            
+
             .btn-contact:hover {
                 background: var(--primary-orange);
                 color: white;
             }
-            
+
             /* Modal */
             .modal-content {
                 border-radius: 10px;
                 border: none;
             }
-            
+
             .modal-header {
                 background: var(--gradient-secondary);
                 color: white;
                 border: none;
                 padding: 1.5rem;
             }
-            
+
             .modal-body {
                 padding: 0;
             }
-            
+
             .modal-thumbnails {
                 display: flex;
                 gap: 0.5rem;
@@ -389,9 +403,9 @@
                 padding: 1rem;
                 background: #f8f9fa;
             }
-            
+
             .modal-thumbnails img {
-                width: 80px;
+                width: 60px;
                 height: 60px;
                 object-fit: cover;
                 border-radius: 8px;
@@ -400,30 +414,33 @@
                 flex-shrink: 0;
                 transition: border-color 0.3s;
             }
-            
+
             .modal-thumbnails img:hover,
             .modal-thumbnails img.selected {
                 border-color: var(--primary-orange);
             }
             
+            img{
+                width: 95%;
+            }
             /* Responsive */
             @media (max-width: 768px) {
                 .tour-title {
                     font-size: 2rem;
                 }
-                
+
                 .tour-content {
                     padding: 1.5rem;
                 }
-                
+
                 .booking-sidebar {
                     margin-top: 2rem;
                 }
-                
+
                 .main-img {
                     height: 250px;
                 }
-                
+
                 .thumbnail-wrapper {
                     max-height: 200px;
                 }
@@ -442,31 +459,17 @@
         <div class="content">
             <div class="container">
                 <!-- Breadcrumb -->
-                <div class="breadcrumb-modern">
-                    <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item">
-                                <a href="placeController?action=destination&page=indexjsp">
-                                    <i class="fas fa-home me-1"></i>Trang chủ
-                                </a>
-                            </li>
-                            <li class="breadcrumb-item">
-                                <a href="placeController?action=destination&page=destinationjsp">
-                                    <i class="fas fa-map-marker-alt me-1"></i>Điểm đến
-                                </a>
-                            </li>
-                            <li class="breadcrumb-item">
-                                <a href="placeController?action=takeListTicket&location=<%=tourTicket.getDestination()%>">
-                                    <i class="fas fa-plane me-1"></i>Du lịch <%= tourTicket.getDestination() %>
-                                </a>
-                            </li>
-                            <li class="breadcrumb-item active">
-                                <i class="fas fa-info-circle me-1"></i>Chi tiết tour
-                            </li>
-                        </ol>
-                    </nav>
+                <div class="custom-breadcrumb">
+                    <i class="fas fa-home me-2"></i>
+                    <a href="placeController?action=destination&page=indexjsp">Trang chủ</a>
+                    <i class="fas fa-chevron-right mx-2"></i>
+                    <a href="placeController?action=destination&page=destinationjsp">Điểm đến</a>
+                    <i class="fas fa-chevron-right mx-2"></i>
+                    <a href="placeController?action=takeListTicket&location=<%=tourTicket.getDestination()%>">Du lịch <%= tourTicket.getDestination() %></a>
+                    <i class="fas fa-chevron-right mx-2"></i>
+                    <span class="current">Chi tiết tour</span>
                 </div>
-                
+
                 <% if (listImg != null && listDayDetail != null && tourTicket != null) { %>
                 <div class="row">
                     <!-- Left Content -->
@@ -476,7 +479,7 @@
                                 <h1 class="tour-title">
                                     <%= tourTicket.getDestination() %>: <%= tourTicket.getNametour() %>
                                 </h1>
-                                
+
                                 <!-- Gallery -->
                                 <div class="gallery-container">
                                     <div class="row">
@@ -503,7 +506,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                
+
                                 <!-- Tour Details Accordion -->
                                 <div class="tour-accordion">
                                     <div class="accordion" id="tourAccordion">
@@ -548,7 +551,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Right Sidebar -->
                     <% if(!AuthUtils.isAdmin(session)){ %>
                     <div class="col-lg-4">
@@ -564,7 +567,7 @@
                                 </div>
                                 <small>/ Khách</small>
                             </div>
-                            
+
                             <!-- Discount Badge -->
                             <div class="discount-badge">
                                 <i class="fas fa-gift fa-lg"></i>
@@ -573,7 +576,7 @@
                                     <small>Tiết kiệm ngay 1,000,000 ₫</small>
                                 </div>
                             </div>
-                            
+
                             <!-- Tour Details -->
                             <div class="tour-details">
                                 <div class="detail-item">
@@ -604,7 +607,7 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <!-- Booking Form -->
                             <form action="loginController" method="get" class="booking-form">
                                 <input type="hidden" name="idTour" value="<%=tourTicket.getIdTourTicket()%>">
@@ -639,7 +642,7 @@
                                     </div>
                                 </div>
                             </form>
-                            
+
                             <!-- Support Buttons -->
                             <div class="support-buttons">
                                 <button class="btn btn-call w-100">
@@ -663,7 +666,7 @@
                 <% } %>
             </div>
         </div>
-        
+
         <!-- Image Modal -->
         <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -682,47 +685,47 @@
                 </div>
             </div>
         </div>
-        
+
         <jsp:include page="footer.jsp"/>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
         <script>
-            function showMainImage(url) {
-                document.getElementById('mainImg').src = url;
-            }
-            
-            function openModal() {
-                const modal = new bootstrap.Modal(document.getElementById('imageModal'));
-                modal.show();
-                
-                // Reset modal content
-                document.getElementById('modalImg').src = document.getElementById('mainImg').src;
-                initModalThumbnails();
-            }
-            
-            function initModalThumbnails() {
-                const container = document.getElementById('modalThumbnails');
-                container.innerHTML = '';
-                
-                const images = document.querySelectorAll('.thumbnail-img');
-                images.forEach((img, index) => {
-                    const thumbnail = document.createElement('img');
-                    thumbnail.src = img.src;
-                    thumbnail.onclick = () => {
-                        document.getElementById('modalImg').src = img.src;
-                        highlightThumbnail(index);
-                    };
-                    container.appendChild(thumbnail);
-                });
-                
-                highlightThumbnail(Array.from(images).findIndex(img => img.src === document.getElementById('modalImg').src));
-            }
-            
-            function highlightThumbnail(index) {
-                const thumbnails = document.querySelectorAll('#modalThumbnails img');
-                thumbnails.forEach((thumb, i) => {
-                    thumb.classList.toggle('selected', i === index);
-                });
-            }
+                                                         function showMainImage(url) {
+                                                             document.getElementById('mainImg').src = url;
+                                                         }
+
+                                                         function openModal() {
+                                                             const modal = new bootstrap.Modal(document.getElementById('imageModal'));
+                                                             modal.show();
+
+                                                             // Reset modal content
+                                                             document.getElementById('modalImg').src = document.getElementById('mainImg').src;
+                                                             initModalThumbnails();
+                                                         }
+
+                                                         function initModalThumbnails() {
+                                                             const container = document.getElementById('modalThumbnails');
+                                                             container.innerHTML = '';
+
+                                                             const images = document.querySelectorAll('.thumbnail-img');
+                                                             images.forEach((img, index) => {
+                                                                 const thumbnail = document.createElement('img');
+                                                                 thumbnail.src = img.src;
+                                                                 thumbnail.onclick = () => {
+                                                                     document.getElementById('modalImg').src = img.src;
+                                                                     highlightThumbnail(index);
+                                                                 };
+                                                                 container.appendChild(thumbnail);
+                                                             });
+
+                                                             highlightThumbnail(Array.from(images).findIndex(img => img.src === document.getElementById('modalImg').src));
+                                                         }
+
+                                                         function highlightThumbnail(index) {
+                                                             const thumbnails = document.querySelectorAll('#modalThumbnails img');
+                                                             thumbnails.forEach((thumb, i) => {
+                                                                 thumb.classList.toggle('selected', i === index);
+                                                             });
+                                                         }
         </script>
     </body>
 </html>

@@ -206,7 +206,7 @@
             .card-img-wrapper {
                 position: relative;
                 overflow: hidden;
-                height: 220px;
+                height: 300px;
             }
 
             .card-img-top {
@@ -260,7 +260,7 @@
                 display: flex;
                 flex-direction: column;
                 justify-content: space-between;
-                height: 100%;
+                height: 40%;
             }
 
             .card-title {
@@ -685,7 +685,7 @@
                                                     <div class="mt-auto">
                                                         <button type="submit" class="btn btn-book w-100">
                                                             <i class="fas fa-ticket-alt"></i>
-                                                            Đặt tour ngay
+                                                            Xem thêm
                                                         </button>
                                                     </div>
                                                 </div>

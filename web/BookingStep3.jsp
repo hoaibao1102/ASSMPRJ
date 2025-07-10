@@ -635,7 +635,7 @@
                                 PHIẾU XÁC NHẬN BOOKING
                             </h3>
 
-                            <img src="assets/images/places/<%= tourImage %>" alt="Tour" class="tour-image">
+                            <img src="<%= tourImage %>" alt="Tour" class="tour-image">
                             
                             <div class="tour-info">
                                 <p><strong><i class="fas fa-map-marker-alt me-2"></i><%= tour != null ? tour.getDestination() : "" %>:</strong> <%= tour != null ? tour.getNametour() : "" %></p>

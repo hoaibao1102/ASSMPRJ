@@ -8,105 +8,79 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
-<html lang="vi">
+<html>
     <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <title>VN Tours</title>
         <!-- Bootstrap CSS -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
         <!-- Font Awesome -->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+        <!-- Google Fonts -->
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
         <style>
-            /* header */
             :root {
-                /* Bảng màu chính - Tropical Vietnam */
-                --primary-blue: #0EA5E9;
-                --primary-orange: #FF6B35;
-                --primary-green: #10B981;
-                /* Bảng màu phụ */
-                --golden-yellow: #F59E0B;
-                --purple: #8B5CF6;
-                --pearl-white: #FEFEFE;
-                /* Gradient */
-                --gradient-main: linear-gradient(135deg, #0EA5E9, #10B981);
-                --gradient-secondary: linear-gradient(135deg, #FF6B35, #F59E0B);
-                --gradient-accent: linear-gradient(135deg, #8B5CF6, #0EA5E9);
-                /* Màu text */
-                --text-dark: #1F2937;
-                --text-medium: #6B7280;
-                --text-light: #9CA3AF;
-                /* Màu nền */
+                --primary-color: #ff6b35;
+                --secondary-color: #2c3e50;
+                --accent-color: #f39c12;
+                --text-dark: #2c3e50;
+                --text-light: #7f8c8d;
                 --bg-light: #f8f9fa;
-                --bg-white: #ffffff;
-                /* Header height */
-                --header-height: 70px;
             }
-            /* Body padding to prevent content being hidden behind fixed header */
-            body {
-                padding-top: var(--header-height);
+
+            * {
+                font-family: 'Poppins', sans-serif;
             }
-            /* ===== HEADER STYLES (for regular users) ===== */
-            .header {
-                background: var(--gradient-main);
-                padding: 0;
-                box-shadow: 0 2px 10px rgba(14, 165, 233, 0.15);
-                position: fixed; /* ← ADDED: Fixed position */
-                top: 0; /* ← ADDED: Stick to top */
-                left: 0; /* ← ADDED: Start from left */
-                right: 0; /* ← ADDED: Extend to right */
-                z-index: 1030; /* ← UPDATED: Higher z-index than Bootstrap's default */
-                width: 100%; /* ← ADDED: Full width */
-                height: var(--header-height); /* ← ADDED: Fixed height */
-            }
-            .header::after {
-                content: '';
-                position: absolute;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                height: 2px;
-                background: var(--gradient-secondary);
-            }
+
+            /* Header Styles */
             .navbar {
-                padding: 0.75rem 0;
-                height: 100%; /* ← ADDED: Full height of header */
-                display: flex;
-                align-items: center;
-            }
-            .navbar-brand {
-                color: var(--pearl-white) !important;
-                font-size: 1.75rem;
-                font-weight: 700;
-                text-decoration: none;
+                background: rgba(255, 255, 255, 0.95);
+                backdrop-filter: blur(10px);
+                box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+                padding: 1rem 0;
                 transition: all 0.3s ease;
+            }
+
+            .navbar.scrolled {
+                background: rgba(255, 255, 255, 0.98);
+                backdrop-filter: blur(15px);
+            }
+
+            .navbar-brand {
+                font-size: 1.8rem;
+                font-weight: 700;
+                color: var(--primary-color) !important;
+                text-decoration: none;
                 display: flex;
                 align-items: center;
-                gap: 0.5rem;
+                gap: 10px;
             }
-            .navbar-brand:hover {
-                color: var(--golden-yellow) !important;
-                transform: scale(1.05);
-            }
+
             .navbar-brand i {
-                font-size: 1.5rem;
-                color: var(--golden-yellow);
+                font-size: 2rem;
+                color: var(--accent-color);
             }
+
             .navbar-nav .nav-link {
-                color: var(--pearl-white) !important;
+                color: var(--text-dark) !important;
                 font-weight: 500;
-                padding: 0.5rem 1rem !important;
-                border-radius: 6px;
+                margin: 0 10px;
+                padding: 10px 15px !important;
+                border-radius: 25px;
                 transition: all 0.3s ease;
                 position: relative;
-                margin: 0 0.25rem;
+                border: none;
+                background: none;
             }
+
             .navbar-nav .nav-link:hover {
-                color: var(--golden-yellow) !important;
-                background: rgba(255, 255, 255, 0.1);
+                color: var(--primary-color) !important;
+                background: rgba(255, 107, 53, 0.1);
                 transform: translateY(-2px);
             }
+
             .navbar-nav .nav-link::after {
                 content: '';
                 position: absolute;
@@ -114,322 +88,317 @@
                 left: 50%;
                 width: 0;
                 height: 2px;
-                background: var(--golden-yellow);
+                background: var(--primary-color);
                 transition: all 0.3s ease;
                 transform: translateX(-50%);
             }
+
             .navbar-nav .nav-link:hover::after {
                 width: 80%;
             }
-            .navbar-nav .btn {
-                background: none;
-                border: none;
-                color: var(--pearl-white) !important;
-                font-weight: 500;
-                padding: 0.5rem 1rem;
-                border-radius: 6px;
-                transition: all 0.3s ease;
-                position: relative;
-                margin: 0 0.25rem;
-            }
-            .navbar-nav .btn:hover {
-                color: var(--golden-yellow) !important;
-                background: rgba(255, 255, 255, 0.1);
-                transform: translateY(-2px);
-            }
+
+            /* Search Bar */
             .search-container {
                 position: relative;
-                margin: 0 1rem;
+                max-width: 300px;
             }
-            .search-form {
-                display: flex;
-                align-items: center;
-                background: var(--bg-white);
-                border-radius: 25px;
-                padding: 0.25rem;
-                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-                transition: all 0.3s ease;
-                min-width: 250px;
-            }
-            .search-form:focus-within {
-                box-shadow: 0 4px 15px rgba(14, 165, 233, 0.2);
-                transform: translateY(-2px);
-            }
+
             .search-input {
-                border: none;
-                outline: none;
-                padding: 0.5rem 1rem;
-                flex: 1;
-                background: transparent;
-                font-size: 0.95rem;
+                background: rgba(248, 249, 250, 0.9);
+                border: 2px solid transparent;
+                border-radius: 25px;
+                padding: 10px 45px 10px 20px;
+                font-size: 14px;
+                transition: all 0.3s ease;
+                width: 100%;
                 color: var(--text-dark);
             }
-            .search-input::placeholder {
-                color: var(--text-medium);
+
+            .search-input:focus {
+                outline: none;
+                border-color: var(--primary-color);
+                background: #fff;
+                box-shadow: 0 0 10px rgba(255, 107, 53, 0.2);
             }
+
             .search-btn {
-                background: var(--gradient-secondary);
+                position: absolute;
+                right: 5px;
+                top: 50%;
+                transform: translateY(-50%);
+                background: var(--primary-color);
                 border: none;
-                color: var(--pearl-white);
-                padding: 0.5rem 1rem;
-                border-radius: 20px;
-                cursor: pointer;
-                transition: all 0.3s ease;
-                display: flex;
-                align-items: center;
-                gap: 0.5rem;
-            }
-            .search-btn:hover {
-                transform: scale(1.05);
-                box-shadow: 0 2px 8px rgba(255, 107, 53, 0.3);
-            }
-            .auth-section {
-                display: flex;
-                align-items: center;
-                gap: 0.75rem;
-            }
-            .auth-btn {
-                background: var(--gradient-secondary);
-                border: none;
-                color: var(--pearl-white);
-                padding: 0.5rem 1.25rem;
-                border-radius: 20px;
-                text-decoration: none;
-                font-weight: 500;
-                transition: all 0.3s ease;
-                display: inline-flex;
-                align-items: center;
-                gap: 0.5rem;
-            }
-            .auth-btn:hover {
-                color: var(--pearl-white);
-                transform: translateY(-2px);
-                box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
-            }
-            .auth-btn.secondary {
-                background: transparent;
-                border: 2px solid var(--pearl-white);
-            }
-            .auth-btn.secondary:hover {
-                background: var(--pearl-white);
-                color: var(--primary-blue);
-            }
-            .logout-btn {
-                background: var(--gradient-accent);
-                border: none;
-                color: var(--pearl-white);
-                padding: 0.5rem 1.25rem;
-                border-radius: 20px;
-                cursor: pointer;
-                transition: all 0.3s ease;
-                font-weight: 500;
-                display: inline-flex;
-                align-items: center;
-                gap: 0.5rem;
-            }
-            .logout-btn:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
-            }
-            .user-dropdown-container {
-                position: relative;
-            }
-            .user-circle {
-                width: 45px;
-                height: 45px;
                 border-radius: 50%;
-                background: var(--gradient-secondary);
-                color: var(--pearl-white);
+                width: 35px;
+                height: 35px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #fff;
+                transition: all 0.3s ease;
+            }
+
+            .search-btn:hover {
+                background: #e55a2b;
+                transform: translateY(-50%) scale(1.1);
+            }
+
+            /* User Profile */
+            .user-profile {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                cursor: pointer;
+                padding: 8px 15px;
+                border-radius: 25px;
+                transition: all 0.3s ease;
+                border: 2px solid transparent;
+            }
+
+            .user-profile:hover {
+                background: rgba(255, 107, 53, 0.1);
+                border-color: var(--primary-color);
+            }
+
+            .user-avatar {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 font-weight: 700;
-                font-size: 1.1rem;
-                cursor: pointer;
-                transition: all 0.3s ease;
-                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+                color: #fff;
+                border: 2px solid rgba(255, 107, 53, 0.3);
             }
-            .user-circle:hover {
-                transform: scale(1.1);
+
+            .user-name {
+                color: var(--text-dark);
+                font-weight: 500;
+                margin-left: 8px;
+            }
+
+            /* Auth Buttons */
+            .auth-buttons .btn {
+                margin: 0 5px;
+                padding: 10px 20px;
+                border-radius: 25px;
+                font-weight: 500;
+                transition: all 0.3s ease;
+            }
+
+            .btn-register {
+                background: transparent;
+                color: var(--primary-color);
+                border: 2px solid var(--primary-color);
+            }
+
+            .btn-register:hover {
+                background: var(--primary-color);
+                color: #fff;
+                transform: translateY(-2px);
+            }
+
+            .btn-login {
+                background: var(--primary-color);
+                color: #fff;
+                border: 2px solid var(--primary-color);
+            }
+
+            .btn-login:hover {
+                background: #e55a2b;
+                transform: translateY(-2px);
+            }
+
+            .btn-logout {
+                background: #e74c3c;
+                color: #fff;
+                border: 2px solid #e74c3c;
+            }
+
+            .btn-logout:hover {
+                background: #c0392b;
+                transform: translateY(-2px);
+            }
+
+            /* Cart */
+            .cart-icon {
+                position: relative;
+                background: var(--accent-color);
+                color: #fff;
+                padding: 12px 16px;
+                border-radius: 25px;
+                text-decoration: none;
+                transition: all 0.3s ease;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+
+            .cart-icon:hover {
+                background: #d68910;
+                transform: translateY(-2px);
+                color: #fff;
+                text-decoration: none;
+            }
+
+            .cart-count {
+                background: #fff;
+                color: var(--accent-color);
+                border-radius: 50%;
+                padding: 2px 8px;
+                font-size: 12px;
+                font-weight: 700;
+                min-width: 20px;
+                text-align: center;
+            }
+
+            /* Hotline */
+            .hotline {
+                background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+                color: #fff;
+                padding: 10px 20px;
+                border-radius: 25px;
+                text-decoration: none;
+                font-weight: 600;
+                transition: all 0.3s ease;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+
+            .hotline:hover {
+                background: linear-gradient(135deg, #e55a2b, #d68910);
+                transform: translateY(-2px);
+                color: #fff;
+                text-decoration: none;
                 box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
             }
-            .user-dropdown-menu {
-                position: absolute;
-                top: 60px;
-                right: 0;
-                background: var(--bg-white);
-                border-radius: 12px;
-                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-                min-width: 250px;
-                z-index: 1000;
-                opacity: 0;
-                visibility: hidden;
-                transform: translateY(-10px);
-                transition: all 0.3s ease;
-                border: 1px solid rgba(14, 165, 233, 0.1);
-                overflow: hidden;
-            }
-            .user-dropdown-menu.show {
-                opacity: 1;
-                visibility: visible;
-                transform: translateY(0);
-            }
-            .user-dropdown-menu::before {
-                content: '';
-                position: absolute;
-                top: -8px;
-                right: 20px;
-                width: 0;
-                height: 0;
-                border-left: 8px solid transparent;
-                border-right: 8px solid transparent;
-                border-bottom: 8px solid var(--bg-white);
-            }
-            .dropdown-header {
-                padding: 1rem;
-                text-align: center;
-                background: var(--gradient-main);
-                color: var(--pearl-white);
-                font-weight: 600;
 
+            .hotline i {
+                animation: pulse 2s infinite;
             }
+
+            @keyframes pulse {
+                0%, 100% {
+                    transform: scale(1);
+                }
+                50% {
+                    transform: scale(1.1);
+                }
+            }
+
+            /* Dropdown Menu */
+            .dropdown-menu {
+                border: none;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+                border-radius: 15px;
+                padding: 15px 0;
+                margin-top: 10px;
+                background: #fff;
+            }
+
             .dropdown-item {
-
-                width: 100%;
-                padding: 0.75rem 1rem;
+                padding: 12px 25px;
+                transition: all 0.3s ease;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                color: var(--text-dark);
                 border: none;
                 background: none;
                 width: 100%;
                 text-align: left;
-                cursor: pointer;
-                transition: all 0.3s ease;
-                font-size: 0.95rem;
-                color: var(--text-dark);
-                display: flex;
-                align-items: center;
-                gap: 0.75rem;
-                text-decoration: none;
             }
+
             .dropdown-item:hover {
-                background: var(--bg-light);
-                color: var(--primary-blue);
+                background: rgba(255, 107, 53, 0.1);
+                color: var(--primary-color);
                 transform: translateX(5px);
             }
+
             .dropdown-item i {
-                color: var(--primary-blue);
-                font-size: 1rem;
+                width: 20px;
+                text-align: center;
             }
-            .dropdown-item-form {
-                margin: 0;
-                padding: 0;
-            }
-            /* ===== ADMIN SIDEBAR STYLES ===== */
+
+            /* Admin Sidebar */
             .admin-sidebar {
                 position: fixed;
                 top: 0;
                 left: 0;
                 height: 100vh;
                 width: 260px;
-                background: var(--gradient-main);
-                padding: 1.5rem 1rem;
-                color: var(--pearl-white);
-                display: flex;
-                flex-direction: column;
+                background: linear-gradient(135deg, var(--secondary-color), #34495e);
+                color: #fff;
                 z-index: 1000;
-                box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+                overflow-y: auto;
+                box-shadow: 5px 0 15px rgba(0,0,0,0.1);
             }
+
             .sidebar-header {
-                font-size: 1.75rem;
-                font-weight: 700;
-                margin-bottom: 2rem;
+                padding: 30px 20px;
                 text-align: center;
-                padding-bottom: 1rem;
-                border-bottom: 2px solid rgba(255, 255, 255, 0.2);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: 0.5rem;
+                background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+                margin-bottom: 20px;
             }
-            .sidebar-header i {
-                color: var(--golden-yellow);
-            }
-            .sidebar-menu {
-                list-style: none;
-                padding: 0;
+
+            .sidebar-header h3 {
                 margin: 0;
-                flex: 1;
+                font-size: 1.5rem;
+                font-weight: 700;
             }
-            .sidebar-menu li {
-                margin: 0.5rem 0;
+
+            .sidebar-nav {
+                padding: 0 10px;
             }
-            .sidebar-menu a,
-            .sidebar-menu button {
-                color: var(--pearl-white);
-                text-decoration: none;
-                font-size: 1rem;
-                background: none;
-                border: none;
-                cursor: pointer;
+
+            .sidebar-nav .nav-item {
+                margin: 8px 0;
+            }
+
+            .sidebar-nav .nav-link {
+                color: #bdc3c7;
+                padding: 15px 20px;
+                border-radius: 10px;
                 transition: all 0.3s ease;
-                width: 100%;
-                padding: 0.75rem 1rem;
                 display: flex;
                 align-items: center;
-                gap: 0.75rem;
-                border-radius: 8px;
-                position: relative;
-                overflow: hidden;
+                gap: 15px;
+                border: none;
+                background: none;
+                width: 100%;
+                text-align: left;
             }
-            .sidebar-menu a:hover,
-            .sidebar-menu button:hover {
-                background: rgba(255, 255, 255, 0.1);
+
+            .sidebar-nav .nav-link:hover {
+                background: rgba(255, 107, 53, 0.2);
+                color: #fff;
                 transform: translateX(5px);
             }
-            .sidebar-menu a::before,
-            .sidebar-menu button::before {
-                content: '';
-                position: absolute;
-                left: 0;
-                top: 0;
-                bottom: 0;
-                width: 0;
-                background: var(--golden-yellow);
-                transition: width 0.3s ease;
+
+            .sidebar-nav .nav-link i {
+                width: 20px;
+                text-align: center;
             }
-            .sidebar-menu a:hover::before,
-            .sidebar-menu button:hover::before {
-                width: 4px;
-            }
-            .sidebar-menu form {
-                margin: 0;
-                width: 100%;
-            }
-            /* Body padding adjustment for admin layout */
-            body.admin-layout {
-                padding-top: 0;
-                margin-left: 260px;
-            }
-            /* Responsive */
-            @media (max-width: 991.98px) {
-                .search-container {
-                    margin: 0.5rem 0;
-                    order: 3;
-                    width: 100%;
-                }
-                .search-form {
-                    min-width: 100%;
-                }
-                .auth-section {
-                    margin-top: 0.5rem;
-                }
-            }
-            @media (max-width: 767.98px) {
+
+            /* Mobile Responsive */
+            @media (max-width: 768px) {
                 .navbar-brand {
                     font-size: 1.5rem;
                 }
-                .user-dropdown-menu {
-                    right: -50px;
-                    min-width: 200px;
+
+                .search-container {
+                    max-width: 200px;
+                }
+
+                .user-name {
+                    display: none;
+                }
+
+                .hotline span {
+                    display: none;
                 }
 
                 .admin-sidebar {
@@ -437,23 +406,10 @@
                     transform: translateX(-100%);
                     transition: transform 0.3s ease;
                 }
+
                 .admin-sidebar.show {
                     transform: translateX(0);
                 }
-                body.admin-layout {
-                    margin-left: 0;
-                }
-            }
-            /* Smooth animations */
-            * {
-                transition: all 0.3s ease;
-            }
-            /* Focus states for accessibility */
-            .search-input:focus,
-            .navbar-nav .btn:focus,
-            .dropdown-item:focus {
-                outline: 2px solid var(--golden-yellow);
-                outline-offset: 2px;
             }
         </style>
     </head>
@@ -466,209 +422,191 @@
         %>
 
         <% if (isAdmin) { %>
-        <!-- Admin Sidebar Layout -->
-        <div class="admin-sidebar" id="adminSidebar">
+        <!-- Admin Sidebar -->
+        <div class="admin-sidebar">
             <div class="sidebar-header">
-                <i class="fas fa-cog"></i>
-                Admin Panel
+                <h3><i class="fas fa-cog"></i> Admin Panel</h3>
             </div>
-            <ul class="sidebar-menu">
-                <li>
-                    <a href="placeController?action=destination&page=indexjsp">
-                        <i class="fas fa-home"></i>
-                        Trang chủ
+            <nav class="sidebar-nav">
+                <div class="nav-item">
+                    <a href="placeController?action=destination&page=indexjsp" class="nav-link">
+                        <i class="fas fa-home"></i> Trang chủ
                     </a>
-                </li>
-                <li>
-                    <a href="placeController?action=destination&page=destinationjsp">
-                        <i class="fas fa-map-marker-alt"></i>
-                        Quản lý điểm đến
+                </div>
+                <div class="nav-item">
+                    <a href="placeController?action=destination&page=destinationjsp" class="nav-link">
+                        <i class="fas fa-map-marker-alt"></i> Quản lý điểm đến
                     </a>
-                </li>
-                <li>
-                    <a href="userController">
-                        <i class="fas fa-users"></i>
-                        Quản lý người dùng
+                </div>
+                <div class="nav-item">
+                    <a href="userController" class="nav-link">
+                        <i class="fas fa-users"></i> Quản lý người dùng
                     </a>
-                </li>
-                <li>
-                    <form action="loginController" method="post">
+                </div>
+                <div class="nav-item">
+                    <form action="loginController" method="post" class="m-0">
                         <input type="hidden" name="action" value="logout" />
-                        <button type="submit" class="logout-btn">
-                            <i class="fas fa-sign-out-alt"></i>
-                            Đăng xuất
+                        <button type="submit" class="nav-link btn btn-link text-start w-100 border-0">
+                            <i class="fas fa-sign-out-alt"></i> Đăng xuất
                         </button>
                     </form>
                 </div>
             </nav>
         </div>
         <% } else { %>
-        <!-- Regular Header Layout -->
-        <header class="header">
-            <nav class="navbar navbar-expand-lg">
-                <div class="container">
-                    <a class="navbar-brand" href="placeController?action=destination&page=indexjsp">
-                        <i class="fas fa-plane"></i>
-                        VN Tours
-                    </a>
+        <!-- Regular Header -->
+        <nav class="navbar navbar-expand-lg fixed-top" id="mainNavbar">
+            <div class="container">
+                <a class="navbar-brand" href="placeController?action=destination&page=indexjsp">
+                    <i class="fas fa-plane"></i> VN Tours
+                </a>
 
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
-                            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
 
-                    <div class="collapse navbar-collapse" id="navbarNav">
-                        <ul class="navbar-nav me-auto">
-                            <li class="nav-item">
-                                <form action="MainController" method="get" class="d-inline">
-                                    <input type="hidden" name="action" value="destination">
-                                    <input type="hidden" name="page" value="indexjsp">
-                                    <button type="submit" class="btn nav-link">
-                                        <i class="fas fa-home"></i>
-                                        Trang chủ
-                                    </button>
-                                </form>
-                            </li>
-                            <li class="nav-item">
-                                <form action="MainController" method="get" class="d-inline">
-                                    <input type="hidden" name="action" value="destination">
-                                    <input type="hidden" name="page" value="destinationjsp">
-                                    <button type="submit" class="btn nav-link">
-                                        <i class="fas fa-map-marker-alt"></i>
-                                        Điểm đến
-                                    </button>
-                                </form>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="about.jsp">
-                                    <i class="fas fa-info-circle"></i>
-                                    Giới thiệu
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="contact.jsp">
-                                    <i class="fas fa-phone"></i>
-                                    Liên hệ
-                                </a>
-                            </li>
-                        </ul>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <form action="MainController" method="get" class="d-inline">
+                                <input type="hidden" name="action" value="destination">
+                                <input type="hidden" name="page" value="indexjsp">
+                                <button type="submit" class="nav-link btn btn-link">
+                                    <i class="fas fa-home"></i> Trang chủ
+                                </button>
+                            </form>
+                        </li>
+                        <li class="nav-item">
+                            <form action="MainController" method="get" class="d-inline">
+                                <input type="hidden" name="action" value="destination">
+                                <input type="hidden" name="page" value="destinationjsp">
+                                <button type="submit" class="nav-link btn btn-link">
+                                    <i class="fas fa-map-marker-alt"></i> Điểm đến
+                                </button>
+                            </form>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="about.jsp">
+                                <i class="fas fa-info-circle"></i> Giới thiệu
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="contact.jsp">
+                                <i class="fas fa-envelope"></i> Liên hệ
+                            </a>
+                        </li>
+                    </ul>
 
-                        <div class="d-flex align-items-center flex-wrap">
-                            <!-- Search Form -->
-                            <div class="search-container">
-                                <form action="MainController" method="get" class="search-form">
-                                    <input type="hidden" name="action" value="search">
-                                    <input type="text" class="search-input" name="searchItem" 
-                                           placeholder="Tìm kiếm địa điểm..." value="<%= searchTour %>">
-                                    <button type="submit" class="search-btn">
-                                        <i class="fas fa-search"></i>
-                                    </button>
-                                </form>
-                            </div>
+                    <div class="d-flex align-items-center gap-3">
+                        <!-- Search Bar -->
+                        <form action="MainController" method="get" class="search-container">
+                            <input type="hidden" name="action" value="search">
+                            <input type="text" class="search-input" name="searchItem" 
+                                   placeholder="Tìm kiếm tour..." value="<%= searchTour %>" >
+                            <button type="submit" class="search-btn">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </form>
 
-                            <!-- Auth Section -->
-                            <div class="auth-section">
-                                <% if (user == null) { %>
-                                <a href="RegisForm.jsp" class="auth-btn secondary">
-                                    <i class="fas fa-user-plus"></i>
-                                    Đăng ký
-                                </a>
-                                <a href="LoginForm.jsp" class="auth-btn">
-                                    <i class="fas fa-sign-in-alt"></i>
-                                    Đăng nhập
-                                </a>
-                                <% } else { %>
-                                <!-- User Dropdown -->
-                                <div class="user-dropdown-container">
-                                    <div class="user-circle" onclick="toggleUserDropdown()" 
-                                         title="<%= user.getFullName() %>">
+                        <!-- Hotline -->
+                        <a href="tel:1900xxxx" class="hotline">
+                            <i class="fas fa-phone"></i>
+                            <span>1900-xxxx</span>
+                        </a>
+
+                        <!-- Auth Section -->
+                        <% if (user == null) { %>
+                        <div class="auth-buttons">
+                            <a href="RegisForm.jsp" class="btn btn-register">Đăng ký</a>
+                            <a href="LoginForm.jsp" class="btn btn-login">Đăng nhập</a>
+                        </div>
+                        <% } else { %>
+                        <div class="d-flex align-items-center gap-2">
+
+
+                            <!-- User Dropdown -->
+                            <div class="dropdown">
+                                <div class="user-profile" data-bs-toggle="dropdown">
+                                    <div class="user-avatar">
                                         <%= user.getFullName().trim().substring(0,1).toUpperCase() %>
                                     </div>
-
-                                    <div class="user-dropdown-menu" id="userDropdownMenu">
-                                        <div class="dropdown-header">
-                                            <strong><%= user.getFullName() %></strong>
-                                        </div>
-
-                                        <form action="MainController" method="post" class="dropdown-item-form">
+                                    <span class="user-name"><%= user.getFullName() %></span>
+                                    <i class="fas fa-chevron-down"></i>
+                                </div>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <form action="MainController" method="post" class="d-inline">
                                             <input type="hidden" name="action" value="editProfile" />
                                             <input type="hidden" name="userId" value="<%= user.getIdUser() %>" />
                                             <button type="submit" class="dropdown-item">
-                                                <i class="fas fa-user-edit"></i>
-                                                Chỉnh sửa hồ sơ
+                                                <i class="fas fa-user-edit"></i> Chỉnh sửa hồ sơ
                                             </button>
                                         </form>
-
-                                        <form action="MainController" method="post" class="dropdown-item-form">
+                                    </li>
+                                    <li>
+                                        <form action="MainController" method="post" class="d-inline">
                                             <input type="hidden" name="action" value="orderOfUser" />
                                             <input type="hidden" name="userId" value="<%= user.getIdUser() %>" />
                                             <button type="submit" class="dropdown-item">
-                                                <i class="fas fa-history"></i>
-                                                Lịch sử giao dịch
+                                                <i class="fas fa-history"></i> Lịch sử giao dịch
                                             </button>
                                         </form>
-                                    </div>
-                                </div>
+                                    </li>
+                                    <li>
+                                        <a href="wishlist.jsp" class="cart-icon">
+                                            <i class="fas fa-heart"></i>
+                                            <span class="cart-count" id="favoriteCount">0</span>
+                                        </a>
+                                    </li>
 
-                                <form action="loginController" method="post" class="d-inline">
-                                    <input type="hidden" name="action" value="logout" />
-                                    <button type="submit" class="logout-btn">
-                                        <i class="fas fa-sign-out-alt"></i>
-                                        Đăng xuất
-                                    </button>
-                                </form>
-                                <% } %>
+                                </ul>
+
+
                             </div>
 
+                            <!-- Logout Button -->
+                            <form action="loginController" method="post" class="d-inline">
+                                <input type="hidden" name="action" value="logout" />
+                                <button type="submit" class="btn btn-logout">
+                                    <i class="fas fa-sign-out-alt"></i> Đăng xuất
+                                </button>
+                            </form>
                         </div>
                         <% } %>
                     </div>
                 </div>
-            </nav>
-        </header>
-
+            </div>
+        </nav>
         <% } %>
 
         <!-- Bootstrap JS -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
         <script>
-                                        function toggleUserDropdown() {
-                                            const dropdown = document.getElementById("userDropdownMenu");
-                                            dropdown.classList.toggle("show");
-                                        }
+            // Navbar scroll effect
+            window.addEventListener('scroll', function () {
+                const navbar = document.getElementById('mainNavbar');
+                if (window.scrollY > 50) {
+                    navbar.classList.add('scrolled');
+                } else {
+                    navbar.classList.remove('scrolled');
+                }
+            });
 
-                                        // Close dropdown when clicking outside
-                                        document.addEventListener('click', function (event) {
-                                            const userContainer = document.querySelector('.user-dropdown-container');
-                                            const dropdown = document.getElementById("userDropdownMenu");
+            // Update cart count function
+            function updateFavoriteCount(count) {
+                const favoriteCountElement = document.getElementById('favoriteCount');
+                if (favoriteCountElement) {
+                    favoriteCountElement.textContent = count;
+                }
+            }
 
-                                            if (userContainer && !userContainer.contains(event.target)) {
-                                                dropdown.classList.remove("show");
-                                            }
-                                        });
 
-                                        // Mobile admin sidebar toggle (if needed)
-                                        function toggleAdminSidebar() {
-                                            const sidebar = document.getElementById("adminSidebar");
-                                            if (sidebar) {
-                                                sidebar.classList.toggle("show");
-                                            }
-                                        }
-
-                                        // Close mobile menu when clicking outside
-                                        document.addEventListener('click', function (event) {
-                                            const navbarCollapse = document.getElementById('navbarNav');
-                                            const navbarToggler = document.querySelector('.navbar-toggler');
-
-                                            if (navbarCollapse && navbarToggler) {
-                                                if (!navbarCollapse.contains(event.target) && !navbarToggler.contains(event.target)) {
-                                                    const bsCollapse = new bootstrap.Collapse(navbarCollapse, {
-                                                        toggle: false
-                                                    });
-                                                    bsCollapse.hide();
-                                                }
-                                            }
-                                        });
+            // Example usage
+            // updateCartCount(3);
         </script>
     </body>
 </html>
+
+
+

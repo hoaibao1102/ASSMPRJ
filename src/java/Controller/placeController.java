@@ -512,8 +512,11 @@ public class placeController extends HttpServlet {
             request.setAttribute("searchTourInfor", searchItem);
             return "ResultSearchForm.jsp";
 
+        }else {
+            List<TourTicketDTO> tour2 = tdao.readAll();
+            request.setAttribute("tourList2", tour2);
+            return "ResultSearchForm.jsp";
         }
-        return null;
 
     }
 
