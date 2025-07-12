@@ -24,6 +24,7 @@ public class MainController extends HttpServlet {
     private static final String PLACE_CONTROLLER = "placeController";
     private static final String USER_CONTROLLER = "userController";
     private static final String ORDER_CONTROLLER = "orderController";
+    private static final String VOUCHER_CONTROLLER = "voucherController";
 
     private boolean isUserAction(String action) {
         return "login".equals(action)
@@ -33,6 +34,15 @@ public class MainController extends HttpServlet {
                 || "editProfile".equals(action)
                 || "updateProfile".equals(action)
                 || "addFavoriteTour".equals(action);
+    }
+    
+    private boolean isVoucherAction(String action) {
+        return "goVoucherPage".equals(action) 
+                || "goCreateNewVoucherForm".equals(action)
+                || "createNewVoucher".equals(action)
+                || "reuseVoucher".equals(action)
+                || "goReuseVoucherForm".equals(action)
+                || "deleteVoucher".equals(action);
     }
 
     private boolean isPlaceAction(String action) {
@@ -86,6 +96,8 @@ public class MainController extends HttpServlet {
                 url = USER_CONTROLLER;
             } else if (isPlaceAction(action)) {
                 url = PLACE_CONTROLLER;
+            }else if (isVoucherAction(action)) {
+                url = VOUCHER_CONTROLLER;
             }
 
         } finally {

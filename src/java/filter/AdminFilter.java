@@ -109,7 +109,8 @@ public class AdminFilter implements Filter {
         HttpSession session = httpRequest.getSession(false);
 
         if (requestURI.contains("/UserManager.jsp") || requestURI.contains("/createPlace.jsp")
-                || requestURI.contains("/createTicketForm.jsp")) {
+                || requestURI.contains("/createTicketForm.jsp") || requestURI.contains("/voucherForm.jsp") 
+                || requestURI.contains("/vouchersManagement.jsp")) {
 
             if (!UTILS.AuthUtils.isAdmin(session)) {
                 httpRequest.setAttribute("errorMessage", "You don't have permission to access this page. Admin access required.");
