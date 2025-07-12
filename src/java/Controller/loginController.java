@@ -5,12 +5,14 @@
  */
 package Controller;
 
+import DAO.FavoritesDAO;
 import DAO.PlacesDAO;
 import DAO.StartDateDAO;
 import DAO.TourTicketDAO;
 import DAO.TicketImgDAO;
 import DAO.UserDAO;
 import DAO.VoucherDAO;
+import DTO.FavoritesDTO;
 import DTO.PlacesDTO;
 import DTO.StartDateDTO;
 import DTO.TourTicketDTO;
@@ -35,6 +37,7 @@ import java.util.List;
  */
 @WebServlet(name = "loginController", urlPatterns = {"/loginController"})
 public class loginController extends HttpServlet {
+
     private static final String INDEX_PAGE = "index.jsp";
     private static final String LOGIN_PAGE = "LoginForm.jsp";
 
@@ -57,6 +60,7 @@ public class loginController extends HttpServlet {
         TourTicketDAO tdao = new TourTicketDAO();
         placeController pcl = new placeController();
         StartDateDAO stDao = new StartDateDAO();
+        FavoritesDAO fDAO = new FavoritesDAO();
 
         try {
             if (action == null) {
@@ -74,29 +78,74 @@ public class loginController extends HttpServlet {
 
                     // Kiểm tra session có lưu URL redirect không
                     String redirectUrl = (String) session.getAttribute("redirectAfterLogin");
-                    if (redirectUrl != null) {
-                        if (UTILS.AuthUtils.isCustomer(session)) {
-                            //di vao chi tiet tour    
-                            String idTour = (String) session.getAttribute("idTour");
-                            int startNum = (int) session.getAttribute("startNum");
+                    String actionCheck = (String) session.getAttribute("action");
 
-                            if (idTour != null && !idTour.trim().isEmpty()) {
-                                TourTicketDTO tourTicket = tdao.readbyID(idTour);
-                                StartDateDTO stDate = stDao.searchDetailDate(idTour, startNum);
+                    if (redirectUrl != null && actionCheck != null) {
+                        switch (actionCheck) {
+                            case "order": {
+                                if (AuthUtils.isCustomer(session)) {
+                                    String idTour = (String) session.getAttribute("idTour");
+                                    Integer startNum = (Integer) session.getAttribute("startNum");
 
-                                session.setAttribute("stDate", stDate);
-                                request.getSession().setAttribute("tourTicket", tourTicket);
-                                session.removeAttribute("idTour"); // Xóa sau khi dùng
+                                    if (idTour != null && startNum != null) {
+                                        TourTicketDTO tourTicket = tdao.readbyID(idTour);
+                                        StartDateDTO stDate = stDao.searchDetailDate(idTour, startNum);
+                                        session.setAttribute("stDate", stDate);
+                                        session.setAttribute("tourTicket", tourTicket);
+                                        session.removeAttribute("idTour");
+                                        session.removeAttribute("startNum");
+                                    }
+                                    url = redirectUrl;
+                                } else {
+                                    url = INDEX_PAGE;
+                                }
+                                break;
                             }
-                            url = redirectUrl;
-                        }else url = INDEX_PAGE;
+                            case "addFavoriteTour": {
+                                String pendingFavoriteTourId = (String) session.getAttribute("pendingFavoriteTourId");
+                                if (pendingFavoriteTourId != null) {
+                                    FavoritesDTO favo = new FavoritesDTO(user.getIdUser(), pendingFavoriteTourId);
+                                    if (fDAO.create(favo)) {
+                                        session.setAttribute("message", "Đã thêm vào yêu thích sau khi đăng nhập!");
+                                    } else {
+                                        session.setAttribute("message", "Tour đã nằm trong danh sách yêu thích.");
+                                    }
+                                    session.removeAttribute("pendingFavoriteTourId");
+                                }
+                                String location1 = (String) session.getAttribute("location1");
 
+                                PlacesDAO pdao = new PlacesDAO();
+                                StartDateDAO stdDAO = new StartDateDAO();
+                                // ✅ Load lại danh sách tour dựa vào location
+                                if (location1 != null && !location1.trim().isEmpty()) {
+                                    location1 = location1.trim();
+                                    List<TourTicketDTO> tourList = tdao.searchByDestination(location1);
+                                    String discriptionPlaces = pdao.readByName(location1).getDescription();
+
+                                    for (int i = 0; i < tourList.size(); i++) {
+                                        List<StartDateDTO> startDateTour = stdDAO.search(tourList.get(i).getIdTourTicket());
+                                        request.setAttribute("startDateTour" + (i + 1), startDateTour);
+                                    }
+
+                                    request.setAttribute("tourList", tourList);
+                                    request.setAttribute("discriptionPlaces", discriptionPlaces);
+                                    request.setAttribute("location", location1);
+                                    session.setAttribute("message", "Đã thêm vào yêu thích!");
+                                    url = "TourTicketForm.jsp";
+                                    session.removeAttribute("location1");
+                                }
+                                break;
+                            }
+                            default:
+                                url = INDEX_PAGE;
+                                break;
+                        }
+                        session.removeAttribute("action");
                         session.removeAttribute("redirectAfterLogin");
-
                     } else {
                         // Gọi hàm getFeaturedPlaces để lấy danh sách địa điểm và gán vào request
                         pcl.getAllDestination(request, response);
-                        url = "index.jsp";
+                        url = INDEX_PAGE;
                     }
                 } else {
                     request.setAttribute("message", "Invalid login account");
@@ -111,37 +160,6 @@ public class loginController extends HttpServlet {
                 // Gọi hàm getFeaturedPlaces để lấy danh sách địa điểm và gán vào request
                 pcl.getAllDestination(request, response);
                 url = "index.jsp";
-
-            } else if ("order".equals(action)) {
-                String idTour = (String) request.getParameter("idTour");
-                int startNum = Integer.parseInt(request.getParameter("startNum"));
-                // Truy cập trang đặt hàng
-                // kiểm tra login chưa 
-                if (AuthUtils.isLoggedIn(session)) {
-                    if (idTour != null && !idTour.trim().isEmpty()) {
-                        TourTicketDTO tour = tdao.readbyID(idTour);
-                        StartDateDTO stDate = stDao.searchDetailDate(idTour, startNum);
-                        VoucherDAO vcdao = new VoucherDAO();
-                        List<VoucherDTO> listVouchers = vcdao.getAllVoucherActive();
-                        request.setAttribute("listVouchers", listVouchers);
-                        session.setAttribute("stDate", stDate);
-                        session.setAttribute("tourTicket", tour);
-
-                        url = "BookingStep1.jsp";
-                    }
-
-                } else {
-                    // Chưa login => lưu trang cần redirect sau login, rồi chuyển tới login page
-                    session = request.getSession(false);
-                    if (idTour != null) {
-                        session.setAttribute("idTour", idTour);
-                        session.setAttribute("startNum", startNum);
-                    }
-                    session.setAttribute("redirectAfterLogin", "BookingStep1.jsp");
-                    url = LOGIN_PAGE;
-                    request.setAttribute("message", "Login to place order");
-                }
-
             } else {
                 // Các action khác, về trang đăng nhập mặc định
                 url = LOGIN_PAGE;
@@ -194,6 +212,3 @@ public class loginController extends HttpServlet {
     }// </editor-fold>
 
 }
-
-
-

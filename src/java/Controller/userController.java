@@ -4,12 +4,16 @@
  */
 package Controller;
 
+import DAO.FavoritesDAO;
 import DAO.OrderDAO;
+import DAO.PlacesDAO;
 import DAO.StartDateDAO;
 import DAO.TourTicketDAO;
 import DAO.UserDAO;
+import DTO.FavoritesDTO;
 import DTO.OrderDTO;
 import DTO.StartDateDTO;
+import DTO.TourTicketDTO;
 import DTO.UserDTO;
 import UTILS.AuthUtils;
 import UTILS.PasswordUtils;
@@ -36,12 +40,15 @@ public class userController extends HttpServlet {
     UserDAO udao = new UserDAO();
     OrderDAO odao = new OrderDAO();
     StartDateDAO stdao = new StartDateDAO();
+    FavoritesDAO fDAO = new FavoritesDAO();
+    TourTicketDAO tdao = new TourTicketDAO();
+    private static final String LOGIN_PAGE = "LoginForm.jsp";
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html;charset=UTF-8");
-
+        HttpSession session = request.getSession(false);
         String url = "about.jsp";
         try {
             String action = request.getParameter("action");
@@ -53,6 +60,57 @@ public class userController extends HttpServlet {
                 url = handleUserEditing(request, response);
             } else if ("updateProfile".equals(action)) {
                 url = handleUserUpdating(request);
+            } else if ("addFavoriteTour".equals(action)) {
+                String idTourTicket = request.getParameter("idTourTicket");
+                String referer = request.getParameter("referer");
+                String idUserStr = request.getParameter("idUser");
+                String location1 = request.getParameter("location");
+
+                PlacesDAO pdao = new PlacesDAO();
+                StartDateDAO stdDAO = new StartDateDAO();
+
+                // Nếu chưa login → lưu redirect và yêu cầu đăng nhập
+                if (!AuthUtils.isLoggedIn(session) || idUserStr == null || idUserStr.isEmpty()) {
+                    session.setAttribute("redirectAfterLogin", referer != null ? referer : "index.jsp");
+                    session.setAttribute("pendingFavoriteTourId", idTourTicket);
+                    session.setAttribute("location1", location1);
+                    session.setAttribute("action", "addFavoriteTour");
+                    request.setAttribute("message", "Login to favorite this tour.");
+                    url = LOGIN_PAGE;
+                } else {
+                    // Đã login → xử lý thêm vào yêu thích
+                    try {
+                        int idUser = Integer.parseInt(idUserStr);
+                        FavoritesDTO favo = new FavoritesDTO(idUser, idTourTicket);
+                        boolean isAdded = fDAO.create(favo);
+
+                        if (isAdded) {
+                            session.setAttribute("message", "Đã thêm vào yêu thích!");
+                        } else {
+                            session.setAttribute("message", "Tour đã nằm trong danh sách yêu thích.");
+                        }
+                    } catch (NumberFormatException e) {
+                        session.setAttribute("message", "Lỗi: ID người dùng không hợp lệ.");
+                    }
+
+                    // ✅ Load lại danh sách tour dựa vào location
+                    if (location1 != null && !location1.trim().isEmpty()) {
+                        location1 = location1.trim();
+                        List<TourTicketDTO> tourList = tdao.searchByDestination(location1);
+                        String discriptionPlaces = pdao.readByName(location1).getDescription();
+
+                        for (int i = 0; i < tourList.size(); i++) {
+                            List<StartDateDTO> startDateTour = stdDAO.search(tourList.get(i).getIdTourTicket());
+                            request.setAttribute("startDateTour" + (i + 1), startDateTour);
+                        }
+
+                        request.setAttribute("tourList", tourList);
+                        request.setAttribute("discriptionPlaces", discriptionPlaces);
+                        request.setAttribute("location", location1);
+
+                        url = "TourTicketForm.jsp";
+                    }
+                }
             }
         } catch (Exception e) {
             e.printStackTrace(); // ✅ In lỗi để debug
@@ -166,9 +224,9 @@ public class userController extends HttpServlet {
             String currentPwd = request.getParameter("txtCurrentPassword");
             String newPwd = request.getParameter("txtNewPassword");
             String confirmPwd = request.getParameter("txtConfirmNewPassword");
-            
+
             String REGEX_FULLNAME = "^(?=.{2,20}$)[\\p{L}]+(?:[ ]+[\\p{L}]+)*$";
-            
+
             /* ------------------- 1. Validate cơ bản ------------------- */
             Map<String, String> err = new HashMap<>();
 
@@ -191,7 +249,7 @@ public class userController extends HttpServlet {
                     = !(isBlank(currentPwd) && isBlank(newPwd) && isBlank(confirmPwd));
 
             UserDTO currentUser = udao.readbyID(String.valueOf(idUser)); // đọc 1 lần
-            
+
             if (wantsPwdChange) {
                 if (isBlank(currentPwd)) {
                     err.put("txtCurrentPassword_error", "Vui lòng nhập mật khẩu hiện tại");
@@ -262,4 +320,5 @@ public class userController extends HttpServlet {
         String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
         return email.matches(emailRegex);
     }
+
 }
