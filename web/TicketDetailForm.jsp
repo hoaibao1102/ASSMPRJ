@@ -609,7 +609,7 @@
                             </div>
 
                             <!-- Booking Form -->
-                            <form action="loginController" method="get" class="booking-form">
+                            <form action="MainController" method="get" class="booking-form">
                                 <input type="hidden" name="idTour" value="<%=tourTicket.getIdTourTicket()%>">
                                 <input type="hidden" name="action" value="order">
                                 <div class="mb-3">

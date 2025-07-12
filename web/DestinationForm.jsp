@@ -425,8 +425,7 @@
                                                 <p>${place.description}</p>
 
                                                 <input type="hidden" name="location" value="${place.placeName}" />
-                                                <input type="hidden" name="img" value="${place.img}" />
-                                                <input type="hidden" name="description" value="${place.description}" />
+                                                
 
                                                 <div class="btn-group">
                                                     <button type="submit" name="action" value="takeListTicket" class="btn-overlay blue">
@@ -435,6 +434,8 @@
                                                     </button>
 
                                                     <c:if test="${sessionScope.nameUser.role eq 'AD'}">
+                                                        <input type="hidden" name="img" value="${place.img}" />
+                                                        <input type="hidden" name="description" value="${place.description}" />
                                                         <button type="submit" name="action" value="updatePlace" class="btn-overlay orange">
                                                             <i class="fas fa-edit" aria-hidden="true"></i>
                                                             Cập nhật

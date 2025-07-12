@@ -31,7 +31,8 @@ public class MainController extends HttpServlet {
                 || "orderOfUser".equals(action)
                 || "listUser".equals(action)
                 || "editProfile".equals(action)
-                || "updateProfile".equals(action);
+                || "updateProfile".equals(action)
+                || "addFavoriteTour".equals(action);
     }
 
     private boolean isPlaceAction(String action) {
@@ -49,13 +50,15 @@ public class MainController extends HttpServlet {
                 || "deleteTicket".equals(action)
                 || "submitAddTour".equals(action)
                 || "submitUpdateTour".equals(action);
+
     }
 
     private boolean isOrderAction(String action) {
         return "call_oder_step2".equals(action)
                 || "call_oder_step3".equals(action)
                 || "openPayModal".equals(action)
-                || "updatePayOrder".equals(action);
+                || "updatePayOrder".equals(action)
+                || "order".equals(action);
     }
 
     /**

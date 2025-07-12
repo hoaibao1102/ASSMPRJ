@@ -5,6 +5,7 @@
 <%@page import="UTILS.AuthUtils"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html lang="vi">
     <head>
@@ -491,10 +492,38 @@
             .tour-img.loaded {
                 opacity: 1;
             }
+
+            /*            nút yêu thích*/
+            .btn-favorite {
+                background: none;
+                border: none;
+                color: #ccc;
+                font-size: 1.3rem;
+                transition: all 0.3s ease;
+                padding: 0.2rem 0.5rem;
+            }
+
+            .btn-favorite:hover i {
+                color: var(--vietnam-emerald);
+                transform: scale(1.2);
+            }
+
+            .btn-favorite.active i {
+                color: var(--vietnam-emerald);
+            }
+
         </style>
     </head>
     <body class="<%= AuthUtils.isAdmin(session) ? "admin-layout" : "" %>">
         <%@include file="header.jsp" %>
+
+        <c:if test="${not empty sessionScope.message}">
+            <script>
+                alert("${fn:escapeXml(sessionScope.message)}");
+            </script>
+            <c:remove var="message" scope="session"/>
+        </c:if>
+
 
         <%
             List<TourTicketDTO> tourList = (List<TourTicketDTO>) request.getAttribute("tourList");
@@ -684,24 +713,41 @@
                                     Giá từ: <%= String.format("%,.0f", t.getPrice()) %> đ
                                 </div>
 
-                                <form action="MainController" method="get">
-                                    <input type="hidden" name="idTourTicket" value="<%=t.getIdTourTicket()%>"/>
-                                    <input type="hidden" name="nameOfDestination" value="<%=tourList.get(0).getDestination()%>"/>
-                                    <div class="d-flex gap-2 flex-wrap">
-                                        <button type="submit" name="action" value="ticketDetail" class="btn btn-vietnam-primary btn-sm">
-                                            <i class="fas fa-eye me-1"></i>Xem chi tiết
-                                        </button>
-                                        <c:if test="${sessionScope.nameUser.role eq 'AD'}">
-                                            <button type="submit" name="action" value="updateTicket" class="btn btn-vietnam-secondary btn-sm">
-                                                <i class="fas fa-edit me-1"></i>Cập nhật
+                                <div class="d-flex gap-2 flex-wrap align-items-center">
+                                    <form action="MainController" method="get">
+                                        <input type="hidden" name="idTourTicket" value="<%=t.getIdTourTicket()%>"/>
+                                        <input type="hidden" name="nameOfDestination" value="<%=tourList.get(0).getDestination()%>"/>
+                                        <div class="d-flex gap-2 flex-wrap">
+                                            <button type="submit" name="action" value="ticketDetail" class="btn btn-vietnam-primary btn-sm">
+                                                <i class="fas fa-eye me-1"></i>Xem chi tiết
                                             </button>
-                                            <button type="submit" name="action" value="deleteTicket" class="btn btn-vietnam-danger btn-sm"
-                                                    onclick="return confirm('Bạn có chắc chắn muốn xóa không?');">
-                                                <i class="fas fa-trash me-1"></i>Xóa
+
+                                            <c:if test="${sessionScope.nameUser.role eq 'AD'}">
+                                                <button type="submit" name="action" value="updateTicket" class="btn btn-vietnam-secondary btn-sm">
+                                                    <i class="fas fa-edit me-1"></i>Cập nhật
+                                                </button>
+                                                <button type="submit" name="action" value="deleteTicket" class="btn btn-vietnam-danger btn-sm"
+                                                        onclick="return confirm('Bạn có chắc chắn muốn xóa không?');">
+                                                    <i class="fas fa-trash me-1"></i>Xóa
+                                                </button>
+                                            </c:if>
+                                        </div>
+                                    </form>
+                                    <c:if test="${sessionScope.nameUser.role ne 'AD'}">
+                                        <form action="MainController" method="get"> <!-- POST là hợp lý hơn cho thêm dữ liệu -->
+                                            <input type="hidden" name="action" value="addFavoriteTour">
+                                            <input type="hidden" name="idTourTicket" value="<%=t.getIdTourTicket()%>">
+                                            <input type="hidden" name="location" value="<%=location%>">
+                                            <input type="hidden" name="idUser" value="<%= session.getAttribute("nameUser") != null ? ((DTO.UserDTO)session.getAttribute("nameUser")).getIdUser() : "" %>">
+                                            <input type="hidden" name="referer" value="<%= request.getRequestURI() + (request.getQueryString() != null ? "?" + request.getQueryString() : "") %>">
+                                            <button type="submit" class="btn btn-favorite" data-bs-toggle="tooltip" title="Thêm vào yêu thích">
+                                                <i class="fas fa-heart"></i>
                                             </button>
-                                        </c:if>
-                                    </div>
-                                </form>
+                                        </form>
+
+                                    </c:if>
+                                </div>
+
                             </div>
                         </div>
                     </div>
@@ -747,56 +793,60 @@
         <c:if test="${sessionScope.nameUser.role != 'AD'}">
             <%@include file="footer.jsp" %>
         </c:if>
-        
+
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
         <script>
-                                                        // Smooth scrolling effect
-                                                        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                                                            anchor.addEventListener('click', function (e) {
-                                                                e.preventDefault();
-                                                                const target = document.querySelector(this.getAttribute('href'));
-                                                                if (target) {
-                                                                    target.scrollIntoView({behavior: 'smooth'});
-                                                                }
+                                                            // Smooth scrolling effect
+                                                            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                                                                anchor.addEventListener('click', function (e) {
+                                                                    e.preventDefault();
+                                                                    const target = document.querySelector(this.getAttribute('href'));
+                                                                    if (target) {
+                                                                        target.scrollIntoView({behavior: 'smooth'});
+                                                                    }
+                                                                });
                                                             });
-                                                        });
 
-                                                        // Image loading animation
-                                                        document.addEventListener('DOMContentLoaded', function () {
-                                                            const images = document.querySelectorAll('.tour-img');
-                                                            images.forEach(img => {
-                                                                if (img.complete) {
-                                                                    img.classList.add('loaded');
-                                                                } else {
-                                                                    img.addEventListener('load', function () {
-                                                                        this.classList.add('loaded');
-                                                                    });
-                                                                }
+                                                            // Image loading animation
+                                                            document.addEventListener('DOMContentLoaded', function () {
+                                                                const images = document.querySelectorAll('.tour-img');
+                                                                images.forEach(img => {
+                                                                    if (img.complete) {
+                                                                        img.classList.add('loaded');
+                                                                    } else {
+                                                                        img.addEventListener('load', function () {
+                                                                            this.classList.add('loaded');
+                                                                        });
+                                                                    }
+                                                                });
                                                             });
-                                                        });
 
-                                                        // Card animation on scroll
-                                                        const observer = new IntersectionObserver(entries => {
-                                                            entries.forEach(entry => {
-                                                                if (entry.isIntersecting) {
-                                                                    entry.target.classList.add('animate-in');
-                                                                }
+                                                            // Card animation on scroll
+                                                            const observer = new IntersectionObserver(entries => {
+                                                                entries.forEach(entry => {
+                                                                    if (entry.isIntersecting) {
+                                                                        entry.target.classList.add('animate-in');
+                                                                    }
+                                                                });
+                                                            }, {
+                                                                threshold: 0.1,
+                                                                rootMargin: '0px 0px -50px 0px'
                                                             });
-                                                        }, {
-                                                            threshold: 0.1,
-                                                            rootMargin: '0px 0px -50px 0px'
-                                                        });
 
-                                                        // Observe all cards
-                                                        document.querySelectorAll('.card, .tour-card, .service-card').forEach(card => {
-                                                            observer.observe(card);
-                                                        });
+                                                            // Observe all cards
+                                                            document.querySelectorAll('.card, .tour-card, .service-card').forEach(card => {
+                                                                observer.observe(card);
+                                                            });
 
-                                                        // Simple fade-in effect for elements
-                                                        document.querySelectorAll('.fade-in').forEach(element => {
-                                                            observer.observe(element);
-                                                        });
+                                                            // Simple fade-in effect for elements
+                                                            document.querySelectorAll('.fade-in').forEach(element => {
+                                                                observer.observe(element);
+                                                            });
+
+                                                            // Kích hoạt tooltip bootstrap
+                                                            const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+                                                            const tooltipList = [...tooltipTriggerList].map(el => new bootstrap.Tooltip(el))
         </script>
     </body>
 </html>

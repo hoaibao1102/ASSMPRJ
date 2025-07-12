@@ -96,6 +96,8 @@ CREATE TABLE Favorites (
     FOREIGN KEY (idTourTicket) REFERENCES TourTickets(idTourTicket)
 );
 
+
+
 -- Insert admin & users
 INSERT INTO Users (full_name, email, password, phone, role) VALUES
 (N'Nguyễn Văn Dương', 'admin@gmail.com', '123123', '1234599890', 'AD'),

@@ -12,6 +12,7 @@ import DTO.OrderDTO;
 import DTO.StartDateDTO;
 import DTO.TourTicketDTO;
 import DTO.UserDTO;
+import UTILS.AuthUtils;
 import UTILS.EmailUtils;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
@@ -35,6 +36,7 @@ import java.util.Map;
 public class orderController extends HttpServlet {
 
     private static String url = "BookingStep1.jsp";
+     private static final String LOGIN_PAGE = "LoginForm.jsp";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -49,20 +51,50 @@ public class orderController extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         String action = request.getParameter("action");
+        TicketImgDAO tdDao = new TicketImgDAO();
+        StartDateDAO stDao = new StartDateDAO();
+        TourTicketDAO tdao = new TourTicketDAO();
+        HttpSession session = request.getSession(false);
         try {
 
             if ("call_oder_step2".equals(action)) {
                 url = handleCallStep2(request, response);
             } else if ("call_oder_step3".equals(action)) {
                 url = handleCallStep3(request, response);
-
                 //HuyCODE
             } else if ("openPayModal".equals(action)) {
                 url = handleUserOrder(request, response);
             } else if ("updatePayOrder".equals(action)) {
                 url = handleUpdateOrder(request, response);
-            }
+            }else if ("order".equals(action)) {
+                String idTour = (String) request.getParameter("idTour");
+                int startNum = Integer.parseInt(request.getParameter("startNum"));
+                // Truy cập trang đặt hàng
+                // kiểm tra login chưa 
+                if (AuthUtils.isLoggedIn(session)) {
+                    if (idTour != null && !idTour.trim().isEmpty()) {
+                        TourTicketDTO tour = tdao.readbyID(idTour);
+                        StartDateDTO stDate = stDao.searchDetailDate(idTour, startNum);
 
+                        session.setAttribute("stDate", stDate);
+                        session.setAttribute("tourTicket", tour);
+
+                        url = "BookingStep1.jsp";
+                    }
+
+                } else {
+                    // Chưa login => lưu trang cần redirect sau login, rồi chuyển tới login page
+                    session = request.getSession(false);
+                    if (idTour != null) {
+                        session.setAttribute("idTour", idTour);
+                        session.setAttribute("startNum", startNum);
+                        session.setAttribute("action", "order");
+                    }
+                    session.setAttribute("redirectAfterLogin", "BookingStep1.jsp");
+                    url = LOGIN_PAGE;
+                    request.setAttribute("message", "Login to place order");
+                }
+            }
             // thao tac phuong thuc thanh toan
             String paymentMethod = request.getParameter("paymentMethod");
             if ("momo".equals(paymentMethod)) {
