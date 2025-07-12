@@ -10,11 +10,13 @@ import DAO.StartDateDAO;
 import DAO.TourTicketDAO;
 import DAO.TicketImgDAO;
 import DAO.UserDAO;
+import DAO.VoucherDAO;
 import DTO.PlacesDTO;
 import DTO.StartDateDTO;
 import DTO.TourTicketDTO;
 import DTO.TicketImgDTO;
 import DTO.UserDTO;
+import DTO.VoucherDTO;
 import UTILS.AuthUtils;
 import UTILS.PasswordUtils;
 import jakarta.servlet.RequestDispatcher;
@@ -119,7 +121,9 @@ public class loginController extends HttpServlet {
                     if (idTour != null && !idTour.trim().isEmpty()) {
                         TourTicketDTO tour = tdao.readbyID(idTour);
                         StartDateDTO stDate = stDao.searchDetailDate(idTour, startNum);
-
+                        VoucherDAO vcdao = new VoucherDAO();
+                        List<VoucherDTO> listVouchers = vcdao.getAllVoucherActive();
+                        request.setAttribute("listVouchers", listVouchers);
                         session.setAttribute("stDate", stDate);
                         session.setAttribute("tourTicket", tour);
 

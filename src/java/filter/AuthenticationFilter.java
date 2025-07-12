@@ -110,7 +110,7 @@ public class AuthenticationFilter implements Filter {
         if (requestURI.contains("/BookingStep1.jsp") || requestURI.contains("/BookingStep2.jsp")
                 || requestURI.contains("/BookingStep3.jsp") || requestURI.contains("/OrderOfUser.jsp")
                 || requestURI.contains("/UserManager.jsp") || requestURI.contains("/createPlace.jsp")
-                || requestURI.contains("/createTicketForm.jsp")) {
+                || requestURI.contains("/createTicketForm.jsp") || requestURI.contains("/voucherForm.jsp")) {
 
             if (!UTILS.AuthUtils.isLoggedIn(session)) {
                 httpRequest.setAttribute("errorMessage", "Please log in to access this page.");

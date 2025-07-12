@@ -444,6 +444,11 @@
                     </a>
                 </div>
                 <div class="nav-item">
+                    <a href="MainController?action=goVoucherPage" class="nav-link">
+                        <i class="fas fa-voucher"></i> Quản lý vouchers
+                    </a>
+                </div>
+                <div class="nav-item">
                     <form action="loginController" method="post" class="m-0">
                         <input type="hidden" name="action" value="logout" />
                         <button type="submit" class="nav-link btn btn-link text-start w-100 border-0">
