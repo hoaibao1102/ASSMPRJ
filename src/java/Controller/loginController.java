@@ -75,7 +75,8 @@ public class loginController extends HttpServlet {
                     UserDTO user = AuthUtils.getUser(txtEmailOrPhone);
                     session = request.getSession(true);
                     session.setAttribute("nameUser", user);
-
+                    List<FavoritesDTO> favoritesList = fDAO.getByUserId(user.getIdUser());
+                    session.setAttribute("favoriteCount", favoritesList.size());
                     // Kiểm tra session có lưu URL redirect không
                     String redirectUrl = (String) session.getAttribute("redirectAfterLogin");
                     String actionCheck = (String) session.getAttribute("action");
@@ -113,27 +114,23 @@ public class loginController extends HttpServlet {
                                     session.removeAttribute("pendingFavoriteTourId");
                                 }
                                 String location1 = (String) session.getAttribute("location1");
-
                                 PlacesDAO pdao = new PlacesDAO();
                                 StartDateDAO stdDAO = new StartDateDAO();
-                                // ✅ Load lại danh sách tour dựa vào location
-                                if (location1 != null && !location1.trim().isEmpty()) {
-                                    location1 = location1.trim();
-                                    List<TourTicketDTO> tourList = tdao.searchByDestination(location1);
-                                    String discriptionPlaces = pdao.readByName(location1).getDescription();
-
-                                    for (int i = 0; i < tourList.size(); i++) {
-                                        List<StartDateDTO> startDateTour = stdDAO.search(tourList.get(i).getIdTourTicket());
-                                        request.setAttribute("startDateTour" + (i + 1), startDateTour);
-                                    }
-
-                                    request.setAttribute("tourList", tourList);
-                                    request.setAttribute("discriptionPlaces", discriptionPlaces);
-                                    request.setAttribute("location", location1);
-                                    session.setAttribute("message", "Đã thêm vào yêu thích!");
-                                    url = "TourTicketForm.jsp";
-                                    session.removeAttribute("location1");
+                                location1 = location1.trim();
+                                List<TourTicketDTO> tourList = tdao.searchByDestination(location1);
+                                String discriptionPlaces = pdao.readByName(location1).getDescription();
+                                for (int i = 0; i < tourList.size(); i++) {
+                                    List<StartDateDTO> startDateTour = stdDAO.search(tourList.get(i).getIdTourTicket());
+                                    request.setAttribute("startDateTour" + (i + 1), startDateTour);
                                 }
+                                List<FavoritesDTO> favoritesList2 = fDAO.getByUserId(user.getIdUser());
+                                request.setAttribute("tourList", tourList);
+                                request.setAttribute("discriptionPlaces", discriptionPlaces);
+                                request.setAttribute("location", location1);
+                                session.setAttribute("favoriteCount", favoritesList2.size());
+                                url = "TourTicketForm.jsp";
+                                session.removeAttribute("location1");
+
                                 break;
                             }
                             default:

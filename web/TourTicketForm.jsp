@@ -1,7 +1,6 @@
 <%@page import="java.util.List"%>
 <%@page import="DTO.TourTicketDTO"%>
 <%@page import="DTO.StartDateDTO"%>
-<%@page import="DAO.PlacesDAO"%>
 <%@page import="UTILS.AuthUtils"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
@@ -583,7 +582,7 @@
                                 <div class="status-indicator status-inactive">
                                     <i class="fas fa-pause"></i> Ngưng hoạt động
                                 </div>
-                                <img class="tour-img" src="assets/images/places/<%=t.getImg_Tour()%>" alt="<%= t.getNametour() %>">
+                                <img class="tour-img" src="<%=t.getImg_Tour()%>" alt="<%= t.getNametour() %>">
                                 <div class="tour-content">
                                     <h3 class="tour-title"><%= t.getNametour() %></h3>
 

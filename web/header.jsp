@@ -558,10 +558,17 @@
                                         </form>
                                     </li>
                                     <li>
-                                        <a href="wishlist.jsp" class="cart-icon">
-                                            <i class="fas fa-heart"></i>
-                                            <span class="cart-count" id="favoriteCount">0</span>
-                                        </a>
+                                        <form action="MainController" method="get" class="d-inline">
+                                            <input type="hidden" name="action" value="showFavoriteList" />
+                                            <input type="hidden" name="idUser" value="${sessionScope.nameUser.idUser}" />
+                                            <button type="submit" class="dropdown-item btn btn-link text-start w-100">
+                                                <i class="fas fa-heart"></i> 
+                                                Yêu thích 
+                                                <c:if test="${not empty sessionScope.favoriteCount}">
+                                                    (${sessionScope.favoriteCount})
+                                                </c:if>
+                                            </button>
+                                        </form>
                                     </li>
 
                                 </ul>

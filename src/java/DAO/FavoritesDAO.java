@@ -8,7 +8,9 @@ import DTO.FavoritesDTO;
 import UTILS.DBUtils;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -63,6 +65,49 @@ public class FavoritesDAO implements IDAO<FavoritesDTO, String>{
     @Override
     public List<FavoritesDTO> search(String searchTerm) {
         return null;
+    }
+
+    public List<FavoritesDTO> getByUserId(int idUser) {
+        String sql = "SELECT * FROM Favorites WHERE idUser = ? ";
+        List<FavoritesDTO> list = new ArrayList<>();
+        try {
+            Connection conn = DBUtils.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, idUser);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()){
+                FavoritesDTO favo = new FavoritesDTO(rs.getInt("idUser"),
+                                                     rs.getString("idTourTicket"));
+                
+                list.add(favo);
+            }
+            return list;
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(FavoritesDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(FavoritesDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+        
+    }
+
+    public boolean deleteFavorite(FavoritesDTO favo) {
+        String sql = "DELETE FROM Favorites WHERE idUser = ? AND idTourTicket = ?";
+        try {
+            Connection conn = DBUtils.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, favo.getIdUser());
+            ps.setString(2,favo.getIdTourTicket());
+            
+            int rowEffect = ps.executeUpdate();
+            return rowEffect >0;
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(FavoritesDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(FavoritesDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return false;
     }
     
 }

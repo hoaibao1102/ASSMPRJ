@@ -26,6 +26,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +43,7 @@ public class userController extends HttpServlet {
     StartDateDAO stdao = new StartDateDAO();
     FavoritesDAO fDAO = new FavoritesDAO();
     TourTicketDAO tdao = new TourTicketDAO();
+    StartDateDAO stdDAO = new StartDateDAO();
     private static final String LOGIN_PAGE = "LoginForm.jsp";
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
@@ -61,56 +63,11 @@ public class userController extends HttpServlet {
             } else if ("updateProfile".equals(action)) {
                 url = handleUserUpdating(request);
             } else if ("addFavoriteTour".equals(action)) {
-                String idTourTicket = request.getParameter("idTourTicket");
-                String referer = request.getParameter("referer");
-                String idUserStr = request.getParameter("idUser");
-                String location1 = request.getParameter("location");
-
-                PlacesDAO pdao = new PlacesDAO();
-                StartDateDAO stdDAO = new StartDateDAO();
-
-                // Nếu chưa login → lưu redirect và yêu cầu đăng nhập
-                if (!AuthUtils.isLoggedIn(session) || idUserStr == null || idUserStr.isEmpty()) {
-                    session.setAttribute("redirectAfterLogin", referer != null ? referer : "index.jsp");
-                    session.setAttribute("pendingFavoriteTourId", idTourTicket);
-                    session.setAttribute("location1", location1);
-                    session.setAttribute("action", "addFavoriteTour");
-                    request.setAttribute("message", "Login to favorite this tour.");
-                    url = LOGIN_PAGE;
-                } else {
-                    // Đã login → xử lý thêm vào yêu thích
-                    try {
-                        int idUser = Integer.parseInt(idUserStr);
-                        FavoritesDTO favo = new FavoritesDTO(idUser, idTourTicket);
-                        boolean isAdded = fDAO.create(favo);
-
-                        if (isAdded) {
-                            session.setAttribute("message", "Đã thêm vào yêu thích!");
-                        } else {
-                            session.setAttribute("message", "Tour đã nằm trong danh sách yêu thích.");
-                        }
-                    } catch (NumberFormatException e) {
-                        session.setAttribute("message", "Lỗi: ID người dùng không hợp lệ.");
-                    }
-
-                    // ✅ Load lại danh sách tour dựa vào location
-                    if (location1 != null && !location1.trim().isEmpty()) {
-                        location1 = location1.trim();
-                        List<TourTicketDTO> tourList = tdao.searchByDestination(location1);
-                        String discriptionPlaces = pdao.readByName(location1).getDescription();
-
-                        for (int i = 0; i < tourList.size(); i++) {
-                            List<StartDateDTO> startDateTour = stdDAO.search(tourList.get(i).getIdTourTicket());
-                            request.setAttribute("startDateTour" + (i + 1), startDateTour);
-                        }
-
-                        request.setAttribute("tourList", tourList);
-                        request.setAttribute("discriptionPlaces", discriptionPlaces);
-                        request.setAttribute("location", location1);
-
-                        url = "TourTicketForm.jsp";
-                    }
-                }
+                url = handleAddFavoriteTour(request, response);
+            } else if ("showFavoriteList".equals(action)) {
+                url = handleShowFavoriteList(request, response);
+            } else if ("removeFavorite".equals(action)) {
+                url = handleRemoveFavorite(request, response);;
             }
         } catch (Exception e) {
             e.printStackTrace(); // ✅ In lỗi để debug
@@ -319,6 +276,112 @@ public class userController extends HttpServlet {
         }
         String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
         return email.matches(emailRegex);
+    }
+
+    private String handleRemoveFavorite(HttpServletRequest request, HttpServletResponse response) {
+        String idUserStr = request.getParameter("idUser");
+        String idTourTicket = request.getParameter("idTourTicket");
+        int idUser = Integer.parseInt(idUserStr);
+        if (idUserStr != null && idTourTicket != null) {
+            FavoritesDTO favo = new FavoritesDTO(idUser, idTourTicket);
+            boolean success = fDAO.deleteFavorite(favo);
+            if (success) {
+                List<FavoritesDTO> favoritesList = fDAO.getByUserId(idUser);
+                List<TourTicketDTO> tourList = new ArrayList<>();
+                for (FavoritesDTO f : favoritesList) {
+                    TourTicketDTO tour = tdao.readbyID(f.getIdTourTicket());;
+                    tourList.add(tour);
+                }
+                for (int i = 0; i < tourList.size(); i++) {
+                    // lấy ra các ngày đi 
+                    List<StartDateDTO> startDateTour = stdDAO.search(tourList.get(i).getIdTourTicket());
+                    request.setAttribute("startDateTour" + (i + 1), startDateTour);
+                }
+                request.setAttribute("tourFavoriteList", tourList);
+                return "favoriteList.jsp";
+            }
+        }
+        return null;
+    }
+
+    private String handleAddFavoriteTour(HttpServletRequest request, HttpServletResponse response) {
+        HttpSession session = request.getSession();
+        String idTourTicket = request.getParameter("idTourTicket");
+        String referer = request.getParameter("referer");
+        String idUserStr = request.getParameter("idUser");
+        String location1 = request.getParameter("location");
+
+        TourTicketDAO tdao = new TourTicketDAO();
+        PlacesDAO pdao = new PlacesDAO();
+        StartDateDAO stdDAO = new StartDateDAO();
+
+        String url = "favoriteList.jsp"; // fallback mặc định
+
+        if (!AuthUtils.isLoggedIn(session) || idUserStr == null || idUserStr.isEmpty()) {
+            session.setAttribute("redirectAfterLogin", referer != null ? referer : "index.jsp");
+            session.setAttribute("pendingFavoriteTourId", idTourTicket);
+            session.setAttribute("location1", location1);
+            session.setAttribute("action", "addFavoriteTour");
+            request.setAttribute("message", "Vui lòng đăng nhập để thêm tour vào yêu thích.");
+            return "LoginForm.jsp";
+        }
+
+        try {
+            int idUser = Integer.parseInt(idUserStr);
+            FavoritesDTO favo = new FavoritesDTO(idUser, idTourTicket);
+            boolean isAdded = fDAO.create(favo);
+
+            if (isAdded) {
+                session.setAttribute("message", "Đã thêm vào yêu thích!");
+            } else {
+                session.setAttribute("message", "Tour đã có trong danh sách yêu thích.");
+            }
+
+            if (location1 != null && !location1.trim().isEmpty()) {
+                location1 = location1.trim();
+                List<TourTicketDTO> tourList = tdao.searchByDestination(location1);
+                String descriptionPlaces = pdao.readByName(location1).getDescription();
+
+                for (int i = 0; i < tourList.size(); i++) {
+                    List<StartDateDTO> startDateTour = stdDAO.search(tourList.get(i).getIdTourTicket());
+                    request.setAttribute("startDateTour" + (i + 1), startDateTour);
+                }
+
+                List<FavoritesDTO> favoritesList = fDAO.getByUserId(idUser);
+                session.setAttribute("favoriteCount", favoritesList.size());
+
+                request.setAttribute("tourList", tourList);
+                request.setAttribute("discriptionPlaces", descriptionPlaces);
+                request.setAttribute("location", location1);
+                url = "TourTicketForm.jsp";
+            }
+
+        } catch (NumberFormatException e) {
+            session.setAttribute("message", "Lỗi: ID người dùng không hợp lệ.");
+            url = "error.jsp";
+        }
+        return url;
+    }
+
+    private String handleShowFavoriteList(HttpServletRequest request, HttpServletResponse response) {
+        String url;
+        String idUserStr = request.getParameter("idUser");
+        int idUser = Integer.parseInt(idUserStr);
+        List<FavoritesDTO> favoritesList = fDAO.getByUserId(idUser);
+        List<TourTicketDTO> tourList = new ArrayList<>();
+        for (FavoritesDTO f : favoritesList) {
+            TourTicketDTO tour = tdao.readbyID(f.getIdTourTicket());;
+            tourList.add(tour);
+        }
+        for (int i = 0; i < tourList.size(); i++) {
+            // lấy ra các ngày đi 
+            List<StartDateDTO> startDateTour = stdDAO.search(tourList.get(i).getIdTourTicket());
+            request.setAttribute("startDateTour" + (i + 1), startDateTour);
+        }
+        request.setAttribute("tourFavoriteList", tourList);
+        url = "favoriteList.jsp";
+        
+        return url;
     }
 
 }

@@ -33,11 +33,13 @@ public class MainController extends HttpServlet {
                 || "listUser".equals(action)
                 || "editProfile".equals(action)
                 || "updateProfile".equals(action)
-                || "addFavoriteTour".equals(action);
+                || "addFavoriteTour".equals(action)
+                || "showFavoriteList".equals(action)
+                || "removeFavorite".equals(action);
     }
-    
+
     private boolean isVoucherAction(String action) {
-        return "goVoucherPage".equals(action) 
+        return "goVoucherPage".equals(action)
                 || "goCreateNewVoucherForm".equals(action)
                 || "createNewVoucher".equals(action)
                 || "reuseVoucher".equals(action)
@@ -96,7 +98,7 @@ public class MainController extends HttpServlet {
                 url = USER_CONTROLLER;
             } else if (isPlaceAction(action)) {
                 url = PLACE_CONTROLLER;
-            }else if (isVoucherAction(action)) {
+            } else if (isVoucherAction(action)) {
                 url = VOUCHER_CONTROLLER;
             }
 
