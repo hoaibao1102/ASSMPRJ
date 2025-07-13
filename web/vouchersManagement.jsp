@@ -13,11 +13,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Quản lý Vouchers</title>
 
-        <!-- Bootstrap CSS -->
         <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-        <!-- Bootstrap Icons -->
         <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css" rel="stylesheet">
-        <!-- Google Fonts -->
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
         <style>
@@ -37,6 +34,9 @@
                 --danger-color: #e74c3c;
                 --success-light: #f0fff4;
                 --success-color: #27ae60;
+                /* Thêm màu cho nút sửa */
+                --edit-light: #e0f7fa; /* Màu nền nhẹ nhàng cho nút sửa */
+                --edit-color: #007bff; /* Màu chữ và viền cho nút sửa */
             }
 
             * {
@@ -311,6 +311,7 @@
                 cursor: pointer;
                 text-transform: uppercase;
                 letter-spacing: 0.5px;
+                margin: 0 0.25rem; /* Thêm khoảng cách giữa các nút */
             }
 
             .btn-reuse {
@@ -337,6 +338,21 @@
                 transform: translateY(-2px);
                 box-shadow: 0 6px 20px rgba(231, 76, 60, 0.3);
             }
+            
+            /* CSS mới cho nút Sửa */
+            .btn-edit {
+                background: var(--edit-light);
+                color: var(--edit-color);
+                box-shadow: 0 4px 12px rgba(0, 123, 255, 0.2);
+            }
+
+            .btn-edit:hover {
+                background: var(--edit-color);
+                color: var(--primary-white);
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4);
+            }
+
             .back-section {
                 padding: 2rem 2rem 0;
             }
@@ -500,18 +516,15 @@
     </head>
     <body>
         <div class="main-container">
-            <!-- Back Button -->
-                <div class="back-section">
-                    <a href="javascript:void(0)" class="btn btn-back" onclick="window.history.back()">
+            <div class="back-section">
+                    <a href="javascript:void(0)" class="btn btn-back" onclick="window.location.href='index.jsp'">
                         <i class="bi bi-arrow-left"></i> Quay lại
                     </a>
                 </div>
-            <!-- Header Section -->
             <div class="header-section">
                 <h1><i class="bi bi-ticket-detailed"></i> Quản lý Vouchers</h1>
                 <p class="subtitle">Quản lý và theo dõi các voucher của bạn</p>
 
-                <!-- Create New Voucher Button -->
                 <form action="MainController" method="get" style="display: inline;">
                     <input type="hidden" name="action" value="goCreateNewVoucherForm">
                     <button type="submit" class="btn-create">
@@ -522,7 +535,6 @@
 
             <c:choose>
                 <c:when test="${not empty listVoucher}">
-                    <!-- Inactive Vouchers Section -->
                     <div class="section-card">
                         <h2 class="section-title inactive">
                             <i class="bi bi-pause-circle"></i> Vouchers Đang Ngưng Hoạt Động
@@ -576,7 +588,7 @@
                                                             <span class="fw-medium">${vc.minimumOrderValue} VNĐ</span>
                                                         </td>
                                                         <td>
-                                                            <form action="MainController" method="get" style="display: inline;">
+                                                            <form action="MainController" method="get" style="display: inline-block;">
                                                                 <input type="hidden" name="action" value="goReuseVoucherForm">
                                                                 <input type="hidden" name="voucherID" value="${vc.voucherID}">
                                                                 <button type="submit" class="btn-action btn-reuse">
@@ -601,7 +613,6 @@
                         </c:choose>
                     </div>
 
-                    <!-- Active Vouchers Section -->
                     <div class="section-card">
                         <h2 class="section-title active">
                             <i class="bi bi-check-circle"></i> Vouchers Đang Hoạt Động
@@ -658,11 +669,18 @@
                                                             <span class="fw-medium">${vc.minimumOrderValue} VNĐ</span>
                                                         </td>
                                                         <td>
-                                                            <form action="MainController" method="get" style="display: inline;">
+                                                            <form action="MainController" method="get" style="display: inline-block;">
                                                                 <input type="hidden" name="action" value="deleteVoucher">
                                                                 <input type="hidden" name="voucherID" value="${vc.voucherID}">
                                                                 <button type="submit" class="btn-action btn-delete" onclick="return confirm('Bạn có chắc chắn muốn xóa voucher này?')">
                                                                     <i class="bi bi-trash me-1"></i> Xóa
+                                                                </button>
+                                                            </form>
+                                                            <form action="MainController" method="get" style="display: inline-block;">
+                                                                <input type="hidden" name="action" value="goReuseVoucherForm"> 
+                                                                <input type="hidden" name="voucherID" value="${vc.voucherID}">
+                                                                <button type="submit" class="btn-action btn-edit" onclick="return confirm('Bạn có chắc chắn muốn sửa voucher này?')">
+                                                                    <i class="bi bi-pencil-square me-1"></i> Sửa <%-- Đổi icon --%>
                                                                 </button>
                                                             </form>
                                                         </td>
@@ -693,7 +711,6 @@
             </c:choose>
         </div>
 
-        <!-- Bootstrap JS -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     </body>
 </html>

@@ -8,10 +8,12 @@ import DAO.OrderDAO;
 import DAO.StartDateDAO;
 import DAO.TicketImgDAO;
 import DAO.TourTicketDAO;
+import DAO.VoucherDAO;
 import DTO.OrderDTO;
 import DTO.StartDateDTO;
 import DTO.TourTicketDTO;
 import DTO.UserDTO;
+import DTO.VoucherDTO;
 import UTILS.AuthUtils;
 import UTILS.EmailUtils;
 import jakarta.servlet.RequestDispatcher;
@@ -36,7 +38,10 @@ import java.util.Map;
 public class orderController extends HttpServlet {
 
     private static String url = "BookingStep1.jsp";
-     private static final String LOGIN_PAGE = "LoginForm.jsp";
+    private static final String LOGIN_PAGE = "LoginForm.jsp";
+    TicketImgDAO tdDao = new TicketImgDAO();
+    StartDateDAO stDao = new StartDateDAO();
+    TourTicketDAO tdao = new TourTicketDAO();
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -51,10 +56,7 @@ public class orderController extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         String action = request.getParameter("action");
-        TicketImgDAO tdDao = new TicketImgDAO();
-        StartDateDAO stDao = new StartDateDAO();
-        TourTicketDAO tdao = new TourTicketDAO();
-        HttpSession session = request.getSession(false);
+
         try {
 
             if ("call_oder_step2".equals(action)) {
@@ -66,34 +68,9 @@ public class orderController extends HttpServlet {
                 url = handleUserOrder(request, response);
             } else if ("updatePayOrder".equals(action)) {
                 url = handleUpdateOrder(request, response);
-            }else if ("order".equals(action)) {
-                String idTour = (String) request.getParameter("idTour");
-                int startNum = Integer.parseInt(request.getParameter("startNum"));
-                // Truy cập trang đặt hàng
-                // kiểm tra login chưa 
-                if (AuthUtils.isLoggedIn(session)) {
-                    if (idTour != null && !idTour.trim().isEmpty()) {
-                        TourTicketDTO tour = tdao.readbyID(idTour);
-                        StartDateDTO stDate = stDao.searchDetailDate(idTour, startNum);
+            } else if ("order".equals(action)) {
+                url = handleOder(request, response);
 
-                        session.setAttribute("stDate", stDate);
-                        session.setAttribute("tourTicket", tour);
-
-                        url = "BookingStep1.jsp";
-                    }
-
-                } else {
-                    // Chưa login => lưu trang cần redirect sau login, rồi chuyển tới login page
-                    session = request.getSession(false);
-                    if (idTour != null) {
-                        session.setAttribute("idTour", idTour);
-                        session.setAttribute("startNum", startNum);
-                        session.setAttribute("action", "order");
-                    }
-                    session.setAttribute("redirectAfterLogin", "BookingStep1.jsp");
-                    url = LOGIN_PAGE;
-                    request.setAttribute("message", "Login to place order");
-                }
             }
             // thao tac phuong thuc thanh toan
             String paymentMethod = request.getParameter("paymentMethod");
@@ -109,7 +86,6 @@ public class orderController extends HttpServlet {
             RequestDispatcher rd = request.getRequestDispatcher(url);
             rd.forward(request, response);
         }
-
     }
 
 // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -237,6 +213,9 @@ public class orderController extends HttpServlet {
     }
 
     private String handleCallStep2(HttpServletRequest request, HttpServletResponse response) {
+        int voucherID = Integer.parseInt(request.getParameter("voucherID"));
+        VoucherDAO vcdao = new VoucherDAO();
+        vcdao.subQuantity(voucherID);
         //lay thong tin de tao dtb booking
         OrderDAO odao = new OrderDAO();
         double total = Double.parseDouble(request.getParameter("totalBill"));
@@ -308,6 +287,61 @@ public class orderController extends HttpServlet {
             System.out.println("khong update duoc tu tim lai");
         }
         return null;
+    }
+
+    private String handleOder(HttpServletRequest request, HttpServletResponse response) {
+        HttpSession session = request.getSession(false);
+        String idTour = (String) request.getParameter("idTour");
+        int startNum = Integer.parseInt(request.getParameter("startNum"));
+        // Truy cập trang đặt hàng
+        // kiểm tra login chưa 
+        if (AuthUtils.isLoggedIn(session)) {
+            if (idTour != null && !idTour.trim().isEmpty()) {
+                TourTicketDTO tour = tdao.readbyID(idTour);
+                StartDateDTO stDate = stDao.searchDetailDate(idTour, startNum);
+                VoucherDAO vcdao = new VoucherDAO();
+                List<VoucherDTO> listVouchers = vcdao.getAllVoucherActive();
+                //tao bien phu de xoa 2 voucher co dinh                
+                VoucherDTO xoa1 = null;
+                VoucherDTO xoa2 = null;
+                
+                for(VoucherDTO i : listVouchers){
+                    if(i.getTitle().equals("Mã giảm giá cố định cho bé từ 2-6 tuổi")){
+                        request.setAttribute("child", i);
+                        xoa1 = i;
+                    }
+                    System.out.println("=======");
+                        System.out.println(i.getTitle());
+                    if(i.getTitle().contains("Mã giảm giá cố định cho em bé dưới 2 tuổi")){
+                        request.setAttribute("baby", i);
+                        xoa2 = i;
+                    }
+                    
+                }
+                
+                listVouchers.remove(xoa1);
+                listVouchers.remove(xoa2);
+                
+                request.setAttribute("listVouchers", listVouchers);
+                session.setAttribute("stDate", stDate);
+                session.setAttribute("tourTicket", tour);
+
+                url = "BookingStep1.jsp";
+            }
+
+        } else {
+            // Chưa login => lưu trang cần redirect sau login, rồi chuyển tới login page
+            session = request.getSession(false);
+            if (idTour != null) {
+                session.setAttribute("idTour", idTour);
+                session.setAttribute("startNum", startNum);
+                session.setAttribute("action", "order");
+            }
+            session.setAttribute("redirectAfterLogin", "BookingStep1.jsp");
+            url = LOGIN_PAGE;
+            request.setAttribute("message", "Login to place order");
+        }
+        return url;
     }
 
 }
