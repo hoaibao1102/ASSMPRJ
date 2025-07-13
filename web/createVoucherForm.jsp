@@ -340,7 +340,7 @@
                 <div class="header-section">
                     <c:choose>
                         <c:when test="${not empty voucher}">
-                            <h1><i class="bi bi-ticket-perforated"></i>Dùng lại voucher giảm giá</h1>
+                            <h1><i class="bi bi-ticket-perforated"></i>Sửa lại voucher giảm giá</h1>
                         </c:when>
                         <c:otherwise>
                             <h1><i class="bi bi-ticket-perforated"></i> Tạo voucher giảm giá</h1>

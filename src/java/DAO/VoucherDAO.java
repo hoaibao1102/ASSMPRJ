@@ -25,6 +25,7 @@ public class VoucherDAO {
     protected final String INSERT_QUERY = "INSERT INTO Vouchers (startDate ,discount, numbers, duration, title, status, minimumOrderValue)" +
                                             " VALUES(?, ?, ?, ?, ?, 1, ?)";
     protected final String DELETE_QUERY = "UPDATE Vouchers SET status = 0 WHERE voucherID = ?";
+    protected final String SUB_QUERY = "UPDATE Vouchers SET numbers = ? WHERE voucherID = ?";
     protected final String UPDATE_QUERY = "UPDATE Vouchers SET status = 1, title = ?, startDate = ?, discount = ?, "
             + " numbers = ?, duration = ?, minimumOrderValue = ?  WHERE voucherID = ?";
     
@@ -153,6 +154,24 @@ public class VoucherDAO {
             Logger.getLogger(TourTicketDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
+    }
+
+    public boolean subQuantity(int voucherID) {
+        String sql = SUB_QUERY;
+        try {
+            Connection conn = DBUtils.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            int quantity_old = getVoucherByID(voucherID).getNumbers();
+            ps.setInt(1, quantity_old - 1 );
+            ps.setInt(2, voucherID);
+            int n = ps.executeUpdate();
+            return n > 0;
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
     }
 
     

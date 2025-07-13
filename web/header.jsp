@@ -445,7 +445,7 @@
                 </div>
                 <div class="nav-item">
                     <a href="MainController?action=goVoucherPage" class="nav-link">
-                        <i class="fas fa-voucher"></i> Quản lý vouchers
+                        <i class="fas fa-ticket-alt"></i> Quản lý vouchers
                     </a>
                 </div>
                 <div class="nav-item">
