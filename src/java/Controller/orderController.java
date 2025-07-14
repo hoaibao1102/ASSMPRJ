@@ -212,11 +212,15 @@ public class orderController extends HttpServlet {
         return url;
     }
 
-    private String handleCallStep2(HttpServletRequest request, HttpServletResponse response) {
-        int voucherID = Integer.parseInt(request.getParameter("voucherID"));
-        VoucherDAO vcdao = new VoucherDAO();
-        vcdao.subQuantity(voucherID);
-        //lay thong tin de tao dtb booking
+    private String handleCallStep2(HttpServletRequest request, HttpServletResponse response) {         
+        try {
+            int voucherID = Integer.parseInt(request.getParameter("voucherID"));
+            VoucherDAO vcdao = new VoucherDAO();
+            vcdao.subQuantity(voucherID);
+        } catch (Exception e) {           
+        }
+        
+    //lay thong tin de tao dtb booking
         OrderDAO odao = new OrderDAO();
         double total = Double.parseDouble(request.getParameter("totalBill"));
         int numberTicket = Integer.parseInt(request.getParameter("numberTicket"));
@@ -273,7 +277,8 @@ public class orderController extends HttpServlet {
             request.setAttribute("message", "Đặt tour thành công nhưng không thể gửi email xác nhận.");
             request.setAttribute("messageType", "warning");
         }
-
+        System.out.println("==============");
+        System.out.println(total);
         boolean isUpdate = stDao.update(startDate);
         System.out.println(isUpdate);
         //update trang thai
