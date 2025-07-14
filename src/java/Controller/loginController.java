@@ -144,15 +144,15 @@ public class loginController extends HttpServlet {
                     case "order": {
                         if (AuthUtils.isCustomer(session)) {
                             String idTour = (String) session.getAttribute("idTour");
-                            Integer startNum = (Integer) session.getAttribute("startNum");
+                            Date startDate = (Date) session.getAttribute("startDate");
 
-                            if (idTour != null && startNum != null) {
+                            if (idTour != null && startDate != null) {
                                 TourTicketDTO tourTicket = tdao.readbyID(idTour);
-                                StartDateDTO stDate = stDao.searchDetailDate(idTour, startNum);
+                                StartDateDTO stDate = stDao.searchDetailDate(idTour, startDate);
                                 session.setAttribute("stDate", stDate);
                                 session.setAttribute("tourTicket", tourTicket);
                                 session.removeAttribute("idTour");
-                                session.removeAttribute("startNum");
+                                session.removeAttribute("startDate");
                             }
                             url = redirectUrl;
                         } else {
