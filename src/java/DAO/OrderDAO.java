@@ -26,7 +26,7 @@ public class OrderDAO implements IDAO<OrderDTO, String> {
 
     @Override
     public boolean create(OrderDTO entity) {
-        String sql = "INSERT INTO Orders (idBooking, idUser, idTourTicket, BookingDate, NumberTicket, TotalPrice, Status, Note, startNum) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) ";
+        String sql = "INSERT INTO Orders (idBooking, idUser, idTourTicket, BookingDate, NumberTicket, TotalPrice, Status, Note, startDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) ";
         try {
             Connection conn = DBUtils.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -38,7 +38,7 @@ public class OrderDAO implements IDAO<OrderDTO, String> {
             ps.setDouble(6, entity.getTotalPrice());
             ps.setInt(7, entity.getStatus());
             ps.setString(8, entity.getNote());
-            ps.setInt(9, entity.getStartNum());
+            ps.setDate(9, entity.getStartDate());
 
             int n = ps.executeUpdate();
             return n > 0;
@@ -74,7 +74,7 @@ public class OrderDAO implements IDAO<OrderDTO, String> {
                         rs.getInt("Status"),
                         rs.getString("idBooking"),
                         rs.getString("Note"),
-                        rs.getInt("startNum"));
+                        rs.getDate("startDate"));
                 return newT;
             }
 
@@ -116,7 +116,7 @@ public class OrderDAO implements IDAO<OrderDTO, String> {
                         rs.getInt("Status"),
                         rs.getString("idBooking"),
                         rs.getString("Note"),
-                        rs.getInt("startNum"));
+                        rs.getDate("startDate"));
                 list.add(newT);
             }
             return list;
@@ -197,7 +197,7 @@ public class OrderDAO implements IDAO<OrderDTO, String> {
                         rs.getInt("Status"),
                         rs.getString("idBooking"),
                         rs.getString("Note"),
-                        rs.getInt("startNum"));
+                        rs.getDate("startDate"));
                 list.add(newT);
             }
             return list;

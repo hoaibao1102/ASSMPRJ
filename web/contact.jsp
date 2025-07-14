@@ -243,7 +243,7 @@
                                         </div>
                                         <div class="info-content">
                                             <p><strong>Hotline đặt tour:</strong> 028 1234 5678 (24/7)</p>
-                                            <p><strong>Zalo / Messenger:</strong> @vntours</p>
+                                            <p><strong>Zalo / Messenger:</strong> @prjassmabh </p>
                                         </div>
                                     </div>
 
@@ -262,8 +262,8 @@
                                             <i class="fas fa-envelope"></i>
                                         </div>
                                         <div class="info-content">
-                                            <p><strong>Email:</strong> support@vntours.com</p>
-                                            <p><strong>Hợp tác kinh doanh:</strong> partner@vntours.com</p>
+                                            <p><strong>Email:</strong> prjassmabh@gmail.com</p>
+                                            <p><strong>Hợp tác kinh doanh:</strong> prjassmabh_eco@gmail.com</p>
                                         </div>
                                     </div>
                                 </div>
@@ -277,7 +277,7 @@
                                 <form action="#" method="post">
                                     <div class="form-group">
                                         <label for="name" class="form-label">Họ tên của bạn</label>
-                                        <input type="text" class="form-control" id="name" name="name" required>
+                                        <input type="text" class="form-control" id="name" name="name" required value="${not empty nameUser? nameUser.fullName : ''}">
                                     </div>
 
                                     <div class="form-group">
@@ -294,7 +294,7 @@
 
                                     <div class="form-group">
                                         <label for="email" class="form-label">Email liên hệ</label>
-                                        <input type="email" class="form-control" id="email" name="email" required>
+                                        <input type="email" class="form-control" id="email" name="email" required value="${not empty nameUser? nameUser.email : ''}">
                                     </div>
 
                                     <div class="form-group">

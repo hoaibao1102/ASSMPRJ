@@ -756,238 +756,243 @@
 
         <jsp:include page="footer.jsp"/>
 
+       <script src="assets/js/chatbase-loader.js"></script>
+
+
+
+
         <!-- Bootstrap 5 JS -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
         <script>
-        // Auto-submit form with better reliability
-                        (function () {
-                            // Check if form submission is needed
-                            var hasSubmitted = false;
+            // Auto-submit form with better reliability
+            (function () {
+                // Check if form submission is needed
+                var hasSubmitted = false;
 
-                            // Use sessionStorage for better compatibility
-                            try {
-                                hasSubmitted = sessionStorage.getItem('autoFormSubmitted') === 'true';
-                            } catch (e) {
-                                // Fallback to cookie if sessionStorage is not available
-                                hasSubmitted = document.cookie.indexOf('autoFormSubmitted=true') !== -1;
-                            }
+                // Use sessionStorage for better compatibility
+                try {
+                    hasSubmitted = sessionStorage.getItem('autoFormSubmitted') === 'true';
+                } catch (e) {
+                    // Fallback to cookie if sessionStorage is not available
+                    hasSubmitted = document.cookie.indexOf('autoFormSubmitted=true') !== -1;
+                }
 
-                            if (!hasSubmitted) {
-                                try {
-                                    sessionStorage.setItem('autoFormSubmitted', 'true');
-                                } catch (e) {
-                                    // Fallback to cookie
-                                    document.cookie = 'autoFormSubmitted=true; path=/';
-                                }
+                if (!hasSubmitted) {
+                    try {
+                        sessionStorage.setItem('autoFormSubmitted', 'true');
+                    } catch (e) {
+                        // Fallback to cookie
+                        document.cookie = 'autoFormSubmitted=true; path=/';
+                    }
 
-                                // Submit the form
-                                var form = document.getElementById('autoSubmitForm');
-                                if (form) {
-                                    form.submit();
-                                }
-                            }
-                        })();
+                    // Submit the form
+                    var form = document.getElementById('autoSubmitForm');
+                    if (form) {
+                        form.submit();
+                    }
+                }
+            })();
 
-        // Fade in animation on scroll
-                        document.addEventListener('DOMContentLoaded', function () {
-                            const observerOptions = {
-                                threshold: 0.1,
-                                rootMargin: '0px 0px -50px 0px'
-                            };
+            // Fade in animation on scroll
+            document.addEventListener('DOMContentLoaded', function () {
+                const observerOptions = {
+                    threshold: 0.1,
+                    rootMargin: '0px 0px -50px 0px'
+                };
 
-                            const observer = new IntersectionObserver(function (entries) {
-                                entries.forEach(entry => {
-                                    if (entry.isIntersecting) {
-                                        entry.target.classList.add('visible');
-                                    }
-                                });
-                            }, observerOptions);
+                const observer = new IntersectionObserver(function (entries) {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('visible');
+                        }
+                    });
+                }, observerOptions);
 
-                            // Observe all fade-in elements
-                            document.querySelectorAll('.fade-in').forEach(el => {
-                                observer.observe(el);
+                // Observe all fade-in elements
+                document.querySelectorAll('.fade-in').forEach(el => {
+                    observer.observe(el);
+                });
+
+                // Enhanced hover effects
+                const tourCards = document.querySelectorAll('.tour-card');
+                const featureCards = document.querySelectorAll('.feature-card');
+
+                [...tourCards, ...featureCards].forEach(card => {
+                    card.addEventListener('mouseenter', function () {
+                        this.style.transform = 'translateY(-5px)';
+                    });
+
+                    card.addEventListener('mouseleave', function () {
+                        this.style.transform = 'translateY(0)';
+                    });
+                });
+
+                // Smooth scrolling for navigation links
+                document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                    anchor.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        const targetId = this.getAttribute('href').substring(1);
+                        const targetElement = document.getElementById(targetId);
+
+                        if (targetElement) {
+                            targetElement.scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'start'
                             });
+                        }
+                    });
+                });
 
-                            // Enhanced hover effects
-                            const tourCards = document.querySelectorAll('.tour-card');
-                            const featureCards = document.querySelectorAll('.feature-card');
+                // Navbar scroll effect
+                window.addEventListener('scroll', function () {
+                    const navbar = document.querySelector('.navbar');
+                    if (navbar) {
+                        if (window.scrollY > 50) {
+                            navbar.classList.add('scrolled');
+                        } else {
+                            navbar.classList.remove('scrolled');
+                        }
+                    }
+                });
 
-                            [...tourCards, ...featureCards].forEach(card => {
-                                card.addEventListener('mouseenter', function () {
-                                    this.style.transform = 'translateY(-5px)';
-                                });
+                // Image lazy loading
+                const images = document.querySelectorAll('img[data-src]');
+                const imageObserver = new IntersectionObserver((entries, observer) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const img = entry.target;
+                            img.src = img.dataset.src;
+                            img.classList.remove('lazy');
+                            imageObserver.unobserve(img);
+                        }
+                    });
+                });
 
-                                card.addEventListener('mouseleave', function () {
-                                    this.style.transform = 'translateY(0)';
-                                });
-                            });
+                images.forEach(img => imageObserver.observe(img));
 
-                            // Smooth scrolling for navigation links
-                            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                                anchor.addEventListener('click', function (e) {
-                                    e.preventDefault();
-                                    const targetId = this.getAttribute('href').substring(1);
-                                    const targetElement = document.getElementById(targetId);
+                // Form validation enhancement
+                const forms = document.querySelectorAll('.needs-validation');
+                forms.forEach(form => {
+                    form.addEventListener('submit', function (event) {
+                        if (!form.checkValidity()) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    });
+                });
 
-                                    if (targetElement) {
-                                        targetElement.scrollIntoView({
-                                            behavior: 'smooth',
-                                            block: 'start'
-                                        });
-                                    }
-                                });
-                            });
+                // Back to top button
+                const backToTopBtn = document.querySelector('.back-to-top');
+                if (backToTopBtn) {
+                    window.addEventListener('scroll', function () {
+                        if (window.scrollY > 300) {
+                            backToTopBtn.style.display = 'block';
+                        } else {
+                            backToTopBtn.style.display = 'none';
+                        }
+                    });
 
-                            // Navbar scroll effect
-                            window.addEventListener('scroll', function () {
-                                const navbar = document.querySelector('.navbar');
-                                if (navbar) {
-                                    if (window.scrollY > 50) {
-                                        navbar.classList.add('scrolled');
-                                    } else {
-                                        navbar.classList.remove('scrolled');
-                                    }
-                                }
-                            });
-
-                            // Image lazy loading
-                            const images = document.querySelectorAll('img[data-src]');
-                            const imageObserver = new IntersectionObserver((entries, observer) => {
-                                entries.forEach(entry => {
-                                    if (entry.isIntersecting) {
-                                        const img = entry.target;
-                                        img.src = img.dataset.src;
-                                        img.classList.remove('lazy');
-                                        imageObserver.unobserve(img);
-                                    }
-                                });
-                            });
-
-                            images.forEach(img => imageObserver.observe(img));
-
-                            // Form validation enhancement
-                            const forms = document.querySelectorAll('.needs-validation');
-                            forms.forEach(form => {
-                                form.addEventListener('submit', function (event) {
-                                    if (!form.checkValidity()) {
-                                        event.preventDefault();
-                                        event.stopPropagation();
-                                    }
-                                    form.classList.add('was-validated');
-                                });
-                            });
-
-                            // Back to top button
-                            const backToTopBtn = document.querySelector('.back-to-top');
-                            if (backToTopBtn) {
-                                window.addEventListener('scroll', function () {
-                                    if (window.scrollY > 300) {
-                                        backToTopBtn.style.display = 'block';
-                                    } else {
-                                        backToTopBtn.style.display = 'none';
-                                    }
-                                });
-
-                                backToTopBtn.addEventListener('click', function () {
-                                    window.scrollTo({
-                                        top: 0,
-                                        behavior: 'smooth'
-                                    });
-                                });
-                            }
-
-                            // Carousel auto-play control
-                            const carousels = document.querySelectorAll('.carousel');
-                            carousels.forEach(carousel => {
-                                carousel.addEventListener('mouseenter', function () {
-                                    const bsCarousel = bootstrap.Carousel.getInstance(this);
-                                    if (bsCarousel) {
-                                        bsCarousel.pause();
-                                    }
-                                });
-
-                                carousel.addEventListener('mouseleave', function () {
-                                    const bsCarousel = bootstrap.Carousel.getInstance(this);
-                                    if (bsCarousel) {
-                                        bsCarousel.cycle();
-                                    }
-                                });
-                            });
-
-                            // Mobile menu toggle enhancement
-                            const navToggler = document.querySelector('.navbar-toggler');
-                            const navCollapse = document.querySelector('.navbar-collapse');
-
-                            if (navToggler && navCollapse) {
-                                navToggler.addEventListener('click', function () {
-                                    setTimeout(() => {
-                                        if (navCollapse.classList.contains('show')) {
-                                            document.body.style.overflow = 'hidden';
-                                        } else {
-                                            document.body.style.overflow = 'auto';
-                                        }
-                                    }, 300);
-                                });
-                            }
-
-                            // Close mobile menu when clicking outside
-                            document.addEventListener('click', function (e) {
-                                const navbar = document.querySelector('.navbar');
-                                const navCollapse = document.querySelector('.navbar-collapse');
-
-                                if (navbar && navCollapse && !navbar.contains(e.target) && navCollapse.classList.contains('show')) {
-                                    const navToggler = document.querySelector('.navbar-toggler');
-                                    if (navToggler) {
-                                        navToggler.click();
-                                    }
-                                }
-                            });
-
-                            // Tooltip initialization
-                            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-                            tooltipTriggerList.map(function (tooltipTriggerEl) {
-                                return new bootstrap.Tooltip(tooltipTriggerEl);
-                            });
-
-                            // Popover initialization
-                            const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
-                            popoverTriggerList.map(function (popoverTriggerEl) {
-                                return new bootstrap.Popover(popoverTriggerEl);
-                            });
-
-                            // Loading animation
-                            window.addEventListener('load', function () {
-                                const loader = document.querySelector('.loader-wrapper');
-                                if (loader) {
-                                    loader.style.opacity = '0';
-                                    setTimeout(() => {
-                                        loader.style.display = 'none';
-                                    }, 500);
-                                }
-                            });
-
-                            // Performance optimization: Debounce scroll events
-                            function debounce(func, wait) {
-                                let timeout;
-                                return function executedFunction(...args) {
-                                    const later = () => {
-                                        clearTimeout(timeout);
-                                        func(...args);
-                                    };
-                                    clearTimeout(timeout);
-                                    timeout = setTimeout(later, wait);
-                                };
-                            }
-
-                            // Apply debounce to scroll events
-                            const debouncedScrollHandler = debounce(function () {
-                                // Any scroll-heavy operations can be placed here
-                                console.log('Scroll event processed');
-                            }, 100);
-
-                            window.addEventListener('scroll', debouncedScrollHandler);
+                    backToTopBtn.addEventListener('click', function () {
+                        window.scrollTo({
+                            top: 0,
+                            behavior: 'smooth'
                         });
+                    });
+                }
+
+                // Carousel auto-play control
+                const carousels = document.querySelectorAll('.carousel');
+                carousels.forEach(carousel => {
+                    carousel.addEventListener('mouseenter', function () {
+                        const bsCarousel = bootstrap.Carousel.getInstance(this);
+                        if (bsCarousel) {
+                            bsCarousel.pause();
+                        }
+                    });
+
+                    carousel.addEventListener('mouseleave', function () {
+                        const bsCarousel = bootstrap.Carousel.getInstance(this);
+                        if (bsCarousel) {
+                            bsCarousel.cycle();
+                        }
+                    });
+                });
+
+                // Mobile menu toggle enhancement
+                const navToggler = document.querySelector('.navbar-toggler');
+                const navCollapse = document.querySelector('.navbar-collapse');
+
+                if (navToggler && navCollapse) {
+                    navToggler.addEventListener('click', function () {
+                        setTimeout(() => {
+                            if (navCollapse.classList.contains('show')) {
+                                document.body.style.overflow = 'hidden';
+                            } else {
+                                document.body.style.overflow = 'auto';
+                            }
+                        }, 300);
+                    });
+                }
+
+                // Close mobile menu when clicking outside
+                document.addEventListener('click', function (e) {
+                    const navbar = document.querySelector('.navbar');
+                    const navCollapse = document.querySelector('.navbar-collapse');
+
+                    if (navbar && navCollapse && !navbar.contains(e.target) && navCollapse.classList.contains('show')) {
+                        const navToggler = document.querySelector('.navbar-toggler');
+                        if (navToggler) {
+                            navToggler.click();
+                        }
+                    }
+                });
+
+                // Tooltip initialization
+                const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+                tooltipTriggerList.map(function (tooltipTriggerEl) {
+                    return new bootstrap.Tooltip(tooltipTriggerEl);
+                });
+
+                // Popover initialization
+                const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
+                popoverTriggerList.map(function (popoverTriggerEl) {
+                    return new bootstrap.Popover(popoverTriggerEl);
+                });
+
+                // Loading animation
+                window.addEventListener('load', function () {
+                    const loader = document.querySelector('.loader-wrapper');
+                    if (loader) {
+                        loader.style.opacity = '0';
+                        setTimeout(() => {
+                            loader.style.display = 'none';
+                        }, 500);
+                    }
+                });
+
+                // Performance optimization: Debounce scroll events
+                function debounce(func, wait) {
+                    let timeout;
+                    return function executedFunction(...args) {
+                        const later = () => {
+                            clearTimeout(timeout);
+                            func(...args);
+                        };
+                        clearTimeout(timeout);
+                        timeout = setTimeout(later, wait);
+                    };
+                }
+
+                // Apply debounce to scroll events
+                const debouncedScrollHandler = debounce(function () {
+                    // Any scroll-heavy operations can be placed here
+                    console.log('Scroll event processed');
+                }, 100);
+
+                window.addEventListener('scroll', debouncedScrollHandler);
+            });
         </script>
     </body>
 </html>

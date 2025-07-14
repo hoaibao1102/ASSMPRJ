@@ -57,120 +57,9 @@ public class regisController extends HttpServlet {
                 url = REGIS_PAGE;
             } else {
                 if (action.equals("regis")) {
-                    boolean checkedError = false;
-                    // Lấy dữ liệu từ form đăng ký
-                    String fullName = request.getParameter("txtFullname");
-                    String email = request.getParameter("txtEmail");
-                    String phone = request.getParameter("txtPhone");
-                    String password = request.getParameter("txtPassword");
-                    String confirmPassword = request.getParameter("txtConfirmPassword");
-
-                    // Regex cho tên: chỉ cho phép chữ cái, dấu cách, độ dài 2-20 ký tự
-                    String regexFullName = "^[\\p{L} ]{2,20}$";
-                    // Regex cho email cơ bản
-                    String regexEmail = "^[\\w\\.-]+@[\\w\\.-]+\\.\\w{2,}$";
-                    // Regex cho số điện thoại 10 số, bắt đầu số 0
-                    String regexPhone = "^0\\d{9}$";
-                    // Regex mật khẩu tối thiểu 6 ký tự (ví dụ), ít nhất 1 ký tự
-                    String regexPassword = "^.{6,}$";
-
-                    if (fullName == null || !fullName.matches(regexFullName)) {
-                        checkedError = true;
-                        request.setAttribute("txtFullname_error", "Tên không hợp lệ");
-                    }
-
-                    if (email == null || !email.matches(regexEmail)) {
-                        checkedError = true;
-                        request.setAttribute("txtEmail_error", "Email không hợp lệ");
-                    }
-
-                    if (checkExist(email) != null) {
-                        checkedError = true;
-                        request.setAttribute("txtEmail_error", "Email existed");
-                    }
-
-                    if (phone.trim() == null || !phone.trim().matches(regexPhone)) {
-                        checkedError = true;
-                        request.setAttribute("txtPhone_error", "Sđt phải 10 số, bắt đầu 0");
-                    }
-
-                    if (checkExist(phone) != null) {
-                        checkedError = true;
-                        request.setAttribute("txtPhone_error", "Phone existed");
-                    }
-
-                    if (password == null || !password.matches(regexPassword)) {
-                        checkedError = true;
-                        request.setAttribute("txtPassword_error", "Mật khẩu ít nhất 6 ký tự");
-                    }
-
-                    if (confirmPassword == null || !confirmPassword.equals(password)) {
-                        checkedError = true;
-                        request.setAttribute("txtConfirmPassword_error", "Xác nhận mật khẩu sai");
-                    }
-
-                    if (!checkedError) {
-                        String verificationCode = generateVerificationCode(); // sinh mã 6 số
-                        Timestamp expiredTime = Timestamp.valueOf(LocalDateTime.now().plusMinutes(3));
-                        String newPassWord = PasswordUtils.hashPassword(password);
-                        UserDTO userSuccess = new UserDTO(fullName, email, phone, newPassWord, "CUS");
-                        UserVerificationDAO verDAO = new UserVerificationDAO();
-                        boolean saved = verDAO.saveVerificationCode(email, verificationCode, expiredTime);
-
-                        if (saved) {
-                            sendVerificationEmail(email, fullName, verificationCode); // bạn sẽ thêm nội dung hàm này sau
-
-                            session.setAttribute("userWaitAccess", userSuccess);
-                            request.setAttribute("email", email);
-                            url = "verify.jsp"; // chuyển đến trang xác minh
-
-//                        uDAO.create(userSuccess);
-//                        url = LOGIN_PAGE;
-                        } else {
-
-//                        UserDTO userFail = new UserDTO(fullName, email, phone, password, "CUS");
-//                        request.setAttribute("newUser", userFail);
-//                        url = REGIS_PAGE;
-                        }
-
-                    }
+                    url = handleRegis(request, response);
                 } else if (action.equals("verifyCode")) {
-                    UserDTO userWaitAccess = (UserDTO) session.getAttribute("userWaitAccess");
-                    String inputCode = request.getParameter("codeInput");
-                    String email = userWaitAccess.getEmail();
-                    UserVerificationDAO verDAO = new UserVerificationDAO();
-                    UserVerificationDTO ver = verDAO.findByEmail(email);
-
-                    if (ver == null) {
-                        request.setAttribute("error", "Verification session expired. Please register again.");
-                        url = "RegisForm.jsp";
-                    }
-
-                    Timestamp now = new Timestamp(System.currentTimeMillis());
-
-                    if (ver.getAttemptCount() >= 5 || now.after(ver.getExpiredTime())) {
-                        verDAO.deleteByEmail(email);
-                        session.invalidate(); // Xoá toàn bộ session tạm
-                        request.setAttribute("error", "Verification expired or too many attempts.");
-                        url = "LoginForm.jsp";
-                    }
-
-                    if (ver.getCode().equals(inputCode)) {
-                        // Lấy lại các dữ liệu từ sessioN
-                        UserDAO userDAO = new UserDAO();
-                        userDAO.create(userWaitAccess);
-
-                        verDAO.deleteByEmail(email);
-                        session.invalidate(); // Xoá dữ liệu tạm
-                        request.setAttribute("success", "Account verified! You can now login.");
-                        url = "LoginForm.jsp";
-                    } else {
-                        verDAO.incrementAttempt(email);
-                        request.setAttribute("error", "Incorrect verification code.");
-                        request.setAttribute("mode", "register"); // hoặc "regis"
-                        request.setAttribute("email", email);     // để hiển thị email trong jsp
-                        url = "verify.jsp";
-                    }
+                    url = handleVerifyCode(request, response);
                 }
             }
 
@@ -250,5 +139,130 @@ public class regisController extends HttpServlet {
         Random rand = new Random();
         int code = 100000 + rand.nextInt(900000); // 6 chữ số
         return String.valueOf(code);
+    }
+
+    private String handleRegis(HttpServletRequest request, HttpServletResponse response) throws SQLException, ClassNotFoundException {
+        boolean checkedError = false;
+        String url = "";
+        HttpSession session = request.getSession();
+                    // Lấy dữ liệu từ form đăng ký
+                    String fullName = request.getParameter("txtFullname");
+                    String email = request.getParameter("txtEmail");
+                    String phone = request.getParameter("txtPhone");
+                    String password = request.getParameter("txtPassword");
+                    String confirmPassword = request.getParameter("txtConfirmPassword");
+
+                    // Regex cho tên: chỉ cho phép chữ cái, dấu cách, độ dài 2-20 ký tự
+                    String regexFullName = "^[\\p{L} ]{2,20}$";
+                    // Regex cho email cơ bản
+                    String regexEmail = "^[\\w\\.-]+@[\\w\\.-]+\\.\\w{2,}$";
+                    // Regex cho số điện thoại 10 số, bắt đầu số 0
+                    String regexPhone = "^0\\d{9}$";
+                    // Regex mật khẩu tối thiểu 6 ký tự (ví dụ), ít nhất 1 ký tự
+                    String regexPassword = "^.{6,}$";
+
+                    if (fullName == null || !fullName.matches(regexFullName)) {
+                        checkedError = true;
+                        request.setAttribute("txtFullname_error", "Tên không hợp lệ");
+                    }
+
+                    if (email == null || !email.matches(regexEmail)) {
+                        checkedError = true;
+                        request.setAttribute("txtEmail_error", "Email không hợp lệ");
+                    }
+
+                    if (checkExist(email) != null) {
+                        checkedError = true;
+                        request.setAttribute("txtEmail_error", "Email existed");
+                    }
+
+                    if (phone.trim() == null || !phone.trim().matches(regexPhone)) {
+                        checkedError = true;
+                        request.setAttribute("txtPhone_error", "Sđt phải 10 số, bắt đầu 0");
+                    }
+
+                    if (checkExist(phone) != null) {
+                        checkedError = true;
+                        request.setAttribute("txtPhone_error", "Phone existed");
+                    }
+
+                    if (password == null || !password.matches(regexPassword)) {
+                        checkedError = true;
+                        request.setAttribute("txtPassword_error", "Mật khẩu ít nhất 6 ký tự");
+                    }
+
+                    if (confirmPassword == null || !confirmPassword.equals(password)) {
+                        checkedError = true;
+                        request.setAttribute("txtConfirmPassword_error", "Xác nhận mật khẩu sai");
+                    }
+
+                    if (!checkedError) {
+                        String verificationCode = generateVerificationCode(); // sinh mã 6 số
+                        Timestamp expiredTime = Timestamp.valueOf(LocalDateTime.now().plusMinutes(3));
+                        String newPassWord = PasswordUtils.hashPassword(password);
+                        UserDTO userSuccess = new UserDTO(fullName, email, phone, newPassWord, "CUS");
+                        UserVerificationDAO verDAO = new UserVerificationDAO();
+                        boolean saved = verDAO.saveVerificationCode(email, verificationCode, expiredTime);
+
+                        if (saved) {
+                            sendVerificationEmail(email, fullName, verificationCode); // bạn sẽ thêm nội dung hàm này sau
+
+                            session.setAttribute("userWaitAccess", userSuccess);
+                            request.setAttribute("email", email);
+                            url = "verify.jsp"; // chuyển đến trang xác minh
+
+//                        uDAO.create(userSuccess);
+//                        url = LOGIN_PAGE;
+                        } else {
+
+//                        UserDTO userFail = new UserDTO(fullName, email, phone, password, "CUS");
+//                        request.setAttribute("newUser", userFail);
+//                        url = REGIS_PAGE;
+                        }
+
+                    }
+                    return url;
+    }
+
+    private String handleVerifyCode(HttpServletRequest request, HttpServletResponse response ) throws SQLException, ClassNotFoundException {
+        String url = "";
+        HttpSession session = request.getSession();
+        UserDTO userWaitAccess = (UserDTO) session.getAttribute("userWaitAccess");
+                    String inputCode = request.getParameter("codeInput");
+                    String email = userWaitAccess.getEmail();
+                    UserVerificationDAO verDAO = new UserVerificationDAO();
+                    UserVerificationDTO ver = verDAO.findByEmail(email);
+
+                    if (ver == null) {
+                        request.setAttribute("error", "Verification session expired. Please register again.");
+                        url = "RegisForm.jsp";
+                    }
+
+                    Timestamp now = new Timestamp(System.currentTimeMillis());
+
+                    if (ver.getAttemptCount() >= 5 || now.after(ver.getExpiredTime())) {
+                        verDAO.deleteByEmail(email);
+                        session.invalidate(); // Xoá toàn bộ session tạm
+                        request.setAttribute("error", "Verification expired or too many attempts.");
+                        url = "LoginForm.jsp";
+                    }
+
+                    if (ver.getCode().equals(inputCode)) {
+                        // Lấy lại các dữ liệu từ sessioN
+                        UserDAO userDAO = new UserDAO();
+                        userDAO.create(userWaitAccess);
+
+                        verDAO.deleteByEmail(email);
+                        session.invalidate(); // Xoá dữ liệu tạm
+                        request.setAttribute("success", "Account verified! You can now login.");
+                        url = "LoginForm.jsp";
+                    } else {
+                        verDAO.incrementAttempt(email);
+                        request.setAttribute("error", "Incorrect verification code.");
+                        request.setAttribute("mode", "register"); // hoặc "regis"
+                        request.setAttribute("email", email);     // để hiển thị email trong jsp
+                        url = "verify.jsp";
+                    }
+                    return url;
     }
 }
