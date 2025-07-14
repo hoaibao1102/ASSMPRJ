@@ -909,7 +909,7 @@
                         </div>
                         <form action="MainController" method="get" onsubmit="return prepareSubmit()">
                             <input type="hidden" name="action" value="call_oder_step2">
-                            <input type="hidden" name="startNum" value="<%=stDate.getStartNum()%>">
+                            <input type="hidden" name="startDate" value="<%=stDate.getStartDate()%>">
                             <input type="hidden" name="idUser" value="<%=account.getIdUser()%>">
                             <input type="hidden" name="idTour" value="<%=tour.getIdTourTicket()%>">
                             <input type="hidden" name="bookingDate" value="<%=today%>">

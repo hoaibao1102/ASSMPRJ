@@ -29,6 +29,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
+import java.sql.Date;
 import java.util.List;
 
 /**
@@ -61,6 +62,7 @@ public class loginController extends HttpServlet {
             if (action == null) {
                 url = LOGIN_PAGE;
             } else if ("login".equals(action)) {
+
                 url = handleLogin(request, response);
             } else if ("logout".equals(action)) {
                 url = handleLogout(request, response);

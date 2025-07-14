@@ -25,6 +25,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -121,11 +122,11 @@ public class userController extends HttpServlet {
         List<OrderDTO> list = odao.search(userId); // Lấy toàn bộ user từ DAO
         Map<String, String> startDateMap = new HashMap<>();
         for (OrderDTO order : list) {
-            int stNum = order.getStartNum();
+            Date startDate = order.getStartDate();
             String idTour = order.getIdTour();
             String idBooking = order.getIdBooking();
 
-            StartDateDTO st = stdao.searchDetailDate(idTour, stNum);
+            StartDateDTO st = stdao.searchDetailDate(idTour, startDate);
             String date = st.getStartDate();
 
             startDateMap.put(idBooking, date);

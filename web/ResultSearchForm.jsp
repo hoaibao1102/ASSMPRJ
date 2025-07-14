@@ -553,7 +553,7 @@
                     <div class="col-lg-4 col-md-6 mb-4">
                         <form class="destination-card" action="MainController" method="post">
                             <div class="image-wrapper">
-                                <img src="assets/images/<%=p.getImg()%>" alt="<%=p.getPlaceName()%>" />
+                                <img src="<%=p.getImg()%>" alt="<%=p.getPlaceName()%>" />
                                 <div class="card-overlay"></div>
                                 <button type="submit" class="btn-overlay">
                                     <i class="fas fa-arrow-right me-2"></i>Khám phá
@@ -580,5 +580,7 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
         
         <%@include file="footer.jsp" %>
+        <script src="assets/js/chatbase-loader.js"></script>
+
     </body>
 </html>

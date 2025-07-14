@@ -97,6 +97,55 @@ CREATE TABLE Favorites (
 );
 
 
+--BẢNG VOUCHER
+ALTER TABLE [dbo].[Orders]
+ADD voucherID INT;
+
+ALTER TABLE [dbo].[Orders]
+ADD amount_off DECIMAL(10, 2);
+
+ALTER TABLE [dbo].[Orders]
+ADD CONSTRAINT fk_voucherID
+FOREIGN KEY (voucherID) REFERENCES Vouchers(voucherID);
+
+CREATE TABLE Vouchers (
+    voucherID INT IDENTITY(1,1) PRIMARY KEY,
+    startDate DATE,
+    discount DECIMAL(5, 2),
+    numbers INT,
+    duration INT,
+	title NVARCHAR(100),
+	status int default 1 ,
+	minimumOrderValue DECIMAL(15,2) NOT NULL 
+);
+
+--==============================================================================
+GO
+CREATE TRIGGER update_status_after_duration
+ON Vouchers
+FOR UPDATE
+AS
+BEGIN
+    -- Kiểm tra xem ngày kết thúc (startDate + duration) có quá ngày hiện tại không
+    IF (DATEADD(DAY, (SELECT duration FROM INSERTED), (SELECT startDate FROM INSERTED)) < GETDATE())
+    BEGIN
+        -- Nếu quá hạn, set status = 0
+        UPDATE Vouchers
+        SET status = 0
+        WHERE voucherID IN (SELECT voucherID FROM INSERTED);
+    END
+END;
+
+
+======================================================================================
+
+
+
+
+
+
+--==========================================================================
+--CHÈN DATA VÀO CÁC BẢNG
 
 -- Insert admin & users
 INSERT INTO Users (full_name, email, password, phone, role) VALUES
