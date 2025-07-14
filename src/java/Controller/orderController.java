@@ -226,15 +226,16 @@ public class orderController extends HttpServlet {
         return url;
     }
 
-    private String handleCallStep2(HttpServletRequest request, HttpServletResponse response) {
+
+    private String handleCallStep2(HttpServletRequest request, HttpServletResponse response) {         
         try {
             int voucherID = Integer.parseInt(request.getParameter("voucherID"));
             VoucherDAO vcdao = new VoucherDAO();
             vcdao.subQuantity(voucherID);
+
         } catch (Exception e) {
         }
 
-        //lay thong tin de tao dtb booking
         OrderDAO odao = new OrderDAO();
         double total = Double.parseDouble(request.getParameter("totalBill"));
         int numberTicket = Integer.parseInt(request.getParameter("numberTicket"));
