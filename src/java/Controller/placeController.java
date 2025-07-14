@@ -5,16 +5,20 @@
  */
 package Controller;
 
+import DAO.OrderDAO;
 import DAO.PlacesDAO;
+import DAO.ReviewDAO;
 import DAO.StartDateDAO;
 import DAO.TicketDayDetailDAO;
 import DAO.TicketImgDAO;
 import DAO.TourTicketDAO;
 import DTO.PlacesDTO;
+import DTO.ReviewDTO;
 import DTO.StartDateDTO;
 import DTO.TicketDayDetailDTO;
 import DTO.TourTicketDTO;
 import DTO.TicketImgDTO;
+import DTO.UserDTO;
 import UTILS.AuthUtils;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletResponse;
@@ -29,6 +33,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -44,6 +50,8 @@ public class placeController extends HttpServlet {
     private final TicketDayDetailDAO tddDao = new TicketDayDetailDAO();
     private final TicketImgDAO tiDAO = new TicketImgDAO();
     private final StartDateDAO stdDAO = new StartDateDAO();
+    private final OrderDAO odao = new OrderDAO();
+    private final ReviewDAO reviewDAO = new ReviewDAO();
 
     public void getAllDestination(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -471,8 +479,17 @@ public class placeController extends HttpServlet {
     }
 
     private String handleTicketDetail(HttpServletRequest request, HttpServletResponse response) {
+        HttpSession session = request.getSession(false);
+        UserDTO user = null;
+        int userId = -1;
 
-//di vao chi tiet tour    
+        if (session != null) {
+            user = (UserDTO) session.getAttribute("nameUser");
+            if (user != null) {
+                userId = user.getIdUser();
+            }
+        }
+
         String idTour = request.getParameter("idTourTicket");
         if (idTour != null && !idTour.trim().isEmpty()) {
             List<TicketImgDTO> ticketImgDetail = tiDAO.readbyIdTourTicket(idTour);
@@ -486,6 +503,29 @@ public class placeController extends HttpServlet {
             request.setAttribute("ticketImgDetail", ticketImgDetail);
             request.setAttribute("ticketDayDetail", ticketDayDetail);
             request.setAttribute("tourTicket", tourTicket);
+            // 2. Lấy danh sách đánh giá
+            List<ReviewDTO> reviews = reviewDAO.getReviewsByTourId(idTour);
+            request.setAttribute("reviews", reviews);
+
+            // 3. Gửi thêm thông tin tổng hợp (đã được trigger cập nhật)
+            request.setAttribute("averageRating", tdao.getAvgRating(idTour));
+            request.setAttribute("totalReviews", tdao.getTotalReviews(idTour));
+            request.setAttribute("featuredReview", tdao.getFeaturedReview(idTour));
+
+            // ✅ Chỉ kiểm tra đánh giá nếu đã đăng nhập
+            if (user != null) {
+                
+                // review yet?
+                boolean hasReviewed = reviewDAO.hasUserReviewed(userId, idTour);
+                request.setAttribute("hasUserReviewed", hasReviewed);
+                // paying yet?
+                boolean hasPaid = odao.hasUserPaidForTour(userId, idTour);
+                request.setAttribute("hasUserPaid", hasPaid);
+                
+                ReviewDTO userReview = reviewDAO.getUserReview(userId, idTour);
+                request.setAttribute("userReview", userReview);
+            }
+
             return "TicketDetailForm.jsp";
         }
         return null;

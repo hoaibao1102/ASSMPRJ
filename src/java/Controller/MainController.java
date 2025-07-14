@@ -33,6 +33,9 @@ public class MainController extends HttpServlet {
                 || "listUser".equals(action)
                 || "editProfile".equals(action)
                 || "updateProfile".equals(action)
+                || "addReview".equals(action)
+                || "updateReview".equals(action)
+                || "deleteReview".equals(action)
                 || "addFavoriteTour".equals(action)
                 || "showFavoriteList".equals(action)
                 || "removeFavorite".equals(action);
@@ -45,6 +48,7 @@ public class MainController extends HttpServlet {
                 || "reuseVoucher".equals(action)
                 || "goReuseVoucherForm".equals(action)
                 || "deleteVoucher".equals(action);
+
     }
 
     private boolean isPlaceAction(String action) {
