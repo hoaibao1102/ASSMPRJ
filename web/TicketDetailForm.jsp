@@ -619,12 +619,12 @@
                                     </label>
                                     <div class="row">
                                         <div class="col-12 mb-2">
-                                            <select name="startNum" id="startNum" class="form-select">
+                                            <select name="startDate" id="startNum" class="form-select">
                                                 <% if (startDates != null) {
                                                     for (StartDateDTO sd : startDates) { 
                                                         if(sd.getQuantity() != 0){
                                                 %>
-                                                <option value="<%= sd.getStartNum() %>">
+                                                <option value="<%= sd.getStartDate() %>">
                                                     <%= sd.getStartDate() %> (còn <%= sd.getQuantity()%> vé)
                                                 </option>
                                                 <%

@@ -499,14 +499,14 @@
                                 <table class="table table-hover">
                                     <thead>
                                         <tr>
-                                            <th><i class="bi bi-hash me-2"></i>Mã đơn</th>
-                                            <th><i class="bi bi-geo-alt me-2"></i>Mã tour</th>
-                                            <th><i class="bi bi-calendar-event me-2"></i>Ngày đặt</th>
-                                            <th><i class="bi bi-calendar-check me-2"></i>Ngày khởi hành</th>
-                                            <th><i class="bi bi-ticket-perforated me-2"></i>Số vé</th>
-                                            <th><i class="bi bi-currency-dollar me-2"></i>Tổng tiền</th>
-                                            <th><i class="bi bi-chat-dots me-2"></i>Ghi chú</th>
-                                            <th><i class="bi bi-check-circle me-2"></i>Trạng thái</th>
+                                            <td><strong><i class="bi bi-hash me-2"></i>Mã đơn</strong></td>
+                                            <td><strong><i class="bi bi-geo-alt me-2"></i>Mã tour</strong></td>
+                                            <td><strong><i class="bi bi-calendar-event me-2"></i>Ngày đặt</strong></td>
+                                            <td><strong><i class="bi bi-calendar-check me-2"></i>Ngày khởi hành</strong></td>
+                                            <td><strong><i class="bi bi-ticket-perforated me-2"></i>Số vé</strong></td>
+                                            <td><strong><i class="bi bi-currency-dollar me-2"></i>Tổng tiền</strong></td>
+                                            <td><strong><i class="bi bi-chat-dots me-2"></i>Ghi chú</strong></td>
+                                            <td><strong><i class="bi bi-check-circle me-2"></i>Trạng thái</strong></td>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -515,7 +515,7 @@
                                                 <td><strong>${order.idTour}</strong></td>
                                                 <td><span class="badge bg-primary">${order.idBooking}</span></td>
                                                 <td>${order.bookingDate}</td>
-                                                <td>${order.startNum}</td>
+                                                <td>${order.startDate}</td>
                                                 <td><span class="badge bg-secondary">${order.numberTicket}</span></td>
                                                 <td class="price-value">
                                                     <fmt:formatNumber value="${order.totalPrice}" type="currency" currencySymbol="₫" groupingUsed="true"/>

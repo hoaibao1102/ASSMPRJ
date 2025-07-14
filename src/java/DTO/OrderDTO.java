@@ -4,6 +4,8 @@
  */
 package DTO;
 
+import java.sql.Date;
+
 /**
  *
  * @author MSI PC
@@ -13,7 +15,7 @@ public class OrderDTO {
     private String idTour;
     private String bookingDate;
     private int numberTicket;
-    private int startNum;
+    private Date startDate;
     private double totalPrice;
     private int status;
     private String idBooking;
@@ -22,25 +24,27 @@ public class OrderDTO {
     public OrderDTO() {
     }
 
-    public OrderDTO(int idUser, String idTour, String bookingDate, int numberTicket, double totalPrice, int status, String idBooking, String note,int startNum) {
+    public OrderDTO(int idUser, String idTour, String bookingDate, int numberTicket, double totalPrice, int status, String idBooking, String note, Date startDate) {
         this.idUser = idUser;
         this.idTour = idTour;
         this.bookingDate = bookingDate;
         this.numberTicket = numberTicket;
+        this.startDate = startDate;
         this.totalPrice = totalPrice;
         this.status = status;
         this.idBooking = idBooking;
         this.note = note;
-        this.startNum = startNum;
     }
 
-    public int getStartNum() {
-        return startNum;
+    public Date getStartDate() {
+        return startDate;
     }
 
-    public void setStartNum(int startNum) {
-        this.startNum = startNum;
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
     }
+
+    
 
     public int getIdUser() {
         return idUser;

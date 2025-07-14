@@ -7,6 +7,7 @@ package DAO;
 import DTO.StartDateDTO;
 import UTILS.DBUtils;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -112,15 +113,15 @@ public class StartDateDAO implements IDAO<StartDateDTO, String>{
         return null;
     }
     
-    public StartDateDTO searchDetailDate(String idTourTicket,int startNum) {
+    public StartDateDTO searchDetailDate(String idTourTicket,Date startDate) {
         StartDateDTO std = null;
-        String sql = "SELECT * FROM TourStartDates WHERE idTourTicket = ? and startNum = ? ";
+        String sql = "SELECT * FROM TourStartDates WHERE idTourTicket = ? and startDate = ? ";
        
         try {
             Connection conn = DBUtils.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1,idTourTicket);
-            ps.setInt(2,startNum);
+            ps.setDate(2,startDate);
             ResultSet rs = ps.executeQuery();
             if(rs.next()){
                     std = new StartDateDTO(rs.getString("idTourTicket"),
@@ -162,6 +163,6 @@ public class StartDateDAO implements IDAO<StartDateDTO, String>{
         }
         return false;
     }
-    
-    
+
+   
 }
