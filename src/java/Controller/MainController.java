@@ -31,7 +31,10 @@ public class MainController extends HttpServlet {
                 || "orderOfUser".equals(action)
                 || "listUser".equals(action)
                 || "editProfile".equals(action)
-                || "updateProfile".equals(action);
+                || "updateProfile".equals(action)
+                || "addReview".equals(action)
+                || "updateReview".equals(action)
+                || "deleteReview".equals(action);
     }
 
     private boolean isPlaceAction(String action) {

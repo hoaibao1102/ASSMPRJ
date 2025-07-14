@@ -5,11 +5,14 @@
 package Controller;
 
 import DAO.OrderDAO;
+import DAO.ReviewDAO;
 import DAO.StartDateDAO;
 import DAO.TourTicketDAO;
 import DAO.UserDAO;
 import DTO.OrderDTO;
+import DTO.ReviewDTO;
 import DTO.StartDateDTO;
+import DTO.TourTicketDTO;
 import DTO.UserDTO;
 import UTILS.AuthUtils;
 import UTILS.PasswordUtils;
@@ -36,28 +39,61 @@ public class userController extends HttpServlet {
     UserDAO udao = new UserDAO();
     OrderDAO odao = new OrderDAO();
     StartDateDAO stdao = new StartDateDAO();
+// ====== KHAI BÁO THÊM CÁC DAO KHÁC CHO REVIEW ======
+    TourTicketDAO tourTicketDAO = new TourTicketDAO(); // Dùng để lấy ảnh tour
+    ReviewDAO reviewDAO = new ReviewDAO(); // Dùng để xử lý đánh giá
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html;charset=UTF-8");
+        String url = "about.jsp"; // Trang mặc định
 
-        String url = "about.jsp";
         try {
             String action = request.getParameter("action");
-            if ("orderOfUser".equals(action)) {
-                url = handleUserOrder(request, response);
-            } else if ("listUser".equals(action) || action == null) {
-                url = handleUserListing(request, response);
-            } else if ("editProfile".equals(action)) {
-                url = handleUserEditing(request, response);
-            } else if ("updateProfile".equals(action)) {
-                url = handleUserUpdating(request);
+            if (action == null) {
+                action = "";
+            }
+
+            switch (action) {
+                case "orderOfUser":
+                    url = handleUserOrder(request, response);
+                    break;
+                case "listUser":
+                    url = handleUserListing(request, response);
+                    break;
+                case "editProfile":
+                    url = handleUserEditing(request, response);
+                    break;
+                case "updateProfile":
+                    url = handleUserUpdating(request);
+                    break;
+                // ====== THÊM CÁC ACTION MỚI CHO REVIEW ======
+                case "addReview":
+                    url = handleAddReview(request, response);
+                    break;
+                case "updateReview":
+                    url = handleUpdateReview(request, response);
+                    break;
+                case "deleteReview":
+                    url = handleDeleteReview(request, response);
+                    break;
+                // ======================================
+                default:
+                    // Có thể để trống hoặc chuyển về trang chính
+                    url = "index.jsp";
+                    break;
             }
         } catch (Exception e) {
             e.printStackTrace(); // ✅ In lỗi để debug
         } finally {
-            request.getRequestDispatcher(url).forward(request, response);
+            if (url != null) {
+                if (url.startsWith("redirect:")) {
+                    response.sendRedirect(url.substring(9)); // cắt "redirect:" ra
+                } else {
+                    request.getRequestDispatcher(url).forward(request, response);
+                }
+            }
         }
     }
 
@@ -166,9 +202,9 @@ public class userController extends HttpServlet {
             String currentPwd = request.getParameter("txtCurrentPassword");
             String newPwd = request.getParameter("txtNewPassword");
             String confirmPwd = request.getParameter("txtConfirmNewPassword");
-            
+
             String REGEX_FULLNAME = "^(?=.{2,20}$)[\\p{L}]+(?:[ ]+[\\p{L}]+)*$";
-            
+
             /* ------------------- 1. Validate cơ bản ------------------- */
             Map<String, String> err = new HashMap<>();
 
@@ -191,7 +227,7 @@ public class userController extends HttpServlet {
                     = !(isBlank(currentPwd) && isBlank(newPwd) && isBlank(confirmPwd));
 
             UserDTO currentUser = udao.readbyID(String.valueOf(idUser)); // đọc 1 lần
-            
+
             if (wantsPwdChange) {
                 if (isBlank(currentPwd)) {
                     err.put("txtCurrentPassword_error", "Vui lòng nhập mật khẩu hiện tại");
@@ -262,4 +298,170 @@ public class userController extends HttpServlet {
         String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
         return email.matches(emailRegex);
     }
+
+    // Method xử lý thêm review
+    private String handleAddReview(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            HttpSession session = request.getSession(false); // dùng false để không tạo session mới
+            if (session == null) {
+                return "redirect:loginController?action=login";
+            }
+
+            UserDTO user = (UserDTO) session.getAttribute("nameUser");
+            System.out.println("🧪 nameUser = " + user);
+
+            if (user == null) {
+                return "redirect:loginController?action=login";
+            }
+
+            int userId = user.getIdUser();
+            String idTourTicket = request.getParameter("idTourTicket");
+            String ratingStr = request.getParameter("rating");
+            String comment = request.getParameter("comment");
+            String nameOfDestination = request.getParameter("nameOfDestination");
+
+            // 2. Lấy danh sách đánh giá
+            List<ReviewDTO> reviews = reviewDAO.getReviewsByTourId(idTourTicket);
+            request.setAttribute("reviews", reviews);
+
+            // 3. Gửi thêm thông tin tổng hợp (đã được trigger cập nhật)
+            request.setAttribute("averageRating", tourTicketDAO.getAvgRating(idTourTicket));
+            request.setAttribute("totalReviews", tourTicketDAO.getTotalReviews(idTourTicket));
+            request.setAttribute("featuredReview", tourTicketDAO.getFeaturedReview(idTourTicket));
+
+            String redirectUrl = "redirect:MainController?idTourTicket=" + idTourTicket
+                    + "&nameOfDestination=" + (nameOfDestination != null ? nameOfDestination : "")
+                    + "&action=ticketDetail";
+
+            // Validation input
+            if (idTourTicket == null || idTourTicket.trim().isEmpty()) {
+                request.setAttribute("error", "Thông tin tour không hợp lệ");
+                return "error.jsp";
+            }
+
+            if (ratingStr == null || ratingStr.trim().isEmpty()) {
+                request.setAttribute("error", "Vui lòng chọn điểm đánh giá");
+                return "error.jsp";
+            }
+
+            int rating;
+            try {
+                rating = Integer.parseInt(ratingStr);
+                if (rating < 1 || rating > 5) {
+                    request.setAttribute("error", "Điểm đánh giá phải từ 1 đến 5");
+                    return "error.jsp";
+                }
+            } catch (NumberFormatException e) {
+                request.setAttribute("error", "Điểm đánh giá không hợp lệ");
+                return "error.jsp";
+            }
+
+            // Kiểm tra đã đánh giá chưa
+            if (reviewDAO.hasUserReviewed(userId, idTourTicket)) {
+                request.setAttribute("message", "Bạn đã đánh giá tour này rồi!");
+                return redirectUrl;
+            }
+
+            // Tạo và lưu đánh giá
+            ReviewDTO review = new ReviewDTO(userId, idTourTicket, rating, comment != null ? comment.trim() : "", true);
+
+            if (reviewDAO.create(review)) {
+                request.setAttribute("message", "Cảm ơn bạn đã đánh giá! Đánh giá của bạn đã được gửi thành công.");
+                System.out.println("isCreate: " + reviewDAO.create(review));
+            } else {
+                request.setAttribute("error", "Có lỗi xảy ra khi gửi đánh giá. Vui lòng thử lại.");
+                System.out.println("isCreate: " + reviewDAO.create(review));
+            }
+
+            return redirectUrl;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("error", "Có lỗi xảy ra: " + e.getMessage());
+            return "error.jsp";
+        }
+    }
+
+// Method xử lý cập nhật review
+    private String handleUpdateReview(HttpServletRequest request, HttpServletResponse response) {
+        HttpSession session = request.getSession(false);
+        UserDTO user = null;
+        if (session != null) {
+            user = (UserDTO) session.getAttribute("nameUser");
+        }
+
+        if (user == null) {
+            request.setAttribute("error", "Bạn cần đăng nhập để thực hiện thao tác này.");
+            return "loginController?action=login";
+        }
+
+        String idTour = request.getParameter("idTourTicket");
+        String destination = request.getParameter("nameOfDestination");
+        String ratingStr = request.getParameter("rating");
+        String comment = request.getParameter("comment");
+        
+        String redirectUrl = "redirect:MainController?idTourTicket=" + idTour
+                    + "&nameOfDestination=" + (destination != null ? destination : "")
+                    + "&action=ticketDetail";
+
+        try {
+            int rating = Integer.parseInt(ratingStr);
+
+            // Kiểm tra user có review này không
+            if (!reviewDAO.hasUserReviewed(user.getIdUser(), idTour)) {
+                request.setAttribute("error", "Bạn chưa có đánh giá nào cho tour này.");
+            } else {
+                // Cập nhật review
+                boolean success = reviewDAO.updateUserReview(user.getIdUser(), idTour, rating, comment);
+                if (success) {
+                    request.setAttribute("message", "Đánh giá của bạn đã được cập nhật thành công!");
+                } else {
+                    request.setAttribute("error", "Có lỗi xảy ra khi cập nhật đánh giá. Vui lòng thử lại.");
+                }
+            }
+        } catch (NumberFormatException e) {
+            request.setAttribute("error", "Dữ liệu không hợp lệ.");
+        }
+
+        // Redirect về trang chi tiết tour
+        return redirectUrl;
+    }
+
+//  Method xử lý xóa review
+    private String handleDeleteReview(HttpServletRequest request, HttpServletResponse response) {
+        HttpSession session = request.getSession(false);
+        UserDTO user = null;
+        if (session != null) {
+            user = (UserDTO) session.getAttribute("nameUser");
+        }
+
+        if (user == null) {
+            request.setAttribute("error", "Bạn cần đăng nhập để thực hiện thao tác này.");
+            return "loginController?action=login";
+        }
+
+        String idTour = request.getParameter("idTourTicket");
+        String destination = request.getParameter("nameOfDestination");
+        
+        String redirectUrl = "redirect:MainController?idTourTicket=" + idTour
+                    + "&nameOfDestination=" + (destination != null ? destination : "")
+                    + "&action=ticketDetail";
+        
+        // Kiểm tra user có review này không
+        if (!reviewDAO.hasUserReviewed(user.getIdUser(), idTour)) {
+            request.setAttribute("error", "Bạn chưa có đánh giá nào cho tour này.");
+        } else {
+            // Xóa review
+            boolean success = reviewDAO.deleteUserReview(user.getIdUser(), idTour);
+            if (success) {
+                request.setAttribute("message", "Đánh giá của bạn đã được xóa thành công!");
+            } else {
+                request.setAttribute("error", "Có lỗi xảy ra khi xóa đánh giá. Vui lòng thử lại.");
+            }
+        }
+
+        // Redirect về trang chi tiết tour
+        return redirectUrl;
+    }
+
 }

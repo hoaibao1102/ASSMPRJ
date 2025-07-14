@@ -179,8 +179,6 @@ public class OrderDAO implements IDAO<OrderDTO, String> {
         return false;
     }
 
-   
-
     public List<OrderDTO> getAllOrdersByUser(int userId) {
         List<OrderDTO> list = new ArrayList<>();
         String sql = "SELECT * FROM Orders Where idUser = ?  ";
@@ -209,6 +207,21 @@ public class OrderDAO implements IDAO<OrderDTO, String> {
             Logger.getLogger(TourTicketDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
+    }
+
+    public boolean hasUserPaidForTour(int userId, String idTourTicket) {
+        String sql = "SELECT 1 FROM Orders WHERE idUser = ? AND idTourTicket = ? AND Status = 1";
+        try {
+            Connection conn = DBUtils.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, userId);
+            ps.setString(2, idTourTicket);
+            ResultSet rs = ps.executeQuery();
+            return rs.next(); // Nếu có kết quả thì user đã thanh toán tour đó
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
     }
 
 }

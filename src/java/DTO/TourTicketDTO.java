@@ -9,16 +9,20 @@ package DTO;
  * @author MSI PC
  */
 public class TourTicketDTO {
-        private String idTourTicket;
-        private int idplace;
-        private String destination;
-        private String placestart;
-        private String duration;
-        private double price;
-        private String transport_name;
-        private String nametour;
-        private String img_Tour;
-        private boolean status;
+
+    private String idTourTicket;
+    private int idplace;
+    private String destination;
+    private String placestart;
+    private String duration;
+    private double price;
+    private String transport_name;
+    private String nametour;
+    private String img_Tour;
+    private boolean status;
+    private double avgRating;
+    private int totalReviews;
+    private String featuredReview;
 
     public TourTicketDTO() {
     }
@@ -35,6 +39,8 @@ public class TourTicketDTO {
         this.img_Tour = img_Tour;
         this.status = status;
     }
+    
+    
 
     public boolean isStatus() {
         return status;
@@ -43,8 +49,6 @@ public class TourTicketDTO {
     public void setStatus(boolean status) {
         this.status = status;
     }
-    
-    
 
     public String getIdTourTicket() {
         return idTourTicket;
@@ -86,7 +90,6 @@ public class TourTicketDTO {
         this.duration = duration;
     }
 
-    
     public double getPrice() {
         return price;
     }
@@ -119,10 +122,28 @@ public class TourTicketDTO {
         this.img_Tour = img_Tour;
     }
 
-    
-        
-        
-        
+    public double getAvgRating() {
+        return avgRating;
     }
 
-   
+    public void setAvgRating(double avgRating) {
+        this.avgRating = avgRating;
+    }
+
+    public int getTotalReviews() {
+        return totalReviews;
+    }
+
+    public void setTotalReviews(int totalReviews) {
+        this.totalReviews = totalReviews;
+    }
+
+    public String getFeaturedReview() {
+        return featuredReview;
+    }
+
+    public void setFeaturedReview(String featuredReview) {
+        this.featuredReview = featuredReview;
+    }
+
+}
