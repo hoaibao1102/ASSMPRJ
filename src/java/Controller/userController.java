@@ -340,15 +340,6 @@ public class userController extends HttpServlet {
             String comment = request.getParameter("comment");
             String nameOfDestination = request.getParameter("nameOfDestination");
 
-            // 2. Lấy danh sách đánh giá
-            List<ReviewDTO> reviews = reviewDAO.getReviewsByTourId(idTourTicket);
-            request.setAttribute("reviews", reviews);
-
-            // 3. Gửi thêm thông tin tổng hợp (đã được trigger cập nhật)
-            request.setAttribute("averageRating", tourTicketDAO.getAvgRating(idTourTicket));
-            request.setAttribute("totalReviews", tourTicketDAO.getTotalReviews(idTourTicket));
-            request.setAttribute("featuredReview", tourTicketDAO.getFeaturedReview(idTourTicket));
-
             String redirectUrl = "redirect:MainController?idTourTicket=" + idTourTicket
                     + "&nameOfDestination=" + (nameOfDestination != null ? nameOfDestination : "")
                     + "&action=ticketDetail";
@@ -383,14 +374,12 @@ public class userController extends HttpServlet {
             }
 
             // Tạo và lưu đánh giá
-            ReviewDTO review = new ReviewDTO(userId, idTourTicket, rating, comment != null ? comment.trim() : "", true);
+            ReviewDTO review = new ReviewDTO(userId, idTourTicket, rating, comment != null ? comment.trim() : "");
 
             if (reviewDAO.create(review)) {
                 request.setAttribute("message", "Cảm ơn bạn đã đánh giá! Đánh giá của bạn đã được gửi thành công.");
-                System.out.println("isCreate: " + reviewDAO.create(review));
             } else {
                 request.setAttribute("error", "Có lỗi xảy ra khi gửi đánh giá. Vui lòng thử lại.");
-                System.out.println("isCreate: " + reviewDAO.create(review));
             }
 
             return redirectUrl;

@@ -112,7 +112,6 @@ CREATE TABLE TourReviews (
     rating INT NOT NULL CHECK (rating >= 1 AND rating <= 5), -- Bắt buộc phải có điểm
     comment NVARCHAR(1000) NULL,                         -- Bình luận có thể để trống
     reviewDate DATETIME DEFAULT GETDATE(),
-    isVerified BIT DEFAULT 0,                            -- 1 nếu người dùng đã mua tour này
 	status VARCHAR(20) DEFAULT 'ACTIVE',     -- ACTIVE, HIDDEN, DELETED
     FOREIGN KEY (idUser) REFERENCES Users(id),
     FOREIGN KEY (idTourTicket) REFERENCES TourTickets(idTourTicket),

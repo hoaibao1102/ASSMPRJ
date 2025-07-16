@@ -680,8 +680,6 @@
                                         Double averageRating = (Double) request.getAttribute("averageRating");
                                         Integer totalReviews = (Integer) request.getAttribute("totalReviews");
 
-                                        // ✅ THÊM: Khai báo reviewDAO (hoặc xử lý trong Controller)
-                                        // ReviewDAO reviewDAO = new ReviewDAO(); // Nên di chuyển logic này vào Controller
                                     %>
 
                                     <!-- Thống kê đánh giá -->
@@ -815,16 +813,17 @@
                                         <span class="text-muted">Trạng thái đánh giá không xác định</span>
                                         <% }
                                         } else { %>
+                                        <!-- Thay thế form hiện tại trong JSP -->
                                         <form action="loginController" method="get" class="booking-form">
-                                            <input type="hidden" name="action" value="review">
-                                            <input type="hidden" name="idTour" value="<%= tourTicket.getIdTourTicket() %>">
+                                            <input type="hidden" name="action" value="addReviewTour">
+                                            <input type="hidden" name="pendingReviewTourId" value="<%= tourTicket.getIdTourTicket() %>">
                                             <input type="hidden" name="nameOfDestination" value="<%= tourTicket.getDestination() %>" />
-                                            
-                                            <button type="submit"  class="btn btn-outline-primary">
+
+                                            <button type="submit" class="btn btn-outline-primary">
                                                 <i class="fas fa-sign-in-alt me-2"></i>Đăng nhập để đánh giá
                                             </button>
-                                            <% } %>
                                         </form>
+                                        <% } %>
                                     </div>
 
                                     <!-- FORM DELETE (ẨN) -->
@@ -833,7 +832,7 @@
                                         <input type="hidden" name="idTourTicket" value="<%= tourTicket.getIdTourTicket() %>" />
                                         <input type="hidden" name="nameOfDestination" value="<%= tourTicket.getDestination() %>" />
                                     </form>
-                                    
+
                                     <!-- ✅ SỬA: Danh sách đánh giá - Đơn giản hóa -->
                                     <div class="reviews-list">
                                         <% if (reviews != null && !reviews.isEmpty()) { 
@@ -1041,60 +1040,60 @@
 <jsp:include page="footer.jsp"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 <script>
-                                        function showMainImage(url) {
-                                            document.getElementById('mainImg').src = url;
-                                        }
+                                                        function showMainImage(url) {
+                                                            document.getElementById('mainImg').src = url;
+                                                        }
 
-                                        function openModal() {
-                                            const modal = new bootstrap.Modal(document.getElementById('imageModal'));
-                                            modal.show();
+                                                        function openModal() {
+                                                            const modal = new bootstrap.Modal(document.getElementById('imageModal'));
+                                                            modal.show();
 
-                                            // Reset modal content
-                                            document.getElementById('modalImg').src = document.getElementById('mainImg').src;
-                                            initModalThumbnails();
-                                        }
+                                                            // Reset modal content
+                                                            document.getElementById('modalImg').src = document.getElementById('mainImg').src;
+                                                            initModalThumbnails();
+                                                        }
 
-                                        function initModalThumbnails() {
-                                            const container = document.getElementById('modalThumbnails');
-                                            container.innerHTML = '';
+                                                        function initModalThumbnails() {
+                                                            const container = document.getElementById('modalThumbnails');
+                                                            container.innerHTML = '';
 
-                                            const images = document.querySelectorAll('.thumbnail-img');
-                                            images.forEach((img, index) => {
-                                                const thumbnail = document.createElement('img');
-                                                thumbnail.src = img.src;
-                                                thumbnail.onclick = () => {
-                                                    document.getElementById('modalImg').src = img.src;
-                                                    highlightThumbnail(index);
-                                                };
-                                                container.appendChild(thumbnail);
-                                            });
-                                            highlightThumbnail(Array.from(images).findIndex(img => img.src === document.getElementById('mainImg').src));
-                                        }
+                                                            const images = document.querySelectorAll('.thumbnail-img');
+                                                            images.forEach((img, index) => {
+                                                                const thumbnail = document.createElement('img');
+                                                                thumbnail.src = img.src;
+                                                                thumbnail.onclick = () => {
+                                                                    document.getElementById('modalImg').src = img.src;
+                                                                    highlightThumbnail(index);
+                                                                };
+                                                                container.appendChild(thumbnail);
+                                                            });
+                                                            highlightThumbnail(Array.from(images).findIndex(img => img.src === document.getElementById('mainImg').src));
+                                                        }
 
-                                        function highlightThumbnail(index) {
-                                            const thumbnails = document.querySelectorAll('#modalThumbnails img');
-                                            thumbnails.forEach((thumb, i) => {
-                                                thumb.classList.toggle('selected', i === index);
-                                            });
-                                        }
+                                                        function highlightThumbnail(index) {
+                                                            const thumbnails = document.querySelectorAll('#modalThumbnails img');
+                                                            thumbnails.forEach((thumb, i) => {
+                                                                thumb.classList.toggle('selected', i === index);
+                                                            });
+                                                        }
 
-                                        function showEditForm() {
-                                            document.getElementById('userReviewDisplay').style.display = 'none';
-                                            document.querySelector('.review-buttons').style.display = 'none';
-                                            document.getElementById('editReviewForm').style.display = 'block';
-                                        }
+                                                        function showEditForm() {
+                                                            document.getElementById('userReviewDisplay').style.display = 'none';
+                                                            document.querySelector('.review-buttons').style.display = 'none';
+                                                            document.getElementById('editReviewForm').style.display = 'block';
+                                                        }
 
-                                        function hideEditForm() {
-                                            document.getElementById('userReviewDisplay').style.display = 'block';
-                                            document.querySelector('.review-buttons').style.display = 'block';
-                                            document.getElementById('editReviewForm').style.display = 'none';
-                                        }
+                                                        function hideEditForm() {
+                                                            document.getElementById('userReviewDisplay').style.display = 'block';
+                                                            document.querySelector('.review-buttons').style.display = 'block';
+                                                            document.getElementById('editReviewForm').style.display = 'none';
+                                                        }
 
-                                        function confirmDelete() {
-                                            if (confirm('Bạn có chắc chắn muốn xóa đánh giá này không?')) {
-                                                document.getElementById('deleteReviewForm').submit();
-                                            }
-                                        }
+                                                        function confirmDelete() {
+                                                            if (confirm('Bạn có chắc chắn muốn xóa đánh giá này không?')) {
+                                                                document.getElementById('deleteReviewForm').submit();
+                                                            }
+                                                        }
 </script>
 </body>
 </html>

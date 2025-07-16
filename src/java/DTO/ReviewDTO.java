@@ -18,7 +18,6 @@ public class ReviewDTO {
     private int rating; // Thêm lại cột rating
     private String comment;
     private Date reviewDate;
-    private boolean isVerified;
     private String userName;
     private String Status;
 
@@ -27,23 +26,21 @@ public class ReviewDTO {
     public ReviewDTO() {
     }
 
-    public ReviewDTO(int idUser, String idTourTicket, int rating, String comment, boolean isVerified) {
+    public ReviewDTO(int idUser, String idTourTicket, int rating, String comment) {
         this.idUser = idUser;
         this.idTourTicket = idTourTicket;
         this.rating = rating;
         this.comment = comment;
-        this.isVerified = isVerified;
     }
     
 
-    public ReviewDTO(int idReview, int idUser, String idTourTicket, int rating, String comment, Date reviewDate, boolean isVerified, String userName) {
+    public ReviewDTO(int idReview, int idUser, String idTourTicket, int rating, String comment, Date reviewDate, String userName) {
         this.idReview = idReview;
         this.idUser = idUser;
         this.idTourTicket = idTourTicket;
         this.rating = rating;
         this.comment = comment;
         this.reviewDate = reviewDate;
-        this.isVerified = isVerified;
         this.userName = userName;
     }
 
@@ -94,14 +91,6 @@ public class ReviewDTO {
 
     public void setReviewDate(Date reviewDate) {
         this.reviewDate = reviewDate;
-    }
-
-    public boolean isVerified() {
-        return isVerified;
-    }
-
-    public void setVerified(boolean verified) {
-        this.isVerified = verified;
     }
 
     public String getUserName() {

@@ -9,7 +9,9 @@ import DTO.UserDTO;
 import UTILS.DBUtils;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -21,7 +23,7 @@ public class ReviewDAO implements IDAO<ReviewDTO, Integer> {
 
     @Override
     public boolean create(ReviewDTO review) {
-        String sql = "INSERT INTO TourReviews (idUser, idTourTicket, rating, comment, isVerified) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO TourReviews (idUser, idTourTicket, rating, comment) VALUES (?, ?, ?, ?)";
 
         try {
             Connection conn = DBUtils.getConnection();
@@ -30,7 +32,6 @@ public class ReviewDAO implements IDAO<ReviewDTO, Integer> {
             ps.setString(2, review.getIdTourTicket());
             ps.setInt(3, review.getRating());
             ps.setString(4, review.getComment());
-            ps.setBoolean(5, review.isVerified());
             int result = ps.executeUpdate();
             return result > 0;
         } catch (SQLException e) {
@@ -57,7 +58,6 @@ public class ReviewDAO implements IDAO<ReviewDTO, Integer> {
                         rs.getInt("rating"),
                         rs.getString("comment"),
                         rs.getDate("reviewDate"),
-                        rs.getBoolean("isVerified"),
                         rs.getString("full_name")
                 );
                 reviews.add(review);
@@ -86,7 +86,6 @@ public class ReviewDAO implements IDAO<ReviewDTO, Integer> {
                         rs.getInt("rating"),
                         rs.getString("comment"),
                         rs.getDate("reviewDate"),
-                        rs.getBoolean("isVerified"),
                         rs.getString("full_name")
                 );
             }
@@ -160,41 +159,52 @@ public class ReviewDAO implements IDAO<ReviewDTO, Integer> {
     }
 
     // Lấy tất cả đánh giá của một tour
-    public List<ReviewDTO> getReviewsByTourId(String idTourTicket) {
-        List<ReviewDTO> reviews = new ArrayList<>();
-        // Sử dụng JOIN để lấy cả tên người dùng (full_name) cùng lúc
-        String sql = "SELECT r.*, u.full_name FROM TourReviews r "
-                + "JOIN Users u ON r.idUser = u.id "
-                + "WHERE r.idTourTicket = ? ORDER BY r.reviewDate DESC";
-
-        try {
-            Connection conn = DBUtils.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, idTourTicket);
-            ResultSet rs = ps.executeQuery();
-
-            // Dùng constructor để tạo đối tượng gọn gàng hơn
-            while (rs.next()) {
-                ReviewDTO review = new ReviewDTO(
-                        rs.getInt("idReview"),
-                        rs.getInt("idUser"),
-                        rs.getString("idTourTicket"),
-                        rs.getInt("rating"),
-                        rs.getString("comment"),
-                        rs.getDate("reviewDate"),
-                        rs.getBoolean("isVerified"),
-                        rs.getString("full_name") // Truyền tên vào constructor
-                );
-
-                reviews.add(review);
+public List<ReviewDTO> getReviewsByTourId(String idTourTicket) {
+    List<ReviewDTO> reviews = new ArrayList<>();
+    String sql = "SELECT * FROM TourReviews WHERE idTourTicket = ? ORDER BY reviewDate DESC";
+    
+    try {
+        Connection conn = DBUtils.getConnection();
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setString(1, idTourTicket);
+        ResultSet rs = ps.executeQuery();
+        
+        UserDAO userDAO = new UserDAO();
+        Map<Integer, String> userCache = new HashMap<>(); // Cache userName
+        
+        while (rs.next()) {
+            ReviewDTO review = new ReviewDTO();
+            review.setIdReview(rs.getInt("idReview"));
+            review.setIdUser(rs.getInt("idUser"));
+            review.setIdTourTicket(rs.getString("idTourTicket"));
+            review.setRating(rs.getInt("rating"));
+            review.setComment(rs.getString("comment"));
+            review.setReviewDate(rs.getTimestamp("reviewDate"));
+            
+            // Lấy userName từ cache hoặc database
+            int userId = rs.getInt("idUser");
+            String userName = userCache.get(userId);
+            
+            if (userName == null) {
+                UserDTO user = userDAO.readbyID(String.valueOf(userId));
+                if (user != null) {
+                    userName = user.getFullName();
+                    userCache.put(userId, userName); // Lưu vào cache
+                } else {
+                    userName = "Unknown User";
+                }
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ReviewDAO.class.getName()).log(Level.SEVERE, null, ex);
+            
+            review.setUserName(userName);
+            reviews.add(review);
         }
-        return reviews;
+    } catch (SQLException e) {
+        e.printStackTrace();
+    } catch (ClassNotFoundException ex) {
+        Logger.getLogger(ReviewDAO.class.getName()).log(Level.SEVERE, null, ex);
     }
+    return reviews;
+}
 
     public ReviewDTO getUserReview(int userId, String tourId) {
         String sql = "SELECT * FROM TourReviews WHERE idUser = ? AND idTourTicket = ?";
@@ -213,7 +223,6 @@ public class ReviewDAO implements IDAO<ReviewDTO, Integer> {
                 review.setRating(rs.getInt("rating"));
                 review.setComment(rs.getString("comment"));
                 review.setReviewDate(rs.getTimestamp("reviewDate"));
-                review.setVerified(rs.getBoolean("isVerified"));
 
                 // Lấy thêm thông tin user
                 UserDAO userDAO = new UserDAO();
