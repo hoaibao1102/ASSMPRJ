@@ -554,7 +554,13 @@ public class placeController extends HttpServlet {
 
         }else {
             List<TourTicketDTO> tour2 = tdao.readAll();
+            for (int i = 0; i < tour2.size(); i++) {
+                // lấy ra các ngày đi 
+                List<StartDateDTO> startDateTour = stdDAO.search(tour2.get(i).getIdTourTicket());
+                request.setAttribute("startDateTour" + (i + 1), startDateTour);
+            }
             request.setAttribute("tourList2", tour2);
+            request.setAttribute("searchTourInfor", searchItem);
             return "ResultSearchForm.jsp";
         }
 

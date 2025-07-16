@@ -49,6 +49,10 @@
                 min-height: 100vh;
                 padding: 2rem 0;
             }
+            
+            .other-content{
+                margin-left: 20%;
+            }
 
             /* Breadcrumb */
             .breadcrumb-modern {
@@ -562,7 +566,7 @@
             DecimalFormat vnd = new DecimalFormat("#,###");
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         %>
-        <div class="content">
+        <div class="${sessionScope.nameUser.role ne 'AD' ? 'content' : 'other-content'}">
             <div class="container">
                 <!-- Breadcrumb -->
                 <div class="custom-breadcrumb">
