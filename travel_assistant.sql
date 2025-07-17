@@ -101,7 +101,6 @@ CREATE TABLE Favorites (
 ALTER TABLE TourTickets ADD 
     avgRating DECIMAL(3,2) DEFAULT 0,       -- Điểm đánh giá trung bình (ví dụ: 4.5)
     totalReviews INT DEFAULT 0,            -- Tổng số lượt đánh giá
-    featuredReview NVARCHAR(1000) NULL;    -- Có thể lưu một vài bình luận nổi bật
 
 -- Bước 1: Tạo bảng mới để lưu chi tiết từng bình luận
 -- Bảng này sẽ lưu lịch sử đánh giá của người dùng

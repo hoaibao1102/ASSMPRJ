@@ -78,8 +78,8 @@ public class loginController extends HttpServlet {
         } catch (Exception e) {
             log("Error in loginController: " + e.toString());
         } finally {
-            RequestDispatcher rd = request.getRequestDispatcher(url);
-            rd.forward(request, response);
+                RequestDispatcher rd = request.getRequestDispatcher(url);
+                rd.forward(request, response);
         }
     }
 
@@ -140,6 +140,11 @@ public class loginController extends HttpServlet {
             session.setAttribute("nameUser", user);
             List<FavoritesDTO> favoritesList = fDAO.getByUserId(user.getIdUser());
             session.setAttribute("favoriteCount", favoritesList.size());
+            //=========Review===========
+            String pendingReviewTourId = (String) session.getAttribute("pendingReviewTourId");
+            String nameOfDestination = (String) session.getAttribute("nameOfDestination");
+            System.out.println("pendingReviewTourId:" + pendingReviewTourId);
+            //===========END=========
             // Kiểm tra session có lưu URL redirect không
             String redirectUrl = (String) session.getAttribute("redirectAfterLogin");
             String actionCheck = (String) session.getAttribute("action");
@@ -194,6 +199,65 @@ public class loginController extends HttpServlet {
                         url = "TourTicketForm.jsp";
                         session.removeAttribute("location1");
 
+                        break;
+                    }
+                    case "addReview": {
+                        if (pendingReviewTourId != null && nameOfDestination != null) {
+                            // Sau khi đăng nhập thành công, chuyển về trang chi tiết tour để có thể review
+                            // Cần gọi lại controller để load đầy đủ thông tin tour
+
+                            // Gọi các DAO cần thiết để load lại thông tin tour
+                            TicketImgDAO imgDAO = new TicketImgDAO();
+                            TicketDayDetailDAO dayDetailDAO = new TicketDayDetailDAO();
+                            ReviewDAO reviewDAO = new ReviewDAO();
+                            OrderDAO oDao = new OrderDAO();
+
+                            // Load thông tin tour
+                            TourTicketDTO tourTicket = tdao.readbyID(pendingReviewTourId);
+                            List ticketImgDetail = imgDAO.readbyIdTourTicket(pendingReviewTourId);
+                            List ticketDayDetail = dayDetailDAO.readbyIdTourTicket(pendingReviewTourId);
+                            List startDateTour = stDao.search(pendingReviewTourId);
+
+                            // Load thông tin review
+                            List reviews = reviewDAO.getReviewsByTourId(pendingReviewTourId);
+                            Double averageRating = tdao.getAvgRating(pendingReviewTourId);
+                            Integer totalReviews = tdao.getTotalReviews(pendingReviewTourId);
+
+                            // Kiểm tra user đã review chưa và đã thanh toán chưa
+                            boolean hasUserReviewed = reviewDAO.hasUserReviewed(user.getIdUser(), pendingReviewTourId);
+                            boolean hasUserPaid = oDao.hasUserPaidForTour(user.getIdUser(), pendingReviewTourId);
+
+                            ReviewDTO userReview = null;
+                            if (hasUserReviewed) {
+                                userReview = reviewDAO.getUserReview(user.getIdUser(), pendingReviewTourId);
+                            }
+
+                            // Set attributes cho JSP
+                            request.setAttribute("tourTicket", tourTicket);
+                            request.setAttribute("ticketImgDetail", ticketImgDetail);
+                            request.setAttribute("ticketDayDetail", ticketDayDetail);
+                            request.setAttribute("startDateTour", startDateTour);
+                            request.setAttribute("reviews", reviews);
+                            request.setAttribute("averageRating", averageRating);
+                            request.setAttribute("totalReviews", totalReviews);
+                            request.setAttribute("hasUserReviewed", hasUserReviewed);
+                            request.setAttribute("hasUserPaid", hasUserPaid);
+                            request.setAttribute("userReview", userReview);
+
+                            // Thông báo cho user biết đã đăng nhập thành công
+                            request.setAttribute("message", "Đăng nhập thành công! Bạn có thể đánh giá tour ngay bây giờ.");
+
+                            // Xóa thông tin tạm thời khỏi session
+                            session.removeAttribute("pendingReviewTourId");
+                            session.removeAttribute("nameOfDestination");
+
+                            // Chuyển về trang chi tiết tour
+                            url = "TicketDetailForm.jsp";
+                        } else {
+                            // Nếu không có thông tin tour, về trang chủ
+                            pcl.getAllDestination(request, response);
+                            url = INDEX_PAGE;
+                        }
                         break;
                     }
                     default:
