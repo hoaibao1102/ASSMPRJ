@@ -58,6 +58,7 @@
                 max-width: 1200px;
                 margin: 0 auto;
                 padding: 0 1rem;
+                margin-left: 20%;
             }
 
             .header-section {
@@ -515,12 +516,9 @@
         </style>
     </head>
     <body>
+        <%@include file="header.jsp" %>
+        
         <div class="main-container">
-            <div class="back-section">
-                    <a href="javascript:void(0)" class="btn btn-back" onclick="window.location.href='index.jsp'">
-                        <i class="bi bi-arrow-left"></i> Quay lại
-                    </a>
-                </div>
             <div class="header-section">
                 <h1><i class="bi bi-ticket-detailed"></i> Quản lý Vouchers</h1>
                 <p class="subtitle">Quản lý và theo dõi các voucher của bạn</p>

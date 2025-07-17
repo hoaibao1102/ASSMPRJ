@@ -156,6 +156,30 @@ public class loginController extends HttpServlet {
                             String idTour = (String) session.getAttribute("idTour");
                             Date startDate = (Date) session.getAttribute("startDate");
 
+                            VoucherDAO vcdao = new VoucherDAO();
+                            List<VoucherDTO> listVouchers = vcdao.getAllVoucherActive();
+                            //tao bien phu de xoa 2 voucher co dinh                
+                            VoucherDTO xoa1 = null;
+                            VoucherDTO xoa2 = null;
+
+                            for (VoucherDTO i : listVouchers) {
+                                if (i.getTitle().equals("Mã giảm giá cố định cho bé từ 2-6 tuổi")) {
+                                    request.setAttribute("child", i);
+                                    xoa1 = i;
+                                }
+                                System.out.println("=======");
+                                System.out.println(i.getTitle());
+                                if (i.getTitle().contains("Mã giảm giá cố định cho em bé dưới 2 tuổi")) {
+                                    request.setAttribute("baby", i);
+                                    xoa2 = i;
+                                }
+
+                            }
+
+                            listVouchers.remove(xoa1);
+                            listVouchers.remove(xoa2);
+
+                            request.setAttribute("listVouchers", listVouchers);
                             if (idTour != null && startDate != null) {
                                 TourTicketDTO tourTicket = tdao.readbyID(idTour);
                                 StartDateDTO stDate = stDao.searchDetailDate(idTour, startDate);

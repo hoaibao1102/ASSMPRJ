@@ -41,6 +41,10 @@
                 min-height: 100vh;
                 padding: 2rem 0;
             }
+            
+            .other-content{
+                margin-left: 20%;
+            }
 
             /* Breadcrumb */
             .breadcrumb-modern {
@@ -547,7 +551,7 @@
     <body class="${sessionScope.nameUser.role eq 'AD' ? 'admin-layout' : ''}">
         <jsp:include page="header.jsp"/>
 
-        <div class="content">
+        <div class="${sessionScope.nameUser.role ne 'AD' ? 'content' : 'other-content'}">
             <div class="container">
                 <!-- Breadcrumb -->
                 <div class="custom-breadcrumb">

@@ -44,6 +44,9 @@ CREATE TABLE TourStartDates (
     FOREIGN KEY (idTourTicket) REFERENCES TourTickets(idTourTicket)
 );
 
+
+
+
 --Bảng chứa ảnh của vé
 CREATE TABLE TicketImgs(
     idTourTicket varchar(5) ,
@@ -74,17 +77,19 @@ CREATE TABLE Orders (
     idBooking VARCHAR(20) PRIMARY KEY,
     idUser INT NOT NULL,
     idTourTicket VARCHAR(5) NOT NULL,
-    startNum INT NOT NULL,  -- ghi rõ ngày khởi hành (số thứ tự)
+    startDate DATE NOT NULL,  -- ngày khởi hành thay cho startNum
     BookingDate DATE NOT NULL,
     NumberTicket INT NOT NULL,
-    TotalPrice DECIMAL(15,2) NOT NULL,
+    TotalPrice DECIMAL(15, 2) NOT NULL,
     Status INT NOT NULL,
     Note NVARCHAR(250),
 
-	FOREIGN KEY (idTourTicket, startNum) REFERENCES TourStartDates(idTourTicket, startNum),
-	FOREIGN KEY (idTourTicket) REFERENCES TourTickets(idTourTicket),
-	FOREIGN KEY (idUser) REFERENCES Users(id)
+    -- Ràng buộc khóa ngoại
+    FOREIGN KEY (idTourTicket) REFERENCES TourTickets(idTourTicket),
+    FOREIGN KEY (idUser) REFERENCES Users(id),
+    FOREIGN KEY (idTourTicket, startDate) REFERENCES TourStartDates(idTourTicket, startdate)
 );
+
 
 -- Bảng yêu thích
 CREATE TABLE Favorites (
@@ -988,7 +993,7 @@ INSERT INTO TicketImgs (idTourTicket, imgNum, imgUrl) VALUES
 ('DN002', 8, 'DN3img8.jpg');
 
 --=======================================================================================
---insert data
+--insert data startdate
 INSERT INTO TourStartDates (idTourTicket, startdate, startNum) VALUES
 ('NT001', '2025-07-10', 1),('NT001', '2025-07-15', 2),('NT001', '2025-07-20', 3),
 ('NT002', '2025-07-20', 1),('NT002', '2025-07-25', 2),('NT002', '2025-07-30', 3),

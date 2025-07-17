@@ -52,7 +52,12 @@
                 padding: 0 20px;
                 margin-left: 20%;
             }
-
+            .other-container{
+                max-width: 1200px;
+                margin: 40px auto;
+                padding: 0 20px;
+            }
+            
             .section-header {
                 background: var(--gradient-primary);
                 color: var(--pearl-white);
@@ -334,7 +339,7 @@
         <%@include file="header.jsp" %>
 
         <div class="container-fluid">
-            <div class="places-container">
+            <div class="${sessionScope.nameUser.role eq 'AD' ? 'places-container' : 'other-container'}">
                 <div class="section-header">
                     <h2>
                         <i class="fas fa-map-marked-alt tropical-icon" aria-hidden="true"></i>
@@ -464,8 +469,10 @@
                 </c:choose>
             </div>
         </div>
-
-        <%@include file="footer.jsp" %>
+        <c:if test="${sessionScope.nameUser.role ne 'AD'}">
+                <%@include file="footer.jsp" %>
+        </c:if>
+        
         
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     </body>
