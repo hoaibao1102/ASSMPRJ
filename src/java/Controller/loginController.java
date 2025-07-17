@@ -78,8 +78,8 @@ public class loginController extends HttpServlet {
         } catch (Exception e) {
             log("Error in loginController: " + e.toString());
         } finally {
-                RequestDispatcher rd = request.getRequestDispatcher(url);
-                rd.forward(request, response);
+            RequestDispatcher rd = request.getRequestDispatcher(url);
+            rd.forward(request, response);
         }
     }
 
@@ -269,7 +269,9 @@ public class loginController extends HttpServlet {
                             request.setAttribute("userReview", userReview);
 
                             // Thông báo cho user biết đã đăng nhập thành công
-                            request.setAttribute("message", "Đăng nhập thành công! Bạn có thể đánh giá tour ngay bây giờ.");
+                            if (hasUserPaid) {
+                                request.setAttribute("message", "Đăng nhập thành công! Bạn có thể đánh giá tour ngay bây giờ.");
+                            }
 
                             // Xóa thông tin tạm thời khỏi session
                             session.removeAttribute("pendingReviewTourId");

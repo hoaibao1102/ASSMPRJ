@@ -675,130 +675,133 @@
 
                                         <!-- Logic nút "Viết đánh giá" với Edit/Delete -->
                                         <div class="review-actions">
-                                            <c:if test="${not empty sessionScope.nameUser and sessionScope.nameUser.role ne 'AD'}">
+                                            <c:choose>
+                                                <c:when test="${not empty sessionScope.nameUser and sessionScope.nameUser.role ne 'AD'}">
 
-                                                <c:choose>
-                                                    <c:when test="${hasUserReviewed ne true and hasUserPaid eq true}">
-                                                        <!-- FORM THÊM REVIEW MỚI -->
-                                                        <form action="MainController" method="get">
-                                                            <input type="hidden" name="action" value="addReview" />
-                                                            <input type="hidden" name="idTourTicket" value="${tourTicket.idTourTicket}" />
-                                                            <input type="hidden" name="nameOfDestination" value="${tourTicket.destination}" />
-
-                                                            <div class="mb-3">
-                                                                <label for="rating">Đánh giá sao:</label>
-                                                                <select name="rating" id="rating" class="form-select" required>
-                                                                    <option value="5">★★★★★</option>
-                                                                    <option value="4">★★★★☆</option>
-                                                                    <option value="3">★★★☆☆</option>
-                                                                    <option value="2">★★☆☆☆</option>
-                                                                    <option value="1">★☆☆☆☆</option>
-                                                                </select>
-                                                            </div>
-
-                                                            <div class="mb-3">
-                                                                <label for="comment">Bình luận:</label>
-                                                                <textarea name="comment" id="comment" class="form-control" rows="3" placeholder="Cảm nhận của bạn..."></textarea>
-                                                            </div>
-
-                                                            <button type="submit" class="btn btn-success">
-                                                                <i class="fas fa-paper-plane me-2"></i>Gửi đánh giá
-                                                            </button>
-                                                        </form>
-                                                    </c:when>
-
-                                                    <c:when test="${hasUserReviewed eq true and not empty userReview}">
-                                                        <!-- HIỂN THỊ REVIEW CỦA USER + NÚT EDIT/DELETE -->
-                                                        <div class="user-review-section">
-                                                            <div class="alert alert-info">
-                                                                <h6><i class="fas fa-user-check me-2"></i>Đánh giá của bạn:</h6>
-                                                                <div class="user-review-display" id="userReviewDisplay">
-                                                                    <div class="rating mb-2">
-                                                                        <c:forEach var="star" begin="1" end="5">
-                                                                            <c:choose>
-                                                                                <c:when test="${star <= userReview.rating}">
-                                                                                    <i class="fas fa-star star"></i>
-                                                                                </c:when>
-                                                                                <c:otherwise>
-                                                                                    <i class="far fa-star star empty"></i>
-                                                                                </c:otherwise>
-                                                                            </c:choose>
-                                                                        </c:forEach>
-                                                                    </div>
-                                                                    <p class="mb-2">${not empty userReview.comment ? userReview.comment : 'Không có bình luận'}</p>
-                                                                    <small class="text-muted">Đăng lúc: <fmt:formatDate value="${userReview.reviewDate}" pattern="dd/MM/yyyy" /></small>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- NÚT EDIT/DELETE -->
-                                                            <div class="review-buttons mt-3">
-                                                                <button type="button" class="btn btn-outline-warning btn-sm" onclick="showEditForm()">
-                                                                    <i class="fas fa-edit me-1"></i>Sửa đánh giá
-                                                                </button>
-                                                                <button type="button" class="btn btn-outline-danger btn-sm" onclick="confirmDelete()">
-                                                                    <i class="fas fa-trash me-1"></i>Xóa đánh giá
-                                                                </button>
-                                                            </div>
-
-                                                            <!-- FORM EDIT (ẨN BAN ĐẦU) -->
-                                                            <form action="MainController" method="get" id="editReviewForm" style="display: none;" class="mt-3">
-                                                                <input type="hidden" name="action" value="updateReview" />
+                                                    <c:choose>
+                                                        <c:when test="${hasUserReviewed ne true and hasUserPaid eq true}">
+                                                            <!-- FORM THÊM REVIEW MỚI -->
+                                                            <form action="MainController" method="get">
+                                                                <input type="hidden" name="action" value="addReview" />
                                                                 <input type="hidden" name="idTourTicket" value="${tourTicket.idTourTicket}" />
                                                                 <input type="hidden" name="nameOfDestination" value="${tourTicket.destination}" />
 
                                                                 <div class="mb-3">
-                                                                    <label for="editRating">Đánh giá sao:</label>
-                                                                    <select name="rating" id="editRating" class="form-select" required>
-                                                                        <option value="5" ${userReview.rating == 5 ? 'selected' : ''}>★★★★★</option>
-                                                                        <option value="4" ${userReview.rating == 4 ? 'selected' : ''}>★★★★☆</option>
-                                                                        <option value="3" ${userReview.rating == 3 ? 'selected' : ''}>★★★☆☆</option>
-                                                                        <option value="2" ${userReview.rating == 2 ? 'selected' : ''}>★★☆☆☆</option>
-                                                                        <option value="1" ${userReview.rating == 1 ? 'selected' : ''}>★☆☆☆☆</option>
+                                                                    <label for="rating">Đánh giá sao:</label>
+                                                                    <select name="rating" id="rating" class="form-select" required>
+                                                                        <option value="5">★★★★★</option>
+                                                                        <option value="4">★★★★☆</option>
+                                                                        <option value="3">★★★☆☆</option>
+                                                                        <option value="2">★★☆☆☆</option>
+                                                                        <option value="1">★☆☆☆☆</option>
                                                                     </select>
                                                                 </div>
 
                                                                 <div class="mb-3">
-                                                                    <label for="editComment">Bình luận:</label>
-                                                                    <textarea name="comment" id="editComment" class="form-control" rows="3" placeholder="Cảm nhận của bạn...">${userReview.comment}</textarea>
+                                                                    <label for="comment">Bình luận:</label>
+                                                                    <textarea name="comment" id="comment" class="form-control" rows="3" placeholder="Cảm nhận của bạn..."></textarea>
                                                                 </div>
 
-                                                                <div class="d-flex gap-2">
-                                                                    <button type="submit" class="btn btn-success btn-sm">
-                                                                        <i class="fas fa-save me-1"></i>Cập nhật
-                                                                    </button>
-                                                                    <button type="button" class="btn btn-secondary btn-sm" onclick="hideEditForm()">
-                                                                        <i class="fas fa-times me-1"></i>Hủy
-                                                                    </button>
-                                                                </div>
+                                                                <button type="submit" class="btn btn-success">
+                                                                    <i class="fas fa-paper-plane me-2"></i>Gửi đánh giá
+                                                                </button>
                                                             </form>
-                                                        </div>
-                                                    </c:when>
+                                                        </c:when>
 
-                                                    <c:when test="${hasUserPaid ne true}">
-                                                        <div class="alert alert-warning">
-                                                            <i class="fas fa-exclamation-triangle me-2"></i>
-                                                            Bạn cần trải nghiệm tour này trước khi đánh giá.
-                                                        </div>
-                                                    </c:when>
+                                                        <c:when test="${hasUserReviewed eq true and not empty userReview}">
+                                                            <!-- HIỂN THỊ REVIEW CỦA USER + NÚT EDIT/DELETE -->
+                                                            <div class="user-review-section">
+                                                                <div class="alert alert-info">
+                                                                    <h6><i class="fas fa-user-check me-2"></i>Đánh giá của bạn:</h6>
+                                                                    <div class="user-review-display" id="userReviewDisplay">
+                                                                        <div class="rating mb-2">
+                                                                            <c:forEach var="star" begin="1" end="5">
+                                                                                <c:choose>
+                                                                                    <c:when test="${star <= userReview.rating}">
+                                                                                        <i class="fas fa-star star"></i>
+                                                                                    </c:when>
+                                                                                    <c:otherwise>
+                                                                                        <i class="far fa-star star empty"></i>
+                                                                                    </c:otherwise>
+                                                                                </c:choose>
+                                                                            </c:forEach>
+                                                                        </div>
+                                                                        <p class="mb-2">${not empty userReview.comment ? userReview.comment : 'Không có bình luận'}</p>
+                                                                        <small class="text-muted">Đăng lúc: <fmt:formatDate value="${userReview.reviewDate}" pattern="dd/MM/yyyy" /></small>
+                                                                    </div>
+                                                                </div>
 
-                                                    <c:otherwise>
-                                                        <span class="text-muted">Trạng thái đánh giá không xác định</span>
-                                                    </c:otherwise>
-                                                </c:choose>
+                                                                <!-- NÚT EDIT/DELETE -->
+                                                                <div class="review-buttons mt-3">
+                                                                    <button type="button" class="btn btn-outline-warning btn-sm" onclick="showEditForm()">
+                                                                        <i class="fas fa-edit me-1"></i>Sửa đánh giá
+                                                                    </button>
+                                                                    <button type="button" class="btn btn-outline-danger btn-sm" onclick="confirmDelete()">
+                                                                        <i class="fas fa-trash me-1"></i>Xóa đánh giá
+                                                                    </button>
+                                                                </div>
 
-                                            </c:if>
+                                                                <!-- FORM EDIT (ẨN BAN ĐẦU) -->
+                                                                <form action="MainController" method="get" id="editReviewForm" style="display: none;" class="mt-3">
+                                                                    <input type="hidden" name="action" value="updateReview" />
+                                                                    <input type="hidden" name="idTourTicket" value="${tourTicket.idTourTicket}" />
+                                                                    <input type="hidden" name="nameOfDestination" value="${tourTicket.destination}" />
 
-                                            <c:if test="${empty sessionScope.nameUser or sessionScope.nameUser.role ne 'AD'}">
-                                                <form action="MainController" method="get" class="booking-form">
-                                                    <input type="hidden" name="action" value="addReview">
-                                                    <input type="hidden" name="idTourTicket" value="${tourTicket.idTourTicket}">
-                                                    <input type="hidden" name="nameOfDestination" value="${tourTicket.destination}" />
+                                                                    <div class="mb-3">
+                                                                        <label for="editRating">Đánh giá sao:</label>
+                                                                        <select name="rating" id="editRating" class="form-select" required>
+                                                                            <option value="5" ${userReview.rating == 5 ? 'selected' : ''}>★★★★★</option>
+                                                                            <option value="4" ${userReview.rating == 4 ? 'selected' : ''}>★★★★☆</option>
+                                                                            <option value="3" ${userReview.rating == 3 ? 'selected' : ''}>★★★☆☆</option>
+                                                                            <option value="2" ${userReview.rating == 2 ? 'selected' : ''}>★★☆☆☆</option>
+                                                                            <option value="1" ${userReview.rating == 1 ? 'selected' : ''}>★☆☆☆☆</option>
+                                                                        </select>
+                                                                    </div>
 
-                                                    <button type="submit" class="btn btn-outline-primary">
-                                                        <i class="fas fa-sign-in-alt me-2"></i>Đăng nhập để đánh giá
-                                                    </button>
-                                                </form>
-                                            </c:if>
+                                                                    <div class="mb-3">
+                                                                        <label for="editComment">Bình luận:</label>
+                                                                        <textarea name="comment" id="editComment" class="form-control" rows="3" placeholder="Cảm nhận của bạn...">${userReview.comment}</textarea>
+                                                                    </div>
+
+                                                                    <div class="d-flex gap-2">
+                                                                        <button type="submit" class="btn btn-success btn-sm">
+                                                                            <i class="fas fa-save me-1"></i>Cập nhật
+                                                                        </button>
+                                                                        <button type="button" class="btn btn-secondary btn-sm" onclick="hideEditForm()">
+                                                                            <i class="fas fa-times me-1"></i>Hủy
+                                                                        </button>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                        </c:when>
+
+                                                        <c:when test="${hasUserPaid ne true}">
+                                                            <div class="alert alert-warning">
+                                                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                                                Bạn cần trải nghiệm tour này trước khi đánh giá.
+                                                            </div>
+                                                        </c:when>
+
+                                                        <c:otherwise>
+                                                            <span class="text-muted">Trạng thái đánh giá không xác định</span>
+                                                        </c:otherwise>
+                                                    </c:choose>
+
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <c:if test="${empty sessionScope.nameUser or sessionScope.nameUser.role ne 'AD'}">
+                                                        <form action="MainController" method="get" class="booking-form">
+                                                            <input type="hidden" name="action" value="addReview">
+                                                            <input type="hidden" name="idTourTicket" value="${tourTicket.idTourTicket}">
+                                                            <input type="hidden" name="nameOfDestination" value="${tourTicket.destination}" />
+
+                                                            <button type="submit" class="btn btn-outline-primary">
+                                                                <i class="fas fa-sign-in-alt me-2"></i>Đăng nhập để đánh giá
+                                                            </button>
+                                                        </form>
+                                                    </c:if>
+                                                </c:otherwise>         
+                                            </c:choose>
                                         </div>
 
                                         <!-- FORM DELETE (ẨN) -->

@@ -626,7 +626,7 @@
                                         Giá từ: <%= String.format("%,.0f", t.getPrice()) %> đ
                                     </div>
 
-                                    <form action="MainController" method="get">
+                                    <form action="MainController" method="post">
                                         <input type="hidden" name="idTourTicket" value="<%=t.getIdTourTicket()%>"/>
                                         <input type="hidden" name="nameOfDestination" value="<%=tourList.get(0).getDestination()%>"/>
                                         <div class="d-flex gap-2 flex-wrap">
@@ -733,7 +733,7 @@
                                         </div>
                                     </form>
                                     <c:if test="${sessionScope.nameUser.role ne 'AD'}">
-                                        <form action="MainController" method="get"> <!-- POST là hợp lý hơn cho thêm dữ liệu -->
+                                        <form action="MainController" method="post"> <!-- POST là hợp lý hơn cho thêm dữ liệu -->
                                             <input type="hidden" name="action" value="addFavoriteTour">
                                             <input type="hidden" name="idTourTicket" value="<%=t.getIdTourTicket()%>">
                                             <input type="hidden" name="location" value="<%=location%>">

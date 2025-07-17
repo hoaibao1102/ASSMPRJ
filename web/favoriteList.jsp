@@ -223,94 +223,133 @@
                     font-size: 1.5rem;
                 }
             }
+
+            .unauthorized-container {
+                background: #fef3c7;
+                border: 2px dashed #f59e0b;
+                border-radius: 20px;
+                margin: 4rem auto;
+                max-width: 700px;
+                box-shadow: 0 6px 20px rgba(0,0,0,0.05);
+            }
+
+            .unauthorized-title {
+                color: #b45309;
+                font-size: 1.8rem;
+                font-weight: 700;
+                margin-bottom: 1rem;
+            }
+
+            .unauthorized-desc {
+                color: #78350f;
+                font-size: 1rem;
+                margin-bottom: 1.5rem;
+            }
+
         </style>
     </head>
     <body>
-
-        <div class="main-container">
-            <!-- Header -->
-            <div class="header-section d-flex align-items-center justify-content-between flex-wrap">
-                <a href="placeController?action=destination&page=indexjsp" class="back-btn">
-                    <i class="bi bi-arrow-left me-2"></i> Quay lại
-                </a>
-                <div class="flex-grow-1 text-center">
-                    <h1 class="page-title m-0">
-                        <i class="bi bi-heart-fill me-2"></i> Danh sách tour yêu thích của bạn
-                    </h1>
-                </div>
-            </div>
-            <div class="content">
-                <!-- Tour List -->
-                <c:choose>
-                    <c:when test="${not empty tourFavoriteList}">
-                        <c:forEach var="t" items="${tourFavoriteList}" varStatus="loop">
-                            <c:set var="index" value="${loop.index + 1}" />
-                            <c:set var="dateKey" value="startDateTour${index}" />
-                            <c:set var="startDates" value="${requestScope[dateKey]}" />
-
-
-                            <div class="tour-card">
-                                <div class="tour-img-box">
-                                    <img src="${t.img_Tour}" alt="Tour image" class="tour-img"/>
-                                </div>
-                                <div class="tour-info d-flex flex-column justify-content-between">
-                                    <div>
-                                        <div class="tour-title">${t.nametour}</div>
-                                        <div class="tour-meta"><i class="bi bi-tag-fill me-2 text-primary"></i> Mã tour: <strong>${t.idTourTicket}</strong></div>
-                                        <div class="tour-meta"><i class="bi bi-geo-alt-fill me-2 text-danger"></i> Khởi hành: <strong>${t.placestart}</strong></div>
-                                        <div class="tour-meta"><i class="bi bi-clock-fill me-2 text-warning"></i> Thời gian: <strong>${t.duration}</strong></div>
-                                        <div class="tour-meta"><i class="bi bi-truck me-2 text-success"></i> Phương tiện: <strong>${t.transport_name}</strong></div>
-                                        <div class="tour-meta">
-                                            <i class="bi bi-calendar-event-fill me-2 text-info"></i> Ngày khởi hành:
-                                            <c:choose>
-                                                <c:when test="${not empty startDates}">
-                                                    <c:forEach var="sd" items="${startDates}">
-                                                        <span class="date-badge">${sd.startDate}</span>
-                                                    </c:forEach>
-                                                </c:when>
-                                                <c:otherwise>
-                                                    <span class="date-badge">Chưa có lịch</span>
-                                                </c:otherwise>
-                                            </c:choose>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex justify-content-between align-items-center mt-3 flex-wrap gap-2">
-                                        <span class="price">
-                                            <i class="bi bi-cash-coin me-2 fs-5"></i>
-                                            <fmt:formatNumber value="${t.price}" type="number" groupingUsed="true" /> ₫
-                                        </span>
-
-                                        <div class="d-flex gap-2">
-                                            <form action="MainController" method="get">
-                                                <input type="hidden" name="idTourTicket" value="${t.idTourTicket}"/>
-                                                <input type="hidden" name="nameOfDestination" value="${t.destination}"/>
-                                                <button type="submit" name="action" value="ticketDetail" class="btn btn-primary btn-sm">
-                                                    <i class="bi bi-eye"></i> Xem chi tiết
-                                                </button>
-                                            </form>
-                                            <form action="MainController" method="get" onsubmit="return confirm('Bạn có chắc muốn xóa?')">
-                                                <input type="hidden" name="action" value="removeFavorite"/>
-                                                <input type="hidden" name="idTourTicket" value="${t.idTourTicket}"/>
-                                                <input type="hidden" name="idUser" value="${sessionScope.nameUser.idUser}"/>
-                                                <button type="submit" class="btn btn-danger btn-sm">
-                                                    <i class="bi bi-trash"></i> Xóa khỏi yêu thích 
-                                                </button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </c:forEach>
-                    </c:when>
-                    <c:otherwise>
-                        <div class="text-center py-5">
-                            <h4>Không có tour yêu thích nào.</h4>
-                            <p class="text-muted">Hãy khám phá và thêm tour vào danh sách yêu thích của bạn!</p>
+        <c:choose>
+            <c:when test="${sessionScope.user.role eq 'CUS'}">
+                <div class="main-container">
+                    <!-- Header -->
+                    <div class="header-section d-flex align-items-center justify-content-between flex-wrap">
+                        <a href="placeController?action=destination&page=indexjsp" class="back-btn">
+                            <i class="bi bi-arrow-left me-2"></i> Quay lại
+                        </a>
+                        <div class="flex-grow-1 text-center">
+                            <h1 class="page-title m-0">
+                                <i class="bi bi-heart-fill me-2"></i> Danh sách tour yêu thích của bạn
+                            </h1>
                         </div>
-                    </c:otherwise>
-                </c:choose>
-            </div> 
-        </div>
+                    </div>
+                    <div class="content">
+                        <!-- Tour List -->
+                        <c:choose>
+                            <c:when test="${not empty tourFavoriteList}">
+                                <c:forEach var="t" items="${tourFavoriteList}" varStatus="loop">
+                                    <c:set var="index" value="${loop.index + 1}" />
+                                    <c:set var="dateKey" value="startDateTour${index}" />
+                                    <c:set var="startDates" value="${requestScope[dateKey]}" />
+
+
+                                    <div class="tour-card">
+                                        <div class="tour-img-box">
+                                            <img src="${t.img_Tour}" alt="Tour image" class="tour-img"/>
+                                        </div>
+                                        <div class="tour-info d-flex flex-column justify-content-between">
+                                            <div>
+                                                <div class="tour-title">${t.nametour}</div>
+                                                <div class="tour-meta"><i class="bi bi-tag-fill me-2 text-primary"></i> Mã tour: <strong>${t.idTourTicket}</strong></div>
+                                                <div class="tour-meta"><i class="bi bi-geo-alt-fill me-2 text-danger"></i> Khởi hành: <strong>${t.placestart}</strong></div>
+                                                <div class="tour-meta"><i class="bi bi-clock-fill me-2 text-warning"></i> Thời gian: <strong>${t.duration}</strong></div>
+                                                <div class="tour-meta"><i class="bi bi-truck me-2 text-success"></i> Phương tiện: <strong>${t.transport_name}</strong></div>
+                                                <div class="tour-meta">
+                                                    <i class="bi bi-calendar-event-fill me-2 text-info"></i> Ngày khởi hành:
+                                                    <c:choose>
+                                                        <c:when test="${not empty startDates}">
+                                                            <c:forEach var="sd" items="${startDates}">
+                                                                <span class="date-badge">${sd.startDate}</span>
+                                                            </c:forEach>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <span class="date-badge">Chưa có lịch</span>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex justify-content-between align-items-center mt-3 flex-wrap gap-2">
+                                                <span class="price">
+                                                    <i class="bi bi-cash-coin me-2 fs-5"></i>
+                                                    <fmt:formatNumber value="${t.price}" type="number" groupingUsed="true" /> ₫
+                                                </span>
+
+                                                <div class="d-flex gap-2">
+                                                    <form action="MainController" method="get">
+                                                        <input type="hidden" name="idTourTicket" value="${t.idTourTicket}"/>
+                                                        <input type="hidden" name="nameOfDestination" value="${t.destination}"/>
+                                                        <button type="submit" name="action" value="ticketDetail" class="btn btn-primary btn-sm">
+                                                            <i class="bi bi-eye"></i> Xem chi tiết
+                                                        </button>
+                                                    </form>
+                                                    <form action="MainController" method="get" onsubmit="return confirm('Bạn có chắc muốn xóa?')">
+                                                        <input type="hidden" name="action" value="removeFavorite"/>
+                                                        <input type="hidden" name="idTourTicket" value="${t.idTourTicket}"/>
+                                                        <input type="hidden" name="idUser" value="${sessionScope.nameUser.idUser}"/>
+                                                        <button type="submit" class="btn btn-danger btn-sm">
+                                                            <i class="bi bi-trash"></i> Xóa khỏi yêu thích 
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </c:forEach>
+                            </c:when>
+                            <c:otherwise>
+                                <div class="text-center py-5">
+                                    <h4>Không có tour yêu thích nào.</h4>
+                                    <p class="text-muted">Hãy khám phá và thêm tour vào danh sách yêu thích của bạn!</p>
+                                </div>
+                            </c:otherwise>
+                        </c:choose>
+                    </div> 
+                </div>
+            </c:when>
+            <c:otherwise>
+                <div class="unauthorized-container text-center py-5 px-4">
+                    <h2 class="unauthorized-title">
+                        <i class="bi bi-shield-lock-fill me-2"></i> Bạn cần đăng nhập để truy cập
+                    </h2>
+                    <p class="unauthorized-desc">Vui lòng đăng nhập để xem danh sách tour yêu thích của bạn.</p>
+                    <a href="placeController?action=destination&page=indexjsp" class="btn btn-warning rounded-pill mt-3">
+                        <i class="bi bi-house-door-fill me-1"></i> Quay về trang chủ
+                    </a>
+                </div>
+            </c:otherwise>
+        </c:choose>
+
+
 
     </body>
 </html>
