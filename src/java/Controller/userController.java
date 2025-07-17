@@ -89,7 +89,7 @@ public class userController extends HttpServlet {
                     url = handleDeleteReview(request, response);
                     break;
                 // ======================================
-                 case "addFavoriteTour":
+                case "addFavoriteTour":
                     url = handleAddFavoriteTour(request, response);
                     break;
                 case "showFavoriteList":
@@ -323,35 +323,26 @@ public class userController extends HttpServlet {
     private String handleAddReview(HttpServletRequest request, HttpServletResponse response) {
         try {
             HttpSession session = request.getSession(false); // dùng false để không tạo session mới
-            if (session == null) {
-                return "redirect:loginController?action=login";
-            }
-
-            UserDTO user = (UserDTO) session.getAttribute("nameUser");
-            System.out.println("🧪 nameUser = " + user);
-
-            if (user == null) {
-                return "redirect:loginController?action=login";
-            }
-
-            int userId = user.getIdUser();
             String idTourTicket = request.getParameter("idTourTicket");
-            String ratingStr = request.getParameter("rating");
-            String comment = request.getParameter("comment");
             String nameOfDestination = request.getParameter("nameOfDestination");
-
-            // 2. Lấy danh sách đánh giá
-            List<ReviewDTO> reviews = reviewDAO.getReviewsByTourId(idTourTicket);
-            request.setAttribute("reviews", reviews);
-
-            // 3. Gửi thêm thông tin tổng hợp (đã được trigger cập nhật)
-            request.setAttribute("averageRating", tourTicketDAO.getAvgRating(idTourTicket));
-            request.setAttribute("totalReviews", tourTicketDAO.getTotalReviews(idTourTicket));
-            request.setAttribute("featuredReview", tourTicketDAO.getFeaturedReview(idTourTicket));
 
             String redirectUrl = "redirect:MainController?idTourTicket=" + idTourTicket
                     + "&nameOfDestination=" + (nameOfDestination != null ? nameOfDestination : "")
                     + "&action=ticketDetail";
+
+            UserDTO user = (UserDTO) session.getAttribute("nameUser");
+
+            if (!AuthUtils.isLoggedIn(session) || user == null) {
+                session.setAttribute("redirectAfterLogin", redirectUrl != null ? redirectUrl : "index.jsp");
+                session.setAttribute("pendingReviewTourId", idTourTicket);
+                session.setAttribute("nameOfDestination", nameOfDestination);
+                session.setAttribute("action", "addReview");
+                return "LoginForm.jsp";
+            }
+
+            int userId = user.getIdUser();
+            String ratingStr = request.getParameter("rating");
+            String comment = request.getParameter("comment");
 
             // Validation input
             if (idTourTicket == null || idTourTicket.trim().isEmpty()) {
@@ -383,14 +374,12 @@ public class userController extends HttpServlet {
             }
 
             // Tạo và lưu đánh giá
-            ReviewDTO review = new ReviewDTO(userId, idTourTicket, rating, comment != null ? comment.trim() : "", true);
+            ReviewDTO review = new ReviewDTO(userId, idTourTicket, rating, comment != null ? comment.trim() : "");
 
             if (reviewDAO.create(review)) {
                 request.setAttribute("message", "Cảm ơn bạn đã đánh giá! Đánh giá của bạn đã được gửi thành công.");
-                System.out.println("isCreate: " + reviewDAO.create(review));
             } else {
                 request.setAttribute("error", "Có lỗi xảy ra khi gửi đánh giá. Vui lòng thử lại.");
-                System.out.println("isCreate: " + reviewDAO.create(review));
             }
 
             return redirectUrl;
@@ -419,10 +408,10 @@ public class userController extends HttpServlet {
         String destination = request.getParameter("nameOfDestination");
         String ratingStr = request.getParameter("rating");
         String comment = request.getParameter("comment");
-        
+
         String redirectUrl = "redirect:MainController?idTourTicket=" + idTour
-                    + "&nameOfDestination=" + (destination != null ? destination : "")
-                    + "&action=ticketDetail";
+                + "&nameOfDestination=" + (destination != null ? destination : "")
+                + "&action=ticketDetail";
 
         try {
             int rating = Integer.parseInt(ratingStr);
@@ -462,11 +451,11 @@ public class userController extends HttpServlet {
 
         String idTour = request.getParameter("idTourTicket");
         String destination = request.getParameter("nameOfDestination");
-        
+
         String redirectUrl = "redirect:MainController?idTourTicket=" + idTour
-                    + "&nameOfDestination=" + (destination != null ? destination : "")
-                    + "&action=ticketDetail";
-        
+                + "&nameOfDestination=" + (destination != null ? destination : "")
+                + "&action=ticketDetail";
+
         // Kiểm tra user có review này không
         if (!reviewDAO.hasUserReviewed(user.getIdUser(), idTour)) {
             request.setAttribute("error", "Bạn chưa có đánh giá nào cho tour này.");
@@ -586,7 +575,7 @@ public class userController extends HttpServlet {
         }
         request.setAttribute("tourFavoriteList", tourList);
         url = "favoriteList.jsp";
-        
+
         return url;
     }
 

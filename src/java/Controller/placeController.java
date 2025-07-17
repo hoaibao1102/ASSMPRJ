@@ -510,7 +510,6 @@ public class placeController extends HttpServlet {
             // 3. Gửi thêm thông tin tổng hợp (đã được trigger cập nhật)
             request.setAttribute("averageRating", tdao.getAvgRating(idTour));
             request.setAttribute("totalReviews", tdao.getTotalReviews(idTour));
-            request.setAttribute("featuredReview", tdao.getFeaturedReview(idTour));
 
             // ✅ Chỉ kiểm tra đánh giá nếu đã đăng nhập
             if (user != null) {

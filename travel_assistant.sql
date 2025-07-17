@@ -106,7 +106,6 @@ CREATE TABLE Favorites (
 ALTER TABLE TourTickets ADD 
     avgRating DECIMAL(3,2) DEFAULT 0,       -- Điểm đánh giá trung bình (ví dụ: 4.5)
     totalReviews INT DEFAULT 0,            -- Tổng số lượt đánh giá
-    featuredReview NVARCHAR(1000) NULL;    -- Có thể lưu một vài bình luận nổi bật
 
 -- Bước 1: Tạo bảng mới để lưu chi tiết từng bình luận
 -- Bảng này sẽ lưu lịch sử đánh giá của người dùng
@@ -117,7 +116,6 @@ CREATE TABLE TourReviews (
     rating INT NOT NULL CHECK (rating >= 1 AND rating <= 5), -- Bắt buộc phải có điểm
     comment NVARCHAR(1000) NULL,                         -- Bình luận có thể để trống
     reviewDate DATETIME DEFAULT GETDATE(),
-    isVerified BIT DEFAULT 0,                            -- 1 nếu người dùng đã mua tour này
 	status VARCHAR(20) DEFAULT 'ACTIVE',     -- ACTIVE, HIDDEN, DELETED
     FOREIGN KEY (idUser) REFERENCES Users(id),
     FOREIGN KEY (idTourTicket) REFERENCES TourTickets(idTourTicket),

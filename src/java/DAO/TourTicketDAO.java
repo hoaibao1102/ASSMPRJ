@@ -325,21 +325,4 @@ public class TourTicketDAO implements IDAO<TourTicketDTO, String> {
         return 0;
     }
 
-    public String getFeaturedReview(String idTourTicket) {
-        String sql = "SELECT featuredReview FROM TourTickets WHERE idTourTicket = ?";
-        try {
-            Connection con = DBUtils.getConnection();  
-            PreparedStatement ps = con.prepareStatement(sql);
-            ps.setString(1, idTourTicket);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                return rs.getString("featuredReview");
-            }
-        } catch (ClassNotFoundException | SQLException ex) {
-            Logger.getLogger(TourTicketDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return null;
-    }
-  
-
 }
