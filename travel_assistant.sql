@@ -106,6 +106,7 @@ CREATE TABLE Favorites (
 ALTER TABLE TourTickets ADD 
     avgRating DECIMAL(3,2) DEFAULT 0,       -- Điểm đánh giá trung bình (ví dụ: 4.5)
     totalReviews INT DEFAULT 0,            -- Tổng số lượt đánh giá
+    featuredReview NVARCHAR(1000) NULL;    -- Có thể lưu một vài bình luận nổi bật
 
 -- Bước 1: Tạo bảng mới để lưu chi tiết từng bình luận
 -- Bảng này sẽ lưu lịch sử đánh giá của người dùng
@@ -116,6 +117,7 @@ CREATE TABLE TourReviews (
     rating INT NOT NULL CHECK (rating >= 1 AND rating <= 5), -- Bắt buộc phải có điểm
     comment NVARCHAR(1000) NULL,                         -- Bình luận có thể để trống
     reviewDate DATETIME DEFAULT GETDATE(),
+    isVerified BIT DEFAULT 0,                            -- 1 nếu người dùng đã mua tour này
 	status VARCHAR(20) DEFAULT 'ACTIVE',     -- ACTIVE, HIDDEN, DELETED
     FOREIGN KEY (idUser) REFERENCES Users(id),
     FOREIGN KEY (idTourTicket) REFERENCES TourTickets(idTourTicket),
@@ -199,7 +201,61 @@ BEGIN
 END;
 
 
+-- bảng đánh giá của khách hàng
 
+-- Chúng ta sẽ lưu trữ thông tin tổng hợp để tối ưu hiển thị
+ALTER TABLE TourTickets ADD 
+    avgRating DECIMAL(3,2) DEFAULT 0,       -- Điểm đánh giá trung bình (ví dụ: 4.5)
+    totalReviews INT DEFAULT 0           -- Tổng số lượt đánh giá
+
+-- Bước 1: Tạo bảng mới để lưu chi tiết từng bình luận
+-- Bảng này sẽ lưu lịch sử đánh giá của người dùng
+CREATE TABLE TourReviews ( 
+    idReview INT IDENTITY(1,1) PRIMARY KEY,
+    idUser INT NOT NULL,
+    idTourTicket VARCHAR(5) NOT NULL,
+    rating INT NOT NULL CHECK (rating >= 1 AND rating <= 5), -- Bắt buộc phải có điểm
+    comment NVARCHAR(1000) NULL,                         -- Bình luận có thể để trống
+    reviewDate DATETIME DEFAULT GETDATE(),
+	status VARCHAR(20) DEFAULT 'ACTIVE',     -- ACTIVE, HIDDEN, DELETED
+    FOREIGN KEY (idUser) REFERENCES Users(id),
+    FOREIGN KEY (idTourTicket) REFERENCES TourTickets(idTourTicket),
+    UNIQUE (idUser, idTourTicket) -- Đảm bảo một người chỉ được đánh giá một lần cho một tour
+);
+
+-- Bước 2: Tạo Trigger để tự động cập nhật thông tin đánh giá
+-- Trigger này sẽ cập nhật avgRating, totalReviews mỗi khi có bình luận mới hoặc bị xóa
+CREATE TRIGGER trg_AfterInsertDeleteReview
+ON TourReviews
+AFTER INSERT, DELETE, UPDATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    
+    -- Xác định tour bị ảnh hưởng
+    WITH AffectedTours AS (
+        SELECT DISTINCT idTourTicket FROM inserted
+        UNION
+        SELECT DISTINCT idTourTicket FROM deleted
+    )
+    
+    -- Cập nhật avgRating và totalReviews (chỉ tính review ACTIVE)
+    UPDATE TourTickets
+    SET 
+        avgRating = (
+            SELECT AVG(CAST(rating AS DECIMAL(4,2)))
+            FROM TourReviews
+            WHERE idTourTicket = at.idTourTicket AND status = 'ACTIVE'
+        ),
+        totalReviews = (
+            SELECT COUNT(*)
+            FROM TourReviews
+            WHERE idTourTicket = at.idTourTicket AND status = 'ACTIVE'
+        )
+    FROM AffectedTours at
+    WHERE TourTickets.idTourTicket = at.idTourTicket;
+END;
+GO
 
 
 

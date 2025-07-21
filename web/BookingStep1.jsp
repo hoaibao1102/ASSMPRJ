@@ -656,6 +656,28 @@
             .right-content {
                 animation-delay: 0.2s;
             }
+
+            #voucherModal {
+                position: fixed;
+                inset: 0;
+                background-color: rgba(0, 0, 0, 0.4);
+                z-index: 1000;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                overflow: hidden; /* Ngăn cuộn toàn trang */
+            }
+            .modal-content {
+                width: 90%;
+                max-width: 600px;
+                max-height: 90vh;
+                overflow-y: auto; /* Cho phép cuộn nội dung bên trong nếu quá dài */
+                background-color: #fff;
+                padding: 20px;
+                border-radius: 8px;
+                position: relative;
+            }
+
         </style>
     </head>
     <body>
@@ -944,7 +966,7 @@
                 }${!loop.last ? ',' : ''}
                 </c:forEach>
                 ];
-            
+
                 let selectedVoucher = null; // Lưu trữ đối tượng voucher đang được áp dụng
                 let tempSelectedVoucher = null; // Voucher tạm thời được chọn trong modal
 
@@ -960,7 +982,8 @@
                 function openDiscountModal() {
                     const modal = document.getElementById('voucherModal');
                     const container = document.getElementById('voucherListContainer');
-
+                    document.getElementById('voucherModal').style.display = 'flex';
+                    document.body.style.overflow = 'hidden'; // Ngăn cuộn nền
                     // Xóa nội dung cũ
                     container.innerHTML = '';
 
@@ -1044,6 +1067,7 @@
                  */
                 function closeDiscountModal() {
                     document.getElementById('voucherModal').style.display = 'none';
+                    document.body.style.overflow = ''; // Cho phép cuộn lại
                     tempSelectedVoucher = null;
                 }
 
@@ -1180,8 +1204,8 @@
                     document.getElementById("voucherID").value = selectedVoucher ? selectedVoucher.voucherID : '';
 
                     // Tính tổng tiền được giảm theo loại hành khách (để hiển thị)
-                    const totalChild_down = childCount * pricePerAdult * (1.0)*discountChild / 100.0;
-                    const totalBaby_down = babyCount * pricePerAdult * (1.0)*discountBaby / 100.0;
+                    const totalChild_down = childCount * pricePerAdult * (1.0) * discountChild / 100.0;
+                    const totalBaby_down = babyCount * pricePerAdult * (1.0) * discountBaby / 100.0;
                     const total_down = totalChild_down + totalBaby_down;
 
                     // Cập nhật giao diện hiển thị
@@ -1223,8 +1247,8 @@
                     if (selectedVoucher) {
                         updateVoucherDisplay();
                     }
-                    
-                    
+
+
                 }
 
                 /**

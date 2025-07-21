@@ -389,7 +389,7 @@
                                         <i class="bi bi-clock"></i> Thời lượng
                                     </label>
                                     <div class="input-group">
-                                        <input type="number" name="duration" class="form-control" max="30" required 
+                                        <input type="number" name="duration" class="form-control" min="0" max="30" required 
                                                value="${not empty voucher ? voucher.duration : ''}" 
                                                placeholder="1-30">
                                         <span class="input-group-text">ngày</span>

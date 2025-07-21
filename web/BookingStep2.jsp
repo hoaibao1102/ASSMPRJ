@@ -807,7 +807,7 @@
                     </div>
                     <div class="modal-body">
                         <form id="paymentForm" method="get" action="MainController">
-                            <input type="hidden" name="action" value="updatePayOrder"/>
+                            <input type="hidden" name="action" value="call_oder_step3"/>
                             <input type="hidden" id="idBooking" name="idBooking" value="">
                             <input type="hidden" id="totalPrice" name="totalBill2" value="">
                             <input type="hidden" id="numberTicket" name="numberTicket2" value="">

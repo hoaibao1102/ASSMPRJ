@@ -250,7 +250,7 @@
     </head>
     <body>
         <c:choose>
-            <c:when test="${sessionScope.user.role eq 'CUS'}">
+            <c:when test="${sessionScope.nameUser.role eq 'CUS'}">
                 <div class="main-container">
                     <!-- Header -->
                     <div class="header-section d-flex align-items-center justify-content-between flex-wrap">

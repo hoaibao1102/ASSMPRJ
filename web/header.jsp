@@ -439,7 +439,7 @@
                     </a>
                 </div>
                 <div class="nav-item">
-                    <a href="userController" class="nav-link">
+                    <a href="userController?action=listUser " class="nav-link">
                         <i class="fas fa-users"></i> Quản lý người dùng
                     </a>
                 </div>
