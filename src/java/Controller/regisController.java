@@ -220,6 +220,8 @@ public class regisController extends HttpServlet {
 //                        url = REGIS_PAGE;
                         }
 
+                    }else{
+                        url = REGIS_PAGE;
                     }
                     return url;
     }

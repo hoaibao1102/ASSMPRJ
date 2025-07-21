@@ -9,7 +9,7 @@
 <html lang="vi">
     <head>
         <meta charset="UTF-8">
-        <title>VN Tours - Footer</title>
+        <title>VN Tours</title>
         <!-- Bootstrap CSS -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
         <!-- Font Awesome -->
@@ -252,10 +252,10 @@
                             <h4>Liên kết nhanh</h4>
                             <ul class="quick-links">
                                 <li><a href="MainController?action=destination&page=indexjsp">Trang chủ</a></li>
-                                <li><a href="TourTicketForm.jsp">Tour du lịch</a></li>
+                                <li><a href="placeController?action=destination&page=destinationjsp" >Tour du lịch</a></li>
                                 <li><a href="about.jsp">Về chúng tôi</a></li>
                                 <li><a href="contact.jsp">Liên hệ</a></li>
-                                <li><a href="TicketDetailForm.jsp">Đặt tour</a></li>
+                                <li><a href="placeController?action=destination&page=destinationjsp" >Đặt tour</a></li>
                                 <li><a href="#">Tin tức</a></li>
                             </ul>
                         </div>

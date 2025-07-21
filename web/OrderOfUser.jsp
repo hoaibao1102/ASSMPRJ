@@ -12,7 +12,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Đơn hàng của bạn</title>
+        <title>VN Tours</title>
 
         <!-- Bootstrap 5 CSS -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -647,7 +647,7 @@
                                                     <div class="payment-actions">
                                                         <c:choose>
                                                             <c:when test="${order.status == 0}">
-                                                                <form class="pay-order-form" action="MainController" method="get">
+                                                                <form class="pay-order-form" action="MainController" method="post">
                                                                     <input type="hidden" name="action" value="openPayModal"/>
                                                                     <input type="hidden" name="idBooking" value="${order.idBooking}"/>
                                                                     <input type="hidden" name="totalPrice" value="${order.totalPrice}"/>
@@ -697,7 +697,7 @@
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
                                     </div>
                                     <div class="modal-body">
-                                        <form id="paymentForm" method="get" action="MainController">
+                                        <form id="paymentForm" method="post" action="MainController">
                                             <input type="hidden" name="action" value="updatePayOrder"/>
                                             <input type="hidden" id="idBooking" name="idBooking" value="">
                                             <input type="hidden" id="totalPrice" name="totalBill2" value="">

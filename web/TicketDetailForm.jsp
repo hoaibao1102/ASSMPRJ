@@ -12,7 +12,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Chi tiết Tour</title>
+        <title>VN Tours</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
         <style>
@@ -681,7 +681,7 @@
                                                     <c:choose>
                                                         <c:when test="${hasUserReviewed ne true and hasUserPaid eq true}">
                                                             <!-- FORM THÊM REVIEW MỚI -->
-                                                            <form action="MainController" method="get">
+                                                            <form action="MainController" method="post">
                                                                 <input type="hidden" name="action" value="addReview" />
                                                                 <input type="hidden" name="idTourTicket" value="${tourTicket.idTourTicket}" />
                                                                 <input type="hidden" name="nameOfDestination" value="${tourTicket.destination}" />
@@ -742,7 +742,7 @@
                                                                 </div>
 
                                                                 <!-- FORM EDIT (ẨN BAN ĐẦU) -->
-                                                                <form action="MainController" method="get" id="editReviewForm" style="display: none;" class="mt-3">
+                                                                <form action="MainController" method="post" id="editReviewForm" style="display: none;" class="mt-3">
                                                                     <input type="hidden" name="action" value="updateReview" />
                                                                     <input type="hidden" name="idTourTicket" value="${tourTicket.idTourTicket}" />
                                                                     <input type="hidden" name="nameOfDestination" value="${tourTicket.destination}" />
@@ -790,7 +790,7 @@
                                                 </c:when>
                                                 <c:otherwise>
                                                     <c:if test="${empty sessionScope.nameUser or sessionScope.nameUser.role ne 'AD'}">
-                                                        <form action="MainController" method="get" class="booking-form">
+                                                        <form action="MainController" method="post" class="booking-form">
                                                             <input type="hidden" name="action" value="addReview">
                                                             <input type="hidden" name="idTourTicket" value="${tourTicket.idTourTicket}">
                                                             <input type="hidden" name="nameOfDestination" value="${tourTicket.destination}" />
@@ -805,7 +805,7 @@
                                         </div>
 
                                         <!-- FORM DELETE (ẨN) -->
-                                        <form action="MainController" method="get" id="deleteReviewForm" style="display: none;">
+                                        <form action="MainController" method="post" id="deleteReviewForm" style="display: none;">
                                             <input type="hidden" name="action" value="deleteReview" />
                                             <input type="hidden" name="idTourTicket" value="${tourTicket.idTourTicket}" />
                                             <input type="hidden" name="nameOfDestination" value="${tourTicket.destination}" />
@@ -940,7 +940,7 @@
                                     </div>
 
                                     <!-- Booking Form -->
-                                    <form action="MainController" method="get" class="booking-form">
+                                    <form action="MainController" method="post" class="booking-form">
                                         <input type="hidden" name="idTour" value="${tourTicket.idTourTicket}">
                                         <input type="hidden" name="action" value="order">
                                         <div class="mb-3">

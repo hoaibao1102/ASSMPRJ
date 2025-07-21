@@ -15,7 +15,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Đặt Tour - Thanh Toán</title>
+        <title>VN Tours</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
@@ -778,7 +778,7 @@
                             <strong>Ngày về:</strong> <%=endDateStr%>
                         </p>
 
-                        <form action="MainController" method="get">
+                        <form action="MainController" method="post">
                             <input type="hidden" name="action" value="call_oder_step3">
                             <input type="hidden" name="totalBill2" value="<%=newBooking.getTotalPrice()%>">
                             <input type="hidden" name="numberTicket2" value="<%=newBooking.getNumberTicket()%>">
@@ -806,7 +806,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
                     </div>
                     <div class="modal-body">
-                        <form id="paymentForm" method="get" action="MainController">
+                        <form id="paymentForm" method="post" action="MainController">
                             <input type="hidden" name="action" value="call_oder_step3"/>
                             <input type="hidden" id="idBooking" name="idBooking" value="">
                             <input type="hidden" id="totalPrice" name="totalBill2" value="">

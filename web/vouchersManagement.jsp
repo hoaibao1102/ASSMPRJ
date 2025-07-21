@@ -11,7 +11,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Quản lý Vouchers</title>
+        <title>VN Tours</title>
 
         <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css" rel="stylesheet">
@@ -523,7 +523,7 @@
                 <h1><i class="bi bi-ticket-detailed"></i> Quản lý Vouchers</h1>
                 <p class="subtitle">Quản lý và theo dõi các voucher của bạn</p>
 
-                <form action="MainController" method="get" style="display: inline;">
+                <form action="MainController" method="post" style="display: inline;">
                     <input type="hidden" name="action" value="goCreateNewVoucherForm">
                     <button type="submit" class="btn-create">
                         <i class="bi bi-plus-circle"></i> Tạo Voucher Mới
@@ -586,7 +586,7 @@
                                                             <span class="fw-medium">${vc.minimumOrderValue} VNĐ</span>
                                                         </td>
                                                         <td>
-                                                            <form action="MainController" method="get" style="display: inline-block;">
+                                                            <form action="MainController" method="post" style="display: inline-block;">
                                                                 <input type="hidden" name="action" value="goReuseVoucherForm">
                                                                 <input type="hidden" name="voucherID" value="${vc.voucherID}">
                                                                 <button type="submit" class="btn-action btn-reuse">
@@ -667,14 +667,14 @@
                                                             <span class="fw-medium">${vc.minimumOrderValue} VNĐ</span>
                                                         </td>
                                                         <td>
-                                                            <form action="MainController" method="get" style="display: inline-block;">
+                                                            <form action="MainController" method="post" style="display: inline-block;">
                                                                 <input type="hidden" name="action" value="deleteVoucher">
                                                                 <input type="hidden" name="voucherID" value="${vc.voucherID}">
                                                                 <button type="submit" class="btn-action btn-delete" onclick="return confirm('Bạn có chắc chắn muốn xóa voucher này?')">
                                                                     <i class="bi bi-trash me-1"></i> Xóa
                                                                 </button>
                                                             </form>
-                                                            <form action="MainController" method="get" style="display: inline-block;">
+                                                            <form action="MainController" method="post" style="display: inline-block;">
                                                                 <input type="hidden" name="action" value="goReuseVoucherForm"> 
                                                                 <input type="hidden" name="voucherID" value="${vc.voucherID}">
                                                                 <button type="submit" class="btn-action btn-edit" onclick="return confirm('Bạn có chắc chắn muốn sửa voucher này?')">

@@ -7,7 +7,7 @@
 <html lang="vi">
     <head>
         <meta charset="UTF-8">
-        <title>Thêm Tour</title>
+        <title>VN Tours</title>
         <style>
             :root {
                 --sky-blue: #0EA5E9;

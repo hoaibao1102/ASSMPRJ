@@ -10,7 +10,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Tạo Voucher</title>
+        <title>VN Tours</title>
         
         <!-- Bootstrap CSS -->
         <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
@@ -351,7 +351,7 @@
                 <!-- Form Container -->
                 <div class="form-container">
                     <!-- Main Form -->
-                    <form action="MainController" method="get">
+                    <form action="MainController" method="post">
                         <input type="hidden" name="action" value="${not empty voucher ? 'reuseVoucher' : 'createNewVoucher'}">
                         <c:if test="${not empty voucher}">
                             <input type="hidden" name="voucherID" value="${voucher.voucherID}">
@@ -419,7 +419,7 @@
                                     <label class="form-label">
                                         <i class="bi bi-box"></i> Số lượng
                                     </label>
-                                    <input type="number" name="numbers" class="form-control" required 
+                                    <input type="number" name="numbers" class="form-control"  min="1" required 
                                            value="${not empty voucher ? voucher.numbers : ''}" 
                                            placeholder="Nhập số lượng voucher">
                                 </div>
@@ -433,7 +433,7 @@
                                     </label>
                                     <div class="input-group">
                                         <input type="number" name="minimumOrderValue" class="form-control" step="0.01" 
-                                               required min="0.0" value="${not empty voucher ? voucher.minimumOrderValue : ''}" 
+                                               required min="1" value="${not empty voucher ? voucher.minimumOrderValue : ''}" 
                                                placeholder="Nhập giá trị tối thiểu">
                                         <span class="input-group-text">VNĐ</span>
                                     </div>

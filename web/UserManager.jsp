@@ -11,7 +11,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>User manager</title>
+        <title>VN Tours</title>
         <%@include file="header.jsp" %>
         <style>
             /* Reset hiệu ứng không cần thiết */
@@ -126,7 +126,7 @@
                                         <td><%=u.getPhone()%></td>
                                         <td><%=u.getRole()%></td>
                                         <td>
-                                            <form action="MainController" method="get">
+                                            <form action="MainController" method="post">
                                                 <input type="hidden" name="action" value="orderOfUser" />
                                                 <input type="hidden" name="userId" value="<%= u.getIdUser() %>" />
                                                 <button type="submit">Xem đơn hàng</button>

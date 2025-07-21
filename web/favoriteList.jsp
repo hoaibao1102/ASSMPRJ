@@ -11,7 +11,7 @@
 <html lang="vi">
     <head>
         <meta charset="UTF-8">
-        <title>Danh sách yêu thích</title>
+        <title>VN Tours</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
         <style>
@@ -305,14 +305,14 @@
                                                 </span>
 
                                                 <div class="d-flex gap-2">
-                                                    <form action="MainController" method="get">
+                                                    <form action="MainController" method="post">
                                                         <input type="hidden" name="idTourTicket" value="${t.idTourTicket}"/>
                                                         <input type="hidden" name="nameOfDestination" value="${t.destination}"/>
                                                         <button type="submit" name="action" value="ticketDetail" class="btn btn-primary btn-sm">
                                                             <i class="bi bi-eye"></i> Xem chi tiết
                                                         </button>
                                                     </form>
-                                                    <form action="MainController" method="get" onsubmit="return confirm('Bạn có chắc muốn xóa?')">
+                                                    <form action="MainController" method="post" onsubmit="return confirm('Bạn có chắc muốn xóa?')">
                                                         <input type="hidden" name="action" value="removeFavorite"/>
                                                         <input type="hidden" name="idTourTicket" value="${t.idTourTicket}"/>
                                                         <input type="hidden" name="idUser" value="${sessionScope.nameUser.idUser}"/>

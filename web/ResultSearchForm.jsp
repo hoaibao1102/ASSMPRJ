@@ -14,7 +14,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Danh sách Tour</title>
+        <title>VN Tours</title>
         <!-- Bootstrap 5 CSS -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
         <!-- Font Awesome Icons -->
@@ -506,7 +506,7 @@
                                                 <%=String.format("%,.0f", t.getPrice())%> đ
                                             </div>
                                             
-                                            <form action="MainController" method="get">
+                                            <form action="MainController" method="post">
                                                 <input type="hidden" name="action" value="ticketDetail" />
                                                 <input type="hidden" name="idTourTicket" value="<%=t.getIdTourTicket()%>" />
                                                 <button class="btn-detail" type="submit">

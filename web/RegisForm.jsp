@@ -12,7 +12,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Register - Tour Booking</title>
+        <title>VN Tours</title>
         
         <!-- Bootstrap 5 CSS -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -363,7 +363,7 @@
                                         ${requestScope.updateError}
                                     </div>
                                 </c:if>
-                                <form action="${isEditMode ? 'userController' : 'regisController'}" method="get">
+                                <form action="${isEditMode ? 'userController' : 'regisController'}" method="post">
                                     <input type="hidden" value="${isEditMode ? 'updateProfile' : 'regis'}" name="action"> 
                                     <c:if test="${isEditMode}">
                                         <input type="hidden" name="userId" value="${sessionScope.nameUser.idUser}" />

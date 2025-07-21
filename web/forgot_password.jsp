@@ -9,7 +9,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Quên mật khẩu - VN Tours</title>
+        <title>VN Tours</title>
         <!-- Bootstrap 5 CSS -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
         <!-- Bootstrap Icons -->
@@ -155,7 +155,7 @@
                                 <p class="mb-0 opacity-75">Đừng lo lắng, chúng tôi sẽ giúp bạn!</p>
                             </div>
                             <div class="card-body">
-                                <form action="ForgotPasswordController" method="get">
+                                <form action="ForgotPasswordController" method="post">
                                     <input type="hidden" name="action" value="sendCode"/>
                                     <div class="form-floating">
                                         <input type="email" class="form-control" id="email" name="email" 

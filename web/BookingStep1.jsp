@@ -14,7 +14,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Đặt Tour - Nhập Thông Tin</title>
+        <title>VN Tours</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
         <style>
@@ -929,7 +929,7 @@
                             <p><i class="fas fa-calculator me-2"></i>Tổng tiền</p>
                             <p class="total-amount">0 đ</p>
                         </div>
-                        <form action="MainController" method="get" onsubmit="return prepareSubmit()">
+                        <form action="MainController" method="post" onsubmit="return prepareSubmit()">
                             <input type="hidden" name="action" value="call_oder_step2">
                             <input type="hidden" name="startDate" value="<%=stDate.getStartDate()%>">
                             <input type="hidden" name="idUser" value="<%=account.getIdUser()%>">
