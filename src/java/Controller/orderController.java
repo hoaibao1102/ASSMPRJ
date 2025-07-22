@@ -238,7 +238,9 @@ public class orderController extends HttpServlet {
 
         OrderDAO odao = new OrderDAO();
         double total = Double.parseDouble(request.getParameter("totalBill"));
+        double amount_off = Double.parseDouble(request.getParameter("amount_off"));
         int numberTicket = Integer.parseInt(request.getParameter("numberTicket"));
+        int voucherID = Integer.parseInt(request.getParameter("voucherID"));
         String idTour = request.getParameter("idTour");
         int idUser = Integer.parseInt(request.getParameter("idUser"));
         String bookingDate = String.valueOf(request.getParameter("bookingDate"));
@@ -247,7 +249,7 @@ public class orderController extends HttpServlet {
         String idBooking = odao.generateBookingId(idTour);
         Date startDate = Date.valueOf(request.getParameter("startDate"));
 
-        OrderDTO newBooking = new OrderDTO(idUser, idTour, bookingDate, numberTicket, total, status, idBooking, note, startDate);
+        OrderDTO newBooking = new OrderDTO(idUser, idTour, bookingDate, numberTicket, startDate, total, status, idBooking, note,voucherID, amount_off);
         if (odao.create(newBooking)) {
             request.setAttribute("newBooking", newBooking);
             return "BookingStep2.jsp";

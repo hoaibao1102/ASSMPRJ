@@ -884,6 +884,17 @@
                         </div>
 
                         <!-- Right Sidebar -->
+                        <c:if test="${sessionScope.nameUser.role eq 'AD'}">
+                            <select name="startDate" id="startNum" class="form-select">
+                                <c:forEach var="sd" items="${startDateTour}">
+                                    <c:if test="${sd.quantity != 0}">
+                                        <option value="${sd.startDate}">
+                                            ${sd.startDate} (còn ${sd.quantity} vé)
+                                        </option>
+                                    </c:if>
+                                </c:forEach>
+                            </select>
+                        </c:if>
                         <c:if test="${sessionScope.nameUser.role ne 'AD'}">
                             <div class="col-lg-4">
                                 <div class="booking-sidebar">
