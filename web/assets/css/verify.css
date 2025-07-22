@@ -1,0 +1,232 @@
+           :root {
+                /* Bảng màu chính - Tropical Vietnam */
+                --primary-blue: #0EA5E9;
+                --primary-orange: #FF6B35;
+                --primary-green: #10B981;
+                /* Bảng màu phụ */
+                --golden-yellow: #F59E0B;
+                --purple: #8B5CF6;
+                --pearl-white: #FEFEFE;
+                /* Gradient */
+                --gradient-main: linear-gradient(135deg, #0EA5E9, #10B981);
+                --gradient-secondary: linear-gradient(135deg, #FF6B35, #F59E0B);
+                --gradient-accent: linear-gradient(135deg, #8B5CF6, #0EA5E9);
+                /* Màu text */
+                --text-dark: #1F2937;
+                --text-medium: #6B7280;
+                --text-light: #9CA3AF;
+                /* Màu nền */
+                --bg-light: #f8f9fa;
+                --bg-white: #ffffff;
+            }
+            
+            * {
+                font-family: 'Poppins', sans-serif;
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            
+            body {
+                background: var(--gradient-main);
+                min-height: 100vh;
+                position: relative;
+            }
+            
+            .verify-container {
+                background: var(--bg-white);
+                border-radius: 15px;
+                border: 1px solid #dee2e6;
+                position: relative;
+                overflow: hidden;
+            }
+            
+            .verify-container::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 5px;
+                background: var(--gradient-secondary);
+                z-index: 1;
+            }
+            
+            .verify-header {
+                text-align: center;
+                padding: 2rem 1rem;
+            }
+            
+            .verify-icon {
+                width: 80px;
+                height: 80px;
+                background: var(--gradient-secondary);
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin: 0 auto 1.5rem;
+            }
+            
+            .verify-icon i {
+                color: white;
+                font-size: 2rem;
+            }
+            
+            h2 {
+                color: var(--text-dark);
+                font-weight: 600;
+                margin-bottom: 1rem;
+                font-size: 1.8rem;
+            }
+            
+            .email-info {
+                background: var(--bg-light);
+                border-radius: 15px;
+                padding: 1rem;
+                margin-bottom: 2rem;
+                border-left: 4px solid var(--primary-orange);
+            }
+            
+            .email-info p {
+                margin: 0;
+                color: var(--text-dark);
+                font-size: 0.95rem;
+                line-height: 1.5;
+            }
+            
+            .email-info strong {
+                color: var(--primary-orange);
+                font-weight: 600;
+            }
+            
+            .code-inputs {
+                display: flex;
+                justify-content: center;
+                gap: 0.5rem;
+                margin-bottom: 2rem;
+            }
+            
+            .code-inputs input {
+                width: 50px;
+                height: 50px;
+                text-align: center;
+                font-size: 1.4rem;
+                font-weight: 600;
+                border: 2px solid #e9ecef;
+                border-radius: 12px;
+                background: white;
+                color: var(--text-dark);
+            }
+            
+            .code-inputs input:focus {
+                outline: none;
+                border-color: var(--primary-orange);
+            }
+            
+            .verify-btn {
+                background: var(--gradient-secondary);
+                border: none;
+                border-radius: 15px;
+                padding: 0.8rem 2rem;
+                font-size: 1.1rem;
+                font-weight: 600;
+                color: white;
+                transition: all 0.3s ease;
+                width: 100%;
+                cursor: pointer;
+            }
+            
+            .verify-btn:disabled {
+                background: #6c757d;
+                cursor: not-allowed;
+                opacity: 0.7;
+            }
+            
+            .error-message {
+                background: #f8d7da;
+                border: 1px solid #f1aeb5;
+                border-radius: 12px;
+                padding: 1rem;
+                margin-top: 1rem;
+                color: #721c24;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                font-weight: 500;
+            }
+            
+            .info-section {
+                background: #d1ecf1;
+                border-radius: 15px;
+                padding: 1.5rem;
+                margin-top: 2rem;
+                border-left: 4px solid var(--golden-yellow);
+            }
+            
+            .info-section p {
+                margin: 0 0 1rem 0;
+                color: var(--text-dark);
+                font-size: 0.9rem;
+                line-height: 1.5;
+            }
+            
+            .info-section p:last-child {
+                margin-bottom: 0;
+            }
+            
+            .back-link {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.5rem;
+                color: var(--primary-orange);
+                text-decoration: none;
+                font-weight: 500;
+                transition: all 0.3s ease;
+                padding: 0.5rem 1rem;
+                border-radius: 8px;
+                border: 2px solid transparent;
+            }
+            
+            .back-link:hover {
+                color: var(--primary-orange);
+                background: rgba(255, 107, 53, 0.1);
+                border-color: var(--primary-orange);
+            }
+            
+            .footer {
+                background: var(--text-dark);
+                color: white;
+                text-align: center;
+                padding: 1.5rem;
+                margin-top: 2rem;
+                border-radius: 15px;
+                font-size: 0.9rem;
+            }
+            
+            .footer i {
+                color: var(--golden-yellow);
+                margin-right: 0.5rem;
+            }
+            
+            /* Responsive Design */
+            @media (max-width: 576) {
+                .verify-container {
+                    margin: 1rem;
+                    border-radius: 20px;
+                }
+                
+                .code-inputs {
+                    gap: 0.3rem;
+                }
+                
+                .code-inputs input {
+                    width: 40px;
+                    height: 40px;
+                    font-size: 1.2rem;
+                }
+                
+                h2 {
+                    font-size: 1.5rem;
+                }
+            }

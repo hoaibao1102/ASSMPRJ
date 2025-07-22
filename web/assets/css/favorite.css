@@ -1,0 +1,230 @@
+body {
+    background: linear-gradient(135deg, #0EA5E9, #10B981);
+    font-family: 'Poppins', sans-serif;
+    padding: 20px 0;
+}
+
+.main-container {
+    background: #fff;
+    border-radius: 20px;
+    max-width: 1200px;
+    margin: auto;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.content{
+    padding: 20px;
+}
+
+.header-section {
+    background: linear-gradient(135deg, #FF6B35, #F59E0B);
+    color: white;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.page-title {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.back-btn {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 25px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.back-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    color: white;
+    transform: translateY(-2px);
+}
+
+.tour-card {
+    border: 1px solid #e2e8f0;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    transition: all 0.3s ease;
+    background: #fff;
+}
+
+.tour-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+}
+
+.tour-img-box {
+    flex: 0 0 400px; /* to hơn */
+    max-width: 100%;
+    height: auto;
+    display: flex;
+}
+
+.tour-img {
+    width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+    object-fit: cover;
+    height: auto;
+    flex-grow: 1;
+}
+
+.tour-card:hover .tour-img {
+    transform: scale(1.05);
+}
+
+.tour-info {
+    flex: 1;
+    padding: 1.5rem;
+    color: #1e293b;
+    background: #fff;
+    border-radius: 0 20px 20px 0;
+}
+
+.tour-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    color: #1e293b;
+}
+
+.tour-meta {
+    font-size: 0.95rem;
+    color: #4b5563;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+}
+
+.date-badge {
+    background: linear-gradient(135deg, #fee2e2, #fecaca);
+    color: #b91c1c;
+    padding: 6px 14px;
+    border-radius: 25px;
+    font-size: 0.85rem;
+    margin: 4px 4px 0 0;
+    display: inline-block;
+    font-weight: 500;
+    box-shadow: 0 2px 8px rgba(185, 28, 28, 0.2);
+}
+
+.price {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #FF6B35;
+    background: linear-gradient(135deg, #FF6B35, #F59E0B);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 2px 4px rgba(255, 107, 53, 0.3);
+}
+
+.btn-sm {
+    border-radius: 25px;
+    font-weight: 500;
+    padding: 8px 16px;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #3B82F6, #1D4ED8);
+    border: none;
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, #EF4444, #DC2626);
+    border: none;
+    box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+}
+
+.btn-danger:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(239, 68, 68, 0.4);
+}
+
+.empty-state {
+    text-align: center;
+    padding: 3rem;
+    background: #f8fafc;
+    border-radius: 20px;
+    margin: 2rem 0;
+}
+
+.empty-state h4 {
+    color: #64748b;
+    margin-bottom: 1rem;
+}
+
+.empty-state p {
+    color: #94a3b8;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .tour-card {
+        flex-direction: column;
+    }
+
+    .tour-img-box {
+        flex: none;
+        max-width: 100%;
+    }
+
+    .tour-info {
+        border-radius: 0 0 20px 20px;
+    }
+
+    .header-section {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+
+    .page-title {
+        font-size: 1.5rem;
+    }
+}
+
+.unauthorized-container {
+    background: #fef3c7;
+    border: 2px dashed #f59e0b;
+    border-radius: 20px;
+    margin: 4rem auto;
+    max-width: 700px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.05);
+}
+
+.unauthorized-title {
+    color: #b45309;
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.unauthorized-desc {
+    color: #78350f;
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+}

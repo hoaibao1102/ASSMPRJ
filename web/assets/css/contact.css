@@ -1,0 +1,185 @@
+:root {
+
+    --primary-color: #0EA5E9; /* Xanh biển Việt Nam */
+    --secondary-color: #10B981; /* Xanh lá nhiệt đới */
+    --accent-color: #FF6B35; /* Cam nhiệt đới */
+    --secondary-accent: #F59E0B; /* Vàng ánh dương */
+    --text-color: #1F2937; /* Text chính */
+    --text-secondary: #6B7280; /* Text phụ */
+    --white: #FEFEFE; /* Trắng ngọc trai */
+    --border-radius: 8px;
+
+}
+
+* {
+    font-family: 'Poppins', sans-serif;
+
+}
+
+body {
+    padding-top: 100px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e8f4f8 100%);
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+.hero-section {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    padding: 60px 0 40px;
+}
+
+.hero-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.hero-subtitle {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    margin-bottom: 1.5rem;
+}
+
+.contact-section {
+    padding: 60px 0;
+}
+
+.contact-card {
+    background: var(--white);
+    border-radius: var(--border-radius);
+    padding: 2rem;
+    border: 1px solid #e9ecef;
+}
+
+.contact-info h3 {
+    color: var(--text-color);
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    font-size: 1.6rem;
+}
+
+.info-item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: var(--border-radius);
+    border-left: 4px solid var(--accent-color);
+}
+
+.info-icon {
+    font-size: 1.5rem;
+    color: var(--accent-color);
+    margin-right: 1rem;
+    min-width: 40px;
+    text-align: center;
+}
+
+.info-content strong {
+    color: var(--text-color);
+    font-weight: 600;
+}
+
+.form-card {
+    background: var(--white);
+    border-radius: var(--border-radius);
+    padding: 2rem;
+    border: 1px solid #e9ecef;
+}
+
+.form-card h3 {
+    color: var(--text-color);
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    font-size: 1.6rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-label {
+    font-weight: 500;
+    color: var(--text-color);
+    margin-bottom: 0.5rem;
+}
+
+.form-control {
+    border: 1px solid #e9ecef;
+    border-radius: var(--border-radius);
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+}
+
+.form-control:focus {
+    border-color: var(--accent-color);
+    box-shadow: none;
+}
+
+.form-select {
+    border: 1px solid #e9ecef;
+    border-radius: var(--border-radius);
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+}
+
+.form-select:focus {
+    border-color: var(--accent-color);
+    box-shadow: none;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--accent-color), var(--secondary-accent));
+    border: none;
+    border-radius: var(--border-radius);
+    padding: 0.75rem 2rem;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.map-section {
+    background: var(--white);
+    padding: 40px 0;
+    margin-top: 40px;
+}
+
+.map-container {
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    height: 400px;
+
+}
+
+.map-container iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+
+}
+
+.section-title {
+    text-align: center;
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--text-color);
+    margin-bottom: 2rem;
+
+}
+
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 1.8rem;
+
+    }
+
+    .hero-subtitle {
+        font-size: 1rem;
+    }
+
+    .contact-card,
+    .form-card {
+        padding: 1.5rem;
+    }
+}
