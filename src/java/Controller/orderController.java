@@ -170,8 +170,7 @@ public class orderController extends HttpServlet {
         String paymentMethod = request.getParameter("paymentMethod");
         OrderDAO odao = new OrderDAO();
         HttpSession session = request.getSession(false);
-        
-        
+
         // Cập nhật số lượng vé và trạng thái đơn
         OrderDTO orderdto = odao.readbyID(idBooking);
         String idTour = orderdto.getIdTour();
@@ -180,9 +179,9 @@ public class orderController extends HttpServlet {
         int newQuan = sDate.getQuantity() - numberTicket;
         sDate.setQuantity(newQuan);
         TourTicketDTO tour = tourTicketdao.readbyID(idTour);
-        
+
         double total = orderdto.getTotalPrice();
-        
+
         boolean emailSent = EmailUtils.sendBillThroughEmail(
                 UTILS.AuthUtils.getCurrentUser(session).getEmail(),
                 UTILS.AuthUtils.getCurrentUser(session).getFullName(),
@@ -226,38 +225,41 @@ public class orderController extends HttpServlet {
         return url;
     }
 
-
-    private String handleCallStep2(HttpServletRequest request, HttpServletResponse response) {         
+    private String handleCallStep2(HttpServletRequest request, HttpServletResponse response) {
         try {
-            int voucherID = Integer.parseInt(request.getParameter("voucherID"));
+            String voucherStr = request.getParameter("voucherID");
+            int voucherID = (voucherStr != null && !voucherStr.isEmpty()) ? Integer.parseInt(voucherStr) : 0;
+
             VoucherDAO vcdao = new VoucherDAO();
-            vcdao.subQuantity(voucherID);
+            if (voucherID > 0) {
+                vcdao.subQuantity(voucherID);
+            }
+
+            OrderDAO odao = new OrderDAO();
+            double total = Double.parseDouble(request.getParameter("totalBill"));
+            double amount_off = Double.parseDouble(request.getParameter("amount_off"));
+            int numberTicket = Integer.parseInt(request.getParameter("numberTicket"));
+            String idTour = request.getParameter("idTour");
+            int idUser = Integer.parseInt(request.getParameter("idUser"));
+            String bookingDate = request.getParameter("bookingDate");
+            int status = Integer.parseInt(request.getParameter("status"));
+            String note = request.getParameter("noteValueInput");
+            String idBooking = odao.generateBookingId(idTour);
+            Date startDate = Date.valueOf(request.getParameter("startDate"));
+
+            OrderDTO newBooking = new OrderDTO(idUser, idTour, bookingDate, numberTicket, startDate, total, status, idBooking, note, voucherID, amount_off);
+            if (odao.create(newBooking)) {
+                request.setAttribute("newBooking", newBooking);
+                return "BookingStep2.jsp";
+            } else {
+                System.out.println("Failed to create new booking");
+            }
 
         } catch (Exception e) {
-        }
-
-        OrderDAO odao = new OrderDAO();
-        double total = Double.parseDouble(request.getParameter("totalBill"));
-        double amount_off = Double.parseDouble(request.getParameter("amount_off"));
-        int numberTicket = Integer.parseInt(request.getParameter("numberTicket"));
-        int voucherID = Integer.parseInt(request.getParameter("voucherID"));
-        String idTour = request.getParameter("idTour");
-        int idUser = Integer.parseInt(request.getParameter("idUser"));
-        String bookingDate = String.valueOf(request.getParameter("bookingDate"));
-        int status = Integer.parseInt(request.getParameter("status"));
-        String note = request.getParameter("noteValueInput");
-        String idBooking = odao.generateBookingId(idTour);
-        Date startDate = Date.valueOf(request.getParameter("startDate"));
-
-        OrderDTO newBooking = new OrderDTO(idUser, idTour, bookingDate, numberTicket, startDate, total, status, idBooking, note,voucherID, amount_off);
-        if (odao.create(newBooking)) {
-            request.setAttribute("newBooking", newBooking);
-            return "BookingStep2.jsp";
-        } else {
-            System.out.println("tao loi roi ma");
-
+            e.printStackTrace();
         }
         return null;
+
     }
 
     private String handleCallStep3(HttpServletRequest request, HttpServletResponse response) {

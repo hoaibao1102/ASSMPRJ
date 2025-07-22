@@ -268,7 +268,7 @@
                             <p><i class="fas fa-calculator me-2"></i>Tổng tiền</p>
                             <p class="total-amount">0 đ</p>
                         </div>
-                        <form action="MainController" method="get" onsubmit="return prepareSubmit()">
+                        <form action="MainController" method="post" onsubmit="return prepareSubmit()">
                             <input type="hidden" name="action" value="call_oder_step2">
                             <input type="hidden" name="startDate" value="<%=stDate.getStartDate()%>">
                             <input type="hidden" name="idUser" value="<%=account.getIdUser()%>">
