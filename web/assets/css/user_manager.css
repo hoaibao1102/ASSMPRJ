@@ -1,0 +1,79 @@
+/* Reset hiệu ứng không cần thiết */
+* {
+    box-shadow: none !important;
+    animation: none !important;
+    transition: none !important;
+}
+
+body {
+    background-color: #FEFEFE; /* Trắng ngọc trai */
+    color: #1F2937; /* Text chính */
+    font-family: sans-serif;
+    margin: 0;
+    padding: 20px;
+}
+
+.user-manager-center {
+    max-width: 1200px;
+    margin: 0 0 0 20% ;
+}
+
+.user-manager-title {
+    color: #1F2937;
+    text-align: center;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: linear-gradient(135deg, #0EA5E9, #10B981); /* Gradient chính */
+    border-radius: 4px;
+}
+
+.user-manager-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.user-manager-table th {
+    background-color: #0EA5E9; /* Xanh biển Việt Nam */
+    color: white;
+    padding: 12px 15px;
+    text-align: left;
+}
+
+.user-manager-table td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #ddd;
+}
+
+.user-manager-table tr:nth-child(even) {
+    background-color: #FEFEFE;
+}
+
+.user-manager-table tr:hover {
+    background-color: #f9f9f9;
+}
+
+button {
+    background: linear-gradient(135deg, #FF6B35, #F59E0B); /* Gradient phụ */
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+button:hover {
+    background: linear-gradient(135deg, #F59E0B, #FF6B35);
+}
+
+.header {
+    text-align: center;
+    margin: 50px 0;
+}
+
+.access-denied {
+    text-align: center;
+    color: #6B7280; /* Text phụ */
+    font-size: 18px;
+    padding: 30px;
+}

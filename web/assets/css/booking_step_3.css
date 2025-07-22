@@ -1,0 +1,424 @@
+:root {
+    --primary-blue: #0EA5E9;      /* Xanh biển Việt Nam */
+    --primary-orange: #FF6B35;    /* Cam nhiệt đới */
+    --primary-green: #10B981;     /* Xanh lá nhiệt đới */
+    --secondary-yellow: #F59E0B; /* Vàng ánh dương */
+    --secondary-purple: #8B5CF6; /* Tím lavender */
+    --pearl-white: #FEFEFE;       /* Trắng ngọc trai */
+    --text-main: #1F2937;        /* Text chính */
+    --text-secondary: #6B7280;   /* Text phụ */
+
+    --gradient-main: linear-gradient(135deg, var(--primary-blue), var(--primary-green));
+    --gradient-secondary: linear-gradient(135deg, var(--primary-orange), var(--secondary-yellow));
+
+}
+
+* {
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+
+    padding-top: 100px;
+    background: #f8f9fa;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* Step Progress Section */
+.step-container {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    padding: 2rem;
+
+    margin: 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.step-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" fill="white" opacity="0.1"><polygon points="0,0 1000,0 1000,100 0,80"/></svg>');
+    background-size: cover;
+
+}
+
+.step-title {
+    color: var(--text-main);
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 40px;
+    position: relative;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+}
+
+
+.step-tracker {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    position: relative;
+    z-index: 2;
+}
+
+.step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: all 0.3s ease;
+
+}
+
+.step.active .icon {
+    background: linear-gradient(45deg, #10B981, #34D399);
+    transform: scale(1.1);
+    box-shadow: 0 8px 25px rgba(46, 204, 113, 0.4);
+}
+
+.step.current .icon {
+    background: var(--gradient-secondary);
+    transform: scale(1.15);
+    box-shadow: 0 10px 30px rgba(255, 107, 53, 0.5);
+    animation: pulse 2s infinite;
+}
+
+.step .icon {
+    width: 80px;
+    height: 80px;
+
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+
+    justify-content: center;
+    background: #6c757d;
+    transition: all 0.3s ease;
+    margin-bottom: 15px;
+}
+
+.step .icon img {
+    width: 40px;
+    height: 40px;
+    filter: brightness(0) invert(1);
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1.15);
+    }
+    50% {
+        transform: scale(1.25);
+    }
+}
+
+.arrow {
+    font-size: 24px;
+    color: var(--primary-orange);
+    font-weight: bold;
+}
+
+/* Main Content */
+.content {
+    padding: 60px 0;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.success-card {
+    background: white;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(14, 165, 233, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.success-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: var(--gradient-main);
+}
+
+.success-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.success-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: var(--primary-green);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    color: white;
+    font-size: 40px;
+    box-shadow: 0 10px 30px rgba(39, 174, 96, 0.3);
+    animation: successPulse 2s ease-in-out infinite;
+}
+
+@keyframes successPulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+.success-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary-green);
+    margin-bottom: 15px;
+}
+
+.success-subtitle {
+    color: #666;
+    font-size: 1.1rem;
+    line-height: 1.8;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 25px;
+    margin-top: 40px;
+}
+
+.info-item {
+    background: #f8f9fa;
+
+    padding: 20px;
+    border-radius: 12px;
+    border-left: 4px solid var(--primary-orange);
+    transition: all 0.3s ease;
+}
+
+.info-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+
+}
+
+.info-label {
+    font-size: 0.9rem;
+    color: #666;
+    font-weight: 500;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.info-value {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+
+}
+
+.info-value.highlight {
+    color: var(--primary-orange);
+    font-size: 1.3rem;
+}
+.tour-card {
+    background: white;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 107, 53, 0.1);
+
+    position: relative;
+    overflow: hidden;
+}
+
+.tour-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: var(--gradient-secondary);
+}
+
+.tour-card h3 {
+    color: var(--text-primary);
+
+    font-weight: 700;
+    margin-bottom: 25px;
+    font-size: 1.4rem;
+}
+
+.tour-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 15px;
+    margin-bottom: 20px;
+    transition: transform 0.3s ease;
+}
+
+.tour-image:hover {
+    transform: scale(1.05);
+}
+
+.tour-info {
+    margin-bottom: 20px;
+}
+
+.tour-info p {
+    margin-bottom: 12px;
+    color: #555;
+}
+
+.tour-info strong {
+    color: var(--text-primary);
+
+    font-weight: 600;
+}
+
+.tour-details {
+    background: #fff8f0;
+    padding: 20px;
+    border-radius: 12px;
+    margin: 20px 0;
+}
+
+.tour-details h4 {
+    color: var(--primary-orange);
+    font-weight: 600;
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+}
+
+.divider {
+    height: 1px;
+    background: linear-gradient(to right, transparent, #ddd, transparent);
+    margin: 25px 0;
+}
+
+.total-price {
+    text-align: center;
+    padding: 20px;
+    background: var(--gradient-secondary);
+    border-radius: 15px;
+    margin-bottom: 25px;
+}
+
+.total-label {
+    color: white;
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.total-amount {
+    color: white;
+    font-size: 1.8rem;
+    font-weight: 700;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.btn-primary-custom {
+    background: var(--gradient-secondary);
+
+    border: none;
+    padding: 15px 30px;
+    border-radius: 50px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: white;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 20px rgba(255, 107, 53, 0.3);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.btn-primary-custom:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(255, 107, 53, 0.4);
+    color: white;
+}
+
+.btn-secondary-custom {
+    background: var(--gradient-main);
+    border: none;
+    padding: 15px 30px;
+    border-radius: 50px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: white;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 20px rgba(14, 165, 233, 0.3);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.btn-secondary-custom:hover {
+    transform: translateY(-2px);
+
+    box-shadow: 0 8px 25px rgba(14, 165, 233, 0.4);
+    color: white;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .step-tracker {
+        gap: 40px;
+    }
+
+    .step .icon {
+        width: 60px;
+        height: 60px;
+    }
+
+    .step .icon i {
+        font-size: 24px;
+    }
+
+    .step-title {
+        font-size: 2rem;
+    }
+
+    .arrow {
+        font-size: 20px;
+    }
+
+    .info-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .success-card,
+    .tour-card {
+        padding: 25px;
+    }
+}
