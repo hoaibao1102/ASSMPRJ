@@ -268,7 +268,7 @@
                             <p><i class="fas fa-calculator me-2"></i>Tổng tiền</p>
                             <p class="total-amount">0 đ</p>
                         </div>
-                        <form action="MainController" method="post" onsubmit="return prepareSubmit()">
+                        <form action="MainController" method="get" onsubmit="return prepareSubmit()">
                             <input type="hidden" name="action" value="call_oder_step2">
                             <input type="hidden" name="startDate" value="<%=stDate.getStartDate()%>">
                             <input type="hidden" name="idUser" value="<%=account.getIdUser()%>">
@@ -278,6 +278,7 @@
                             <input type="hidden" id="numberTicket" name="numberTicket" value="">
                             <input type="hidden" id="noteValueInput" name="noteValueInput" value="">
                             <input type="hidden" name="status" value="0">
+                            <input type="hidden" id="amount_off" name="amount_off" value="">
                             <input type="hidden" id="voucherID" name="voucherID" value="">
                             <button type="submit" class="btn-submit">
                                 <i class="fas fa-paper-plane me-2"></i>
@@ -535,6 +536,8 @@
                             updateVoucherDisplay();
                         }
                     }
+                    
+                    
 
                     // Gán giá trị ẩn cho form gửi server
                     document.getElementById("totalBill").value = Math.floor(finalTotal);
@@ -546,7 +549,11 @@
                     const totalChild_down = childCount * pricePerAdult * (1.0) * discountChild / 100.0;
                     const totalBaby_down = babyCount * pricePerAdult * (1.0) * discountBaby / 100.0;
                     const total_down = totalChild_down + totalBaby_down;
-
+                    
+                    //tong giá tr? duocj giam de vut vao database
+                    let totalDown_final = voucherDiscountAmount + total_down;
+                    document.getElementById("amount_off").value = totalDown_final;
+                    
                     // Cập nhật giao diện hiển thị
                     document.querySelector(".total-amount").innerText = formatCurrency(finalTotal);
 

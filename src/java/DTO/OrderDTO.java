@@ -20,10 +20,50 @@ public class OrderDTO {
     private int status;
     private String idBooking;
     private String note;
+    private int voucherID;
+    private Double amount_off;
 
     public OrderDTO() {
     }
 
+    public OrderDTO(int idUser, String idTour, String bookingDate, int numberTicket, Date startDate, double totalPrice, int status, String idBooking, String note, int voucherID, Double amount_off) {
+        this.idUser = idUser;
+        this.idTour = idTour;
+        this.bookingDate = bookingDate;
+        this.numberTicket = numberTicket;
+        this.startDate = startDate;
+        this.totalPrice = totalPrice;
+        this.status = status;
+        this.idBooking = idBooking;
+        this.note = note;
+        this.voucherID = voucherID;
+        this.amount_off = amount_off;
+    }
+
+    public OrderDTO(int idUser, String idTour, String bookingDate, int numberTicket, double total, int status, String idBooking, String note, Date startDate, int voucherID, double amount_off) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    public Double getAmount_off() {
+        return amount_off;
+    }
+
+    public void setAmount_off(Double amount_off) {
+        this.amount_off = amount_off;
+    }
+
+    
+
+    public int getVoucherID() {
+        return voucherID;
+    }
+
+    public void setVoucherID(int voucherID) {
+        this.voucherID = voucherID;
+    }
+
+    
+    
     public OrderDTO(int idUser, String idTour, String bookingDate, int numberTicket, double totalPrice, int status, String idBooking, String note, Date startDate) {
         this.idUser = idUser;
         this.idTour = idTour;
@@ -34,6 +74,10 @@ public class OrderDTO {
         this.status = status;
         this.idBooking = idBooking;
         this.note = note;
+    }
+
+    public OrderDTO(int idUser, String idTour, String bookingDate, int numberTicket, double total, int status, String idBooking, String note, Date startDate, int voucherID) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     public Date getStartDate() {

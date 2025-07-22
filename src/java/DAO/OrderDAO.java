@@ -26,7 +26,7 @@ public class OrderDAO implements IDAO<OrderDTO, String> {
 
     @Override
     public boolean create(OrderDTO entity) {
-        String sql = "INSERT INTO Orders (idBooking, idUser, idTourTicket, BookingDate, NumberTicket, TotalPrice, Status, Note, startDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) ";
+        String sql = "INSERT INTO Orders (idBooking, idUser, idTourTicket, BookingDate, NumberTicket, TotalPrice, Status, Note, voucherID, startDate, amount_off) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ";
         try {
             Connection conn = DBUtils.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -38,7 +38,9 @@ public class OrderDAO implements IDAO<OrderDTO, String> {
             ps.setDouble(6, entity.getTotalPrice());
             ps.setInt(7, entity.getStatus());
             ps.setString(8, entity.getNote());
-            ps.setDate(9, entity.getStartDate());
+            ps.setInt(9, entity.getVoucherID());
+            ps.setDate(10, entity.getStartDate());
+            ps.setDouble(11, entity.getAmount_off());
 
             int n = ps.executeUpdate();
             return n > 0;

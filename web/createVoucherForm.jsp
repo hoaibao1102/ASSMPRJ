@@ -84,12 +84,12 @@
                                         <i class="bi bi-clock"></i> Thời lượng
                                     </label>
                                     <div class="input-group">
-                                        <input type="number" name="duration" class="form-control" min="0" max="30" required 
+                                        <input type="number" name="duration" class="form-control" min="1" max="30" required 
                                                value="${not empty voucher ? voucher.duration : ''}" 
                                                placeholder="1-30">
                                         <span class="input-group-text">ngày</span>
                                     </div>
-                                    <div class="form-text">Tối đa 30 ngày</div>
+                                    <div class="form-text">Tối đa 30 ngày(1-30)</div>
                                 </div>
                             </div>
 
@@ -100,9 +100,9 @@
                                         <i class="bi bi-percent"></i> Giá trị giảm
                                     </label>
                                     <div class="input-group">
-                                        <input type="number" name="discount" class="form-control" step="0.01" required 
-                                               min="0.0" max="100.0" value="${not empty voucher ? voucher.discount : ''}" 
-                                               placeholder="0.0 - 100.0">
+                                        <input type="number" name="discount" class="form-control" step="0.1" required 
+                                               min="0.1" max="100.0" value="${not empty voucher ? voucher.discount : ''}" 
+                                               placeholder="0.1 - 100.0">
                                         <span class="input-group-text">%</span>
                                     </div>
                                 </div>
@@ -127,8 +127,8 @@
                                         <i class="bi bi-cash-coin"></i> Giá trị đơn hàng tối thiểu
                                     </label>
                                     <div class="input-group">
-                                        <input type="number" name="minimumOrderValue" class="form-control" step="0.01" 
-                                               required min="1" value="${not empty voucher ? voucher.minimumOrderValue : ''}" 
+                                        <input type="number" name="minimumOrderValue" class="form-control" step="0.1" 
+                                               required min="0" value="${not empty voucher ? voucher.minimumOrderValue : ''}" 
                                                placeholder="Nhập giá trị tối thiểu">
                                         <span class="input-group-text">VNĐ</span>
                                     </div>
