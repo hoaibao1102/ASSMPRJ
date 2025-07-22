@@ -27,17 +27,17 @@
                 --sky-blue: #0EA5E9;
                 --coral-orange: #FF6B35;
                 --emerald-green: #10B981;
-                
+
                 /* Tông màu phụ */
                 --golden-yellow: #F59E0B;
                 --purple-lavender: #8B5CF6;
                 --pearl-white: #FEFEFE;
-                
+
                 /* Màu nền và text */
                 --dark-gray: #1F2937;
                 --medium-gray: #6B7280;
                 --light-bg: #F8FAFC;
-                
+
                 /* Gradient */
                 --gradient-primary: linear-gradient(135deg, #0EA5E9, #10B981);
                 --gradient-secondary: linear-gradient(135deg, #FF6B35, #F59E0B);
@@ -463,7 +463,7 @@
                 .back-btn {
                     display: none;
                 }
-                
+
                 .main-container {
                     border: 1px solid #000;
                 }
@@ -522,18 +522,21 @@
                                                 </td>
                                                 <td>${order.note}</td>
                                                 <td>
-                                                    <c:choose>
-                                                        <c:when test="${order.status == 0}">
-                                                            <span class="badge bg-warning">
-                                                                <i class="bi bi-clock me-1"></i>Chưa thanh toán
-                                                            </span>
-                                                        </c:when>
-                                                        <c:otherwise>
-                                                            <span class="badge bg-success">
-                                                                <i class="bi bi-check-circle me-1"></i>Đã thanh toán
-                                                            </span>
-                                                        </c:otherwise>
-                                                    </c:choose>
+                                                    <c:if test="${order.status == 0}">
+                                                        <span class="badge bg-warning">
+                                                            <i class="bi bi-clock me-1"></i>Chưa thanh toán
+                                                        </span>
+                                                    </c:if>
+                                                    <c:if test="${order.status == 1}">
+                                                        <span class="badge bg-success">
+                                                            <i class="bi bi-check-circle me-1"></i>Đã thanh toán
+                                                        </span>
+                                                    </c:if>
+                                                    <c:if test="${order.status == -1}">
+                                                        <span class="badge bg-success">
+                                                            <i class="bi bi-check-circle me-1"></i>Đã bị hủy
+                                                        </span>
+                                                    </c:if>
                                                 </td>
                                             </tr>
                                         </c:forEach>
@@ -645,28 +648,33 @@
                                                     </div>
 
                                                     <div class="payment-actions">
-                                                        <c:choose>
-                                                            <c:when test="${order.status == 0}">
-                                                                <form class="pay-order-form" action="MainController" method="post">
-                                                                    <input type="hidden" name="action" value="openPayModal"/>
-                                                                    <input type="hidden" name="idBooking" value="${order.idBooking}"/>
-                                                                    <input type="hidden" name="totalPrice" value="${order.totalPrice}"/>
-                                                                    <input type="hidden" name="numberTicket" value="${order.numberTicket}"/>
-                                                                    <button class="btn btn-pay w-100" type="button"
-                                                                            onclick="openPaymentModal('${order.idBooking}', '${order.totalPrice}', '${order.numberTicket}')"
-                                                                            aria-label="Thanh toán đơn hàng ${order.idBooking}">
-                                                                        <i class="bi bi-credit-card me-2"></i>
-                                                                        Thanh toán ngay
-                                                                    </button>
-                                                                </form>
-                                                            </c:when>
-                                                            <c:otherwise>
-                                                                <div class="status-paid">
-                                                                    <i class="bi bi-check-circle"></i>
-                                                                    Đã thanh toán
-                                                                </div>
-                                                            </c:otherwise>
-                                                        </c:choose>
+                                                        <c:if test="${order.status == 0}">
+                                                            <form class="pay-order-form" action="MainController" method="post">
+                                                                <input type="hidden" name="action" value="openPayModal"/>
+                                                                <input type="hidden" name="idBooking" value="${order.idBooking}"/>
+                                                                <input type="hidden" name="totalPrice" value="${order.totalPrice}"/>
+                                                                <input type="hidden" name="numberTicket" value="${order.numberTicket}"/>
+                                                                <button class="btn btn-pay w-100" type="button"
+                                                                        onclick="openPaymentModal('${order.idBooking}', '${order.totalPrice}', '${order.numberTicket}')"
+                                                                        aria-label="Thanh toán đơn hàng ${order.idBooking}">
+                                                                    <i class="bi bi-credit-card me-2"></i>
+                                                                    Thanh toán ngay
+                                                                </button>
+                                                            </form>
+                                                        </c:if>
+                                                        <c:if test="${order.status == 1}">
+                                                            <div class="status-paid">
+                                                                <i class="bi bi-check-circle"></i>
+                                                                Đã thanh toán
+                                                            </div>
+                                                        </c:if>
+                                                        <c:if test="${order.status == -1}">
+                                                            <div class="status-paid">
+                                                                <i class="bi bi-check-circle"></i>
+                                                                Đã bị hủy
+                                                            </div>
+                                                        </c:if>
+
                                                     </div>
                                                 </div>
                                             </div>
@@ -751,51 +759,51 @@
 
         <!-- Bootstrap 5 JS -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-        
+
         <script>
-            function openPaymentModal(idBooking, totalPrice, numberTicket) {
-                document.getElementById('idBooking').value = idBooking;
-                document.getElementById('totalPrice').value = totalPrice;
-                document.getElementById('numberTicket').value = numberTicket;
-                
-                // Clear previous selections
-                document.querySelectorAll('.payment-option').forEach(option => {
-                    option.classList.remove('selected');
-                });
-                document.querySelectorAll('input[name="paymentMethod"]').forEach(radio => {
-                    radio.checked = false;
-                });
-                
-                const modal = new bootstrap.Modal(document.getElementById('paymentModal'));
-                modal.show();
-            }
+                                            function openPaymentModal(idBooking, totalPrice, numberTicket) {
+                                                document.getElementById('idBooking').value = idBooking;
+                                                document.getElementById('totalPrice').value = totalPrice;
+                                                document.getElementById('numberTicket').value = numberTicket;
 
-            function selectPayment(event, method) {
-                // Remove selected class from all options
-                document.querySelectorAll('.payment-option').forEach(option => {
-                    option.classList.remove('selected');
-                });
-                
-                // Add selected class to clicked option
-                event.currentTarget.classList.add('selected');
-                
-                // Check the corresponding radio button
-                const radio = event.currentTarget.querySelector('input[type="radio"]');
-                if (radio) {
-                    radio.checked = true;
-                }
-            }
+                                                // Clear previous selections
+                                                document.querySelectorAll('.payment-option').forEach(option => {
+                                                    option.classList.remove('selected');
+                                                });
+                                                document.querySelectorAll('input[name="paymentMethod"]').forEach(radio => {
+                                                    radio.checked = false;
+                                                });
 
-            function confirmPayment() {
-                const selectedPayment = document.querySelector('input[name="paymentMethod"]:checked');
-                if (!selectedPayment) {
-                    alert('Vui lòng chọn phương thức thanh toán!');
-                    return;
-                }
-                
-                // Submit the form
-                document.getElementById('paymentForm').submit();
-            }
+                                                const modal = new bootstrap.Modal(document.getElementById('paymentModal'));
+                                                modal.show();
+                                            }
+
+                                            function selectPayment(event, method) {
+                                                // Remove selected class from all options
+                                                document.querySelectorAll('.payment-option').forEach(option => {
+                                                    option.classList.remove('selected');
+                                                });
+
+                                                // Add selected class to clicked option
+                                                event.currentTarget.classList.add('selected');
+
+                                                // Check the corresponding radio button
+                                                const radio = event.currentTarget.querySelector('input[type="radio"]');
+                                                if (radio) {
+                                                    radio.checked = true;
+                                                }
+                                            }
+
+                                            function confirmPayment() {
+                                                const selectedPayment = document.querySelector('input[name="paymentMethod"]:checked');
+                                                if (!selectedPayment) {
+                                                    alert('Vui lòng chọn phương thức thanh toán!');
+                                                    return;
+                                                }
+
+                                                // Submit the form
+                                                document.getElementById('paymentForm').submit();
+                                            }
         </script>
     </body>
 </html>

@@ -38,7 +38,11 @@ public class OrderDAO implements IDAO<OrderDTO, String> {
             ps.setDouble(6, entity.getTotalPrice());
             ps.setInt(7, entity.getStatus());
             ps.setString(8, entity.getNote());
-            ps.setInt(9, entity.getVoucherID());
+            if (entity.getVoucherID() != 0) {
+                ps.setInt(9, entity.getVoucherID());
+            } else {
+                ps.setNull(9, java.sql.Types.INTEGER);
+            }
             ps.setDate(10, entity.getStartDate());
             ps.setDouble(11, entity.getAmount_off());
 
